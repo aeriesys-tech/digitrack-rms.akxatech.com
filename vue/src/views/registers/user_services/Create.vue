@@ -1,0 +1,436 @@
+<template>
+    <div class="">
+        <div class="d-sm-flex align-items-center justify-content-between mb-2">
+            <div>
+                <ol class="breadcrumb fs-sm mb-1">
+                    <li class="breadcrumb-item" aria-current="page">
+                        <router-link to="/dashboard">Dashboard</router-link>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript:void(0)">Registers</a>
+                    </li>
+                    <li class="breadcrumb-item" aria-current="page">
+                        <router-link to="/user_services">User Services</router-link>
+                    </li>
+                    <li class="breadcrumb-item" aria-current="page" v-if="status">New User Service</li>
+                    <li class="breadcrumb-item active" aria-current="page" v-else>Update User Service</li>
+                </ol>
+                <h4 class="main-title mb-0">User Service</h4>
+            </div>
+            <router-link to="/user_services" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> USER SERVICES</router-link>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form @submit.prevent="submitForm">
+                    <div class="card card-one">
+                        <div class="card-header d-flex justify-content-between">
+                            <h6 class="card-title" v-if="status">Add User Service</h6>
+                            <h6 class="card-title" v-else>Update User Service</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-2 mb-5">
+                                <!-- <div class="col-md-4">
+                                    <label class="form-label">Service Number</label><span class="text-danger"> *</span> 
+                                    <input type="text" placeholder="Enter Service Number" class="form-control" :class="{'is-invalid':errors.service_no}" v-model="user_service.service_no" ref="service_no"/>
+                                    <span v-if="errors.service_no" class="invalid-feedback">{{ errors.service_no[0] }}</span>
+                                </div> -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Service Date</label><span class="text-danger"> *</span>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        placeholder="Enter Service Date"
+                                        :class="{'is-invalid': errors.service_date}"
+                                        :value="convertDateFormat(user_service.service_date)"
+                                        v-model="user_service.service_date"
+                                        ref="service_date"
+                                    />
+                                    <span v-if="errors.service_date" class="invalid-feedback">{{ errors.service_date[0] }}</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Next Service Date</label><span class="text-danger"> *</span>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        placeholder="Enter Next Service Date"
+                                        :class="{'is-invalid': errors.next_service_date}"
+                                        :value="convertDateFormat(user_service.next_service_date)"
+                                        v-model="user_service.next_service_date"
+                                    />
+                                    <span v-if="errors.next_service_date" class="invalid-feedback">{{ errors.next_service_date[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Asset</label><span class="text-danger"> *</span>
+                                    <search
+                                        :class="{ 'is-invalid': errors.asset_id }"
+                                        :customClass="{ 'is-invalid': errors.asset_id }"
+                                        :initialize="user_service.asset_id"
+                                        id="asset_id"
+                                        label="asset_name"
+                                        label2="asset_code"
+                                        placeholder="Select Asset"
+                                        :data="assets"
+                                        @input=" asset => user_service.asset_id = asset"
+                                    >
+                                    </search>
+                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Service</label><span class="text-danger"> *</span>
+                                    <search
+                                        :class="{ 'is-invalid': errors.service_id }"
+                                        :customClass="{ 'is-invalid': errors.service_id }"
+                                        :initialize="user_service.service_id"
+                                        id="service_id"
+                                        label="service_name"
+                                        label2="service_code"
+                                        placeholder="Select Service"
+                                        :data="services"
+                                        @input=" service => user_service.service_id = service"
+                                    >
+                                    </search>
+                                    <span v-if="errors.service_id" class="invalid-feedback">{{ errors.service_id[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Service Cost</label>
+                                    <input type="number" placeholder="Enter Service Cost" min="0" oninput="validity.valid||(value='');" class="form-control" :class="{'is-invalid':errors.service_cost}" v-model="user_service.service_cost" />
+                                    <span v-if="errors.service_cost" class="invalid-feedback">{{ errors.service_cost[0] }}</span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Note</label>
+                                    <textarea type="text" placeholder="Enter Note" class="form-control" :class="{'is-invalid': errors.note}" v-model="user_service.note"></textarea>
+                                    <span v-if="errors.note" class="invalid-feedback">{{ errors.note[0] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="row g-2">
+                                <div class="">
+                                    <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Spare <span class="text-danger"> *</span></th>
+                                                <th>Spare Cost <span class="text-danger"> *</span></th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <search
+                                                        :class="{ 'is-invalid': errors.spare_id }"
+                                                        :customClass="{ 'is-invalid': errors.spare_id }"
+                                                        aria-describedby="basic-addon2"
+                                                        aria-label="Select Spare"
+                                                        :initialize="user_spare.spare_id"
+                                                        id="spare_id"
+                                                        label="spare_name"
+                                                        label2="spare_code"
+                                                        placeholder="Select Spare"
+                                                        :data="spares"
+                                                        @input=" spare1 => user_spare.spare_id = spare1"
+                                                        @selectsearch="getValue(user_spare.spare_id)"
+                                                    >
+                                                    </search>
+                                                    <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control" placeholder="Enter Spare Cost" min="0" :class="{ 'is-invalid': errors.spare_cost }" v-model="user_spare.spare_cost" />
+                                                    <span v-if="errors.spare_cost" class="invalid-feedback">{{ errors.spare_cost[0] }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button v-if="user_spare.status" class="btn btn-outline-success mx-1" @click.prevent="addRow()"><i class="ri-add-line fs-18 lh-1"></i></button>
+                                                    <button v-else class="btn btn-outline-success mx-1" @click.prevent="updateRow(user_spare)"><i class="ri-save-line fs-18 lh-1"></i></button>
+                                                    <button class="btn btn-outline-danger mx-1" @click.prevent="discardNewRow()"><i class="ri-close-line fs-18 lh-1"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr v-for="spare, index in user_service.user_spares" :key="index">
+                                                <td>{{ spare?.spare?.spare_name }}</td>
+                                                <td>{{ spare?.spare_cost }}</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-outline-primary mx-2" @click.prevent="editSpare(spare,index)"><i class="ri-pencil-line fs-18 lh-1"></i></button>
+                                                    <button type="button" class="btn btn-outline-danger" @click.prevent="deleteSpare(spare,index)"><i class="ri-delete-bin-line fs-18 lh-1"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-end">
+                            <router-link type="button" to="/user_services" class="btn btn-danger me-2"><i class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
+                            <button type="submit" class="btn btn-primary">
+                                <span v-if="status"><i class="ri-save-line fs-18 lh-1"></i> Submit</span>
+                                <span v-else><i class="ri-save-line fs-18 lh-1"></i> Update</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import Search from "@/components/Search.vue";
+    import moment from "moment";
+    export default {
+        name: "Assets.Create",
+        components: { Search },
+        data() {
+            return {
+                user_service: {
+                    user_service_id: "",
+                    service_no: "",
+                    service_date: "",
+                    asset_id: "",
+                    service_cost: "",
+                    next_service_date: "",
+                    service_id: "",
+                    note: "",
+                    user_spares: [],
+                    deleted_user_spares: [],
+                    status: true,
+                },
+                user_spare: {
+                    user_spare_id: "",
+                    spare_id: "",
+                    spare: {
+                        spare_name: "",
+                    },
+                    spare_cost: "",
+                    status: true,
+                },
+                deleted_spares: [],
+                assets: [],
+                services: [],
+                spares: [],
+                errors: [],
+                status: true,
+            };
+        },
+
+        watch:{
+            'user_service.asset_id': function(){
+                this.getSpares();
+                this.getServices();
+            }
+        },
+        beforeRouteEnter(to, from, next) {
+            next((vm) => {
+                vm.getAssets();
+                if (to.name == "UserServices.Create") {
+                    if(vm.$store.getters.asset_id){
+                        vm.user_service.asset_id = vm.$store.getters.asset_id
+                    }
+                    vm.$refs.service_date.focus();
+                } else {
+                    vm.status = false;
+                    let uri = { uri: "getUserService", data: { user_service_id: to.params.user_service_id } };
+                    vm.$store
+                        .dispatch("post", uri)
+                        .then(function (response) {
+                            vm.user_service = response.data.data;
+                        })
+                        .catch(function (error) {
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
+            });
+        },
+        mounted() {
+            this.user_service.service_date = moment().format("yyyy-MM-DD");
+            this.user_service.next_service_date = moment().format("yyyy-MM-DD");
+        },
+        methods: {
+            convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD");
+            },
+            submitForm() {
+                let vm = this;
+                if (vm.status) {
+                    vm.addUserService();
+                } else {
+                    vm.updateUserService();
+                }
+            },
+            getValue(value) {
+                let vm = this;
+                let spare = vm.spares?.filter(function (ele) {
+                    return ele.spare_id == value;
+                });
+                if (spare.length) {
+                    vm.user_spare.spare.spare_name = spare[0].spare_name;
+                }
+            },
+            getAssets() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getAssets" })
+                    .then((response) => {
+                        loader.hide();
+                        vm.assets = response.data.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getServices() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getAssetsServices", data: vm.user_service })
+                    .then((response) => {
+                        loader.hide();
+                        vm.services = response.data;
+                       
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getSpares() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getAssetServiceSpares", data: vm.user_service })
+                    .then((response) => {
+                        loader.hide();
+                        vm.spares = response.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            addUserService() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "addUserService", data: vm.user_service })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.$router.push("/user_services");
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+
+            updateUserService() {
+                let vm = this;
+                vm.user_service.deleted_user_spares = vm.deleted_spares;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "updateUserService", data: vm.user_service })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.$router.push("/user_services");
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            addRow() {
+                let vm = this;
+                vm.errors = [];
+                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "") {
+                    if (vm.user_spare.spare_id == "") {
+                        vm.errors.spare_id = ["Spare field cannot be empty"];
+                    }
+                    if (vm.user_spare.spare_cost == "") {
+                        vm.errors.spare_cost = ["Spare Cost cannot be empty"];
+                    }
+                } else {
+                    vm.user_service.user_spares.push({
+                        user_spare_id: "",
+                        spare_id: vm.user_spare.spare_id,
+                        spare: {
+                            spare_name: vm.user_spare.spare.spare_name,
+                        },
+                        spare_cost: vm.user_spare.spare_cost,
+                    });
+                    vm.discardNewRow();
+                }
+            },
+            discardNewRow() {
+                let vm = this;
+                vm.user_spare.user_spare_id = "";
+                vm.user_spare.spare_id = "";
+                vm.user_spare.spare_cost = "";
+                vm.user_spare.spare.spare_name = "";
+                vm.user_spare.status = true;
+                vm.errors = [];
+            },
+            editSpare(spare, key) {
+                let vm = this;
+                vm.user_spare.user_spare_id = spare.user_spare_id;
+                vm.user_spare.spare_id = spare.spare_id;
+                vm.user_spare.spare.spare_name = spare.spare.spare_name;
+                vm.user_spare.spare_cost = spare.spare_cost;
+                vm.user_spare.status = false;
+                vm.user_spare.key = key;
+                vm.errors = [];
+            },
+            updateRow(spare) {
+                let vm = this;
+                vm.errors = [];
+                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "") {
+                    if (vm.user_spare.spare_id == "") {
+                        vm.errors.spare_id = ["Spare field cannot be empty"];
+                    }
+                    if (vm.user_spare.spare_cost == "") {
+                        vm.errors.spare_cost = ["Spare Cost cannot be empty"];
+                    }
+                } else {
+                    let spare_data = vm.user_service.user_spares.filter(function (element) {
+                        return element.key == spare.key;
+                    });
+                    vm.user_service.user_spares[spare_data.key] = spare_data;
+                    vm.user_service.user_spares.splice(vm.user_spare.key, 1);
+                    vm.user_service.user_spares.push({
+                        user_spare_id: vm.user_spare.user_spare_id,
+                        spare_id: vm.user_spare.spare_id,
+                        spare: {
+                            spare_name: vm.user_spare.spare.spare_name,
+                        },
+                        spare_cost: vm.user_spare.spare_cost,
+                    });
+                    vm.discardNewRow();
+                }
+            },
+            deleteSpare(spare, key) {
+                let vm = this;
+                // let sp = vm.user_service.user_spares.filter(function (element) {
+                //     return element.spare_id == spare.user_spare_id;
+                // });
+                if (confirm("Are you sure you want to delete")) {
+                    vm.deleted_spares.push(spare?.user_spare_id);
+                    vm.user_service.user_spares.splice(key, 1);
+                    vm.discardNewRow();
+                }
+            },
+        },
+    };
+</script>
+<style scoped>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
