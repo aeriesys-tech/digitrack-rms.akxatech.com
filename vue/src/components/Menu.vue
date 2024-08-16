@@ -2,7 +2,8 @@
     <div class="sidebar sidebar-dark">
         <div class="sidebar-header">
             <!-- <img src="../../src/assets/jswlogo.png" alt="digiTRACK" class="brand-image img-circle1 elevation-3 me-2" style="opacity: 0.8; width:60px;" /> -->
-            <router-link to="/dashboard" class="sidebar-logo">digiTRACK</router-link>
+            <!-- <img src="../../src/assets/jsw.png" /> -->
+            <router-link to="/dashboard" class="sidebar-logo"><img src="../../src/assets/jsw.png" width="150"/></router-link>
         </div>
         <div id="sidebarMenu" class="sidebar-body">
             <div class="nav-group show">
@@ -16,7 +17,7 @@
                 <a href="javascript:void(0)" :style="{color:color}" class="nav-label"><i class="ri-equalizer-line icn"></i> Lineage parameters</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item" v-can="'clusters.view'" >
-                        <router-link to="/clusters" v-bind:class="{ active: $route.path === '/clusters' }" class="nav-link"><i class="ri-command-line"></i> <span>Clusters</span></router-link>
+                        <router-link to="/areas" v-bind:class="{ active: $route.path === '/areas' }" class="nav-link"><i class="ri-command-line"></i> <span>Areas</span></router-link>
                     </li>
                     <li class="nav-item" v-can="'plants.view'">
                         <router-link to="/plants" v-bind:class="{ active: $route.path === '/plants' }" class="nav-link"><i class="ri-building-fill"></i> <span>Plants</span></router-link>
@@ -24,9 +25,9 @@
                     <li class="nav-item" v-can="'sections.view'">
                         <router-link to="/section" v-bind:class="{ active: $route.path === '/section' }" class="nav-link"><i class="ri-stack-line"></i> <span>Section</span></router-link>
                     </li> 
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link to="/frequency" v-bind:class="{ active: $route.path === '/frequency' }" class="nav-link"><i class="ri-rfid-line"></i> <span>Frequency</span></router-link>
-                    </li>    
+                    </li>     -->
                     <li class="nav-item">
                         <router-link to="/department" v-bind:class="{ active: $route.path === '/department' }" class="nav-link"><i class="ri-government-line"></i> <span>Department</span></router-link>
                     </li>        
@@ -35,9 +36,9 @@
             <div class="nav-group" :class="{show:showType}" @click="showTab('TypeParameters')" v-if="permission('TypeParameters')">
                 <a href="javascript:void(0)" :style="{color:typeParameterColor}" class="nav-label"><i class="ri-corner-up-right-double-line icn"></i> Type Parameters</a>
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item" v-can="'equipment_types.view'">
+                    <!-- <li class="nav-item" v-can="'equipment_types.view'">
                         <router-link to="/equipment_types" v-bind:class="{ active: $route.path === '/equipment_types' }" class="nav-link"><i class="ri-equalizer-line"></i> <span>Equipment Type</span></router-link>
-                    </li>
+                    </li> -->
                     <li class="nav-item" v-can="'asset_types.view'">
                         <router-link to="/asset_types" v-bind:class="{ active: $route.path === '/asset_types' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Type</span></router-link>
                     </li>
@@ -48,7 +49,7 @@
                         <router-link to="/spare_types" v-bind:class="{ active: $route.path === '/spare_types' }" class="nav-link"><i class="ri-shapes-line"></i> <span>Spare Types</span></router-link>
                     </li> 
                     <li class="nav-item" v-can="'reasons.view'">
-                        <router-link to="/reasons" v-bind:class="{ active: $route.path === '/reasons' }" class="nav-link"><i class="ri-color-filter-line"></i> <span>Reasons</span></router-link>
+                        <router-link to="/activity_types" v-bind:class="{ active: $route.path === '/activity_types' }" class="nav-link"><i class="ri-color-filter-line"></i> <span>Activity Type</span></router-link>
                     </li>       
                 </ul>
             </div>
@@ -60,9 +61,32 @@
                     </li>
                 </ul>
             </div>
+            <div class="nav-group" :class="{show:showAttributes}" @click="showTab('Attributes')">
+                <a href="javascript:void(0)" class="nav-label" :style="{color:AttributeColor}"><i class="ri-stack-fill icn"></i> Attributes</a>
+                <ul class="nav nav-sidebar">
+                    <li class="nav-item" >
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-focus-line"></i> <span>Asset Attribute</span></router-link>
+                    </li>  
+                    <li class="nav-item" >
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-focus-line"></i> <span>Spare Attribute</span></router-link>
+                    </li>
+                    <li class="nav-item" >
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-focus-line"></i> <span>Data Source Attribute</span></router-link>
+                    </li>   
+                    <li class="nav-item" >
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-focus-line"></i> <span>Variable Attribute</span></router-link>
+                    </li>  
+                    <li class="nav-item" >
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-focus-line"></i> <span>Service Attribute</span></router-link>
+                    </li> 
+                    <li class="nav-item" >
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-focus-line"></i> <span>Breakdown Attribute</span></router-link>
+                    </li>       
+                </ul>
+            </div>
             
             <div class="nav-group" v-if="permission('ListParameters')" :class="{show:showList}" @click="showTab('ListParameters')">
-                <a href="javascript:void(0)" :style="{color:listParameterColor}" class="nav-label"><i class="ri-list-settings-line icn"></i> List parameters</a>
+                <a href="javascript:void(0)" :style="{color:listParameterColor}" class="nav-label"><i class="ri-list-settings-line icn"></i> Masters</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item" v-can="'checks.view'">
                         <router-link to="/checks" v-bind:class="{ active: $route.path === '/checks' }" class="nav-link"><i class="ri-command-line"></i> <span>Checks</span></router-link>
@@ -72,6 +96,15 @@
                     </li>
                     <li class="nav-item" v-can="'services.view'">
                         <router-link to="/services" v-bind:class="{ active: $route.path === '/services' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
+                    </li>  
+                    <li class="nav-item">
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-archive-drawer-line"></i> <span>Variables</span></router-link>
+                    </li> 
+                    <li class="nav-item">
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source</span></router-link>
+                    </li> 
+                    <li class="nav-item">
+                        <router-link to="javascript:void(0)" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>BreakDown List</span></router-link>
                     </li>       
                 </ul>
             </div>
@@ -206,6 +239,7 @@ export default {
                 showType:false,
                 showMotor:false,
                 showList:false,
+                showAttributes:false,
                 showMaster:false,
                 showRegister:false,
                 showUser:false,
@@ -300,6 +334,10 @@ export default {
                     case "ListParameters":
                         this.listParameterColor='white !important';
                         this.showList = !this.showList;
+                        break;
+                    case "Attributes":
+                        this.AttributeColor='white !important';
+                        this.showAttributes = !this.showAttributes;
                         break;
                     case "Masters":
                         this.masterColor='white !important';

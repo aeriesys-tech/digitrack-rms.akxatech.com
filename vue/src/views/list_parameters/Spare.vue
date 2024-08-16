@@ -6,7 +6,7 @@
                     <router-link to="/dashboard">Dashboard</router-link>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0)">List Parameters</a>
+                    <a href="javascript:void(0)">Masters</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Spares</li>
             </ol>

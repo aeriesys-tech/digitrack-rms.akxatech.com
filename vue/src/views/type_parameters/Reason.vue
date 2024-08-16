@@ -8,28 +8,28 @@
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0)">Type Parameters</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Reasons</li>
+                <li class="breadcrumb-item active" aria-current="page">Activity Types</li>
             </ol>
-            <h4 class="main-title mb-2">Reasons</h4>
+            <h4 class="main-title mb-2">Activity Types</h4>
         </div> 
         <div class="row g-2">
             <div class="col-4" v-can="'reasons.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add Reason</h6>
-                            <h6 class="card-title" v-else>Update Reason</h6>
+                            <h6 class="card-title" v-if="status">Add Activity Type</h6>
+                            <h6 class="card-title" v-else>Update Activity Type</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-12">
-                                    <label class="form-label">Reason Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Reason Code" class="form-control" :class="{ 'is-invalid': errors.reason_code }" v-model="reason.reason_code" ref="reason_code"/>
+                                    <label class="form-label">Activity Type Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Enter Activity Type Code" class="form-control" :class="{ 'is-invalid': errors.reason_code }" v-model="reason.reason_code" ref="reason_code"/>
                                     <span v-if="errors.reason_code" class="invalid-feedback">{{ errors.reason_code[0] }}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">Reason</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Reason" class="form-control" :class="{ 'is-invalid': errors.reason_name }" v-model="reason.reason_name"/>
+                                    <label class="form-label">Activity Type</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Enter Activity Type" class="form-control" :class="{ 'is-invalid': errors.reason_name }" v-model="reason.reason_name"/>
                                     <span v-if="errors.reason_name" class="invalid-feedback">{{ errors.reason_name[0] }}</span>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
             <div :class="column">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Reasons</h6>
+                        <h6 class="card-title">Activity types</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
@@ -56,13 +56,13 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                        <th @click="sort('reason_code')">Reason Code
+                                        <th @click="sort('reason_code')">Activity Type Code
                                             <span>
                                                 <i v-if="meta.keyword=='reason_code' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='reason_code' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                        <th @click="sort('reason_name')">Reason
+                                        <th @click="sort('reason_name')">Activity Type
                                         
                                             <span>
                                                 <i v-if="meta.keyword=='reason_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>

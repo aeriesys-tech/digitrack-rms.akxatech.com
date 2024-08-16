@@ -23,7 +23,7 @@
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-12">
-                                    <label class="form-label">Cluster</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Area</label><span class="text-danger"> *</span>
                                     <search
                                         ref="cluster_id"
                                         :class="{ 'is-invalid': errors.cluster_id }"
@@ -31,7 +31,7 @@
                                         :initialize="plant.cluster_id"
                                         id="cluster_id"
                                         label="cluster_name"
-                                        placeholder="Select Cluster"
+                                        placeholder="Select Area"
                                         :data=" clusters"
                                         @input=" cluster => plant.cluster_id = cluster"
                                     >

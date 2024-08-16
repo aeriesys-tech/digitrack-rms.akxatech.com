@@ -3,9 +3,9 @@
     <div class="header-main px-3 px-lg-4">
 		<a id="menuSidebar" href="#" class="menu-link me-3 me-lg-4"><i class="ri-menu-2-fill"></i></a>
 		<div class="me-auto">
-			<!-- <h4 class="mt-1 text-dark">UltraTech Cement Limited</h4> -->
+			<h4 class="mt-1 text-dark">Refractory Management System</h4>
             <!-- <h4 class="mt-2 text-dark">{{ $store.getters?.user?.plant?.plant_name}}</h4> -->
-            <img src="../../src/assets/jsw.png" class="brand-image img-circle1 elevation-3 me-2" style="opacity: 0.8; width:200px;" />
+            <!-- <img src="../../src/assets/jsw.png" class="brand-image img-circle1 elevation-3 me-2" style="opacity: 0.8; width:200px;" /> -->
 		</div>
 
 		<div class="dropdown dropdown-profile ms-3 ms-xl-4 mt-4">

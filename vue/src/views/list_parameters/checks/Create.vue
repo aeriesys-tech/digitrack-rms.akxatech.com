@@ -7,7 +7,7 @@
                         <router-link to="/dashboard">Dashboard</router-link>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">List Parameters</a>
+                        <a href="javascript:void(0)">Masters</a>
                     </li>
                         <li class="breadcrumb-item" aria-current="page">
                         <router-link to="/checks">Checks</router-link></li>

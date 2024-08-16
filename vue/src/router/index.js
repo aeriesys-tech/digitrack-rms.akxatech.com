@@ -83,6 +83,8 @@ import ScheduledMaintenanceVue from "@/views/assets/ScheduledMaintenance.vue";
 import CreateAssetParameter from "@/views/asset_parameters/Create.vue"
 import AssetParameters from "@/views/asset_parameters/Index.vue";
 
+
+
 const routes = [
   {
     path: "/",
@@ -143,7 +145,7 @@ const routes = [
     component: SpareTypes,
   },
   {
-    path: "/reasons",
+    path: "/activity_types",
     name: "Reason",
     component: ReasonVue,
   },
@@ -156,7 +158,7 @@ const routes = [
     component: Section,
   },
   {
-    path: "/clusters",
+    path: "/areas",
     name: "Cluster",
     component: ClusterVue,
   },
@@ -397,7 +399,8 @@ const routes = [
     path: "/upcomingjobs",
     name: "UpcomingJobs.Index",
     component: UpcomingJobs,
-  }
+  },
+
 ]
 
 const router = createRouter({

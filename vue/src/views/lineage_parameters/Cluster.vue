@@ -8,28 +8,28 @@
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0)">Lineage Parameters</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Clusters</li>
+                <li class="breadcrumb-item active" aria-current="page">Areas</li>
             </ol>
-            <h4 class="main-title mb-2">Clusters</h4>
+            <h4 class="main-title mb-2">Areas</h4>
         </div> 
         <div class="row g-2">
             <div class="col-4" v-can="'clusters.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add Cluster</h6>
-                            <h6 class="card-title" v-else>Update Cluster</h6>
+                            <h6 class="card-title" v-if="status">Add Area</h6>
+                            <h6 class="card-title" v-else>Update Area</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-12">
-                                    <label class="form-label">Cluster Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Cluster Code" class="form-control" :class="{ 'is-invalid': errors.cluster_code }" v-model="cluster.cluster_code" ref="cluster_code"/>
+                                    <label class="form-label">Area Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Area Code" class="form-control" :class="{ 'is-invalid': errors.cluster_code }" v-model="cluster.cluster_code" ref="cluster_code"/>
                                     <span v-if="errors.cluster_code" class="invalid-feedback">{{ errors.cluster_code[0] }}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">Cluster Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter cluster name" class="form-control" :class="{ 'is-invalid': errors.cluster_name }" v-model="cluster.cluster_name"/>
+                                    <label class="form-label">Area Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Enter Area name" class="form-control" :class="{ 'is-invalid': errors.cluster_name }" v-model="cluster.cluster_name"/>
                                     <span v-if="errors.cluster_name" class="invalid-feedback">{{ errors.cluster_name[0] }}</span>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
             <div :class="column">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Clusters</h6>
+                        <h6 class="card-title">Areas</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
@@ -56,13 +56,13 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                        <th @click="sort('cluster_code')">Cluster Code
+                                        <th @click="sort('cluster_code')">Area Code
                                             <span>
                                                 <i v-if="meta.keyword=='cluster_code' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='cluster_code' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                        <th @click="sort('cluster_name')">Cluster Name
+                                        <th @click="sort('cluster_name')">Area Name
                                         
                                             <span>
                                                 <i v-if="meta.keyword=='cluster_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
