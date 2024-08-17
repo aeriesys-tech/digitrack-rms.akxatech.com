@@ -6,19 +6,21 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <router-link to="/dashboard">Dashboard</router-link></li>
                             <li class="breadcrumb-item" aria-current="page">
-                                <a href="javascript:void(0)">Asset Parameters</a></li>
+                                <a href="javascript:void(0)">Attributes</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a href="javascript:void(0)">Asset Attributes</a></li>
                     </ol>
-                    <h4 class="main-title mb-0">Asset Parameters</h4>
+                    <h4 class="main-title mb-0">Asset Attributes</h4>
                 </div>
                 <!-- v-can="'asset_parameters.create'" -->
-                <router-link to="/asset_parameters/create" class="btn btn-primary" style="float: right;" v-can="'assetParameters.create'"><i
-                        class="ri-list-check"></i> ADD Asset Parameter</router-link>
+                <router-link to="/asset_attributes/create" class="btn btn-primary" style="float: right;" v-can="'assetParameters.create'"><i
+                        class="ri-list-check"></i> ADD ASSET ATTRIBUTE</router-link>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title">AssetParameters</h6>
+                            <h6 class="card-title">Asset Attributes</h6>
                         </div>
                         <div class="card-body">
                             <input class="form-control form-control-sm mb-2" type="text"

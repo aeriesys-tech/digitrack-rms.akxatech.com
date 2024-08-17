@@ -38,12 +38,14 @@
                                         <label class="form-label">Field Type</label><span class="text-danger"> *</span>
                                         <select class="form-control" :class="{ 'is-invalid': errors.field_type}" v-model="check.field_type">
                                             <option value="">Select Field Type</option>
-                                            <option value="Text">Text</option>
+                                            <option value="Text">Short Text</option>
                                             <option value="Number">Number</option>
-                                            <option value="Text Area">Text Area</option>
+                                            <option value="Text Area">Long Text</option>
                                             <option value="Date">Date</option>
                                             <option value="Date & Time">Date & Time</option>
-                                            <option value="Select">Select</option>
+                                            <option value="Select">Dropdown</option>
+                                            <option value="Color">Color</option>
+                                            <option value="File">File</option>
                                         </select> 
                                         <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                     </div>

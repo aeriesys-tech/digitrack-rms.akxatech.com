@@ -6,24 +6,24 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <router-link to="/dashboard">Dashboard</router-link></li>
                             <li class="breadcrumb-item" aria-current="page">
-                                <a href="javascript:void(0)">Asset Parameter</a></li>
+                                <a href="javascript:void(0)">Attributes</a></li>
                             <li class="breadcrumb-item" aria-current="page">
-                            <router-link to="/asset_parameters">Asset Parameters</router-link></li>
-                        <li class="breadcrumb-item " aria-current="page" v-if="status">New Asset Parameter</li>
-                        <li class="breadcrumb-item active" aria-current="page" v-else>Update Asset Parameter</li>
+                            <router-link to="/asset_attributes">Asset Attributes</router-link></li>
+                        <li class="breadcrumb-item " aria-current="page" v-if="status">New Asset Attribute</li>
+                        <li class="breadcrumb-item active" aria-current="page" v-else>Update Asset Attribute</li>
                     </ol>
-                    <h4 class="main-title mb-0">Asset Parameter</h4>
+                    <h4 class="main-title mb-0">Asset Attribute</h4>
                 </div>
-                <router-link to="/asset_parameters"  v-can="'assetParameters.create'" type="submit" class="btn btn-primary" style="float: right;"><i
-                        class="ri-list-check"></i> ASSET PARAMETERS</router-link>
+                <router-link to="/asset_attributes"  v-can="'assetParameters.create'" type="submit" class="btn btn-primary" style="float: right;"><i
+                        class="ri-list-check"></i> ASSET ATTRIBUTES</router-link>
             </div>
             <div class="row">
                 <div class="col-12">
                     <form @submit.prevent="submitForm">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">New Asset Parameter</h6>
-                            <h6 class="card-title" v-else>Update Asset Parameter</h6>
+                            <h6 class="card-title" v-if="status">New Asset Attribute</h6>
+                            <h6 class="card-title" v-else>Update Asset Attribute</h6>
                         </div>
                         <div class="card-body ">
                             <div class="row g-2">

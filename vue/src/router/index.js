@@ -84,6 +84,8 @@ import CreateAssetParameter from "@/views/asset_parameters/Create.vue"
 import AssetParameters from "@/views/asset_parameters/Index.vue";
 
 
+import Test from "@/views/Test.vue";
+
 
 const routes = [
   {
@@ -366,18 +368,18 @@ const routes = [
 
   //Asset Parameters
   {
-    path: "/asset_parameters",
+    path: "/asset_attributes",
     name: "AssetParameters.Index",
     component: AssetParameters,
   },
   {
-    path: "/asset_parameters/create",
+    path: "/asset_attributes/create",
     name: "AssetParameters.Create",
     component: CreateAssetParameter,
   },
 
   {
-    path: "/asset_parameters/:asset_parameter_id/edit",
+    path: "/asset_attributes/:asset_attribute_id/edit",
     name: "AssetParameters.Edit",
     component: CreateAssetParameter,
   },
@@ -395,11 +397,126 @@ const routes = [
     component: Pendings,
   },
 
+
+
+
   {
-    path: "/upcomingjobs",
-    name: "UpcomingJobs.Index",
-    component: UpcomingJobs,
+    path: "/data_source_type",
+    name: "DataSourceType",
+    component:Test,
   },
+  {
+    path: "/break_down_type",
+    name: "BreakDownType",
+    component:Test,
+  },
+  {
+    path: "/access_type",
+    name: "AccessType",
+    component:Test,
+  },
+  {
+    path: "/variable_type",
+    name: "VariableType",
+    component:Test,
+  },
+
+  {
+    path: "/asset_attributes",
+    name: "AssetAttributes",
+    component:Test,
+  },
+  {
+    path: "/spre_attributes",
+    name: "SpareAttributes",
+    component:Test,
+  },
+  {
+    path: "/data_source_attributes",
+    name: "DataSoutrceAttributes",
+    component:Test,
+  },
+  {
+    path: "/variable_attributes",
+    name: "VariableAttributes",
+    component:Test,
+  },
+  {
+    path: "/service_attributes",
+    name: "ServiceAttributes",
+    component:Test,
+  },
+  {
+    path: "/break_down_attributes",
+    name: "BreakDownAttributes",
+    component:Test,
+  },
+  {
+    path: "/variables",
+    name: "Variables",
+    component:Test,
+  },
+  {
+    path: "/data_sources",
+    name: "DataSources",
+    component:Test,
+  },
+  {
+    path: "/break_down_lists",
+    name: "BreakDownLists",
+    component:Test,
+  },
+  {
+    path: "/process_registers",
+    name: "ProcessRegisters",
+    component:Test,
+  },
+  {
+    path: "/spare_registers",
+    name: "SpareRegisters",
+     component:Test,
+  },
+  {
+    path: "/qc_registers",
+    name: "QCRegisters",
+     component:Test,
+  },
+  {
+    path: "/asset_details",
+    name: "AssetDetails",
+     component:Test,
+  },
+  {
+    path: "/spare_compaign",
+    name: "SpareCompaingn",
+     component:Test,
+  },
+  {
+    path: "/compliance",
+    name: "Compliance",
+     component:Test,
+  },
+  {
+    path: "/deviations_review",
+    name: "Deviations",
+     component:Test,
+  },
+  {
+    path: "/alerts",
+    name: "Alerts",
+     component:Test,
+  },
+  {
+    path: "/asset_life",
+    name: "AssetLife",
+     component:Test,
+  },
+  {
+    path: "/upcoming_repairs",
+    name: "UpcomingRepairs",
+     component:Test,
+  },
+
 
 ]
 
