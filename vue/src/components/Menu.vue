@@ -75,7 +75,7 @@
                         <router-link to="/break_down_type" v-bind:class="{ active: $route.path === '/break_down_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Break Down Types</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/access_type" v-bind:class="{ active: $route.path === '/access_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Access Types</span></router-link>
+                        <router-link to="/access_type" v-bind:class="{ active: $route.path === '/access_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Accessory Types</span></router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/variable_type" v-bind:class="{ active: $route.path === '/variable_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Variable Types</span></router-link>
