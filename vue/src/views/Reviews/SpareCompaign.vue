@@ -31,7 +31,7 @@
                                 <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">Spare</label>
+                                <label class="form-label">Analysis</label>
                                 <select class="form-control" :class="{ 'is-invalid': errors.spare_id }" v-model="spare.spare_id">
                                     <option value="">Select Spare</option>
                                     <option value="Wall Contour">Wall Contour</option>

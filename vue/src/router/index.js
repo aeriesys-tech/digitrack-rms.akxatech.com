@@ -397,6 +397,11 @@ const routes = [
     component: Pendings,
   },
 
+  {
+    path: "/UpcomingJobs",
+    name: "UpcomingJobs.Index",
+    component: UpcomingJobs,
+  },
 
 
 
