@@ -97,7 +97,7 @@
                                     <tr class="text-center" style="background-color: #9b9b9b; color: white;">
                                         <th>#</th>
                                         <th @click="sort('cluster_id')">
-                                            Cluster
+                                            Area
                                             <span>
                                                 <i v-if="meta.keyword=='cluster_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='cluster_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
