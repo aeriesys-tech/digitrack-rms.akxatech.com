@@ -194,7 +194,7 @@
             },
             editAssetParameter(assetparameter) {
                 // this.$store.commit("setCurrentPage", this.meta.page)
-                this.$router.push("/asset_parameters/" + assetparameter.asset_parameter_id + "/edit");
+                this.$router.push("/asset_attributes/" + assetparameter.asset_parameter_id + "/edit");
             },
          
             deleteAssetParameter(assetparameter) {

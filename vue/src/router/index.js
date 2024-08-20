@@ -379,7 +379,7 @@ const routes = [
   },
 
   {
-    path: "/asset_attributes/:asset_attribute_id/edit",
+    path: "/asset_attributes/:asset_parameter_id/edit",
     name: "AssetParameters.Edit",
     component: CreateAssetParameter,
   },
