@@ -52,33 +52,41 @@
 		</div>
 		<div class="col-sm-3">
 			<router-link to="/Deviations">
-				<div style="display: flex; justify-content: center;">
-					<span style="position: absolute; margin-top: 40px;" class="h2 text-white">{{ total_deviations }}</span>
-					<span style="margin-top: 42%;" class="h5 text-white">DEVIATIONS</span>
+				<div style="position: relative; width: 200px; height: 150px; display: flex; justify-content: center; align-items: center; text-align: center;  margin-left: 40px;">
 					<img src="assets/images/blue_triangle.png" width="200px" height="150px" alt="" style="z-index: -1; position: absolute;">
+					<div style="position: relative; z-index: 1; margin-top: 10px;">
+						<span class="h2 text-white" style="display: block;">{{ total_deviations }}</span>
+						<span class="h5 text-white">DEVIATIONS</span>
+					</div>
 				</div>
 			</router-link>		
 		</div>
 		
 		<div class="col-sm-3">
 			<router-link to="/Pendings">
-				<div style="display: flex; justify-content: center;">
-					<span style="position: absolute; margin-top: 40px;" class="h2 text-white">{{ total_pending_services }}</span>
-					<span style="margin-top: 42%;" class="h5 text-white">PENDINGS/ </span><br>
-					<span style="margin-top: 42%;" class="h5 text-white">OVERDUES</span>
+				<div style="position: relative; width: 200px; height: 150px; display: flex; justify-content: center; align-items: center; text-align: center; margin-left: 40px;">
 					<img src="assets/images/pending_triangle.png" width="200px" height="150px" alt="" style="z-index: -1; position: absolute;">
+					<div style="position: relative; z-index: 1; margin-top: 10px;">
+						<span class="h2 text-white" style="display: block;">{{ total_pending_services }}</span>
+						<span class="h5 text-white">PENDINGS / </span><br>
+						<span class="h5 text-white">OVERDUES</span>
+					</div>
+					
 				</div>
 			</router-link>		
 		</div>
 
 		<div class="col-sm-3">
 			<router-link to="/UpcomingJobs">
-				<div style="display: flex; justify-content: center;">
-					<span style="position: absolute; margin-top: 40px;" class="h2 text-white">{{ total_upcoming_jobs }}</span>
-					<span style="margin-top: 40%;" class="h5 text-white">UPCOMING JOBS</span><br>
-					<img src="assets/images/purple_triangle.png" width="200px" height="150px" alt="" style="z-index: -1; position: absolute;">
+				<div style="position: relative; width: 200px; height: 150px; display: flex; justify-content: center; align-items: center; text-align: center;  margin-left: 40px;">
+				<img src="assets/images/purple_triangle.png" alt="" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
+				
+				<div style="position: relative; z-index: 1; margin-top: 10px;">
+					<span class="h2 text-white" style="display: block;">{{ total_upcoming_jobs }}</span>
+					<span class="h5 text-white">UPCOMING JOBS</span>
 				</div>
-			</router-link>		
+				</div>
+			</router-link>
 		</div>
 	</div>
 </div>
