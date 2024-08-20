@@ -84,8 +84,8 @@ import CreateAssetParameter from "@/views/asset_parameters/Create.vue"
 import AssetParameters from "@/views/asset_parameters/Index.vue";
 
 
-import Test from "@/views/Test.vue";
-
+import Test from "@/views/Test.vue";SpareCompaingn
+import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
 
 const routes = [
   {
@@ -489,7 +489,7 @@ const routes = [
   {
     path: "/spare_compaign",
     name: "SpareCompaingn",
-     component:Test,
+     component:SpareCompaingn,
   },
   {
     path: "/compliance",
