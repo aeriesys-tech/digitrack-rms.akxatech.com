@@ -181,6 +181,7 @@
 </template>
 
 <script>
+import moment from 'moment';
     export default {
         components: {},
         data() {
@@ -197,7 +198,10 @@
             };
         },
 
-        mounted() {},
+        mounted() {
+            this.spare.from_date = moment().format('yyyy-MM-DD')
+            this.spare.to_date = moment().add(1, 'day').format('yyyy-MM-DD')
+        },
 
         methods: {
             submit() {
