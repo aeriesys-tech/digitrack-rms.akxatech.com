@@ -10,7 +10,7 @@ class DataSourceType extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'data_source_type';
+    protected $table = 'data_source_types';
 
     protected $fillable = [
         'data_source_type_code',
