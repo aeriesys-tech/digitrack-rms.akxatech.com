@@ -8,17 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('consents', function (Blueprint $table) {
-            $table->id('consent_id');
-            $table->foreignId('user_id');
-            $table->boolean('consent');
+        Schema::create('accessory_types', function (Blueprint $table) {
+            $table->id('accessory_type_id');
+            $table->string('accessory_type_code');
+            $table->string('accessory_type_name');
             $table->timestamps();
-            $table->foreign('user_id')->references('user_id')->on('users');
+            $table->softDeletes();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('consents');
+        Schema::dropIfExists('accessory_types');
     }
 };
