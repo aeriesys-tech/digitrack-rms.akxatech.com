@@ -30,6 +30,10 @@ use App\Http\Controllers\AssetParameterController;
 use App\Http\Controllers\AssetServiceController;
 use App\Http\Controllers\FrequencyController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\BreakDownTypeController;
+use App\Http\Controllers\DataSourceTypeController;
+use App\Http\Controllers\FunctionalController;
+use App\Http\Controllers\AccessoryTypeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -257,4 +261,32 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getDepartment',[DepartmentController::class, 'getDepartment']);
     Route::post('getDepartments',[DepartmentController::class, 'getDepartments']);
     Route::post('deleteDepartment',[DepartmentController::class, 'deleteDepartment']);
+
+    Route::post('paginateBreakDownTypes',[BreakDownTypeController::class, 'paginateBreakDownTypes']);
+    Route::post('addBreakDownType',[BreakDownTypeController::class, 'addBreakDownType']);
+    Route::post('updateBreakDownType',[BreakDownTypeController::class, 'updateBreakDownType']);
+    Route::post('getBreakDownType',[BreakDownTypeController::class, 'getBreakDownType']);
+    Route::post('getBreakDownTypes',[BreakDownTypeController::class, 'getBreakDownTypes']);
+    Route::post('deleteBreakDownType',[BreakDownTypeController::class, 'deleteBreakDownType']);
+
+    Route::post('paginateDataSourceTypes',[DataSourceTypeController::class, 'paginateDataSourceTypes']);
+    Route::post('addDataSourceType',[DataSourceTypeController::class, 'addDataSourceType']);
+    Route::post('updateDataSourceType',[DataSourceTypeController::class, 'updateDataSourceType']);
+    Route::post('getDataSourceType',[DataSourceTypeController::class, 'getDataSourceType']);
+    Route::post('getDataSourceTypes',[DataSourceTypeController::class, 'getDataSourceTypes']);
+    Route::post('deleteDataSourceType',[DataSourceTypeController::class, 'deleteDataSourceType']);
+
+    Route::post('paginateFunctionals',[FunctionalController::class, 'paginateFunctionals']);
+    Route::post('addFunctional',[FunctionalController::class, 'addFunctional']);
+    Route::post('updateFunctional',[FunctionalController::class, 'updateFunctional']);
+    Route::post('getFunctional',[FunctionalController::class, 'getFunctional']);
+    Route::post('getFunctionals',[FunctionalController::class, 'getFunctionals']);
+    Route::post('deleteFunctional',[FunctionalController::class, 'deleteFunctional']);
+
+    Route::post('paginateAccessoryTypes',[AccessoryTypeController::class, 'paginateAccessoryTypes']);
+    Route::post('addAccessoryType',[AccessoryTypeController::class, 'addAccessoryType']);
+    Route::post('updateAccessoryType',[AccessoryTypeController::class, 'updateAccessoryType']);
+    Route::post('getAccessoryType',[AccessoryTypeController::class, 'getAccessoryType']);
+    Route::post('getAccessoryTypes',[AccessoryTypeController::class, 'getAccessoryTypes']);
+    Route::post('deleteAccessoryType',[AccessoryTypeController::class, 'deleteAccessoryType']);
 });
