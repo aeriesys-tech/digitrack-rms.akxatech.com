@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssetParameterValue extends Model
+class AssetAttributeValue extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'asset_parameter_id',
+        'asset_attribute_id',
         'asset_id',
         'field_value'
     ];
 
-    protected $primaryKey = 'asset_parameter_value_id';
+    protected $primaryKey = 'asset_attribute_value_id';
 
-    public function AssetParameter()
+    public function AssetAttribute()
     {
-        return $this->hasMany(AssetParameter::class, 'asset_parameter_id', 'asset_parameter_id');
+        return $this->hasMany(AssetAttribute::class, 'asset_attribute_id', 'asset_attribute_id');
     }
 }

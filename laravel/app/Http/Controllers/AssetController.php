@@ -7,17 +7,17 @@ use App\Http\Resources\AssetResource;
 use App\Models\Asset;
 use App\Models\AssetType;
 use App\Models\WattRating;
-use App\Models\AssetParameterType;
+use App\Models\AssetAttributeType;
 use App\Models\Section;
 use App\Models\Plant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Milon\Barcode\DNS2D;
 use PDF;
-use App\Http\Resources\AssetParameterResource;
-use App\Models\AssetParameter;
-use App\Models\AssetParameterValue;
-use App\Http\Resources\AssetParameterValueResource;
+use App\Http\Resources\AssetAttributeResource;
+use App\Models\AssetAttribute;
+use App\Models\AssetAttributeValue;
+use App\Http\Resources\AssetAttributeValueResource;
 
 class AssetController extends Controller
 {
@@ -69,9 +69,9 @@ class AssetController extends Controller
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
-            'asset_parameters' => 'required|array',
-            'asset_parameters.*.asset_parameter_id' => 'required|exists:asset_parameters,asset_parameter_id',
-            'asset_parameters.*.field_value' => 'required|string',
+            'asset_attributes' => 'required|array',
+            'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
+            'asset_attributes.*.field_value' => 'required|string',
             'longitude' => 'nullable|sometimes',
             'latitude' => 'nullable|sometimes',
             'department_id' => 'nullable|exists:departments,department_id',
@@ -82,25 +82,25 @@ class AssetController extends Controller
 
         
         $asset = Asset::create($data);
-        $asset_parameter_initial = AssetParameter::whereHas('AssetParameterTypes', function($que) use($request){
+        $asset_attribute_initial = AssetAttribute::whereHas('AssetattributeTypes', function($que) use($request){
             $que->where('asset_type_id', $request->asset_type_id);
         })->get();
 
-        foreach ($asset_parameter_initial as $parameter) {
-            AssetParameterValue::create([
+        foreach ($asset_attribute_initial as $attribute) {
+            AssetAttributeValue::create([
                 'asset_id' => $asset->asset_id,
-                'asset_parameter_id' => $parameter['asset_parameter_id'],
-                'field_value' => $parameter['field_value'] ?? '',
+                'asset_attribute_id' => $attribute['asset_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
 
-        $update_assets = AssetParameterValue::where('asset_id',  $asset->asset_id)->get();
+        $update_assets = AssetAttributeValue::where('asset_id',  $asset->asset_id)->get();
 
         foreach ($update_assets as $update_asset) {
-            foreach ($data['asset_parameters'] as $asset_parameter) {
-                if ($asset_parameter['asset_parameter_id'] == $update_asset['asset_parameter_id']) {
+            foreach ($data['asset_attributes'] as $asset_attribute) {
+                if ($asset_attribute['asset_attribute_id'] == $update_asset['asset_attribute_id']) {
                     $update_asset->update([
-                        'field_value' => $asset_parameter['field_value'] ?? '',
+                        'field_value' => $asset_attribute['field_value'] ?? '',
                     ]);
                 }
             }
@@ -133,15 +133,15 @@ class AssetController extends Controller
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
 
-        $asset_parameter_value = AssetParameterValue::where('asset_id', $request->asset_id)->get('asset_parameter_id');
+        $asset_attribute_value = AssetAttributeValue::where('asset_id', $request->asset_id)->get('asset_attribute_id');
         
-        $asset_parameter_initial = AssetParameter::whereNotIn('asset_parameter_id', $asset_parameter_value)->get();
+        $asset_attribute_initial = AssetAttribute::whereNotIn('asset_attribute_id', $asset_attribute_value)->get();
 
-        foreach ($asset_parameter_initial as $parameter) {
-            AssetParameterValue::create([
+        foreach ($asset_attribute_initial as $attribute) {
+            AssetAttributeValue::create([
                 'asset_id' => $request->asset_id,
-                'asset_parameter_id' => $parameter['asset_parameter_id'],
-                'field_value' => $parameter['field_value'] ?? '',
+                'asset_attribute_id' => $attribute['asset_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
 
@@ -167,8 +167,8 @@ class AssetController extends Controller
             'asset_code' => 'required|string|unique:assets,asset_code,' . $request->asset_id . ',asset_id',
             'asset_name' => 'required|string|unique:assets,asset_name,' . $request->asset_id . ',asset_id',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
-            'asset_parameters' => 'required|array',
-            'asset_parameters.*.asset_parameter_id' => 'required|exists:asset_parameters,asset_parameter_id',
+            'asset_attributes' => 'required|array',
+            'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
             'longitude' => 'nullable|sometimes',
             'latitude' => 'nullable|sometimes',
             'department_id' => 'nullable|exists:departments,department_id',
@@ -181,15 +181,15 @@ class AssetController extends Controller
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
     
-        foreach ($request->asset_parameters as $parameter) 
+        foreach ($request->asset_attributes as $attribute) 
         {
-            $fieldValue = $parameter['field_value'] ?? $parameter['asset_parameter_value']['field_value'] ?? null;
+            $fieldValue = $attribute['field_value'] ?? $attribute['asset_attribute_value']['field_value'] ?? null;
     
             if ($fieldValue !== null) {
-                AssetParameterValue::updateOrCreate(
+                AssetAttributeValue::updateOrCreate(
                     [
                         'asset_id' => $asset->asset_id,
-                        'asset_parameter_id' => $parameter['asset_parameter_id'],
+                        'asset_attribute_id' => $attribute['asset_attribute_id'],
                     ],
                     [
                         'field_value' => $fieldValue,
@@ -229,11 +229,11 @@ class AssetController extends Controller
             'asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
 
-        $asset_type = AssetParameter::whereHas('AssetParameterTypes', function($que) use($request){
+        $asset_type = AssetAttribute::whereHas('AssetAttributeTypes', function($que) use($request){
             $que->where('asset_type_id', $request->asset_type_id);
         })->get();
 
-        return AssetParameterResource::collection($asset_type);
+        return AssetAttributeResource::collection($asset_type);
     } 
 
     public function getAssetQRCode(Request $request)
