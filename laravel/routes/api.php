@@ -35,6 +35,7 @@ use App\Http\Controllers\DataSourceTypeController;
 use App\Http\Controllers\FunctionalController;
 use App\Http\Controllers\AccessoryTypeController;
 use App\Http\Controllers\VariableTypeController;
+use App\Http\Controllers\SpareAttributeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -297,4 +298,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getVariableType',[VariableTypeController::class, 'getVariableType']);
     Route::post('updateVariableType',[VariableTypeController::class, 'updateVariableType']);
     Route::post('deleteVariableType',[VariableTypeController::class, 'deleteVariableType']);
+
+    Route::post('paginateSpareAttributes',[SpareAttributeController::class, 'paginateSpareAttributes']);
+    Route::post('addSpareAttribute',[SpareAttributeController::class, 'addSpareAttribute']);
+    Route::post('updateSpareAttribute',[SpareAttributeController::class, 'updateSpareAttribute']);
+    Route::post('getSpareAttribute',[SpareAttributeController::class, 'getSpareAttribute']);
+    Route::post('getSpareAttributes',[SpareAttributeController::class, 'getSpareAttributes']);
+    Route::post('deleteSpareAttribute',[SpareAttributeController::class, 'deleteSpareAttribute']);
 });
