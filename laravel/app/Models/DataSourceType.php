@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Cluster extends Model
+class DataSourceType extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'data_source_type';
+
     protected $fillable = [
-        'cluster_code',
-        'cluster_name'
+        'data_source_type_code',
+        'data_source_type_name'
     ];
 
-    protected $primaryKey = 'cluster_id';
+    protected $primaryKey = 'data_source_type_id';
 }

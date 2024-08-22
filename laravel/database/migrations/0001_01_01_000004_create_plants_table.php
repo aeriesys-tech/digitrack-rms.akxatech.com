@@ -12,16 +12,16 @@ return new class extends Migration
             $table->id('plant_id');
             $table->string('plant_code',100);
             $table->string('plant_name',100);
-            $table->foreignId('cluster_id');
+            $table->foreignId('area_id');
             $table->timestamps();
-            $table->foreign('cluster_id')->references('cluster_id')->on('clusters');
+            $table->foreign('area_id')->references('area_id')->on('areas');
             $table->softDeletes();
         });
 
         DB::table('plants')->insert([
             'plant_code' => 'JSW Steal Dolvi',
             'plant_name' => 'JSW Steal Dolvi',
-            'cluster_id' => 1
+            'area_id' => 1
         ]);
     }
 
