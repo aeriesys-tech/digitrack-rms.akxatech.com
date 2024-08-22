@@ -15,7 +15,7 @@ class Plant extends Model
     protected $fillable = [
         'plant_code',
         'plant_name',
-        'cluster_id',
+        'area_id',
         'latitude',
         'longitude',
         'radius'
@@ -23,8 +23,8 @@ class Plant extends Model
 
     protected $primaryKey = 'plant_id';
 
-    public function Cluster()
+    public function Area()
     {
-        return $this->belongsTo(Cluster::class, 'cluster_id');
+        return $this->belongsTo(Area::class, 'area_id');
     }
 }

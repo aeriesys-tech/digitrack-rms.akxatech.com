@@ -31,8 +31,8 @@ class PlantController extends Controller
         {
             $query->where('plant_code', 'like', "%$request->search%")
                 ->orWhere('plant_name', 'like', "$request->search%")
-                ->orWherehas('Cluster', function($quer) use($request){
-                    $quer->where('cluster_name', 'like', "%$request->search%");
+                ->orWherehas('Area', function($quer) use($request){
+                    $quer->where('area_name', 'like', "%$request->search%");
                 });
         }
         $plant = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
@@ -50,7 +50,7 @@ class PlantController extends Controller
         $data = $request->validate([
             'plant_code' => 'required|string|unique:plants,plant_code',
             'plant_name' => 'required|string|unique:plants,plant_name',
-            'cluster_id' => 'required|exists:clusters,cluster_id',
+            'area_id' => 'required|exists:areas,area_id',
             'latitude' => 'nullable|sometimes',
             'longitude' => 'nullable|sometimes',
             'radius' => 'nullable|sometimes'
@@ -76,7 +76,7 @@ class PlantController extends Controller
             'plant_id' => 'required|exists:plants,plant_id',
             'plant_code' => 'required|string|unique:plants,plant_code,'.$request->plant_id.',plant_id',
             'plant_name' => 'required|string|unique:plants,plant_name,'.$request->plant_id.',plant_id',
-            'cluster_id' => 'required|exists:clusters,cluster_id',
+            'area_id' => 'required|exists:areas,area_id',
             'latitude' => 'nullable|sometimes',
             'longitude' => 'nullable|sometimes',
             'radius' => 'nullable|sometimes'
@@ -84,7 +84,7 @@ class PlantController extends Controller
 
         $plant = Plant::where('plant_id', $request->plant_id)->first();
         $plant->update($data);
-        return response()->json(["message" => "Cluster Updated Successfully"]);  
+        return response()->json(["message" => "Plant Updated Successfully"]);  
     }
     
     public function deletePlant(Request $request)
