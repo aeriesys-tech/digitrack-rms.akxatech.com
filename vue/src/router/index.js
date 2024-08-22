@@ -29,11 +29,12 @@ import CreateUserCheck from "@/views/registers/check_register/user_checks/Create
 import ViewUserCheck from "@/views/registers/check_register/user_checks/View.vue";
 
 // Lineage parameter
-import ClusterVue from "@/views/lineage_parameters/Cluster.vue";
+import Area from "@/views/lineage_parameters/Area.vue";
 import PlantsVue from "@/views/lineage_parameters/Plants.vue";
 import Section from "@/views/lineage_parameters/Section.vue";
 import Frequency from "@/views/lineage_parameters/Frequency.vue";
 import Department from "@/views/lineage_parameters/Department.vue";
+import Functional from "@/views/lineage_parameters/Functional.vue";
 
 //List params
 
@@ -68,7 +69,11 @@ import EquipmentTypeVue from "@/views/type_parameters/EquipmentType.vue";
 import AssetTypeVue from "@/views/type_parameters/AssetType.vue";
 import ServiceTypeVue from "@/views/type_parameters/ServiceType.vue";
 import SpareTypes from "@/views/type_parameters/SpareTypes.vue";
-import ReasonVue from "@/views/type_parameters/Reason.vue";
+import ActivityTypes from "@/views/type_parameters/ActivityTypes.vue";
+import DataSourceTypes from "@/views/type_parameters/DataSourceType.vue";
+import BreakDownTypes from "@/views/type_parameters/BreakDownType.vue";
+import AccessoryTypes from "@/views/type_parameters/AccessoryTypes.vue";
+import VariableTypes from "@/views/type_parameters/VariableTypes.vue";
 
 //Spares
 
@@ -80,8 +85,8 @@ import ScheduledMaintenanceVue from "@/views/assets/ScheduledMaintenance.vue";
 //import Voltage from ';
 
 //Asset Parameters
-import CreateAssetParameter from "@/views/asset_parameters/Create.vue"
-import AssetParameters from "@/views/asset_parameters/Index.vue";
+import CreateAssetAttribute from "@/views/attributes/asset_attributes/Create.vue"
+import AssetAttributes from "@/views/attributes/asset_attributes/Index.vue";
 
 
 import Test from "@/views/Test.vue";SpareCompaingn
@@ -148,10 +153,29 @@ const routes = [
   },
   {
     path: "/activity_types",
-    name: "Reason",
-    component: ReasonVue,
+    name: "ActivityTypes",
+    component: ActivityTypes,
   },
-  
+  {
+    path: "/data_source_type",
+    name: "DataSourceTypes",
+    component: DataSourceTypes,
+  },
+  {
+    path: "/break_down_type",
+    name: "BreakDownTypes",
+    component: BreakDownTypes,
+  },
+  {
+    path: "/accessory_type",
+    name: "AccessoryTypes",
+    component:AccessoryTypes,
+  },
+  {
+    path: "/variable_type",
+    name: "VariableTypes",
+    component:VariableTypes,
+  },
 
   // configuration
   {
@@ -161,8 +185,8 @@ const routes = [
   },
   {
     path: "/areas",
-    name: "Cluster",
-    component: ClusterVue,
+    name: "Area",
+    component: Area,
   },
   {
     path: "/plants",
@@ -180,6 +204,12 @@ const routes = [
     path: "/department",
     name: "Department",
     component: Department,
+  },
+
+  {
+    path: "/functional",
+    name: "Functional",
+    component: Functional,
   },
 
 
@@ -369,19 +399,19 @@ const routes = [
   //Asset Parameters
   {
     path: "/asset_attributes",
-    name: "AssetParameters.Index",
-    component: AssetParameters,
+    name: "AssetAttributes.Index",
+    component: AssetAttributes,
   },
   {
     path: "/asset_attributes/create",
-    name: "AssetParameters.Create",
-    component: CreateAssetParameter,
+    name: "AssetAttributes.Create",
+    component: CreateAssetAttribute,
   },
 
   {
     path: "/asset_attributes/:asset_parameter_id/edit",
-    name: "AssetParameters.Edit",
-    component: CreateAssetParameter,
+    name: "AssetAttributes.Edit",
+    component: CreateAssetAttribute,
   },
 
   //Deviation
@@ -402,29 +432,8 @@ const routes = [
     name: "UpcomingJobs.Index",
     component: UpcomingJobs,
   },
-
-
-
-  {
-    path: "/data_source_type",
-    name: "DataSourceType",
-    component:Test,
-  },
-  {
-    path: "/break_down_type",
-    name: "BreakDownType",
-    component:Test,
-  },
-  {
-    path: "/access_type",
-    name: "AccessType",
-    component:Test,
-  },
-  {
-    path: "/variable_type",
-    name: "VariableType",
-    component:Test,
-  },
+ 
+  
 
   {
     path: "/asset_attributes",

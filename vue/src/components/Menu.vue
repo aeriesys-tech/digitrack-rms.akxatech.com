@@ -32,7 +32,7 @@
             <div class="nav-group" :class="{show:showLinage}" @click="showTab('LineageParameters')" v-if="permission('LineageParameters')">
                 <a href="javascript:void(0)" :style="{color:color}" class="nav-label"><i class="ri-equalizer-line icn"></i> Lineage parameters</a>
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item" v-can="'clusters.view'">
+                    <li class="nav-item">
                         <router-link to="/areas" v-bind:class="{ active: $route.path === '/areas' }" class="nav-link"><i class="ri-command-line"></i> <span>Areas</span></router-link>
                     </li>
                     <li class="nav-item" v-can="'plants.view'">
@@ -47,6 +47,9 @@
                     <li class="nav-item">
                         <router-link to="/department" v-bind:class="{ active: $route.path === '/department' }" class="nav-link"><i class="ri-government-line"></i> <span>Department</span></router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link to="/functional" v-bind:class="{ active: $route.path === '/functional' }" class="nav-link"><i class="ri-rfid-line"></i> <span>Functional</span></router-link>
+                    </li> 
                 </ul>
             </div>
 
@@ -75,7 +78,7 @@
                         <router-link to="/break_down_type" v-bind:class="{ active: $route.path === '/break_down_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Break Down Types</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/access_type" v-bind:class="{ active: $route.path === '/access_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Accessory Types</span></router-link>
+                        <router-link to="/accessory_type" v-bind:class="{ active: $route.path === '/accessory_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Accessory Types</span></router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/variable_type" v-bind:class="{ active: $route.path === '/variable_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Variable Types</span></router-link>
@@ -93,7 +96,7 @@
             <div class="nav-group" :class="{show:showAttributes}" @click="showTab('Attributes')">
                 <a href="javascript:void(0)" class="nav-label" :style="{color:AttributesColor}"><i class="ri-stack-fill icn"></i> Attributes</a>
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item" v-can="'assetParameters.view'">
+                    <li class="nav-item" >
                         <router-link to="/asset_attributes" v-bind:class="{ active: $route.path === '/asset_attributes' }" class="nav-link"><i class="ri-focus-line"></i> <span>Asset Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
@@ -369,7 +372,7 @@
                     tab == "/activity_types" ||
                     tab == "/data_source_type" ||
                     tab == "/break_down_type" ||
-                    tab == "/access_type" ||
+                    tab == "/accessory_type" ||
                     tab == "/variable_type"
                 ) {
                     this.typeParameterColor = "white !important";
