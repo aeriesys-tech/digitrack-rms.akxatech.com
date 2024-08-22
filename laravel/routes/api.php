@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ClusterController;
+use App\Http\Controllers\AreaController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\EquipmentTypeController;
@@ -34,6 +34,7 @@ use App\Http\Controllers\BreakDownTypeController;
 use App\Http\Controllers\DataSourceTypeController;
 use App\Http\Controllers\FunctionalController;
 use App\Http\Controllers\AccessoryTypeController;
+use App\Http\Controllers\VariableTypeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -71,12 +72,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateUser',[UserController::class, 'updateUser']);
     Route::post('deleteUser',[UserController::class, 'deleteUser']);
 
-    Route::post('paginateClusters',[ClusterController::class, 'paginateClusters']);
-    Route::post('getClusters', [ClusterController::class, 'getClusters']);
-    Route::post('addCluster',[ClusterController::class, 'addCluster']);
-    Route::post('getCluster',[ClusterController::class, 'getCluster']);
-    Route::post('updateCluster',[ClusterController::class, 'updateCluster']);
-    Route::post('deleteCluster',[ClusterController::class, 'deleteCluster']);
+    Route::post('paginateAreas',[AreaController::class, 'paginateAreas']);
+    Route::post('getAreas', [AreaController::class, 'getAreas']);
+    Route::post('addArea',[AreaController::class, 'addArea']);
+    Route::post('getArea',[AreaController::class, 'getArea']);
+    Route::post('updateArea',[AreaController::class, 'updateArea']);
+    Route::post('deleteArea',[AreaController::class, 'deleteArea']);
 
     Route::post('paginatePlants',[PlantController::class, 'paginatePlants']);
     Route::post('getPlants', [PlantController::class, 'getPlants']);
@@ -289,4 +290,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAccessoryType',[AccessoryTypeController::class, 'getAccessoryType']);
     Route::post('getAccessoryTypes',[AccessoryTypeController::class, 'getAccessoryTypes']);
     Route::post('deleteAccessoryType',[AccessoryTypeController::class, 'deleteAccessoryType']);
+
+    Route::post('paginateVariableTypes',[VariableTypeController::class, 'paginateVariableTypes']);
+    Route::post('getVariableTypes',[VariableTypeController::class, 'getVariableTypes']);
+    Route::post('addVariableType',[VariableTypeController::class, 'addVariableType']);
+    Route::post('getVariableType',[VariableTypeController::class, 'getVariableType']);
+    Route::post('updateVariableType',[VariableTypeController::class, 'updateVariableType']);
+    Route::post('deleteVariableType',[VariableTypeController::class, 'deleteVariableType']);
+
 });
