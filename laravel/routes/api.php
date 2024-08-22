@@ -297,5 +297,4 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getVariableType',[VariableTypeController::class, 'getVariableType']);
     Route::post('updateVariableType',[VariableTypeController::class, 'updateVariableType']);
     Route::post('deleteVariableType',[VariableTypeController::class, 'deleteVariableType']);
-
 });

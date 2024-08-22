@@ -32,6 +32,7 @@ class DataSourceTypeController extends Controller
             $query->where('data_source_type_code', 'like', "%$request->search%")
                 ->orWhere('data_source_type_name', 'like', "$request->search%");
         }
+        
         $data_source_type = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return DataSourceTypeResource::collection($data_source_type);
     }
