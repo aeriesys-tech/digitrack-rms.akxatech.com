@@ -5,17 +5,17 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AssetParameterResource extends JsonResource
+class AssetAttributeResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         $asset_types = [];
-        foreach($this->AssetParameterTypes as $AssetParameterType)
+        foreach($this->AssetAttributeTypes as $AssetAttributeType)
         {
-            array_push($asset_types, $AssetParameterType['asset_type_id']);
+            array_push($asset_types, $AssetAttributeType['asset_type_id']);
         }
         return [
-            'asset_parameter_id' => $this->asset_parameter_id,
+            'asset_attribute_id' => $this->asset_attribute_id,
         	'field_name' => $this->field_name,
 	        'display_name' => $this->display_name,
 	        'field_type' => $this->field_type, 
@@ -23,7 +23,7 @@ class AssetParameterResource extends JsonResource
 	        'field_length' => $this->field_length,
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
-	        'asset_parameter_types' => AssetParameterTypeResource::collection($this->AssetParameterTypes),
+	        'asset_attribute_types' => AssetAttributeTypeResource::collection($this->AssetAttributeTypes),
             'status' => $this->deleted_at?false:true,
             'asset_types' => $asset_types
         ];

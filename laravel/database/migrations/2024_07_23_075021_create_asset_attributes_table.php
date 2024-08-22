@@ -6,13 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('asset_parameters', function (Blueprint $table) {
-            $table->id('asset_parameter_id');
+        Schema::create('asset_attributes', function (Blueprint $table) {
+            $table->id('asset_attribute_id');
             $table->string('field_name', 100);
             $table->string('display_name', 100);
             $table->string('field_type', 50);
@@ -26,11 +23,8 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('asset_parameters');
+        Schema::dropIfExists('asset_attributes');
     }
 };

@@ -4,15 +4,10 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\AssetParameterValue;
+use App\Models\AssetAttributeValue;
 
-class AssetParameterVResource extends JsonResource
+class AssetAttributeVResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     protected $assetId;
 
     public function __construct($resource)
@@ -23,12 +18,12 @@ class AssetParameterVResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $asset_parameter_value = AssetParameterValue::where('asset_id', $this->assetId)
-            ->where('asset_parameter_id', $this->asset_parameter_id)
+        $asset_attribute_value = AssetAttributeValue::where('asset_id', $this->assetId)
+            ->where('asset_attribute_id', $this->asset_attribute_id)
             ->first();
 
         return [
-            'asset_parameter_id' => $this->asset_parameter_id,
+            'asset_attribute_id' => $this->asset_attribute_id,
         	'field_name' => $this->field_name,
 	        'display_name' => $this->display_name,
 	        'field_type' => $this->field_type, 
@@ -39,7 +34,7 @@ class AssetParameterVResource extends JsonResource
 	        // 'asset_parameter_types' => AssetParameterTypeResource::collection($this->AssetParameterTypes),
             'status' => $this->deleted_at?false:true,
             // 'asset_types' => $asset_types,
-            'asset_parameter_value' => $asset_parameter_value
+            'asset_attribute_value' => $asset_attribute_value
         ];
     }
 }

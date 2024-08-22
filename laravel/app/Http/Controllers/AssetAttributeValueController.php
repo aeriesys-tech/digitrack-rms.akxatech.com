@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\AssetParameterValue;
+use App\Models\AssetAttributeValue;
 use Illuminate\Http\Request;
-use App\Http\Resources\AssetParameterValueResource;
+use App\Http\Resources\AssetAttributeValueResource;
 
-class AssetParameterValueController extends Controller
+class AssetAttributeValueController extends Controller
 {
-    public function paginateAssetParameterValues(Request $request)
+    public function paginateAssetAttributeValues(Request $request)
     {
         $request->validate([
             'order_by' => 'required',
@@ -15,7 +15,7 @@ class AssetParameterValueController extends Controller
             'keyword' => 'required'
         ]);
 
-        $query = AssetParameterValue::query();
+        $query = AssetAttributeValue::query();
 
         if(isset($request->asset_code))
         {
@@ -32,21 +32,21 @@ class AssetParameterValueController extends Controller
                 ->orWhere('asset_name', 'like', "$request->search%");
         }
         $asset = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
-        return AssetParameterValueResource::collection($asset);
+        return AssetAttributeValueResource::collection($asset);
     }
 
-    public function addAssetParameterValue(Request $request)
+    public function addAssetAttributeValue(Request $request)
     {
         $data = $request->validate([
             'asset_code' => 'required',
             'asset_name' => 'required',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
-            'asset_parameter_id' => 'required|exists:asset_parameters,asset_parameter_id',
+            'asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
             'field_value' => 'required'
         ]);
 
-        $asset = AssetParameterValue::create($data);
-        return new AssetParameterValueResource($asset);
+        $asset = AssetAttributeValue::create($data);
+        return new AssetAttributeValueResource($asset);
     }
 
     public function getAssets()
@@ -129,10 +129,10 @@ class AssetParameterValueController extends Controller
             'asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
 
-        $asset_type = AssetParameter::whereHas('AssetParameterTypes', function($que) use($request){
+        $asset_type = AssetAttribute::whereHas('AssetAttributeTypes', function($que) use($request){
             $que->where('asset_type_id', $request->asset_type_id);
         })->get();
 
-        return AssetParameterResource::collection($asset_type);
+        return AssetAttributeResource::collection($asset_type);
     }
 }

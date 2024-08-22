@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AssetParameter;
-use App\Models\AssetParameterType;
-use App\Http\Resources\AssetParameterResource;
+use App\Models\AssetAttribute;
+use App\Models\AssetAttributeType;
+use App\Http\Resources\AssetAttributeResource;
 use Illuminate\Support\Facades\Auth;
 
-class AssetParameterController extends Controller
+class AssetAttributeController extends Controller
 {
-    public function paginateAssetParameters(Request $request)
+    public function paginateAssetAttributes(Request $request)
     {
         $request->validate([
             'order_by' => 'required',
@@ -18,7 +18,7 @@ class AssetParameterController extends Controller
             'keyword' => 'required'
         ]);
 
-        $query = AssetParameter::query();
+        $query = AssetAttribute::query();
 
         if(isset($request->field_name))
         {
@@ -48,10 +48,10 @@ class AssetParameterController extends Controller
             });
         }
         $asset_spare = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
-        return AssetParameterResource::collection($asset_spare);
+        return AssetAttributeResource::collection($asset_spare);
     }
 
-    public function addAssetParameter(Request $request)
+    public function addAssetAttribute(Request $request)
     {
         $data = $request->validate([
         	'field_name' => 'required',
@@ -65,15 +65,15 @@ class AssetParameterController extends Controller
         ]);
         $data['user_id'] = Auth::id();
         
-        $asset_parameter = AssetParameter::create($data);
+        $asset_attribute = AssetAttribute::create($data);
 
         foreach ($data['asset_types'] as $asset_tpe_id) {
-            AssetParameterType::create([
-                'asset_parameter_id' => $asset_parameter->asset_parameter_id,
+            AssetAttributeType::create([
+                'asset_attribute_id' => $asset_attribute->asset_attribute_id,
                 'asset_type_id' => $asset_tpe_id
             ]);
         }
-        return new AssetParameterResource($asset_parameter);  
+        return new AssetAttributeResource($asset_attribute);  
     }  
 
     // public function updateAssetParameter(Request $request)
@@ -96,10 +96,10 @@ class AssetParameterController extends Controller
 	//     return new AssetParameterResource($asset_parameter);  
     // }  
 
-    public function updateAssetParameter(Request $request)
+    public function updateAssetAttribute(Request $request)
     {
         $data = $request->validate([
-            'asset_parameter_id' => 'required|exists:asset_parameters,asset_parameter_id',
+            'asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
             'field_name' => 'required',
             'display_name' => 'required',
             'field_type' => 'required',
@@ -112,58 +112,58 @@ class AssetParameterController extends Controller
 
         $data['user_id'] = Auth::id();
 
-        $asset_parameter = AssetParameter::where('asset_parameter_id', $request->asset_parameter_id)->first();
-        $asset_parameter->update($data);
+        $asset_attribute = AssetAttribute::where('asset_attribute_id', $request->asset_attribute_id)->first();
+        $asset_attribute->update($data);
 
-        AssetParameterType::where('asset_parameter_id', $asset_parameter->asset_parameter_id)->delete();
+        AssetAttributeType::where('asset_attribute_id', $asset_attribute->asset_attribute_id)->delete();
 
         foreach ($data['asset_types'] as $asset_type_id) {
-            AssetParameterType::create([
-                'asset_parameter_id' => $asset_parameter->asset_parameter_id,
+            AssetAttributeType::create([
+                'asset_attribute_id' => $asset_attribute->asset_attribute_id,
                 'asset_type_id' => $asset_type_id
             ]);
         }
 
-        return new AssetParameterResource($asset_parameter);
+        return new AssetAttributeResource($asset_attribute);
     }
 
 
-    public function getAssetParameter(Request $request)
+    public function getAssetAttribute(Request $request)
     {
         $request->validate([
-            'asset_parameter_id' => 'required|exists:asset_parameters,asset_parameter_id'
+            'asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id'
         ]);
 
-        $asset_parameter = AssetParameter::where('asset_parameter_id', $request->asset_parameter_id)->first();
-        return new AssetParameterResource($asset_parameter);
+        $asset_attribute = AssetAttribute::where('asset_attribute_id', $request->asset_attribute_id)->first();
+        return new AssetAttributeResource($asset_attribute);
     }
 
-    public function getAssetParameters()
+    public function getAssetAttributes()
     {
-        $asset_parameter = AssetParameter::all();
-        return AssetParameterResource::collection($asset_parameter);
+        $asset_attribute = AssetAttribute::all();
+        return AssetAttributeResource::collection($asset_attribute);
     }
 
-    public function deleteAssetParameter(Request $request)
+    public function deleteAssetAttribute(Request $request)
     {
         $request->validate([
-            'asset_parameter_id' => 'required|exists:asset_parameters,asset_parameter_id'
+            'asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id'
         ]);
 
-        $asset_parameter = AssetParameter::withTrashed()->where('asset_parameter_id', $request->asset_parameter_id)->first();
+        $asset_attribute = AssetAttribute::withTrashed()->where('asset_attribute_id', $request->asset_attribute_id)->first();
        
-        if($asset_parameter->trashed())
+        if($asset_attribute->trashed())
         {
-            $asset_parameter->restore();
+            $asset_attribute->restore();
             return response()->json([
-                "message" =>"AssetParameter Activated successfully"
+                "message" =>"AssetAttribute Activated successfully"
             ],200);
         }
         else
         {
-            $asset_parameter->delete();
+            $asset_attribute->delete();
             return response()->json([
-                "message" =>"AssetParameter Deactivated successfully"
+                "message" =>"AssetAttribute Deactivated successfully"
             ], 200); 
         }
     }
