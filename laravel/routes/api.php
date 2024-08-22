@@ -26,7 +26,7 @@ use App\Http\Controllers\UserActivityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserServiceController;
 use App\Http\Controllers\UserCheckController;
-use App\Http\Controllers\AssetParameterController;
+use App\Http\Controllers\AssetAttributeController;
 use App\Http\Controllers\AssetServiceController;
 use App\Http\Controllers\FrequencyController;
 use App\Http\Controllers\DepartmentController;
@@ -242,12 +242,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getUserCheck',[UserCheckController::class, 'getUserCheck']);
     Route::post('deleteUserCheck',[UserCheckController::class, 'deleteUserCheck']);
 
-    Route::post('paginateAssetParameters',[AssetParameterController::class, 'paginateAssetParameters']);
-    Route::post('addAssetParameter',[AssetParameterController::class, 'addAssetParameter']);
-    Route::post('updateAssetParameter',[AssetParameterController::class, 'updateAssetParameter']);
-    Route::post('getAssetParameter',[AssetParameterController::class, 'getAssetParameter']);
-    Route::post('getAssetParameters',[AssetParameterController::class, 'getAssetParameters']);
-    Route::post('deleteAssetParameter',[AssetParameterController::class, 'deleteAssetParameter']);
+    Route::post('paginateAssetAttributes',[AssetAttributeController::class, 'paginateAssetAttributes']);
+    Route::post('addAssetAttribute',[AssetAttributeController::class, 'addAssetAttribute']);
+    Route::post('updateAssetAttribute',[AssetAttributeController::class, 'updateAssetAttribute']);
+    Route::post('getAssetAttribute',[AssetAttributeController::class, 'getAssetAttribute']);
+    Route::post('getAssetAttributes',[AssetAttributeController::class, 'getAssetAttributes']);
+    Route::post('deleteAssetAttribute',[AssetAttributeController::class, 'deleteAssetAttribute']);
 
     Route::post('paginateFrequencies',[FrequencyController::class, 'paginateFrequencies']);
     Route::post('addFrequency',[FrequencyController::class, 'addFrequency']);
