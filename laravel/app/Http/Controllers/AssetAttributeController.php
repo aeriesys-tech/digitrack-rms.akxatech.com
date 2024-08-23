@@ -47,7 +47,7 @@ class AssetAttributeController extends Controller
                 $que->whereHas('AssetType', function($qu) use($request){
                     $que->where('asset_type_name', 'like', "$request->search%");
                 });
-            });        
+            });
         }
         $asset_spare = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return AssetAttributeResource::collection($asset_spare);

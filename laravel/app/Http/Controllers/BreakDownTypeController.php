@@ -71,7 +71,7 @@ class BreakDownTypeController extends Controller
             'break_down_type_name' => 'required|unique:break_down_types,break_down_type_name,'.$request->break_down_type_id.',break_down_type_id'
         ]);
 
-        $break_down_type = DataSourceType::where('break_down_type_id', $request->break_down_type_id)->first();
+        $break_down_type = BreakDownType::where('break_down_type_id', $request->break_down_type_id)->first();
         $break_down_type->update($data);
         return response()->json(["message" => "BreakDownType Updated Successfully"]);  
     }
