@@ -40,6 +40,8 @@ use App\Http\Controllers\VariableAttributeController;
 use App\Http\Controllers\DataSourceAttributeController;
 use App\Http\Controllers\ServiceAttributeController;
 use App\Http\Controllers\BreakDownAttributeController;
+use App\Http\Controllers\VariableController;
+use App\Http\Controllers\DataSourceController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -337,4 +339,20 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getBreakDownAttribute',[BreakDownAttributeController::class, 'getBreakDownAttribute']);
     Route::post('getBreakDownAttributes',[BreakDownAttributeController::class, 'getBreakDownAttributes']);
     Route::post('deleteBreakDownAttribute',[BreakDownAttributeController::class, 'deleteBreakDownAttribute']);
+
+    Route::post('paginateVariables',[VariableController::class, 'paginateVariables']);
+    Route::post('getVariables',[VariableController::class, 'getVariables']);
+    Route::post('addVariable',[VariableController::class, 'addVariable']);
+    Route::post('getVariable',[VariableController::class, 'getVariable']);
+    Route::post('updateVariable',[VariableController::class, 'updateVariable']);
+    Route::post('deleteVariable',[VariableController::class, 'deleteVariable']);
+    Route::post('getAssetTypeVariables',[VariableController::class, 'getAssetTypeVariables']);
+
+    Route::post('paginateDataSources',[DataSourceController::class, 'paginateDataSources']);
+    Route::post('getDataSources',[DataSourceController::class, 'getDataSources']);
+    Route::post('addDataSource',[DataSourceController::class, 'addDataSource']);
+    Route::post('getDataSource',[DataSourceController::class, 'getDataSource']);
+    Route::post('updateDataSource',[DataSourceController::class, 'updateDataSource']);
+    Route::post('deleteDataSource',[DataSourceController::class, 'deleteDataSource']);
+    Route::post('getAssetTypeDataSources',[DataSourceController::class, 'getAssetTypeDataSources']);
 });
