@@ -45,7 +45,7 @@ class SpareAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('SpareAttributeTypes', function($que) use($request){
                 $que->whereHas('SpareType', function($qu) use($request){
-                    $que->where('spare_type_name', 'like', "$request->search%");
+                    $qu->where('spare_type_name', 'like', "$request->search%");
                 });
             });    
         }
@@ -75,7 +75,7 @@ class SpareAttributeController extends Controller
         
         $spare_attribute = SpareAttribute::create($data);
 
-        foreach ($data['spare_types'] as $spare_tpe_id) {
+        foreach ($data['spare_types'] as $spare_type_id) {
             SpareAttributeType::create([
                 'spare_attribute_id' => $spare_attribute->spare_attribute_id,
                 'spare_type_id' => $spare_type_id
@@ -105,7 +105,7 @@ class SpareAttributeController extends Controller
             'field_length' => 'required',
             'is_required' => 'required|boolean',
             'spare_types' => 'required|array',
-            'spare_types.*' => 'required|exists:spare_type,spare_type_id'
+            'spare_types.*' => 'required|exists:spare_types,spare_type_id'
         ]);
 
         $data['user_id'] = Auth::id();

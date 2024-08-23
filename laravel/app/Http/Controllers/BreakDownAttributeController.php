@@ -45,7 +45,7 @@ class BreakDownAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('BreakDownAttributeTypes', function($que) use($request){
                 $que->whereHas('BreakDownType', function($qu) use($request){
-                    $que->where('break_down_type_name', 'like', "$request->search%");
+                    $qu->where('break_down_type_name', 'like', "$request->search%");
                 });
             });    
         }
@@ -75,7 +75,7 @@ class BreakDownAttributeController extends Controller
         
         $break_down_attribute = BreakDownAttribute::create($data);
 
-        foreach ($data['break_down_types'] as $break_down_tpe_id) {
+        foreach ($data['break_down_types'] as $break_down_type_id) {
             BreakDownAttributeType::create([
                 'break_down_attribute_id' => $break_down_attribute->break_down_attribute_id,
                 'break_down_type_id' => $break_down_type_id
@@ -105,7 +105,7 @@ class BreakDownAttributeController extends Controller
             'field_length' => 'required',
             'is_required' => 'required|boolean',
             'break_down_types' => 'required|array',
-            'break_down_types.*' => 'required|exists:break_down_type,break_down_type_id'
+            'break_down_types.*' => 'required|exists:break_down_types,break_down_type_id'
         ]);
 
         $data['user_id'] = Auth::id();

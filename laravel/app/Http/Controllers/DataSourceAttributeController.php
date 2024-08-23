@@ -45,7 +45,7 @@ class DataSourceAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('DataSourceAttributeTypes', function($que) use($request){
                 $que->whereHas('DataSourceType', function($qu) use($request){
-                    $que->where('data_source_type_name', 'like', "$request->search%");
+                    $qu->where('data_source_type_name', 'like', "$request->search%");
                 });
             });    
         }
@@ -75,7 +75,7 @@ class DataSourceAttributeController extends Controller
         
         $data_source_attribute = DataSourceAttribute::create($data);
 
-        foreach ($data['data_source_types'] as $data_source_tpe_id) {
+        foreach ($data['data_source_types'] as $data_source_type_id) {
             DataSourceAttributeType::create([
                 'data_source_attribute_id' => $data_source_attribute->data_source_attribute_id,
                 'data_source_type_id' => $data_source_type_id

@@ -45,7 +45,7 @@ class VariableAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('VariableAttributeTypes', function($que) use($request){
                 $que->whereHas('VariableType', function($qu) use($request){
-                    $que->where('variable_type_name', 'like', "$request->search%");
+                    $qu->where('variable_type_name', 'like', "$request->search%");
                 });
             });    
         }
@@ -75,7 +75,7 @@ class VariableAttributeController extends Controller
         
         $variable_attribute = VariableAttribute::create($data);
 
-        foreach ($data['variable_types'] as $variable_tpe_id) {
+        foreach ($data['variable_types'] as $variable_type_id) {
             VariableAttributeType::create([
                 'variable_attribute_id' => $variable_attribute->variable_attribute_id,
                 'variable_type_id' => $variable_type_id
@@ -105,7 +105,7 @@ class VariableAttributeController extends Controller
             'field_length' => 'required',
             'is_required' => 'required|boolean',
             'variable_types' => 'required|array',
-            'variable_types.*' => 'required|exists:variable_type,variable_type_id'
+            'variable_types.*' => 'required|exists:variable_types,variable_type_id'
         ]);
 
         $data['user_id'] = Auth::id();

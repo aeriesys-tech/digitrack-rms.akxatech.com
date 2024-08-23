@@ -42,6 +42,7 @@ use App\Http\Controllers\ServiceAttributeController;
 use App\Http\Controllers\BreakDownAttributeController;
 use App\Http\Controllers\VariableController;
 use App\Http\Controllers\DataSourceController;
+use App\Http\Controllers\BreakDownListController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -355,4 +356,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateDataSource',[DataSourceController::class, 'updateDataSource']);
     Route::post('deleteDataSource',[DataSourceController::class, 'deleteDataSource']);
     Route::post('getAssetTypeDataSources',[DataSourceController::class, 'getAssetTypeDataSources']);
+
+    Route::post('paginateBreakDownLists',[BreakDownListController::class, 'paginateBreakDownLists']);
+    Route::post('getBreakDownLists',[BreakDownListController::class, 'getBreakDownLists']);
+    Route::post('addBreakDownList',[BreakDownListController::class, 'addBreakDownList']);
+    Route::post('getBreakDownList',[BreakDownListController::class, 'getBreakDownList']);
+    Route::post('updateBreakDownList',[BreakDownListController::class, 'updateBreakDownList']);
+    Route::post('deleteBreakDownList',[BreakDownListController::class, 'deleteBreakDownList']);
+    Route::post('getAssetTypeBreakDownLists',[BreakDownListController::class, 'getAssetTypeBreakDownLists']);
 });

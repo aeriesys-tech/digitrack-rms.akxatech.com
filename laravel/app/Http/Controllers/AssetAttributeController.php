@@ -45,7 +45,7 @@ class AssetAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('AssetAttributeTypes', function($que) use($request){
                 $que->whereHas('AssetType', function($qu) use($request){
-                    $que->where('asset_type_name', 'like', "$request->search%");
+                    $qu->where('asset_type_name', 'like', "$request->search%");
                 });
             });
         }
@@ -69,7 +69,7 @@ class AssetAttributeController extends Controller
         
         $asset_attribute = AssetAttribute::create($data);
 
-        foreach ($data['asset_types'] as $asset_tpe_id) {
+        foreach ($data['asset_types'] as $asset_type_id) {
             AssetAttributeType::create([
                 'asset_attribute_id' => $asset_attribute->asset_attribute_id,
                 'asset_type_id' => $asset_type_id
@@ -77,26 +77,6 @@ class AssetAttributeController extends Controller
         }
         return new AssetAttributeResource($asset_attribute);  
     }  
-
-    // public function updateAssetParameter(Request $request)
-    // {
-    //     $data = $request->validate([
-	// 	'asset_parameter_id' => 'required|exists:asset_parameters,asset_parameter_id',
-	// 	'field_name' => 'required',
-	// 	'display_name' => 'required',
-	// 	'field_type' => 'required', 
-	// 	'field_values' => 'required',
-	// 	'field_length' => 'required',
-	// 	'is_required' => 'required|boolean',
-	// 	'asset_type_id' => 'required|exists:asset_type,asset_type_id'
-    //     ]);
-
-    //     $data['user_id'] = Auth::id();
-        
-    //     $asset_parameter = AssetParameter::where('asset_parameter_id', $request->asset_parameter_id)->first();
-	//     $asset_parameter->update($data);
-	//     return new AssetParameterResource($asset_parameter);  
-    // }  
 
     public function updateAssetAttribute(Request $request)
     {
