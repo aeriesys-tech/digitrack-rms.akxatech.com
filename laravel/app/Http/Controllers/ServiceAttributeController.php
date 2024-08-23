@@ -45,7 +45,7 @@ class ServiceAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('ServiceAttributeTypes', function($que) use($request){
                 $que->whereHas('ServiceType', function($qu) use($request){
-                    $que->where('service_type_name', 'like', "$request->search%");
+                    $qu->where('service_type_name', 'like', "$request->search%");
                 });
             });    
         }
@@ -75,7 +75,7 @@ class ServiceAttributeController extends Controller
         
         $service_attribute = ServiceAttribute::create($data);
 
-        foreach ($data['service_types'] as $service_tpe_id) {
+        foreach ($data['service_types'] as $service_type_id) {
             ServiceAttributeType::create([
                 'service_attribute_id' => $service_attribute->service_attribute_id,
                 'service_type_id' => $service_type_id

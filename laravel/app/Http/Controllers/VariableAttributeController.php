@@ -105,7 +105,7 @@ class VariableAttributeController extends Controller
             'field_length' => 'required',
             'is_required' => 'required|boolean',
             'variable_types' => 'required|array',
-            'variable_types.*' => 'required|exists:variable_type,variable_type_id'
+            'variable_types.*' => 'required|exists:variable_types,variable_type_id'
         ]);
 
         $data['user_id'] = Auth::id();
