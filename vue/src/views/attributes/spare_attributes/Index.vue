@@ -8,18 +8,18 @@
                             <li class="breadcrumb-item" aria-current="page">
                                 <a href="javascript:void(0)">Attributes</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                <a href="javascript:void(0)">Asset Attributes</a></li>
+                                <a href="javascript:void(0)">Spare Attributes</a></li>
                     </ol>
-                    <h4 class="main-title mb-0">Asset Attributes</h4>
+                    <h4 class="main-title mb-0">Spare Attributes</h4>
                 </div>
-                <router-link to="/asset_attributes/create" class="btn btn-primary" style="float: right;" ><i
-                        class="ri-list-check"></i> ADD ASSET ATTRIBUTE</router-link>
+                <router-link to="/spare_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                        class="ri-list-check"></i> ADD SPARE ATTRIBUTE</router-link>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title">Asset Attributes</h6>
+                            <h6 class="card-title">Spare Attributes</h6>
                         </div>
                         <div class="card-body">
                             <input class="form-control form-control-sm mb-2" type="text"
@@ -77,7 +77,7 @@
                                                 </span>
                                             </th>
                                             <th>
-                                                Asset Type
+                                                Spare Type
                                                 <!-- <span>
                                                     <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -88,30 +88,30 @@
                                             <th class="text-center">Actions</th>
                                         </tr>
                                     <tbody>
-                                        <tr v-if="assetattributes.length==0">
+                                        <tr v-if="spareattributes.length==0">
                                             <td colspan="10" class="text-center">No records found</td>
                                         </tr>
-                                        <tr v-for="assetattribute, key in assetattributes" :key="key">
+                                        <tr v-for="spareattribute, key in spareattributes" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
-                                            <td>{{assetattribute.field_name}}</td>
-                                            <td>{{assetattribute.display_name}}</td>
-                                            <td>{{assetattribute.field_type}}</td>
-                                            <td>{{assetattribute.field_values}}</td>
-                                            <td>{{assetattribute.field_length}}</td>
+                                            <td>{{spareattribute.field_name}}</td>
+                                            <td>{{spareattribute.display_name}}</td>
+                                            <td>{{spareattribute.field_type}}</td>
+                                            <td>{{spareattribute.field_values}}</td>
+                                            <td>{{spareattribute.field_length}}</td>
                                             <!-- <td v-if="assetparameter.is_required">Yes</td> -->
-                                            <td>{{assetattribute?.is_required==1 ?'Yes' : 'No'  }}</td>
+                                            <td>{{spareattribute?.is_required==1 ?'Yes' : 'No'  }}</td>
                                             <td>
-                                                <span v-for="asset_attribute_type, key in assetattribute.asset_attribute_types" :key="key">{{ asset_attribute_type?.asset_type?.asset_type_name }}, </span>
+                                                <span v-for="spare_attribute_type, key in spareattribute.spare_attribute_types" :key="key">{{ spare_attribute_type?.spare_type?.spare_type_name }}, </span>
                                             </td>
                                             <td class="text-center" >
                                                 <div class="form-switch" >
-                                                    <input class="form-check-input"  type="checkbox" role="switch" :id="'assetattribute' + assetattribute.asset_attribute_id" :checked="assetattribute.status" :value="assetattribute.status" @change="deleteAssetAttribute(assetattribute)" />
-                                                    <label class="custom-control-label" :for="'user' + assetattribute.asset_attribute_id"></label>
+                                                    <input class="form-check-input"  type="checkbox" role="switch" :id="'spareattribute' + spareattribute.spare_attribute_id" :checked="spareattribute.status" :value="spareattribute.status" @change="deleteSpareAttribute(spareattribute)" />
+                                                    <label class="custom-control-label" :for="'user' + spareattribute.spare_attribute_id"></label>
                                                 </div>
                                             </td>
                                             <td class="text-center" >
-                                                <a href="javascript:void(0)" class="text-success" v-if="assetattribute.status" 
-                                                    @click="editAssetAttribute(assetattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                <a href="javascript:void(0)" class="text-success" v-if="spareattribute.status" 
+                                                    @click="editSpareAttribute(spareattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -147,7 +147,7 @@
                 meta: {
                     search: '',
                     order_by: "asc",
-                    keyword: "asset_attribute_id",
+                    keyword: "spare_attribute_id",
                     per_page: 10,
                     totalRows: 0,
                     page: 1,
@@ -157,14 +157,14 @@
                     maxPage: 1,
                     trashed: false,
                 },
-                assetattributes: [],
+                spareattributes: [],
                 errors: [],
                 status: true,
             }
         },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
-                if(from.name != 'AssetAttributes.Edit'){
+                if(from.name != 'SpareAttributes.Edit'){
                     vm.$store.commit("setCurrentPage", vm.meta.page)
                 }else{
                     vm.meta.page = vm.$store.getters.current_page
@@ -179,10 +179,10 @@
             index() {
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'paginateAssetAttributes', data: vm.meta })
+                this.$store.dispatch('post', { uri: 'paginateSpareAttributes', data: vm.meta })
                     .then(response => {
                         loader.hide();
-                        this.assetattributes = response.data.data;
+                        this.spareattributes = response.data.data;
                         this.meta.totalRows = response.data.meta.total;
                         this.meta.from = response.data.meta.from;
                         this.meta.lastPage = response.data.meta.last_page;
@@ -194,18 +194,18 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            editAssetAttribute(assetattribute) {
+            editSpareAttribute(spareattribute) {
                 // this.$store.commit("setCurrentPage", this.meta.page)
-                this.$router.push("/asset_attributes/" + assetattribute.asset_attribute_id + "/edit");
+                this.$router.push("/spare_attributes/" + spareattribute.spare_attribute_id + "/edit");
             },
          
-            deleteAssetAttribute(assetattribute) {
+            deleteSpareAttribute(spareattribute) {
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", {
-                        uri: "deleteAssetAttribute",
-                        data: assetattribute
+                        uri: "deleteSpareAttribute",
+                        data: spareattribute
                     })
                     .then((response) => {
                         loader.hide();

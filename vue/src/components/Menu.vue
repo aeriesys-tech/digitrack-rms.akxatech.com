@@ -41,9 +41,9 @@
                     <li class="nav-item" v-can="'sections.view'">
                         <router-link to="/section" v-bind:class="{ active: $route.path === '/section' }" class="nav-link"><i class="ri-stack-line"></i> <span>Section</span></router-link>
                     </li>
-                    <!-- <li class="nav-item">
+                    <li class="nav-item">
                         <router-link to="/frequency" v-bind:class="{ active: $route.path === '/frequency' }" class="nav-link"><i class="ri-rfid-line"></i> <span>Frequency</span></router-link>
-                    </li>     -->
+                    </li>    
                     <li class="nav-item">
                         <router-link to="/department" v-bind:class="{ active: $route.path === '/department' }" class="nav-link"><i class="ri-government-line"></i> <span>Department</span></router-link>
                     </li>
@@ -416,7 +416,7 @@
                     this.dashboardActive = "white !important";
                 } else if (tab == "/assets" || name == "Assets.Create" || name == "Assets.Edit" || name == "Assets.View") {
                     this.assetActive = "white !important";
-                } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/varaible_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes") {
+                } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes") {
                     this.AttributesColor = "white !important";
                     this.showAttributes = !this.showAttributes;
                 } else if (tab == "/asset_details" || tab == "/spare_compaign" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {

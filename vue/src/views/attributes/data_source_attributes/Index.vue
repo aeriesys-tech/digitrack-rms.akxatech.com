@@ -8,18 +8,18 @@
                             <li class="breadcrumb-item" aria-current="page">
                                 <a href="javascript:void(0)">Attributes</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                <a href="javascript:void(0)">Asset Attributes</a></li>
+                                <a href="javascript:void(0)">Data Source Attributes</a></li>
                     </ol>
-                    <h4 class="main-title mb-0">Asset Attributes</h4>
+                    <h4 class="main-title mb-0">Data Source Attributes</h4>
                 </div>
-                <router-link to="/asset_attributes/create" class="btn btn-primary" style="float: right;" ><i
-                        class="ri-list-check"></i> ADD ASSET ATTRIBUTE</router-link>
+                <router-link to="/data_source_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                        class="ri-list-check"></i> ADD DATA SOURCE ATTRIBUTE</router-link>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title">Asset Attributes</h6>
+                            <h6 class="card-title">Data Source Attributes</h6>
                         </div>
                         <div class="card-body">
                             <input class="form-control form-control-sm mb-2" type="text"
@@ -77,7 +77,7 @@
                                                 </span>
                                             </th>
                                             <th>
-                                                Asset Type
+                                                Data Source Type
                                                 <!-- <span>
                                                     <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -88,30 +88,30 @@
                                             <th class="text-center">Actions</th>
                                         </tr>
                                     <tbody>
-                                        <tr v-if="assetattributes.length==0">
+                                        <tr v-if="datasourceattributes.length==0">
                                             <td colspan="10" class="text-center">No records found</td>
                                         </tr>
-                                        <tr v-for="assetattribute, key in assetattributes" :key="key">
+                                        <tr v-for="datasourceattribute, key in datasourceattributes" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
-                                            <td>{{assetattribute.field_name}}</td>
-                                            <td>{{assetattribute.display_name}}</td>
-                                            <td>{{assetattribute.field_type}}</td>
-                                            <td>{{assetattribute.field_values}}</td>
-                                            <td>{{assetattribute.field_length}}</td>
+                                            <td>{{datasourceattribute.field_name}}</td>
+                                            <td>{{datasourceattribute.display_name}}</td>
+                                            <td>{{datasourceattribute.field_type}}</td>
+                                            <td>{{datasourceattribute.field_values}}</td>
+                                            <td>{{datasourceattribute.field_length}}</td>
                                             <!-- <td v-if="assetparameter.is_required">Yes</td> -->
-                                            <td>{{assetattribute?.is_required==1 ?'Yes' : 'No'  }}</td>
+                                            <td>{{datasourceattribute?.is_required==1 ?'Yes' : 'No'  }}</td>
                                             <td>
-                                                <span v-for="asset_attribute_type, key in assetattribute.asset_attribute_types" :key="key">{{ asset_attribute_type?.asset_type?.asset_type_name }}, </span>
+                                                <span v-for="data_source_attribute_type, key in datasourceattribute.data_source_attribute_types" :key="key">{{ data_source_attribute_type?.data_source_type?.data_source_type_name }}, </span>
                                             </td>
                                             <td class="text-center" >
                                                 <div class="form-switch" >
-                                                    <input class="form-check-input"  type="checkbox" role="switch" :id="'assetattribute' + assetattribute.asset_attribute_id" :checked="assetattribute.status" :value="assetattribute.status" @change="deleteAssetAttribute(assetattribute)" />
-                                                    <label class="custom-control-label" :for="'user' + assetattribute.asset_attribute_id"></label>
+                                                    <input class="form-check-input"  type="checkbox" role="switch" :id="'datasourceattribute' + datasourceattribute.data_source_attribute_id" :checked="datasourceattribute.status" :value="datasourceattribute.status" @change="deleteDataSourceAttribute(datasourceattribute)" />
+                                                    <label class="custom-control-label" :for="'user' + datasourceattribute.data_source_attribute_id"></label>
                                                 </div>
                                             </td>
                                             <td class="text-center" >
-                                                <a href="javascript:void(0)" class="text-success" v-if="assetattribute.status" 
-                                                    @click="editAssetAttribute(assetattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                <a href="javascript:void(0)" class="text-success" v-if="datasourceattribute.status" 
+                                                    @click="editDataSourceAttribute(datasourceattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -147,7 +147,7 @@
                 meta: {
                     search: '',
                     order_by: "asc",
-                    keyword: "asset_attribute_id",
+                    keyword: "data_source_attribute_id",
                     per_page: 10,
                     totalRows: 0,
                     page: 1,
@@ -157,14 +157,14 @@
                     maxPage: 1,
                     trashed: false,
                 },
-                assetattributes: [],
+                datasourceattributes: [],
                 errors: [],
                 status: true,
             }
         },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
-                if(from.name != 'AssetAttributes.Edit'){
+                if(from.name != 'DataSourceAttributes.Edit'){
                     vm.$store.commit("setCurrentPage", vm.meta.page)
                 }else{
                     vm.meta.page = vm.$store.getters.current_page
@@ -179,10 +179,10 @@
             index() {
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'paginateAssetAttributes', data: vm.meta })
+                this.$store.dispatch('post', { uri: 'paginateDataSourceAttributes', data: vm.meta })
                     .then(response => {
                         loader.hide();
-                        this.assetattributes = response.data.data;
+                        this.datasourceattributes = response.data.data;
                         this.meta.totalRows = response.data.meta.total;
                         this.meta.from = response.data.meta.from;
                         this.meta.lastPage = response.data.meta.last_page;
@@ -194,18 +194,18 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            editAssetAttribute(assetattribute) {
+            editDataSourceAttribute(datasourceattribute) {
                 // this.$store.commit("setCurrentPage", this.meta.page)
-                this.$router.push("/asset_attributes/" + assetattribute.asset_attribute_id + "/edit");
+                this.$router.push("/data_source_attributes/" + datasourceattribute.data_source_attribute_id + "/edit");
             },
          
-            deleteAssetAttribute(assetattribute) {
+            deleteDataSourceAttribute(datasourceattribute) {
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", {
-                        uri: "deleteAssetAttribute",
-                        data: assetattribute
+                        uri: "deleteDataSourceAttribute",
+                        data: datasourceattribute
                     })
                     .then((response) => {
                         loader.hide();
@@ -218,7 +218,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            search() {
+            search() { 
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();

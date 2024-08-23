@@ -8,40 +8,40 @@
                             <li class="breadcrumb-item" aria-current="page">
                                 <a href="javascript:void(0)">Attributes</a></li>
                             <li class="breadcrumb-item" aria-current="page">
-                            <router-link to="/asset_attributes">Asset Attributes</router-link></li>
-                        <li class="breadcrumb-item " aria-current="page" v-if="status">New Asset Attribute</li>
-                        <li class="breadcrumb-item active" aria-current="page" v-else>Update Asset Attribute</li>
+                            <router-link to="/spare_attributes">Spare Attributes</router-link></li>
+                        <li class="breadcrumb-item " aria-current="page" v-if="status">New Spare Attribute</li>
+                        <li class="breadcrumb-item active" aria-current="page" v-else>Update Spare Attribute</li>
                     </ol>
-                    <h4 class="main-title mb-0">Asset Attribute</h4>
+                    <h4 class="main-title mb-0">Spare Attribute</h4>
                 </div>
-                <router-link to="/asset_attributes" type="submit" class="btn btn-primary" style="float: right;"><i
-                        class="ri-list-check"></i> ASSET ATTRIBUTES</router-link>
+                <router-link to="/spare_attributes" type="submit" class="btn btn-primary" style="float: right;"><i
+                        class="ri-list-check"></i> SPARE ATTRIBUTES</router-link>
             </div>
             <div class="row">
                 <div class="col-12">
                     <form @submit.prevent="submitForm">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">New Asset Attribute</h6>
-                            <h6 class="card-title" v-else>Update Asset Attribute</h6>
+                            <h6 class="card-title" v-if="status">New Spare Attribute</h6>
+                            <h6 class="card-title" v-else>Update Spare Attribute</h6>
                         </div>
                         <div class="card-body ">
                             <div class="row g-2">
                                 <div class="col-md-3">
                                     <div class="form-label">
-                                        <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                        <label class="form-label">Spare Type</label><span class="text-danger"> *</span>
+                                        <div class="dropdown" @click="toggleSpareTypeStatus()">
                                             <div class="overselect"></div>
-                                            <select class="form-control form-control" :class="{'is-invalid':errors.asset_types}">
-                                                <option value="">Select Asset Type</option>
+                                            <select class="form-control form-control" :class="{'is-invalid':errors.spare_types}">
+                                                <option value="">Select Spare Type</option>
                                             </select>
-                                            <span v-if="errors.asset_types" class="invalid-feedback">{{ errors.asset_types[0] }}</span>
+                                            <span v-if="errors.spare_types" class="invalid-feedback">{{ errors.spare_types[0] }}</span>
                                         </div>
-                                        <div class="multiselect" v-if="asset_type_status">
+                                        <div class="multiselect" v-if="spare_type_status">
                                             <ul>
-                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="asset_attribute.asset_types" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
+                                                <li class="" v-for="(spare_type, index) in spare_types" :key="index">
+                                                    <input type="checkbox" :value="spare_type.spare_type_id" v-model="spare_attribute.spare_types" style="padding: 2px;" />
+                                                    <label style="margin-left: 5px;">{{ spare_type.spare_type_name }}</label>
                                                 </li>
                                             </ul>
                                         </div>
@@ -50,18 +50,18 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Field Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Name " class="form-control" :class="{'is-invalid':errors.field_name}" v-model="asset_attribute.field_name" />
+                                    <input type="text" placeholder="Field Name " class="form-control" :class="{'is-invalid':errors.field_name}" v-model="spare_attribute.field_name" />
                                     <span v-if="errors.field_name" class="invalid-feedback">{{ errors.field_name[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Display Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Display Name " class="form-control" :class="{'is-invalid':errors.display_name}" v-model="asset_attribute.display_name"/>
+                                    <input type="text" placeholder="Display Name " class="form-control" :class="{'is-invalid':errors.display_name}" v-model="spare_attribute.display_name"/>
                                     <span v-if="errors.display_name" class="invalid-feedback">{{ errors.display_name[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Field Type</label><span class="text-danger"> *</span>
-                                    <!-- <input type="text" placeholder="Field Type" class="form-control" :class="{'is-invalid':errors.field_type}" v-model="asset_parameter.field_type" /> -->
-                                    <select class="form-control" v-model="asset_attribute.field_type" :class="{ 'is-invalid': errors.field_type }">
+                                    <!-- <input type="text" placeholder="Field Type" class="form-control" :class="{'is-invalid':errors.field_type}" v-model="spare_parameter.field_type" /> -->
+                                    <select class="form-control" v-model="spare_attribute.field_type" :class="{ 'is-invalid': errors.field_type }">
                                         <option value="">Select Field Type</option>
                                         <option value="Text">Text </option>
                                         <option value="Dropdown">Dropdown </option>
@@ -74,31 +74,23 @@
                                 </div> 
                                 <div class="col-md-4">
                                     <label class="form-label">Field Value</label>
-                                    <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="asset_attribute.field_values" />
+                                    <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="spare_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Length" class="form-control" v-model="asset_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
+                                    <input type="text" placeholder="Field Length" class="form-control" v-model="spare_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
                                     <span v-if="errors.field_length" class="invalid-feedback">{{ errors.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Is Required</label><span class="text-danger"> *</span>
-                                    <select class="form-control" v-model="asset_attribute.is_required" :class="{ 'is-invalid': errors.is_required }">
+                                    <select class="form-control" v-model="spare_attribute.is_required" :class="{ 'is-invalid': errors.is_required }">
                                         <option value="">Select Is Required</option>
                                         <option value="1">Yes </option>
                                         <option value="0">No </option>
                                     </select>
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>
-                                <!-- <div class="col-md-6">
-                                    <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                    <select class="form-control" v-model="asset_parameter.asset_type_id" :class="{ 'is-invalid': errors.asset_type_id }">
-                                        <option value="">Select Asset Type</option>
-                                        <option v-for="asset_type, key in asset_types" :key="key" :value="asset_type.asset_type_id">{{ asset_type.asset_type_name }}</option>
-                                    </select>
-                                    <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
-                                </div> -->
 
                                
                             </div>
@@ -121,25 +113,25 @@
     export default {
         components: {
             },
-        name: "AssetAttributes.Create",
+        name: "SpareAttributes.Create",
         data() {
             return {
-                asset_attribute: {
+                spare_attribute: {
                     field_name: '',
                     display_name:'',
                     field_type: '',
                     field_values: '',
                     field_length: '',
                     is_required: "",
-                    asset_type_id: '',
-                    asset_types:[],
+                    spare_type_id: '',
+                    spare_types:[],
                 },
-                asset_types: [],
-                asset_attributes:[],
+                spare_types: [],
+                spare_attributes:[],
                 // user_update: false,
                 errors: [],
                 status:true,
-                asset_type_status:false,
+                spare_type_status:false,
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -154,16 +146,16 @@
         // },
         beforeRouteEnter(to, from, next) {
                 next((vm) => {
-                    vm.getAssetTypes();
-                    if (to.name == "AssetAttributes.Create") {
+                    vm.getSpareTypes();
+                    if (to.name == "SpareAttributes.Create") {
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;
-                        let uri = { uri: "getAssetAttribute", data: { asset_attribute_id: to.params.asset_attribute_id } };
+                        let uri = { uri: "getSpareAttribute", data: { spare_attribute_id: to.params.spare_attribute_id } };
                         vm.$store
                             .dispatch("post", uri)
                             .then(function (response) {
-                                vm.asset_attribute = response.data.data;
+                                vm.spare_attribute = response.data.data;
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -173,25 +165,25 @@
                 });
             },
         methods: {
-            toggleAssetTypeStatus(){
-                this.asset_type_status = !this.asset_type_status
+            toggleSpareTypeStatus(){
+                this.spare_type_status = !this.spare_type_status
             },
                 submitForm() {
                     let vm = this;
                     if (vm.status) {
-                        vm.addAssetAttribute();
+                        vm.addSpareAttribute();
                     } else {
-                        vm.updateAssetAttribute();
+                        vm.updateSpareAttribute();
                     }
                 },
-            getAssetTypes() {
+            getSpareTypes() {
                 let vm = this;
                 let loader = vm.$loading.show();
-                vm.$store.dispatch('post', { uri: 'getAssetTypes' })
+                vm.$store.dispatch('post', { uri: 'getSpareTypes' })
                     .then(response => {
                         loader.hide();
-                        vm.asset_types = response.data.data;
-                        console.log(vm.asset_types)
+                        vm.spare_types = response.data.data;
+                        console.log(vm.spare_types)
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -200,14 +192,14 @@
                     });
             },
     
-            addAssetAttribute(){
+            addSpareAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addAssetAttribute', data:this.asset_attribute })
+                this.$store.dispatch('post', { uri: 'addSpareAttribute', data:this.spare_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Asset Attribute created successfully");
-                        vm.$router.push("/asset_attributes");
+                        this.$store.dispatch('success',"Spare Attribute created successfully");
+                        vm.$router.push("/spare_attributes");
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -216,14 +208,14 @@
                     });
             },
     
-            updateAssetAttribute(){
+            updateSpareAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateAssetAttribute', data:this.asset_attribute })
+                this.$store.dispatch('post', { uri: 'updateSpareAttribute', data:this.spare_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Asset Attribute updated successfully");
-                        this.$router.push('/asset_attributes');
+                        this.$store.dispatch('success',"Spare Attribute updated successfully");
+                        this.$router.push('/spare_attributes');
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -232,13 +224,13 @@
                     });
             },
     
-            getAssetAttribute(){
+            getSpareAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'getAssetAttribute', data:this.asset_attribute })
+                this.$store.dispatch('post', { uri: 'getSpareAttribute', data:this.spare_attribute })
                     .then(response => {
                         loader.hide();
-                        this.asset_attributes = response.data.data;
+                        this.spare_attributes = response.data.data;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -248,15 +240,15 @@
             },
             discard() {
                     let vm = this;
-                    vm.asset_attribute.field_name = "";
-                    vm.asset_attribute.field_type = "";
-                    vm.asset_attribute.display_name = "";
-                    vm.asset_attribute.field_values = "";
-                    vm.asset_attribute.field_length = "";
-                    vm.asset_attribute.is_required = "";
-                    vm.asset_attribute.asset_type_id = "";
+                    vm.spare_attribute.field_name = "";
+                    vm.spare_attribute.field_type = "";
+                    vm.spare_attribute.display_name = "";
+                    vm.spare_attribute.field_values = "";
+                    vm.spare_attribute.field_length = "";
+                    vm.spare_attribute.is_required = "";
+                    vm.spare_attribute.spare_type_id = "";
                     // vm.$refs.field_name.focus();
-                    vm.asset_attribute.asset_types = [],
+                    vm.spare_attribute.spare_types = [],
                     vm.errors = [];
                     vm.status = true;
                 },

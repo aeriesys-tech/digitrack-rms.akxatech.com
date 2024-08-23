@@ -8,18 +8,18 @@
                             <li class="breadcrumb-item" aria-current="page">
                                 <a href="javascript:void(0)">Attributes</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                <a href="javascript:void(0)">Asset Attributes</a></li>
+                                <a href="javascript:void(0)">Variable Attributes</a></li>
                     </ol>
-                    <h4 class="main-title mb-0">Asset Attributes</h4>
+                    <h4 class="main-title mb-0">Variable Attributes</h4>
                 </div>
-                <router-link to="/asset_attributes/create" class="btn btn-primary" style="float: right;" ><i
-                        class="ri-list-check"></i> ADD ASSET ATTRIBUTE</router-link>
+                <router-link to="/variable_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                        class="ri-list-check"></i> ADD VARIABLE ATTRIBUTE</router-link>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title">Asset Attributes</h6>
+                            <h6 class="card-title">Variable Attributes</h6>
                         </div>
                         <div class="card-body">
                             <input class="form-control form-control-sm mb-2" type="text"
@@ -77,7 +77,7 @@
                                                 </span>
                                             </th>
                                             <th>
-                                                Asset Type
+                                                Variable Type
                                                 <!-- <span>
                                                     <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -88,30 +88,30 @@
                                             <th class="text-center">Actions</th>
                                         </tr>
                                     <tbody>
-                                        <tr v-if="assetattributes.length==0">
+                                        <tr v-if="variableattributes.length==0">
                                             <td colspan="10" class="text-center">No records found</td>
                                         </tr>
-                                        <tr v-for="assetattribute, key in assetattributes" :key="key">
+                                        <tr v-for="variableattribute, key in variableattributes" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
-                                            <td>{{assetattribute.field_name}}</td>
-                                            <td>{{assetattribute.display_name}}</td>
-                                            <td>{{assetattribute.field_type}}</td>
-                                            <td>{{assetattribute.field_values}}</td>
-                                            <td>{{assetattribute.field_length}}</td>
+                                            <td>{{variableattribute.field_name}}</td>
+                                            <td>{{variableattribute.display_name}}</td>
+                                            <td>{{variableattribute.field_type}}</td>
+                                            <td>{{variableattribute.field_values}}</td>
+                                            <td>{{variableattribute.field_length}}</td>
                                             <!-- <td v-if="assetparameter.is_required">Yes</td> -->
-                                            <td>{{assetattribute?.is_required==1 ?'Yes' : 'No'  }}</td>
+                                            <td>{{variableattribute?.is_required==1 ?'Yes' : 'No'  }}</td>
                                             <td>
-                                                <span v-for="asset_attribute_type, key in assetattribute.asset_attribute_types" :key="key">{{ asset_attribute_type?.asset_type?.asset_type_name }}, </span>
+                                                <span v-for="variable_attribute_type, key in variableattribute.variable_attribute_types" :key="key">{{ variable_attribute_type?.variable_type?.variable_type_name }}, </span>
                                             </td>
                                             <td class="text-center" >
                                                 <div class="form-switch" >
-                                                    <input class="form-check-input"  type="checkbox" role="switch" :id="'assetattribute' + assetattribute.asset_attribute_id" :checked="assetattribute.status" :value="assetattribute.status" @change="deleteAssetAttribute(assetattribute)" />
-                                                    <label class="custom-control-label" :for="'user' + assetattribute.asset_attribute_id"></label>
+                                                    <input class="form-check-input"  type="checkbox" role="switch" :id="'variableattribute' + variableattribute.variable_attribute_id" :checked="variableattribute.status" :value="variableattribute.status" @change="deleteVariableAttribute(variableattribute)" />
+                                                    <label class="custom-control-label" :for="'user' + variableattribute.variable_attribute_id"></label>
                                                 </div>
                                             </td>
                                             <td class="text-center" >
-                                                <a href="javascript:void(0)" class="text-success" v-if="assetattribute.status" 
-                                                    @click="editAssetAttribute(assetattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                <a href="javascript:void(0)" class="text-success" v-if="variableattribute.status" 
+                                                    @click="editVariableAttribute(variableattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -147,7 +147,7 @@
                 meta: {
                     search: '',
                     order_by: "asc",
-                    keyword: "asset_attribute_id",
+                    keyword: "variable_attribute_id",
                     per_page: 10,
                     totalRows: 0,
                     page: 1,
@@ -157,14 +157,14 @@
                     maxPage: 1,
                     trashed: false,
                 },
-                assetattributes: [],
+                variableattributes: [],
                 errors: [],
                 status: true,
             }
         },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
-                if(from.name != 'AssetAttributes.Edit'){
+                if(from.name != 'VariableAttributes.Edit'){
                     vm.$store.commit("setCurrentPage", vm.meta.page)
                 }else{
                     vm.meta.page = vm.$store.getters.current_page
@@ -179,10 +179,10 @@
             index() {
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'paginateAssetAttributes', data: vm.meta })
+                this.$store.dispatch('post', { uri: 'paginateVariableAttributes', data: vm.meta })
                     .then(response => {
                         loader.hide();
-                        this.assetattributes = response.data.data;
+                        this.variableattributes = response.data.data;
                         this.meta.totalRows = response.data.meta.total;
                         this.meta.from = response.data.meta.from;
                         this.meta.lastPage = response.data.meta.last_page;
@@ -194,18 +194,18 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            editAssetAttribute(assetattribute) {
+            editVariableAttribute(variableattribute) {
                 // this.$store.commit("setCurrentPage", this.meta.page)
-                this.$router.push("/asset_attributes/" + assetattribute.asset_attribute_id + "/edit");
+                this.$router.push("/variable_attributes/" + variableattribute.variable_attribute_id + "/edit");
             },
          
-            deleteAssetAttribute(assetattribute) {
+            deleteVariableAttribute(variableattribute) {
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", {
-                        uri: "deleteAssetAttribute",
-                        data: assetattribute
+                        uri: "deleteVariableAttribute",
+                        data: variableattribute
                     })
                     .then((response) => {
                         loader.hide();

@@ -43,6 +43,8 @@ import Spare from "@/views/list_parameters/Spare.vue";
 import CreateCheck from "@/views/list_parameters/checks/Create.vue";
 import IndexChecks from "@/views/list_parameters/checks/Index.vue";
 import Service from "@/views/list_parameters/Service.vue";
+import Variables from "@/views/list_parameters/Variable.vue";
+import DataSources from "@/views/list_parameters/DataSource.vue";
 
 
 // user management 
@@ -84,9 +86,24 @@ import ScheduledMaintenanceVue from "@/views/assets/ScheduledMaintenance.vue";
 // Motor Parameters
 //import Voltage from ';
 
-//Asset Parameters
+//Attributes
 import CreateAssetAttribute from "@/views/attributes/asset_attributes/Create.vue"
 import AssetAttributes from "@/views/attributes/asset_attributes/Index.vue";
+
+import CreateSpareAttribute from "@/views/attributes/spare_attributes/Create.vue"
+import SpareAttributes from "@/views/attributes/spare_attributes/Index.vue";
+
+import CreateDataSourceAttribute from "@/views/attributes/data_source_attributes/Create.vue"
+import DataSourceAttributes from "@/views/attributes/data_source_attributes/Index.vue";
+
+import CreateVariableAttribute from "@/views/attributes/variable_attributes/Create.vue"
+import VariableAttributes from "@/views/attributes/variable_attributes/Index.vue";
+
+import CreateServiceAttribute from "@/views/attributes/service_attributes/Create.vue"
+import ServiceAttributes from "@/views/attributes/service_attributes/Index.vue";
+
+import CreateBreakDownAttribute from "@/views/attributes/breakdown_attributes/Create.vue"
+import BreakDownAttributes from "@/views/attributes/breakdown_attributes/Index.vue";
 
 
 import Test from "@/views/Test.vue";SpareCompaingn
@@ -334,6 +351,16 @@ const routes = [
     name: "Spares",
     component: Spare,
   },
+  {
+    path: "/variables",
+    name: "Variables",
+    component: Variables,
+  },
+  {
+    path: "/data_sources",
+    name: "DataSources",
+    component: DataSources,
+  },
 
   {
     path: "/services",
@@ -409,10 +436,102 @@ const routes = [
   },
 
   {
-    path: "/asset_attributes/:asset_parameter_id/edit",
+    path: "/asset_attributes/:asset_attribute_id/edit",
     name: "AssetAttributes.Edit",
     component: CreateAssetAttribute,
   },
+
+  //spare Parameters
+  {
+    path: "/spare_attributes",
+    name: "SpareAttributes.Index",
+    component: SpareAttributes,
+  },
+  {
+    path: "/spare_attributes/create",
+    name: "SpareAttributes.Create",
+    component: CreateSpareAttribute,
+  },
+
+  {
+    path: "/spare_attributes/:spare_attribute_id/edit",
+    name: "SpareAttributes.Edit",
+    component: CreateSpareAttribute,
+  },
+
+  //data source Parameters
+  {
+    path: "/data_source_attributes",
+    name: "DataSourceAttributes.Index",
+    component: DataSourceAttributes,
+  },
+  {
+    path: "/data_source_attributes/create",
+    name: "DataSourceAttributes.Create",
+    component: CreateDataSourceAttribute,
+  },
+
+  {
+    path: "/data_source_attributes/:data_source_attribute_id/edit",
+    name: "DataSourceAttributes.Edit",
+    component: CreateDataSourceAttribute,
+  },
+
+   //variable Parameters
+   {
+    path: "/variable_attributes",
+    name: "VariableAttributes.Index",
+    component:VariableAttributes,
+  },
+  {
+    path: "/variable_attributes/create",
+    name: "VariableAttributes.Create",
+    component: CreateVariableAttribute,
+  },
+
+  {
+    path: "/variable_attributes/:variable_attribute_id/edit",
+    name: "VariableAttributes.Edit",
+    component: CreateVariableAttribute,
+  },
+
+
+  // service attribute
+  {
+    path: "/service_attributes",
+    name: "ServiceAttributes.Index",
+    component:ServiceAttributes,
+  },
+  {
+    path: "/service_attributes/create",
+    name: "ServiceAttributes.Create",
+    component: CreateServiceAttribute,
+  },
+
+  {
+    path: "/service_attributes/:service_attribute_id/edit",
+    name: "ServiceAttributes.Edit",
+    component: CreateServiceAttribute,
+  },
+
+  // breakdown attribute
+  {
+    path: "/break_down_attributes",
+    name: "BreakDownAttributes.Index",
+    component:BreakDownAttributes,
+  },
+  {
+    path: "/break_down_attributes/create",
+    name: "BreakDownAttributes.Create",
+    component: CreateBreakDownAttribute,
+  },
+
+  {
+    path: "/break_down_attributes/:break_down_attribute_id/edit",
+    name: "BreakDownAttributes.Edit",
+    component: CreateBreakDownAttribute,
+  },
+
 
   //Deviation
   {
@@ -446,16 +565,6 @@ const routes = [
     component:Test,
   },
   {
-    path: "/data_source_attributes",
-    name: "DataSoutrceAttributes",
-    component:Test,
-  },
-  {
-    path: "/variable_attributes",
-    name: "VariableAttributes",
-    component:Test,
-  },
-  {
     path: "/service_attributes",
     name: "ServiceAttributes",
     component:Test,
@@ -463,16 +572,6 @@ const routes = [
   {
     path: "/break_down_attributes",
     name: "BreakDownAttributes",
-    component:Test,
-  },
-  {
-    path: "/variables",
-    name: "Variables",
-    component:Test,
-  },
-  {
-    path: "/data_sources",
-    name: "DataSources",
     component:Test,
   },
   {

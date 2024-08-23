@@ -8,40 +8,40 @@
                             <li class="breadcrumb-item" aria-current="page">
                                 <a href="javascript:void(0)">Attributes</a></li>
                             <li class="breadcrumb-item" aria-current="page">
-                            <router-link to="/asset_attributes">Asset Attributes</router-link></li>
-                        <li class="breadcrumb-item " aria-current="page" v-if="status">New Asset Attribute</li>
-                        <li class="breadcrumb-item active" aria-current="page" v-else>Update Asset Attribute</li>
+                            <router-link to="/break_down_attributes">Break Down Attributes</router-link></li>
+                        <li class="breadcrumb-item " aria-current="page" v-if="status">New Break Down Attribute</li>
+                        <li class="breadcrumb-item active" aria-current="page" v-else>Update Break Down Attribute</li>
                     </ol>
-                    <h4 class="main-title mb-0">Asset Attribute</h4>
+                    <h4 class="main-title mb-0"> Break Down Attribute</h4>
                 </div>
-                <router-link to="/asset_attributes" type="submit" class="btn btn-primary" style="float: right;"><i
-                        class="ri-list-check"></i> ASSET ATTRIBUTES</router-link>
+                <router-link to="/break_down_attributes" type="submit" class="btn btn-primary" style="float: right;"><i
+                        class="ri-list-check"></i> BREAK DOWN ATTRIBUTES</router-link>
             </div>
             <div class="row">
                 <div class="col-12">
                     <form @submit.prevent="submitForm">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">New Asset Attribute</h6>
-                            <h6 class="card-title" v-else>Update Asset Attribute</h6>
+                            <h6 class="card-title" v-if="status">New Break Down Attribute</h6>
+                            <h6 class="card-title" v-else>Update Break Down Attribute</h6>
                         </div>
                         <div class="card-body ">
                             <div class="row g-2">
                                 <div class="col-md-3">
                                     <div class="form-label">
-                                        <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                        <label class="form-label">Break Down Type</label><span class="text-danger"> *</span>
+                                        <div class="dropdown" @click="toggleBreakDownTypeStatus()">
                                             <div class="overselect"></div>
-                                            <select class="form-control form-control" :class="{'is-invalid':errors.asset_types}">
-                                                <option value="">Select Asset Type</option>
+                                            <select class="form-control form-control" :class="{'is-invalid':errors.break_down_types}">
+                                                <option value="">Select Break Down Type</option>
                                             </select>
-                                            <span v-if="errors.asset_types" class="invalid-feedback">{{ errors.asset_types[0] }}</span>
+                                            <span v-if="errors.break_down_types" class="invalid-feedback">{{ errors.break_down_types[0] }}</span>
                                         </div>
-                                        <div class="multiselect" v-if="asset_type_status">
+                                        <div class="multiselect" v-if="break_down_type_status">
                                             <ul>
-                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="asset_attribute.asset_types" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
+                                                <li class="" v-for="(break_down_type, index) in break_down_types" :key="index">
+                                                    <input type="checkbox" :value="break_down_type.break_down_type_id" v-model="break_down_attribute.break_down_types" style="padding: 2px;" />
+                                                    <label style="margin-left: 5px;">{{ break_down_type.break_down_type_name }}</label>
                                                 </li>
                                             </ul>
                                         </div>
@@ -50,18 +50,18 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Field Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Name " class="form-control" :class="{'is-invalid':errors.field_name}" v-model="asset_attribute.field_name" />
+                                    <input type="text" placeholder="Field Name " class="form-control" :class="{'is-invalid':errors.field_name}" v-model="break_down_attribute.field_name" />
                                     <span v-if="errors.field_name" class="invalid-feedback">{{ errors.field_name[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Display Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Display Name " class="form-control" :class="{'is-invalid':errors.display_name}" v-model="asset_attribute.display_name"/>
+                                    <input type="text" placeholder="Display Name " class="form-control" :class="{'is-invalid':errors.display_name}" v-model="break_down_attribute.display_name"/>
                                     <span v-if="errors.display_name" class="invalid-feedback">{{ errors.display_name[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Field Type</label><span class="text-danger"> *</span>
-                                    <!-- <input type="text" placeholder="Field Type" class="form-control" :class="{'is-invalid':errors.field_type}" v-model="asset_parameter.field_type" /> -->
-                                    <select class="form-control" v-model="asset_attribute.field_type" :class="{ 'is-invalid': errors.field_type }">
+                                    <!-- <input type="text" placeholder="Field Type" class="form-control" :class="{'is-invalid':errors.field_type}" v-model="break_down_parameter.field_type" /> -->
+                                    <select class="form-control" v-model="break_down_attribute.field_type" :class="{ 'is-invalid': errors.field_type }">
                                         <option value="">Select Field Type</option>
                                         <option value="Text">Text </option>
                                         <option value="Dropdown">Dropdown </option>
@@ -74,17 +74,17 @@
                                 </div> 
                                 <div class="col-md-4">
                                     <label class="form-label">Field Value</label>
-                                    <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="asset_attribute.field_values" />
+                                    <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="break_down_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Length" class="form-control" v-model="asset_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
+                                    <input type="text" placeholder="Field Length" class="form-control" v-model="break_down_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
                                     <span v-if="errors.field_length" class="invalid-feedback">{{ errors.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Is Required</label><span class="text-danger"> *</span>
-                                    <select class="form-control" v-model="asset_attribute.is_required" :class="{ 'is-invalid': errors.is_required }">
+                                    <select class="form-control" v-model="break_down_attribute.is_required" :class="{ 'is-invalid': errors.is_required }">
                                         <option value="">Select Is Required</option>
                                         <option value="1">Yes </option>
                                         <option value="0">No </option>
@@ -121,25 +121,25 @@
     export default {
         components: {
             },
-        name: "AssetAttributes.Create",
+        name: "BreakDownAttributes.Create",
         data() {
             return {
-                asset_attribute: {
+                break_down_attribute: {
                     field_name: '',
                     display_name:'',
                     field_type: '',
                     field_values: '',
                     field_length: '',
                     is_required: "",
-                    asset_type_id: '',
-                    asset_types:[],
+                    break_down_type_id: '',
+                    break_down_types:[],
                 },
-                asset_types: [],
-                asset_attributes:[],
+                break_down_types: [],
+                break_down_attributes:[],
                 // user_update: false,
                 errors: [],
                 status:true,
-                asset_type_status:false,
+                break_down_type_status:false,
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -154,16 +154,16 @@
         // },
         beforeRouteEnter(to, from, next) {
                 next((vm) => {
-                    vm.getAssetTypes();
-                    if (to.name == "AssetAttributes.Create") {
+                    vm.getBreakDownTypes();
+                    if (to.name == "BreakDownAttributes.Create") {
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;
-                        let uri = { uri: "getAssetAttribute", data: { asset_attribute_id: to.params.asset_attribute_id } };
+                        let uri = { uri: "getBreakDownAttribute", data: { break_down_attribute_id: to.params.break_down_attribute_id } };
                         vm.$store
                             .dispatch("post", uri)
                             .then(function (response) {
-                                vm.asset_attribute = response.data.data;
+                                vm.break_down_attribute = response.data.data;
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -173,25 +173,25 @@
                 });
             },
         methods: {
-            toggleAssetTypeStatus(){
-                this.asset_type_status = !this.asset_type_status
+            toggleBreakDownTypeStatus(){
+                this.break_down_type_status = !this.break_down_type_status
             },
                 submitForm() {
                     let vm = this;
                     if (vm.status) {
-                        vm.addAssetAttribute();
+                        vm.addBreakDownAttribute();
                     } else {
-                        vm.updateAssetAttribute();
+                        vm.updateBreakDownAttribute();
                     }
                 },
-            getAssetTypes() {
+            getBreakDownTypes() {
                 let vm = this;
                 let loader = vm.$loading.show();
-                vm.$store.dispatch('post', { uri: 'getAssetTypes' })
+                vm.$store.dispatch('post', { uri: 'getBreakDownTypes' })
                     .then(response => {
                         loader.hide();
-                        vm.asset_types = response.data.data;
-                        console.log(vm.asset_types)
+                        vm.break_down_types = response.data.data;
+                        console.log(vm.break_down_types)
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -200,14 +200,14 @@
                     });
             },
     
-            addAssetAttribute(){
+            addBreakDownAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addAssetAttribute', data:this.asset_attribute })
+                this.$store.dispatch('post', { uri: 'addBreakDownAttribute', data:this.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Asset Attribute created successfully");
-                        vm.$router.push("/asset_attributes");
+                        this.$store.dispatch('success',"Break Down Attribute created successfully");
+                        vm.$router.push("/break_down_attributes");
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -216,14 +216,14 @@
                     });
             },
     
-            updateAssetAttribute(){
+            updateBreakDownAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateAssetAttribute', data:this.asset_attribute })
+                this.$store.dispatch('post', { uri: 'updateBreakDownAttribute', data:this.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Asset Attribute updated successfully");
-                        this.$router.push('/asset_attributes');
+                        this.$store.dispatch('success',"Break Down Attribute updated successfully");
+                        this.$router.push('/break_down_attributes');
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -232,13 +232,13 @@
                     });
             },
     
-            getAssetAttribute(){
+            getBreakDownAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'getAssetAttribute', data:this.asset_attribute })
+                this.$store.dispatch('post', { uri: 'getBreakDownAttribute', data:this.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        this.asset_attributes = response.data.data;
+                        this.break_down_attributes = response.data.data;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -248,15 +248,15 @@
             },
             discard() {
                     let vm = this;
-                    vm.asset_attribute.field_name = "";
-                    vm.asset_attribute.field_type = "";
-                    vm.asset_attribute.display_name = "";
-                    vm.asset_attribute.field_values = "";
-                    vm.asset_attribute.field_length = "";
-                    vm.asset_attribute.is_required = "";
-                    vm.asset_attribute.asset_type_id = "";
+                    vm.break_down_attribute.field_name = "";
+                    vm.break_down_attribute.field_type = "";
+                    vm.break_down_attribute.display_name = "";
+                    vm.break_down_attribute.field_values = "";
+                    vm.break_down_attribute.field_length = "";
+                    vm.break_down_attribute.is_required = "";
+                    vm.break_down_attribute.break_down_type_id = "";
                     // vm.$refs.field_name.focus();
-                    vm.asset_attribute.asset_types = [],
+                    vm.break_down_attribute.break_down_types = [],
                     vm.errors = [];
                     vm.status = true;
                 },
