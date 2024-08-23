@@ -70,7 +70,7 @@ class AssetAttributeController extends Controller
         foreach ($data['asset_types'] as $asset_tpe_id) {
             AssetAttributeType::create([
                 'asset_attribute_id' => $asset_attribute->asset_attribute_id,
-                'asset_type_id' => $asset_tpe_id
+                'asset_type_id' => $asset_type_id
             ]);
         }
         return new AssetAttributeResource($asset_attribute);  

@@ -76,7 +76,7 @@ class SpareAttributeController extends Controller
         foreach ($data['spare_types'] as $spare_tpe_id) {
             SpareAttributeType::create([
                 'spare_attribute_id' => $spare_attribute->spare_attribute_id,
-                'spare_type_id' => $spare_tpe_id
+                'spare_type_id' => $spare_type_id
             ]);
         }
         return new SpareAttributeResource($spare_attribute);  
