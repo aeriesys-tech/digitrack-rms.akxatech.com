@@ -45,7 +45,7 @@ class DataSourceAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('DataSourceAttributeTypes', function($que) use($request){
                 $que->whereHas('DataSourceType', function($qu) use($request){
-                    $que->where('data_source_type_name', 'like', "$request->search%");
+                    $qu->where('data_source_type_name', 'like', "$request->search%");
                 });
             });    
         }

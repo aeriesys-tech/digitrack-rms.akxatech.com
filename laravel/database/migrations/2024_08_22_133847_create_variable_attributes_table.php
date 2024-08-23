@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('variable_attributes', function (Blueprint $table) {
-            $table->id();
+            $table->id('variable_attribute_id');
             $table->string('field_name', 100);
             $table->string('display_name', 100);
             $table->string('field_type', 50);

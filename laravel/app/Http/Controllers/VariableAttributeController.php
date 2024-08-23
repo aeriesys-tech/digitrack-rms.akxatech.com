@@ -45,7 +45,7 @@ class VariableAttributeController extends Controller
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
             ->orwhereHas('VariableAttributeTypes', function($que) use($request){
                 $que->whereHas('VariableType', function($qu) use($request){
-                    $que->where('variable_type_name', 'like', "$request->search%");
+                    $qu->where('variable_type_name', 'like', "$request->search%");
                 });
             });    
         }
