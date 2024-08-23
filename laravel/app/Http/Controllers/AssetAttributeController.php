@@ -43,8 +43,10 @@ class AssetAttributeController extends Controller
             $query->where('field_name', 'like', "$request->search%")
             ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
-            ->orwhereHas('AssetType', function($que) use($request){
-                $que->where('asset_type_name', 'like', "$request->search%");
+            ->orwhereHas('AssetAttributeTypes', function($que) use($request){
+                $que->whereHas('AssetType', function($qu) use($request){
+                    $qu->where('asset_type_name', 'like', "$request->search%");
+                });
             });
         }
         $asset_spare = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
