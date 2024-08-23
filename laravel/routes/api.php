@@ -35,6 +35,9 @@ use App\Http\Controllers\DataSourceTypeController;
 use App\Http\Controllers\FunctionalController;
 use App\Http\Controllers\AccessoryTypeController;
 use App\Http\Controllers\VariableTypeController;
+use App\Http\Controllers\SpareAttributeController;
+use App\Http\Controllers\VariableAttributeController;
+use App\Http\Controllers\DataSourceAttributeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -297,4 +300,25 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getVariableType',[VariableTypeController::class, 'getVariableType']);
     Route::post('updateVariableType',[VariableTypeController::class, 'updateVariableType']);
     Route::post('deleteVariableType',[VariableTypeController::class, 'deleteVariableType']);
+
+    Route::post('paginateSpareAttributes',[SpareAttributeController::class, 'paginateSpareAttributes']);
+    Route::post('addSpareAttribute',[SpareAttributeController::class, 'addSpareAttribute']);
+    Route::post('updateSpareAttribute',[SpareAttributeController::class, 'updateSpareAttribute']);
+    Route::post('getSpareAttribute',[SpareAttributeController::class, 'getSpareAttribute']);
+    Route::post('getSpareAttributes',[SpareAttributeController::class, 'getSpareAttributes']);
+    Route::post('deleteSpareAttribute',[SpareAttributeController::class, 'deleteSpareAttribute']);
+
+    Route::post('paginateDataSourceAttributes',[DataSourceAttributeController::class, 'paginateDataSourceAttributes']);
+    Route::post('addDataSourceAttribute',[DataSourceAttributeController::class, 'addDataSourceAttribute']);
+    Route::post('updateDataSourceAttribute',[DataSourceAttributeController::class, 'updateDataSourceAttribute']);
+    Route::post('getDataSourceAttribute',[DataSourceAttributeController::class, 'getDataSourceAttribute']);
+    Route::post('getDataSourceAttributes',[DataSourceAttributeController::class, 'getDataSourceAttributes']);
+    Route::post('deleteDataSourceAttribute',[DataSourceAttributeController::class, 'deleteDataSourceAttribute']);
+
+    Route::post('paginateVariableAttributes',[VariableAttributeController::class, 'paginateVariableAttributes']);
+    Route::post('addVariableAttribute',[VariableAttributeController::class, 'addVariableAttribute']);
+    Route::post('updateVariableAttribute',[VariableAttributeController::class, 'updateVariableAttribute']);
+    Route::post('getVariableAttribute',[VariableAttributeController::class, 'getVariableAttribute']);
+    Route::post('getVariableAttributes',[VariableAttributeController::class, 'getVariableAttributes']);
+    Route::post('deleteVariableAttribute',[VariableAttributeController::class, 'deleteVariableAttribute']);
 });
