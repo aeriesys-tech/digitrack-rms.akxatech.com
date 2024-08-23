@@ -38,6 +38,8 @@ use App\Http\Controllers\VariableTypeController;
 use App\Http\Controllers\SpareAttributeController;
 use App\Http\Controllers\VariableAttributeController;
 use App\Http\Controllers\DataSourceAttributeController;
+use App\Http\Controllers\ServiceAttributeController;
+use App\Http\Controllers\BreakDownAttributeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -321,4 +323,18 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getVariableAttribute',[VariableAttributeController::class, 'getVariableAttribute']);
     Route::post('getVariableAttributes',[VariableAttributeController::class, 'getVariableAttributes']);
     Route::post('deleteVariableAttribute',[VariableAttributeController::class, 'deleteVariableAttribute']);
+
+    Route::post('paginateServiceAttributes',[ServiceAttributeController::class, 'paginateServiceAttributes']);
+    Route::post('addServiceAttribute',[ServiceAttributeController::class, 'addServiceAttribute']);
+    Route::post('updateServiceAttribute',[ServiceAttributeController::class, 'updateServiceAttribute']);
+    Route::post('getServiceAttribute',[ServiceAttributeController::class, 'getServiceAttribute']);
+    Route::post('getServiceAttributes',[ServiceAttributeController::class, 'getServiceAttributes']);
+    Route::post('deleteServiceAttribute',[ServiceAttributeController::class, 'deleteServiceAttribute']);
+
+    Route::post('paginateBreakDownAttributes',[BreakDownAttributeController::class, 'paginateBreakDownAttributes']);
+    Route::post('addBreakDownAttribute',[BreakDownAttributeController::class, 'addBreakDownAttribute']);
+    Route::post('updateBreakDownAttribute',[BreakDownAttributeController::class, 'updateBreakDownAttribute']);
+    Route::post('getBreakDownAttribute',[BreakDownAttributeController::class, 'getBreakDownAttribute']);
+    Route::post('getBreakDownAttributes',[BreakDownAttributeController::class, 'getBreakDownAttributes']);
+    Route::post('deleteBreakDownAttribute',[BreakDownAttributeController::class, 'deleteBreakDownAttribute']);
 });

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('service_attribute_id');
             $table->foreign('service_attribute_id')->references('service_attribute_id')->on('service_attributes');
             $table->foreignId('service_type_id');
-            $table->foreign('service_type_id')->references('service_type_id')->on('service_types');
+            $table->foreign('service_type_id')->references('service_type_id')->on('service_type');
             $table->timestamps();
             $table->softDeletes();
         });
