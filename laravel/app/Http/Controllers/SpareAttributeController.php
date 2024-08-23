@@ -43,12 +43,14 @@ class SpareAttributeController extends Controller
             $query->where('field_name', 'like', "$request->search%")
             ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
-            ->orwhereHas('SpareType', function($que) use($request){
-                $que->where('spare_type_name', 'like', "$request->search%");
-            });
+            ->orwhereHas('SpareAttributeTypes', function($que) use($request){
+                $que->whereHas('SpareType', function($qu) use($request){
+                    $que->where('spare_type_name', 'like', "$request->search%");
+                });
+            });    
         }
         $spare_attribute = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
-        return spareAttributeResource::collection($spare_attribute);
+        return SpareAttributeResource::collection($spare_attribute);
     }
 
     public function getSpareAttributes()

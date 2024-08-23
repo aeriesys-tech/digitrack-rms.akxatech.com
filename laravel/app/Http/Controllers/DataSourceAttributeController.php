@@ -43,9 +43,11 @@ class DataSourceAttributeController extends Controller
             $query->where('field_name', 'like', "$request->search%")
             ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
             ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
-            ->orwhereHas('DataSourceType', function($que) use($request){
-                $que->where('data_source_type_name', 'like', "$request->search%");
-            });
+            ->orwhereHas('DataSourceAttributeTypes', function($que) use($request){
+                $que->whereHas('DataSourceType', function($qu) use($request){
+                    $que->where('data_source_type_name', 'like', "$request->search%");
+                });
+            });    
         }
         $data_source = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return DataSourceAttributeResource::collection($data_source);
