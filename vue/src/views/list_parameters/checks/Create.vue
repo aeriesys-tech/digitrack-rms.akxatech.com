@@ -30,11 +30,30 @@
                         <div class="card-body ">
                             <div class="row g-2">
                                 <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
+                                            <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                                <div class="overselect"></div>
+                                                <select class="form-control">
+                                                    <option value="">Select Asset Type</option>
+                                                </select>
+                                            </div>
+                                            <div class="multiselect" v-if="asset_type_status">
+                                                <ul>
+                                                    <li class="" v-for="(asset_type, index) in asset_types" :key="index">
+                                                        <input type="checkbox" :value="asset_type.asset_type_id" v-model="check.asset_types" style="padding: 2px;" />
+                                                        <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="col-md-6">
                                         <label class="form-label">Field Name</label><span class="text-danger"> *</span>
                                         <input type="text" placeholder="Field Name" class="form-control" :class="{ 'is-invalid': errors.field_name }" v-model="check.field_name" ref="field_name"/>
                                         <span v-if="errors.field_name" class="invalid-feedback">{{ errors.field_name[0] }}</span>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label class="form-label">Field Type</label><span class="text-danger"> *</span>
                                         <select class="form-control" :class="{ 'is-invalid': errors.field_type}" v-model="check.field_type">
                                             <option value="">Select Field Type</option>
@@ -92,26 +111,6 @@
                                         </select> 
                                         <span v-if="errors.frequency_id" class="invalid-feedback">{{ errors.frequency_id[0] }}</span>
                                     </div>
-
-                                    <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
-                                            <div class="overselect"></div>
-                                            <select class="form-control">
-                                                <option value="">Select Asset Type</option>
-                                            </select>
-                                        </div>
-                                        <div class="multiselect" v-if="asset_type_status">
-                                            <ul>
-                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="check.asset_types" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="card-footer text-end">
