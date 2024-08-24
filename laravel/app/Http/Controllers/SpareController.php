@@ -70,7 +70,7 @@ class SpareController extends Controller
         $data = $request->validate([
             'spare_code' => 'required|string|unique:spares,spare_code',
             'spare_name' => 'required|string|unique:spares,spare_name',
-            'spare_type_id' => 'required|exists:spare_type,spare_type_id',
+            'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
             'spare_attributes.*.field_value' => 'required|string',
@@ -165,7 +165,7 @@ class SpareController extends Controller
             'spare_id' => 'required|exists:spares,spare_id',
             'spare_code' => 'required|string|unique:spares,spare_code,' . $request->spare_id . ',spare_id',
             'spare_name' => 'required|string|unique:spares,spare_name,' . $request->spare_id . ',spare_id',
-            'spare_type_id' => 'required|exists:spare_type,spare_type_id',
+            'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
             'longitude' => 'nullable|sometimes',

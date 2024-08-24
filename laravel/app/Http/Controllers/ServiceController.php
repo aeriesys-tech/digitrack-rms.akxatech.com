@@ -45,25 +45,49 @@ class ServiceController extends Controller
 
     public function addService(Request $request)
     {
+        $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
-            'service_type_id' => 'required|exists:service_type,service_type_id',
             'service_code' => 'required|string|unique:services,service_code',
             'service_name' => 'required|string|unique:services,service_name',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
-            'frequency_id' => 'required|exists:frequencies,frequency_id'
+            'service_type_id' => 'required|exists:service_type,service_type_id',
+            'service_attributes' => 'required|array',
+            'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
+            'service_attributes.*.field_value' => 'required|string',
+            'longitude' => 'nullable|sometimes',
+            'latitude' => 'nullable|sometimes',
+            'department_id' => 'nullable|exists:departments,department_id',
+            'section_id' => 'nullable|exists:sections,section_id',
+            'radius' => 'nullable|sometimes'
         ]);
+        $data['plant_id'] = $userPlantId;
+
         
         $service = Service::create($data);
+        $service_attribute_initial = ServiceAttribute::whereHas('ServiceattributeTypes', function($que) use($request){
+            $que->where('service_type_id', $request->service_type_id);
+        })->get();
 
-        foreach ($data['asset_types'] as $asset_type) {
-            ServiceAssetType::create([
+        foreach ($service_attribute_initial as $attribute) {
+            ServiceAttributeValue::create([
                 'service_id' => $service->service_id,
-                'asset_type_id' => $asset_type,
+                'service_attribute_id' => $attribute['service_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
+
+        $update_services = ServiceAttributeValue::where('service_id',  $service->service_id)->get();
+
+        foreach ($update_services as $update_service) {
+            foreach ($data['service_attributes'] as $service_attribute) {
+                if ($service_attribute['service_attribute_id'] == $update_service['service_attribute_id']) {
+                    $update_service->update([
+                        'field_value' => $service_attribute['field_value'] ?? '',
+                    ]);
+                }
+            }
+        }                
         return response()->json(["message" => "Service Created Successfully"]);
-    }  
+    } 
 
     public function getService(Request $request)
     {
@@ -87,31 +111,72 @@ class ServiceController extends Controller
         return ServiceResource::collection($services);
     }
 
+    // public function updateService(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'service_id' => 'required|exists:services,service_id',
+    //         'service_type_id' => 'required|exists:service_type,service_type_id',
+    //         'service_code' => 'required|unique:services,service_code,'.$request->service_id.',service_id',
+    //         'service_name' => 'required|unique:services,service_name,'.$request->service_id.',service_id',
+    //         'asset_types' => 'required|array',
+	//         'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+    //         'frequency_id' => 'required|exists:frequencies,frequency_id'
+    //     ]);
+
+    //     $service = Service::where('service_id', $request->service_id)->first();
+    //     $service->update($data);
+
+    //     ServiceAssetType::where('service_id', $service->service_id)->delete();
+
+    //     foreach ($data['asset_types'] as $asset_type_id) {
+    //         ServiceAssetType::create([
+    //             'service_id' => $service->service_id,
+    //             'asset_type_id' => $asset_type_id
+    //         ]);
+    //     }
+    //     return response()->json(["message" => "Service Updated Successfully"]);
+    // }
+
     public function updateService(Request $request)
     {
+        $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
             'service_id' => 'required|exists:services,service_id',
-            'service_type_id' => 'required|exists:service_type,service_type_id',
-            'service_code' => 'required|unique:services,service_code,'.$request->service_id.',service_id',
-            'service_name' => 'required|unique:services,service_name,'.$request->service_id.',service_id',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
-            'frequency_id' => 'required|exists:frequencies,frequency_id'
+            'service_code' => 'required|string|unique:services,service_code,' . $request->service_id . ',service_id',
+            'service_name' => 'required|string|unique:services,service_name,' . $request->service_id . ',service_id',
+            'service_type_id' => 'required|exists:service_types,service_type_id',
+            'service_attributes' => 'required|array',
+            'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
+            'longitude' => 'nullable|sometimes',
+            'latitude' => 'nullable|sometimes',
+            'department_id' => 'nullable|exists:departments,department_id',
+            'section_id' => 'nullable|exists:sections,section_id',
+            'radius' => 'nullable|sometimes'
         ]);
-
+    
+        $data['plant_id'] = $userPlantId;
+    
         $service = Service::where('service_id', $request->service_id)->first();
         $service->update($data);
-
-        ServiceAssetType::where('service_id', $service->service_id)->delete();
-
-        foreach ($data['asset_types'] as $asset_type_id) {
-            ServiceAssetType::create([
-                'service_id' => $service->service_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+    
+        foreach ($request->service_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'] ?? $attribute['service_attribute_value']['field_value'] ?? null;
+    
+            if ($fieldValue !== null) {
+                ServiceAttributeValue::updateOrCreate(
+                    [
+                        'service_id' => $service->service_id,
+                        'service_attribute_id' => $attribute['service_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
         }
         return response()->json(["message" => "Service Updated Successfully"]);
-    }
+    }  
 
     public function deleteService(Request $request)
     {
