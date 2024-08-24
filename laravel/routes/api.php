@@ -357,6 +357,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateVariable',[VariableController::class, 'updateVariable']);
     Route::post('deleteVariable',[VariableController::class, 'deleteVariable']);
     Route::post('getAssetTypeVariables',[VariableController::class, 'getAssetTypeVariables']);
+    Route::post('getVariableData',[VariableController::class, 'getVariableData']);
 
     Route::post('paginateDataSources',[DataSourceController::class, 'paginateDataSources']);
     Route::post('getDataSources',[DataSourceController::class, 'getDataSources']);
@@ -365,6 +366,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateDataSource',[DataSourceController::class, 'updateDataSource']);
     Route::post('deleteDataSource',[DataSourceController::class, 'deleteDataSource']);
     Route::post('getAssetTypeDataSources',[DataSourceController::class, 'getAssetTypeDataSources']);
+    Route::post('getDataSourceData',[DataSourceController::class, 'getDataSourceData']);
 
     Route::post('paginateBreakDownLists',[BreakDownListController::class, 'paginateBreakDownLists']);
     Route::post('getBreakDownLists',[BreakDownListController::class, 'getBreakDownLists']);
@@ -373,4 +375,5 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateBreakDownList',[BreakDownListController::class, 'updateBreakDownList']);
     Route::post('deleteBreakDownList',[BreakDownListController::class, 'deleteBreakDownList']);
     Route::post('getAssetTypeBreakDownLists',[BreakDownListController::class, 'getAssetTypeBreakDownLists']);
+    Route::post('getBreakDownData',[BreakDownController::class, 'getBreakDownData']);
 });

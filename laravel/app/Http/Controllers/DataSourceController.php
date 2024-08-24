@@ -84,6 +84,14 @@ class DataSourceController extends Controller
 
         
         $data_source = DataSource::create($data);
+
+        foreach ($data['asset_types'] as $asset_type) {
+            DataSourceAssetType::create([
+                'data_source_id' => $data_source->data_source_id,
+                'asset_type_id' => $asset_type,
+                ]);
+        }
+
         $data_source_attribute_initial = DataSourceAttribute::whereHas('DataSourceAttributeTypes', function($que) use($request){
             $que->where('data_source_type_id', $request->data_source_type_id);
         })->get();
@@ -111,6 +119,16 @@ class DataSourceController extends Controller
     }
 
     public function getDataSource(Request $request)
+    {
+        $request->validate([
+            'data_source_id' => 'required|exists:data_sources,data_source_id'
+        ]);
+
+        $data_source = DataSource::where('data_source_id',$request->data_source_id)->first();
+        return new DataSourceResource($data_source);
+    }
+
+    public function getDataSourceData(Request $request)
     {
         $request->validate([
             'data_source_id' => 'required|exists:data_sources,data_source_id'
@@ -179,6 +197,15 @@ class DataSourceController extends Controller
     
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
         $data_source->update($data);
+
+        DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->delete();
+
+        foreach ($data['asset_types'] as $asset_type_id) {
+            DataSourceAssetType::create([
+                'data_source_id' => $data_source->data_source_id,
+                'asset_type_id' => $asset_type_id
+            ]);
+        }
     
         foreach ($request->data_source_attributes as $attribute) 
         {
