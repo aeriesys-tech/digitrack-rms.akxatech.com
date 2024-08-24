@@ -32,7 +32,7 @@ class AssetResource extends JsonResource
             'asset_type' => new AssetTypeResource($this->AssetType),
             // 'asset_parameter_values' => AssetParameterResource::collection($this->AssetParameters),
             'status' => $this->deleted_at?false:true,
-            'asset_parameters' => AssetParameterVResource::collection($asset_parameters->map(function ($assetParameter) {
+            'asset_parameters' => AssetAttributeVResource::collection($asset_parameters->map(function ($assetParameter) {
                 return ['resource' => $assetParameter, 'asset_id' => $this->asset_id];
             })),
             // 'asset_parameters' => $asset_parameters,

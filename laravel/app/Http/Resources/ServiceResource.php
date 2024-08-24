@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\ServiceAttribute;
 
 class ServiceResource extends JsonResource
 {
@@ -14,6 +15,11 @@ class ServiceResource extends JsonResource
         {
             array_push($asset_types, $ServiceAssetType['asset_type_id']);
         }
+        
+        $service_attributes = ServiceAttribute::whereHas('ServiceAttributeTypes', function($que){
+            $que->where('service_type_id', $this->service_type_id);
+        })->get();
+
         return [
             'service_id' => $this->service_id,
             'service_type_id' => $this->service_type_id,
@@ -24,7 +30,10 @@ class ServiceResource extends JsonResource
             'service_asset_types' => ServiceAssetTypeResource::collection($this->ServiceAssetTypes),
             'asset_types' => $asset_types,
             'frequency_id' => $this->frequency_id,
-            'frequency' => new FrequencyResource($this->Frequency)
+            'frequency' => new FrequencyResource($this->Frequency),
+            'service_attributes' => ServiceValueResource::collection($service_attributes->map(function ($serviceAttribute) {
+                return ['resource' => $serviceAttribute, 'service_id' => $this->service_id];
+            })),
         ];
     }
 }
