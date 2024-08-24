@@ -74,9 +74,11 @@ class VariableController extends Controller
             'variable_code' => 'required|string|unique:variables,variable_code',
             'variable_name' => 'required|string|unique:variables,variable_name',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-            // 'variable_attributes' => 'required|array',
-            // 'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            // 'variable_attributes.*.field_value' => 'required|string',
+            'variable_attributes' => 'required|array',
+            'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
+            'variable_attributes.*.field_value' => 'required|string',
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
         $data['plant_id'] = $userPlantId;
 
@@ -184,11 +186,9 @@ class VariableController extends Controller
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
             'variable_attributes' => 'required|array',
             'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'variable_attributes.*.field_value' => 'required|string',
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;
