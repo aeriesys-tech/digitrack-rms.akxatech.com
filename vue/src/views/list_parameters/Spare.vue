@@ -36,7 +36,7 @@
                                         @input=" spare_type => spare.spare_type_id = spare_type"
                                     >
                                     </search>
-                                    <span v-if="errors.spare_type_id"><small class="text-danger">{{ errors.spare_type_id[0] }}</small></span>
+                                    <span v-if="errors?.spare_type_id"><small class="text-danger">{{ errors.spare_type_id[0] }}</small></span>
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Spare Code</label><span class="text-danger"> *</span>

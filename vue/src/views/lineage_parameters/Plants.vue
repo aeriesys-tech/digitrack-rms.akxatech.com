@@ -25,18 +25,17 @@
                                 <div class="col-md-12">
                                     <label class="form-label">Area</label><span class="text-danger"> *</span>
                                     <search
-                                        ref="cluster_id"
-                                        :class="{ 'is-invalid': errors.cluster_id }"
-                                        :customClass="{ 'is-invalid': errors.cluster_id }"
-                                        :initialize="plant.cluster_id"
-                                        id="cluster_id"
-                                        label="cluster_name"
+                                        :class="{ 'is-invalid': errors.area_id }"
+                                        :customClass="{ 'is-invalid': errors.area_id }"
+                                        :initialize="plant.area_id"
+                                        id="area_id"
+                                        label="area_name"
                                         placeholder="Select Area"
-                                        :data=" clusters"
-                                        @input=" cluster => plant.cluster_id = cluster"
+                                        :data=" areas"
+                                        @input=" area => plant.area_id = area"
                                     >
                                     </search>
-                                    <span v-if="errors.cluster_id" class="invalid-feedback">{{ errors.cluster_id[0] }}</span>
+                                    <span v-if="errors.area_id" class="invalid-feedback">{{ errors.area_id[0] }}</span>
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Plant Code</label><span class="text-danger"> *</span>
@@ -96,11 +95,11 @@
                                 <thead>
                                     <tr class="text-center" style="background-color: #9b9b9b; color: white;">
                                         <th>#</th>
-                                        <th @click="sort('cluster_id')">
+                                        <th @click="sort('area_id')">
                                             Area
                                             <span>
-                                                <i v-if="meta.keyword=='cluster_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='cluster_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='area_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='area_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
@@ -152,11 +151,11 @@
                                 </thead>
                                 <tbody>
                                     <tr v-if="plants.length==0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="9" class="text-center">No records found</td>
                                     </tr>
                                     <tr v-for="plant, key in plants" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{plant.Cluster?.cluster_name}}</td>
+                                        <td>{{plant.Area.area_name}}</td>
                                         <td>{{plant.plant_code}}</td>
                                         <td>{{plant.plant_name }}</td>
                                         <td>{{plant.latitude }}</td>
@@ -217,7 +216,7 @@ export default {
             plants: [],
             plant: {
                 plant_id: '',
-                cluster_id: '',
+                area_id: '',
                 plant_code: '',
                 plant_name: '',
                 latitude:'',
@@ -227,7 +226,7 @@ export default {
             },
             errors: [],
             status: true,
-            clusters: [],
+            areas: [],
             column:'col-8',
         }
     },
@@ -241,7 +240,7 @@ export default {
             this.column = 'col-12'
         }
         this.index();
-        this.getClusters();
+        this.getAreas();
     },
 
     methods: {
@@ -325,13 +324,13 @@ export default {
                 });
         },
 
-        getClusters() {
+        getAreas() {
             let vm = this;
             let loader = vm.$loading.show();
-            vm.$store.dispatch('post', { uri: 'getClusters' })
+            vm.$store.dispatch('post', { uri: 'getAreas' })
                 .then(response => {
                     loader.hide();
-                    vm.clusters = response.data.data;
+                    vm.areas = response.data.data;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -351,13 +350,12 @@ export default {
         },
         discard() {
             let vm = this;
-            vm.plant.cluster_id="";
+            vm.plant.area_id="";
             vm.plant.plant_code = "";
             vm.plant.plant_name = "";
             vm.plant.latitude = "";
             vm.plant.longitude = "";
             vm.plant.radius = "";
-            vm.$refs.cluster_id.focus();
             vm.errors = [];
             vm.status = true;
             vm.index();
