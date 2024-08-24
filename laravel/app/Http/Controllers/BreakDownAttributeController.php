@@ -62,8 +62,8 @@ class BreakDownAttributeController extends Controller
     public function addBreakDownAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required',
-	        'display_name' => 'required',
+        	'field_name' => 'required|string|unique:break_down_attributes,field_name',
+	        'display_name' => 'required|string|unique:break_down_attributes,display_name',
 	        'field_type' => 'required', 
 	        'field_values' => 'nullable',
 	        'field_length' => 'required',
@@ -98,8 +98,8 @@ class BreakDownAttributeController extends Controller
     {
         $data = $request->validate([
             'break_down_attribute_id' => 'required|exists:break_down_attributes,break_down_attribute_id',
-            'field_name' => 'required',
-            'display_name' => 'required',
+            'field_name' => 'required|string|unique:break_down_attributes,field_name',
+	        'display_name' => 'required|string|unique:break_down_attributes,display_name',
             'field_type' => 'required',
             'field_values' => 'nullable',
             'field_length' => 'required',

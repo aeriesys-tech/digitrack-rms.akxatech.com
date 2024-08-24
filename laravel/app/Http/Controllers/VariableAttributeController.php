@@ -62,8 +62,8 @@ class VariableAttributeController extends Controller
     public function addVariableAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required',
-	        'display_name' => 'required',
+        	'field_name' => 'required|string|unique:variable_attributes,field_name',
+	        'display_name' => 'required|string|unique:variable_attributes,display_name',
 	        'field_type' => 'required', 
 	        'field_values' => 'nullable',
 	        'field_length' => 'required',
@@ -98,8 +98,8 @@ class VariableAttributeController extends Controller
     {
         $data = $request->validate([
             'variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'field_name' => 'required',
-            'display_name' => 'required',
+            'field_name' => 'required|string|unique:variable_attributes,field_name',
+	        'display_name' => 'required|string|unique:variable_attributes,display_name',
             'field_type' => 'required',
             'field_values' => 'nullable',
             'field_length' => 'required',

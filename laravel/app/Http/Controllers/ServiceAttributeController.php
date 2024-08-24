@@ -62,8 +62,8 @@ class ServiceAttributeController extends Controller
     public function addServiceAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required',
-	        'display_name' => 'required',
+        	'field_name' => 'required|string|unique:service_attributes,field_name',
+	        'display_name' => 'required|string|unique:service_attributes,display_name',
 	        'field_type' => 'required', 
 	        'field_values' => 'nullable',
 	        'field_length' => 'required',
@@ -98,8 +98,8 @@ class ServiceAttributeController extends Controller
     {
         $data = $request->validate([
             'service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
-            'field_name' => 'required',
-            'display_name' => 'required',
+            'field_name' => 'required|string|unique:service_attributes,field_name',
+	        'display_name' => 'required|string|unique:service_attributes,display_name',
             'field_type' => 'required',
             'field_values' => 'nullable',
             'field_length' => 'required',
