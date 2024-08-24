@@ -56,8 +56,8 @@ class AssetAttributeController extends Controller
     public function addAssetAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required|string|unique:asset_attributes,field_name,'.$request->asset_attribute_id.',asset_attribute_id',
-	        'display_name' => 'required|string|unique:asset_attributes,display_name,'.$request->asset_attribute_id.',asset_attribute_id',
+        	'field_name' => 'required|string|unique:asset_attributes,field_name',
+	        'display_name' => 'required|string|unique:asset_attributes,display_name',
 	        'field_type' => 'required', 
 	        'field_values' => 'nullable',
 	        'field_length' => 'required',
