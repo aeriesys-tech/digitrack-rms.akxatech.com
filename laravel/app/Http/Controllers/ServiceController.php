@@ -72,7 +72,7 @@ class ServiceController extends Controller
             ]);
         }
 
-        $service_attribute_initial = ServiceAttribute::whereHas('ServiceattributeTypes', function($que) use($request){
+        $service_attribute_initial = ServiceAttribute::whereHas('ServiceAttributeTypes', function($que) use($request){
             $que->where('service_type_id', $request->service_type_id);
         })->get();
 

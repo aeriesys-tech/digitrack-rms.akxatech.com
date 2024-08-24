@@ -61,6 +61,30 @@ class BreakDownListController extends Controller
                 'asset_type_id' => $asset_type,
             ]);
         }
+
+        $break_down_attribute_initial = BreakDownAttribute::whereHas('BreakDownAttributeTypes', function($que) use($request){
+            $que->where('break_down_type_id', $request->break_down_type_id);
+        })->get();
+
+        foreach ($break_down_attribute_initial as $attribute) {
+            BreakDownAttributeValue::create([
+                'break_down_id' => $break_down->break_down_id,
+                'break_down_attribute_id' => $attribute['break_down_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? '',
+            ]);
+        }
+
+        $update_break_downs = BreakDownAttributeValue::where('break_down_id',  $break_down->break_down_id)->get();
+
+        foreach ($update_break_downs as $update_break_down) {
+            foreach ($data['break_down_attributes'] as $break_down_attribute) {
+                if ($break_down_attribute['break_down_attribute_id'] == $update_break_down['break_down_attribute_id']) {
+                    $update_break_down->update([
+                        'field_value' => $break_down_attribute['field_value'] ?? '',
+                    ]);
+                }
+            }
+        }             
         return response()->json(["message" => "BreakDownList Created Successfully"]);  
     } 
     
@@ -72,6 +96,16 @@ class BreakDownListController extends Controller
 
         $break_down_list = BreakDownList::where('break_down_list_id',$request->break_down_list_id)->first();
         return new BreakDownListResource($break_down_list);
+    }
+
+    public function getBreakDownData(Request $request)
+    {
+        $request->validate([
+            'break_down_list_id' => 'required|exists:break_down_lists,break_down_list_id'
+        ]);
+
+        $break_down = BreakDownList::where('break_down_list_id',$request->break_down_list_id)->first();
+        return new BreakDownListResource($break_down);
     }
 
     public function getAssetTypeBreakDownLists(Request $request)
@@ -109,6 +143,22 @@ class BreakDownListController extends Controller
             ]);
         }
 
+        foreach ($request->break_down_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'] ?? $attribute['break_down_attribute_value']['field_value'] ?? null;
+    
+            if ($fieldValue !== null) {
+                BreakDownAttributeValue::updateOrCreate(
+                    [
+                        'break_down_list_id' => $break_down->break_down_list_id,
+                        'break_down_attribute_id' => $attribute['break_down_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
+        }
         return response()->json(["message" => "BreakDownList Updated Successfully"]);
     }
 

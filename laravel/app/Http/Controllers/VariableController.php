@@ -82,7 +82,15 @@ class VariableController extends Controller
 
         
         $variable = Variable::create($data);
-        $variable_attribute_initial = VariableAttribute::whereHas('VariableattributeTypes', function($que) use($request){
+
+        foreach ($data['asset_types'] as $asset_type) {
+            VariableAssetType::create([
+                'variable_id' => $variable->variable_id,
+                'asset_type_id' => $asset_type,
+            ]);
+        }
+
+        $variable_attribute_initial = VariableAttribute::whereHas('VariableAttributeTypes', function($que) use($request){
             $que->where('variable_type_id', $request->variable_type_id);
         })->get();
 
@@ -109,6 +117,16 @@ class VariableController extends Controller
     }
 
     public function getVariable(Request $request)
+    {
+        $request->validate([
+            'variable_id' => 'required|exists:variables,variable_id'
+        ]);
+
+        $variable = Variable::where('variable_id',$request->variable_id)->first();
+        return new VariableResource($variable);
+    }
+
+    public function getVariableData(Request $request)
     {
         $request->validate([
             'variable_id' => 'required|exists:variables,variable_id'
@@ -177,6 +195,15 @@ class VariableController extends Controller
     
         $variable = Variable::where('variable_id', $request->variable_id)->first();
         $variable->update($data);
+
+        VariableAssetType::where('variable_id', $variable->variable_id)->delete();
+
+        foreach ($data['asset_types'] as $asset_type) {
+            VariableAssetType::create([
+                'variable_id' => $variable->variable_id,
+                'asset_type_id' => $asset_type,
+            ]);
+        }
     
         foreach ($request->variable_attributes as $attribute) 
         {
