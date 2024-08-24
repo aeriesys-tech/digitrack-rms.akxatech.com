@@ -43,26 +43,72 @@ class DataSourceController extends Controller
         return DataSourceResource::collection($data_source);
     }
 
+    // public function addDataSource(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
+    //         'data_source_code' => 'required|string|unique:data_sources,data_source_code',
+    //         'data_source_name' => 'required|string|unique:data_sources,data_source_name',
+    //         'asset_types' => 'required|array',
+	//         'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+    //     ]);
+        
+    //     $data_source = DataSource::create($data);
+
+    //     foreach ($data['asset_types'] as $asset_type) {
+    //         DataSourceAssetType::create([
+    //             'data_source_id' => $data_source->data_source_id,
+    //             'asset_type_id' => $asset_type,
+    //         ]);
+    //     }
+    //     return response()->json(["message" => "DataSource Created Successfully"]);  
+    // }  
+
     public function addDataSource(Request $request)
     {
+        $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
-            'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
             'data_source_code' => 'required|string|unique:data_sources,data_source_code',
             'data_source_name' => 'required|string|unique:data_sources,data_source_name',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
+            'data_source_attributes' => 'required|array',
+            'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
+            'data_source_attributes.*.field_value' => 'required|string',
+            'longitude' => 'nullable|sometimes',
+            'latitude' => 'nullable|sometimes',
+            'department_id' => 'nullable|exists:departments,department_id',
+            'section_id' => 'nullable|exists:sections,section_id',
+            'radius' => 'nullable|sometimes'
         ]);
+        $data['plant_id'] = $userPlantId;
+
         
         $data_source = DataSource::create($data);
+        $data_source_attribute_initial = DataSourceAttribute::whereHas('DataSourceAttributeTypes', function($que) use($request){
+            $que->where('data_source_type_id', $request->data_source_type_id);
+        })->get();
 
-        foreach ($data['asset_types'] as $asset_type) {
-            DataSourceAssetType::create([
+        foreach ($data_source_attribute_initial as $attribute) {
+            DataSourceAttributeValue::create([
                 'data_source_id' => $data_source->data_source_id,
-                'asset_type_id' => $asset_type,
+                'data_source_attribute_id' => $attribute['data_source_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
-        return response()->json(["message" => "DataSource Created Successfully"]);  
-    }  
+
+        $update_data_sources = DataSourceAttributeValue::where('data_source_id',  $data_source->data_source_id)->get();
+
+        foreach ($update_data_sources as $update_data_source) {
+            foreach ($data['data_source_attributes'] as $data_source_attribute) {
+                if ($data_source_attribute['data_source_attribute_id'] == $update_data_source['data_source_attribute_id']) {
+                    $update_data_source->update([
+                        'field_value' => $data_source_attribute['field_value'] ?? '',
+                    ]);
+                }
+            }
+        }                
+        return response()->json(["message" => "DataSource Created Successfully"]);
+    }
 
     public function getDataSource(Request $request)
     {
@@ -86,31 +132,72 @@ class DataSourceController extends Controller
         return DataSourceResource::collection($data_sources);
     }
 
+    // public function updateDataSource(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'data_source_id' => 'required|exists:data_sources,data_source_id',
+    //         'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
+    //         'data_source_code' => 'required|string|unique:data_sources,data_source_code,'.$request->data_source_id.',data_source_id',
+    //         'data_source_name' => 'required|string|unique:data_sources,data_source_name,'.$request->data_source_id.',data_source_id',
+    //         'asset_types' => 'required|array',
+	//         'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+    //     ]);
+
+    //     $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
+    //     $data_source->update($data);
+
+    //     DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->delete();
+
+    //     foreach ($data['asset_types'] as $asset_type_id) {
+    //         DataSourceAssetType::create([
+    //             'data_source_id' => $data_source->data_source_id,
+    //             'asset_type_id' => $asset_type_id
+    //         ]);
+    //     }
+
+    //     return response()->json(["message" => "DataSource Updated Successfully"]);
+    // }
+
     public function updateDataSource(Request $request)
     {
+        $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
             'data_source_id' => 'required|exists:data_sources,data_source_id',
+            'data_source_code' => 'required|string|unique:data_sources,data_source_code,' . $request->data_source_id . ',data_source_id',
+            'data_source_name' => 'required|string|unique:data_sources,data_source_name,' . $request->data_source_id . ',data_source_id',
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
-            'data_source_code' => 'required|string|unique:data_sources,data_source_code,'.$request->data_source_id.',data_source_id',
-            'data_source_name' => 'required|string|unique:data_sources,data_source_name,'.$request->data_source_id.',data_source_id',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'data_source_attributes' => 'required|array',
+            'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
+            'longitude' => 'nullable|sometimes',
+            'latitude' => 'nullable|sometimes',
+            'department_id' => 'nullable|exists:departments,department_id',
+            'section_id' => 'nullable|exists:sections,section_id',
+            'radius' => 'nullable|sometimes'
         ]);
-
+    
+        $data['plant_id'] = $userPlantId;
+    
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
         $data_source->update($data);
-
-        DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->delete();
-
-        foreach ($data['asset_types'] as $asset_type_id) {
-            DataSourceAssetType::create([
-                'data_source_id' => $data_source->data_source_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+    
+        foreach ($request->data_source_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'] ?? $attribute['data_source_attribute_value']['field_value'] ?? null;
+    
+            if ($fieldValue !== null) {
+                DataSourceAttributeValue::updateOrCreate(
+                    [
+                        'data_source_id' => $data_source->data_source_id,
+                        'data_source_attribute_id' => $attribute['data_source_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
         }
-
         return response()->json(["message" => "DataSource Updated Successfully"]);
-    }
+    }  
 
     public function deleteDataSource(Request $request)
     {
