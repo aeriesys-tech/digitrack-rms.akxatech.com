@@ -84,6 +84,14 @@ class SpareController extends Controller
 
         
         $spare = Spare::create($data);
+
+        foreach ($data['asset_types'] as $asset_type) {
+            SpareAssetType::create([
+                'spare_id' => $spare->spare_id,
+                'asset_type_id' => $asset_type,
+            ]);
+        }
+
         $spare_attribute_initial = SpareAttribute::whereHas('SpareattributeTypes', function($que) use($request){
             $que->where('spare_type_id', $request->spare_type_id);
         })->get();
@@ -179,6 +187,15 @@ class SpareController extends Controller
     
         $spare = Spare::where('spare_id', $request->spare_id)->first();
         $spare->update($data);
+
+        SpareAssetType::where('spare_id', $spare->spare_id)->delete();
+
+        foreach ($data['asset_types'] as $asset_type) {
+            SpareAssetType::create([
+                'spare_id' => $spare->spare_id,
+                'asset_type_id' => $asset_type,
+            ]);
+        }
     
         foreach ($request->spare_attributes as $attribute) 
         {
