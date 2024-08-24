@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Variable;
 use App\Models\VariableAssetType;
 use App\Http\Resources\VariableResource;
+use Auth;
+use App\Models\VariableAttributeValue;
+use App\Models\VariableAttribute;
 
 class VariableController extends Controller
 {
@@ -71,14 +74,9 @@ class VariableController extends Controller
             'variable_code' => 'required|string|unique:variables,variable_code',
             'variable_name' => 'required|string|unique:variables,variable_name',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-            'variable_attributes' => 'required|array',
-            'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'variable_attributes.*.field_value' => 'required|string',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            // 'variable_attributes' => 'required|array',
+            // 'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
+            // 'variable_attributes.*.field_value' => 'required|string',
         ]);
         $data['plant_id'] = $userPlantId;
 

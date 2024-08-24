@@ -43,6 +43,7 @@ use App\Http\Controllers\BreakDownAttributeController;
 use App\Http\Controllers\VariableController;
 use App\Http\Controllers\DataSourceController;
 use App\Http\Controllers\BreakDownListController;
+use App\Http\Controllers\ServiceAttributeValueController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -179,6 +180,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateService',[ServiceController::class, 'updateService']);
     Route::post('deleteService',[ServiceController::class, 'deleteService']);
     Route::post('getAssetTypeServices',[ServiceController::class, 'getAssetTypeServices']);
+    Route::post('getServiceData',[ServiceController::class, 'getServiceData']);
 
     Route::post('paginateAssets',[AssetController::class, 'paginateAssets']);
     Route::post('addAsset',[AssetController::class, 'addAsset']);
@@ -333,6 +335,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getServiceAttribute',[ServiceAttributeController::class, 'getServiceAttribute']);
     Route::post('getServiceAttributes',[ServiceAttributeController::class, 'getServiceAttributes']);
     Route::post('deleteServiceAttribute',[ServiceAttributeController::class, 'deleteServiceAttribute']);
+    
+
+    Route::post('getServicesDropdown',[ServiceAttributeValueController::class, 'getServicesDropdown']);
 
     Route::post('paginateBreakDownAttributes',[BreakDownAttributeController::class, 'paginateBreakDownAttributes']);
     Route::post('addBreakDownAttribute',[BreakDownAttributeController::class, 'addBreakDownAttribute']);

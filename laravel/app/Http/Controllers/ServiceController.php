@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\ServiceAssetType;
 use App\Http\Resources\ServiceResource;
+use Auth;
+use App\Models\ServiceAttribute;
+use App\Models\ServiceAttributeValue;
 
 class ServiceController extends Controller
 {
@@ -53,16 +56,22 @@ class ServiceController extends Controller
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
             'service_attributes.*.field_value' => 'required|string',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'frequency_id' => 'required|exists:frequencies,frequency_id',
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
         $data['plant_id'] = $userPlantId;
 
         
         $service = Service::create($data);
+
+        foreach ($data['asset_types'] as $asset_type) {
+            ServiceAssetType::create([
+                'service_id' => $service->service_id,
+                'asset_type_id' => $asset_type,
+            ]);
+        }
+
         $service_attribute_initial = ServiceAttribute::whereHas('ServiceattributeTypes', function($que) use($request){
             $que->where('service_type_id', $request->service_type_id);
         })->get();
@@ -90,6 +99,16 @@ class ServiceController extends Controller
     } 
 
     public function getService(Request $request)
+    {
+        $request->validate([
+            'service_id' => 'required|exists:services,service_id'
+        ]);
+
+        $service = Service::where('service_id',$request->service_id)->first();
+        return new ServiceResource($service);
+    }
+
+    public function getServiceData(Request $request)
     {
         $request->validate([
             'service_id' => 'required|exists:services,service_id'
@@ -144,20 +163,27 @@ class ServiceController extends Controller
             'service_id' => 'required|exists:services,service_id',
             'service_code' => 'required|string|unique:services,service_code,' . $request->service_id . ',service_id',
             'service_name' => 'required|string|unique:services,service_name,' . $request->service_id . ',service_id',
-            'service_type_id' => 'required|exists:service_types,service_type_id',
+            'service_type_id' => 'required|exists:service_type,service_type_id',
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'frequency_id' => 'required|exists:frequencies,frequency_id',
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;
     
         $service = Service::where('service_id', $request->service_id)->first();
         $service->update($data);
+
+        ServiceAssetType::where('service_id', $service->service_id)->delete();
+
+        foreach ($data['asset_types'] as $asset_type) {
+            ServiceAssetType::create([
+                'service_id' => $service->service_id,
+                'asset_type_id' => $asset_type,
+            ]);
+        }
     
         foreach ($request->service_attributes as $attribute) 
         {

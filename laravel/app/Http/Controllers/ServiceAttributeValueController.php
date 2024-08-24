@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ServiceAttributeValue;
+use App\Models\ServiceAttribute;
 use App\Http\Resources\ServiceAttributeValueResource;
+use App\Http\Resources\ServiceAttributeResource;
 
 class ServiceAttributeValueController extends Controller
 {
@@ -127,7 +129,7 @@ class ServiceAttributeValueController extends Controller
     public function getServicesDropdown(Request $request)
     {
         $request->validate([
-            'service_type_id' => 'required|exists:service_types,service_type_id'
+            'service_type_id' => 'required|exists:service_type,service_type_id'
         ]);
 
         $service_type = ServiceAttribute::whereHas('ServiceAttributeTypes', function($que) use($request){

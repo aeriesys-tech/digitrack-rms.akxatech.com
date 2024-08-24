@@ -33,4 +33,9 @@ class Service extends Model
     {
         return $this->belongsTo(Frequency::class, 'frequency_id');
     }
+
+    public function ServiceAttributes()
+    {
+        return $this->hasMany(ServiceAttribute::class, 'service_id', 'service_id');
+    }
 }
