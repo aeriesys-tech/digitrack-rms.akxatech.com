@@ -94,6 +94,19 @@ class SpareAttributeController extends Controller
         return new SpareAttributeResource($spare_attribute);
     }
 
+    public function getSparesDropdown(Request $request)
+    {
+        $request->validate([
+            'spare_type_id' => 'required|exists:spare_type,spare_type_id'
+        ]);
+
+        $spare_type = SpareAttribute::whereHas('SpareAttributeTypes', function($que) use($request){
+            $que->where('spare_type_id', $request->spare_type_id);
+        })->get();
+
+        return SpareAttributeResource::collection($spare_type);
+    } 
+
     public function updateSpareAttribute(Request $request)
     {
         $data = $request->validate([
