@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Spare;
 use App\Models\SpareAssetType;
 use App\Http\Resources\SpareResource;
+use Illuminate\Support\Facades\Auth;
+use App\Models\SpareAttribute;
+use App\Models\SpareAttributeValue;
 
 class SpareController extends Controller
 {
@@ -74,11 +77,8 @@ class SpareController extends Controller
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
             'spare_attributes.*.field_value' => 'required|string',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
         $data['plant_id'] = $userPlantId;
 
@@ -119,6 +119,16 @@ class SpareController extends Controller
     }
 
     public function getSpare(Request $request)
+    {
+        $request->validate([
+            'spare_id' => 'required|exists:spares,spare_id'
+        ]);
+
+        $spare = Spare::where('spare_id',$request->spare_id)->first();
+        return new SpareResource($spare);
+    }
+
+    public function getSpareData(Request $request)
     {
         $request->validate([
             'spare_id' => 'required|exists:spares,spare_id'
@@ -176,11 +186,8 @@ class SpareController extends Controller
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;

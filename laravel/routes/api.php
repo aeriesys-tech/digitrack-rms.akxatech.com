@@ -44,6 +44,7 @@ use App\Http\Controllers\VariableController;
 use App\Http\Controllers\DataSourceController;
 use App\Http\Controllers\BreakDownListController;
 use App\Http\Controllers\ServiceAttributeValueController;
+use App\Http\Controllers\SpareAttributeValueController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -172,6 +173,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateSpare',[SpareController::class, 'updateSpare']);
     Route::post('deleteSpare',[SpareController::class, 'deleteSpare']);
     Route::post('getAssetTypeSpares',[SpareController::class, 'getAssetTypeSpares']);
+    Route::post('getSpareData',[SpareController::class, 'getSpareData']);
 
     Route::post('paginateServices',[ServiceController::class, 'paginateServices']);
     Route::post('getServices',[ServiceController::class, 'getServices']);
@@ -314,6 +316,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getSpareAttribute',[SpareAttributeController::class, 'getSpareAttribute']);
     Route::post('getSpareAttributes',[SpareAttributeController::class, 'getSpareAttributes']);
     Route::post('deleteSpareAttribute',[SpareAttributeController::class, 'deleteSpareAttribute']);
+
+    Route::post('getSparesDropdown',[SpareAttributeValueController::class, 'getSparesDropdown']);
 
     Route::post('paginateDataSourceAttributes',[DataSourceAttributeController::class, 'paginateDataSourceAttributes']);
     Route::post('addDataSourceAttribute',[DataSourceAttributeController::class, 'addDataSourceAttribute']);

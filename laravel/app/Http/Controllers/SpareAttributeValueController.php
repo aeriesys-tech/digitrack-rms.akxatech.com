@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SpareAttributeValue;
 use App\Http\Resources\SpareAttributeValueResource;
+use App\Models\SpareAttribute;
+use App\Http\Resources\SpareAttributeResource;
 
 class SpareAttributeValueController extends Controller
 {
