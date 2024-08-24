@@ -62,8 +62,8 @@ class SpareAttributeController extends Controller
     public function addSpareAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required',
-	        'display_name' => 'required',
+        	'field_name' => 'required|string|unique:spare_attributes,field_name',
+	        'display_name' => 'required|string|unique:spare_attributes,display_name',
 	        'field_type' => 'required', 
 	        'field_values' => 'nullable',
 	        'field_length' => 'required',
@@ -98,8 +98,8 @@ class SpareAttributeController extends Controller
     {
         $data = $request->validate([
             'spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
-            'field_name' => 'required',
-            'display_name' => 'required',
+            'field_name' => 'required|string|unique:spare_attributes,field_name',
+	        'display_name' => 'required|string|unique:spare_attributes,display_name',
             'field_type' => 'required',
             'field_values' => 'nullable',
             'field_length' => 'required',

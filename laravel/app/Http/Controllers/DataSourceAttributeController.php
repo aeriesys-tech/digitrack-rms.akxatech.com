@@ -62,8 +62,8 @@ class DataSourceAttributeController extends Controller
     public function addDataSourceAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required',
-	        'display_name' => 'required',
+        	'field_name' => 'required|string|unique:data_source_attributes,field_name',
+	        'display_name' => 'required|string|unique:data_source_attributes,display_name',
 	        'field_type' => 'required', 
 	        'field_values' => 'nullable',
 	        'field_length' => 'required',
@@ -98,8 +98,8 @@ class DataSourceAttributeController extends Controller
     {
         $data = $request->validate([
             'data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
-            'field_name' => 'required',
-            'display_name' => 'required',
+            'field_name' => 'required|string|unique:data_source_attributes,field_name',
+	        'display_name' => 'required|string|unique:data_source_attributes,display_name',
             'field_type' => 'required',
             'field_values' => 'nullable',
             'field_length' => 'required',
