@@ -126,9 +126,12 @@
                     <li class="nav-item" v-can="'spares.view'">
                         <router-link to="/spares" v-bind:class="{ active: $route.path === '/spares' }" class="nav-link"><i class="ri-align-left"></i> <span>Spares</span></router-link>
                     </li>
-                    <li class="nav-item" v-can="'services.view'">
+                    <li class="nav-item" >
                         <router-link to="/services" v-bind:class="{ active: $route.path === '/services' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
                     </li>
+                    <!-- <li class="nav-item" v-can="'services.view'">
+                        <router-link to="/services" v-bind:class="{ active: $route.path === '/services' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
+                    </li> -->
                     <li class="nav-item">
                         <router-link to="/variables" v-bind:class="{ active: $route.path === '/variables' }" class="nav-link"><i class="ri-archive-drawer-line"></i> <span>Variables</span></router-link>
                     </li>

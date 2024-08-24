@@ -39,12 +39,17 @@ import Functional from "@/views/lineage_parameters/Functional.vue";
 //List params
 
 //import Check from "@/views/list_params/Check.vue";
-import Spare from "@/views/list_parameters/Spare.vue";
+// import Spare from "@/views/list_parameters/Spare.vue";
 import CreateCheck from "@/views/list_parameters/checks/Create.vue";
 import IndexChecks from "@/views/list_parameters/checks/Index.vue";
-import Service from "@/views/list_parameters/Service.vue";
 import Variables from "@/views/list_parameters/Variable.vue";
 import DataSources from "@/views/list_parameters/DataSource.vue";
+
+import CreateService from "@/views/list_parameters/service/Create.vue"
+import Services from "@/views/list_parameters/service/Index.vue";
+
+import CreateSpare from "@/views/list_parameters/spares/Create.vue"
+import Spares from "@/views/list_parameters/spares/Index.vue";
 
 
 // user management 
@@ -346,27 +351,22 @@ const routes = [
     component: CreateCheck,
   },
  
-  {
-    path: "/spares",
-    name: "Spares",
-    component: Spare,
-  },
+  // {
+  //   path: "/spares",
+  //   name: "Spares",
+  //   component: Spare,
+  // },
   {
     path: "/variables",
     name: "Variables",
-    component: Variables,
+    component: Test,
   },
   {
     path: "/data_sources",
     name: "DataSources",
-    component: DataSources,
+    component: Test,
   },
 
-  {
-    path: "/services",
-    name: "Services",
-    component: Service,
-  },
   
   // Component Management
   {
@@ -553,6 +553,44 @@ const routes = [
   },
  
   
+  // masteres
+
+  {
+    path: "/spares",
+    name: "Spares.Index",
+    component:Spares,
+  },
+  {
+    path: "/spares/create",
+    name: "Spares.Create",
+    component: CreateSpare,
+  },
+
+  {
+    path: "/spares/:spare_id/edit",
+    name: "Spares.Edit",
+    component: CreateSpare,
+  },
+
+
+  {
+    path: "/services",
+    name: "Services.Index",
+    component:Services,
+  },
+  {
+    path: "/services/create",
+    name: "Services.Create",
+    component: CreateService,
+  },
+
+  {
+    path: "/services/:service_id/edit",
+    name: "Services.Edit",
+    component: CreateService,
+  },
+
+
 
   {
     path: "/asset_attributes",
