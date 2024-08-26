@@ -42,8 +42,7 @@ import Functional from "@/views/lineage_parameters/Functional.vue";
 // import Spare from "@/views/list_parameters/Spare.vue";
 import CreateCheck from "@/views/list_parameters/checks/Create.vue";
 import IndexChecks from "@/views/list_parameters/checks/Index.vue";
-import Variables from "@/views/list_parameters/Variable.vue";
-import DataSources from "@/views/list_parameters/DataSource.vue";
+// import DataSources from "@/views/list_parameters/DataSource.vue";
 
 import CreateService from "@/views/list_parameters/service/Create.vue"
 import Services from "@/views/list_parameters/service/Index.vue";
@@ -51,6 +50,14 @@ import Services from "@/views/list_parameters/service/Index.vue";
 import CreateSpare from "@/views/list_parameters/spares/Create.vue"
 import Spares from "@/views/list_parameters/spares/Index.vue";
 
+import CreateVariable from "@/views/list_parameters/variables/Create.vue"
+import Variables from "@/views/list_parameters/variables/Index.vue";
+
+import CreateDataSource from "@/views/list_parameters/data_source/Create.vue"
+import DataSources from "@/views/list_parameters/data_source/Index.vue";
+
+import CreateBreakDownList from "@/views/list_parameters/break_down_list/Create.vue"
+import BreakDownLists from "@/views/list_parameters/break_down_list/Index.vue";
 
 // user management 
 import Role from "@/views/userManagement/Role.vue";
@@ -356,16 +363,11 @@ const routes = [
   //   name: "Spares",
   //   component: Spare,
   // },
-  {
-    path: "/variables",
-    name: "Variables",
-    component: Test,
-  },
-  {
-    path: "/data_sources",
-    name: "DataSources",
-    component: Test,
-  },
+  // {
+  //   path: "/data_sources",
+  //   name: "DataSources",
+  //   component: Test,
+  // },
 
   
   // Component Management
@@ -588,6 +590,57 @@ const routes = [
     path: "/services/:service_id/edit",
     name: "Services.Edit",
     component: CreateService,
+  },
+
+  {
+    path: "/variables",
+    name: "Variables.Index",
+    component:Variables,
+  },
+  {
+    path: "/variables/create",
+    name: "Variables.Create",
+    component: CreateVariable,
+  },
+
+  {
+    path: "/variables/:variable_id/edit",
+    name: "Varaibles.Edit",
+    component: CreateVariable,
+  },
+
+  {
+    path: "/data_sources",
+    name: "DataSources.Index",
+    component:DataSources,
+  },
+  {
+    path: "/data_sources/create",
+    name: "DataSources.Create",
+    component: CreateDataSource,
+  },
+
+  {
+    path: "/data_sources/:data_source_id/edit",
+    name: "DataSources.Edit",
+    component: CreateDataSource,
+  },
+
+  {
+    path: "/break_down_lists",
+    name: "BreakDownLists.Index",
+    component:Test,
+  },
+  {
+    path: "/break_down_lists/create",
+    name: "BreakDownLists.Create",
+    component: CreateBreakDownList,
+  },
+
+  {
+    path: "/break_down_lists/:break_down_list_id/edit",
+    name: "BreakDownLists.Edit",
+    component: CreateBreakDownList,
   },
 
 

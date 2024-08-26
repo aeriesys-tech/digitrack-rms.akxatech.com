@@ -36,7 +36,7 @@
                         <router-link to="/areas" v-bind:class="{ active: $route.path === '/areas' }" class="nav-link"><i class="ri-command-line"></i> <span>Areas</span></router-link>
                     </li>
                     <li class="nav-item" v-can="'plants.view'">
-                        <router-link to="/plants" v-bind:class="{ active: $route.path === '/plants' }" class="nav-link"><i class="ri-building-fill"></i> <span>Plants</span></router-link>
+                        <router-link to="/plants" v-bind:class="{ active: $route.path === '/plants' }" class="nav-link"><i class="ri-building-fill"></i> <span>Shops</span></router-link>
                     </li>
                     <li class="nav-item" v-can="'sections.view'">
                         <router-link to="/section" v-bind:class="{ active: $route.path === '/section' }" class="nav-link"><i class="ri-stack-line"></i> <span>Section</span></router-link>
