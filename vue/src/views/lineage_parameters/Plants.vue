@@ -8,17 +8,17 @@
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0)">Lineage Parameters</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Plants</li>
+                <li class="breadcrumb-item active" aria-current="page">Shops</li>
             </ol>
-            <h4 class="main-title mb-2">Plants</h4>
+            <h4 class="main-title mb-2">Shops</h4>
         </div> 
         <div class="row g-2">
             <div class="col-4" v-can="'plants.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add Plant</h6>
-                            <h6 class="card-title" v-else>Update Plant</h6>
+                            <h6 class="card-title" v-if="status">Add Shop</h6>
+                            <h6 class="card-title" v-else>Update Shop</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
@@ -38,15 +38,15 @@
                                     <span v-if="errors.area_id" class="invalid-feedback">{{ errors.area_id[0] }}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">Plant Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Plant Code" class="form-control" :class="{ 'is-invalid': errors.plant_code }"
+                                    <label class="form-label">Shop Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Shop Code" class="form-control" :class="{ 'is-invalid': errors.plant_code }"
                                         v-model="plant.plant_code" />
                                     <span v-if="errors.plant_code" class="invalid-feedback">{{ errors.plant_code[0] }}</span>
                                 </div>
 
                                 <div class="col-md-12">
-                                    <label class="form-label">Plant Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Plant name" class="form-control" :class="{ 'is-invalid': errors.plant_name }"
+                                    <label class="form-label">Shop Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Enter Shop name" class="form-control" :class="{ 'is-invalid': errors.plant_name }"
                                         v-model="plant.plant_name" />
                                     <span v-if="errors.plant_name" class="invalid-feedback">{{ errors.plant_name[0] }}</span>
                                 </div>
@@ -86,7 +86,7 @@
             <div :class="column">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Plants</h6>
+                        <h6 class="card-title">Shops</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
@@ -103,13 +103,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('plant_code')">Plant Code
+                                        <th @click="sort('plant_code')">Shop Code
                                             <span>
                                                 <i v-if="meta.keyword=='plant_code' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='plant_code' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                        <th @click="sort('plant_name')">Plant Name
+                                        <th @click="sort('plant_name')">Shop Name
                                         
                                             <span>
                                                 <i v-if="meta.keyword=='plant_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
