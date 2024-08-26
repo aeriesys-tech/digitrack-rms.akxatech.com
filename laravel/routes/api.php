@@ -358,6 +358,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteVariable',[VariableController::class, 'deleteVariable']);
     Route::post('getAssetTypeVariables',[VariableController::class, 'getAssetTypeVariables']);
     Route::post('getVariableData',[VariableController::class, 'getVariableData']);
+    Route::post('getVariablesDropdown',[VariableController::class, 'getVariablesDropdown']);
 
     Route::post('paginateDataSources',[DataSourceController::class, 'paginateDataSources']);
     Route::post('getDataSources',[DataSourceController::class, 'getDataSources']);

@@ -9,6 +9,7 @@ use App\Http\Resources\VariableResource;
 use Auth;
 use App\Models\VariableAttributeValue;
 use App\Models\VariableAttribute;
+use App\Http\Resources\VariableAttributeResource;
 
 class VariableController extends Controller
 {
@@ -245,5 +246,18 @@ class VariableController extends Controller
                 "message" => "Variable Deactivated successfully"
             ], 200);
         }
+    }
+
+    public function getVariablesDropdown(Request $request)
+    {
+        $request->validate([
+            'variable_type_id' => 'required|exists:variable_types,variable_type_id'
+        ]);
+
+        $variable_type = VariableAttribute::whereHas('VariableAttributeTypes', function($que) use($request){
+            $que->where('variable_type_id', $request->variable_type_id);
+        })->get();
+
+        return VariableAttributeResource::collection($variable_type);
     }
 }
