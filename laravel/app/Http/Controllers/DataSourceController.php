@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\DataSource;
 use App\Models\DataSourceAssetType;
 use App\Http\Resources\DataSourceResource;
+use App\Models\getDataSourcesDropdown;
+use App\Models\DataSourceAttribute;
+use App\Http\Resources\DataSourceAttributeResource;
+use Auth;
+use App\Models\DataSourceAttributeValue;
 
 class DataSourceController extends Controller
 {
@@ -74,11 +79,8 @@ class DataSourceController extends Controller
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
             'data_source_attributes.*.field_value' => 'required|string',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
         $data['plant_id'] = $userPlantId;
 
@@ -186,11 +188,8 @@ class DataSourceController extends Controller
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
-            'department_id' => 'nullable|exists:departments,department_id',
-            'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -247,5 +246,18 @@ class DataSourceController extends Controller
                 "message" => "DataSource Deactivated successfully"
             ], 200);
         }
+    }
+
+    public function getDataSourcesDropdown(Request $request)
+    {
+        $request->validate([
+            'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id'
+        ]);
+
+        $data_source_type = DataSourceAttribute::whereHas('DataSourceAttributeTypes', function($que) use($request){
+            $que->where('data_source_type_id', $request->data_source_type_id);
+        })->get();
+
+        return DataSourceAttributeResource::collection($data_source_type);
     }
 }

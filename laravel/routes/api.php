@@ -368,6 +368,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteDataSource',[DataSourceController::class, 'deleteDataSource']);
     Route::post('getAssetTypeDataSources',[DataSourceController::class, 'getAssetTypeDataSources']);
     Route::post('getDataSourceData',[DataSourceController::class, 'getDataSourceData']);
+    Route::post('getDataSourcesDropdown',[DataSourceController::class, 'getDataSourcesDropdown']);
 
     Route::post('paginateBreakDownLists',[BreakDownListController::class, 'paginateBreakDownLists']);
     Route::post('getBreakDownLists',[BreakDownListController::class, 'getBreakDownLists']);

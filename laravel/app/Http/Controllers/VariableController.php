@@ -187,7 +187,7 @@ class VariableController extends Controller
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
             'variable_attributes' => 'required|array',
             'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'variable_attributes.*.field_value' => 'required|string',
+            'variable_attributes.*.variable_attribute_value.field_value' => 'required|string',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
