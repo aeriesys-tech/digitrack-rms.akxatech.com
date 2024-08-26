@@ -629,7 +629,7 @@ const routes = [
   {
     path: "/break_down_lists",
     name: "BreakDownLists.Index",
-    component:Test,
+    component:BreakDownLists,
   },
   {
     path: "/break_down_lists/create",

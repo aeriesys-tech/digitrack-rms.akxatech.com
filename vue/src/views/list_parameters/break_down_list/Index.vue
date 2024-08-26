@@ -67,7 +67,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-if="break_down_lists.length==0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="7" class="text-center">No records found</td>
                                     </tr>
                                     <tr v-for="break_down_list, key in break_down_lists" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
@@ -154,13 +154,10 @@
             index() {
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store
-                    .dispatch("post", {
-                        uri: "paginateBreakDownLists",
-                        data: vm.meta,
-                    })
+                this.$store.dispatch("post", {uri: "paginateBreakDownLists", data: vm.meta,})
                     .then((response) => {
                         loader.hide();
+                        console.log("breakdown-response",response)
                         this.break_down_lists = response.data.data;
                         this.meta.totalRows = response.data.meta.total;
                         this.meta.from = response.data.meta.from;
@@ -169,6 +166,7 @@
                     })
                     .catch(function (error) {
                         loader.hide();
+                        console.log("breakdown-error",error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });

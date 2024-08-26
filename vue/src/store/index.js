@@ -5,8 +5,8 @@ import axios from "axios";
 
 export default createStore({
   state: {
-    apiUrl:"https://digitrack-rms.akxatech.com/api/",
-    // apiUrl:"http://localhost/digitrack-rms.akxatech.com/laravel/public/api/",
+    // apiUrl:"https://digitrack-rms.akxatech.com/api/",
+    apiUrl:"http://192.168.0.213/digitrack-rms.akxatech.com/laravel/public/api/",
     user: null,
     token: '',
     permissions:[],
@@ -113,7 +113,7 @@ export default createStore({
         })
           .catch(function (error) {
             reject(error);
-            if (error.response.data.message == "Unauthenticated.") {
+            if (error?.response?.data?.message == "Unauthenticated.") {
               context.dispatch('logout');
               window.location.href = "/#/"
               window.location.reload();
