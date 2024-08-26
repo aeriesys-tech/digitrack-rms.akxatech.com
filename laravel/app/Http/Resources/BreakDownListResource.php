@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\BreakDownAttribute;
 
 class BreakDownListResource extends JsonResource
 {
@@ -32,7 +33,7 @@ class BreakDownListResource extends JsonResource
             'frequency_id' => $this->frequency_id,
             'frequency' => new FrequencyResource($this->Frequency),
             'break_down_attributes' => BreakDownValueResource::collection($break_down_attributes->map(function ($BreakDownAttribute) {
-                return ['resource' => $BreakDownAttribute, 'break_down_id' => $this->break_down_id];
+                return ['resource' => $BreakDownAttribute, 'break_down_list_id' => $this->break_down_list_id];
             })),
         ];
     }

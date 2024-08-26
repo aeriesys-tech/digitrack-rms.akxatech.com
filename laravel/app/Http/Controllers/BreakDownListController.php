@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\BreakDownList;
 use App\Models\BreakDownListAssetType;
 use App\Http\Resources\BreakDownListResource;
+use App\Models\BreakDownAttribute;
+use App\Http\Resources\BreakDownAttributeResource;
+use App\Models\BreakDownAttributeValue;
 
 class BreakDownListController extends Controller
 {
@@ -50,7 +53,10 @@ class BreakDownListController extends Controller
             'break_down_list_code' => 'required|string|unique:break_down_lists,break_down_list_code',
             'break_down_list_name' => 'required|string|unique:break_down_lists,break_down_list_name',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'break_down_attributes' => 'required|array',
+            'break_down_attributes.*.break_down_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
+            'break_down_attributes.*.field_value' => 'required|string',
         ]);
         
         $break_down_list = BreakDownList::create($data);
@@ -68,16 +74,16 @@ class BreakDownListController extends Controller
 
         foreach ($break_down_attribute_initial as $attribute) {
             BreakDownAttributeValue::create([
-                'break_down_id' => $break_down->break_down_id,
+                'break_down_list_id' => $break_down_list->break_down_list_id,
                 'break_down_attribute_id' => $attribute['break_down_attribute_id'],
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
 
-        $update_break_downs = BreakDownAttributeValue::where('break_down_id',  $break_down->break_down_id)->get();
+        $update_break_downs = BreakDownAttributeValue::where('break_down_list_id',  $break_down_list->break_down_list_id)->get();
 
         foreach ($update_break_downs as $update_break_down) {
-            foreach ($data['break_down_attributes'] as $break_down_attribute) {
+            foreach ($data['break_down_list_attributes'] as $break_down_attribute) {
                 if ($break_down_attribute['break_down_attribute_id'] == $update_break_down['break_down_attribute_id']) {
                     $update_break_down->update([
                         'field_value' => $break_down_attribute['field_value'] ?? '',
@@ -98,7 +104,7 @@ class BreakDownListController extends Controller
         return new BreakDownListResource($break_down_list);
     }
 
-    public function getBreakDownData(Request $request)
+    public function getBreakDownListData(Request $request)
     {
         $request->validate([
             'break_down_list_id' => 'required|exists:break_down_lists,break_down_list_id'
@@ -128,7 +134,10 @@ class BreakDownListController extends Controller
             'break_down_list_code' => 'required|string|unique:break_down_lists,break_down_list_code,'.$request->break_down_list_id.',break_down_list_id',
             'break_down_list_name' => 'required|string|unique:break_down_lists,break_down_list_name,'.$request->break_down_list_id.',break_down_list_id',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'break_down_list_attributes' => 'required|array',
+            'break_down_list_attributes.*.break_down_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
+            'break_down_list_attributes.*.break_down_attribute_value.field_value' => 'required|string',
         ]);
 
         $break_down_list = BreakDownList::where('break_down_list_id', $request->break_down_list_id)->first();
@@ -183,5 +192,18 @@ class BreakDownListController extends Controller
                 "message" => "BreakDownList Deactivated successfully"
             ], 200);
         }
+    }
+
+    public function getBreakDownsDropdown(Request $request)
+    {
+        $request->validate([
+            'break_down_type_id' => 'required|exists:break_down_types,break_down_type_id'
+        ]);
+
+        $break_down_type = BreakDownAttribute::whereHas('BreakDownAttributeTypes', function($que) use($request){
+            $que->where('break_down_type_id', $request->break_down_type_id);
+        })->get();
+
+        return BreakDownAttributeResource::collection($break_down_type);
     }
 }

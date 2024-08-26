@@ -12,7 +12,7 @@ class BreakDownAttributeValue extends Model
 
     protected $fillable = [
         'break_down_attribute_id',
-        'break_down_id',
+        'break_down_list_id',
         'field_value'
     ];
 

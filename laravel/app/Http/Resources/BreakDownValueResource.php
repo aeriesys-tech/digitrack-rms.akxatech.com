@@ -4,20 +4,21 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\BreakDownAttributeValue;
 
 class BreakDownValueResource extends JsonResource
 {
-    protected $breakDownId;
+    protected $breakDownListId;
 
     public function __construct($resource)
     {
         parent::__construct($resource['resource']);
-        $this->breakDownId = $resource['break_down_id'] ?? null;
+        $this->breakDownListId = $resource['break_down_list_id'] ?? null;
     }
 
     public function toArray(Request $request): array
     {
-        $break_down_attribute_value = BreakDownAttributeValue::where('break_down_id', $this->breakDownId)
+        $break_down_attribute_value = BreakDownAttributeValue::where('break_down_list_id', $this->breakDownListId)
             ->where('break_down_attribute_id', $this->break_down_attribute_id)->first();
 
         return [
