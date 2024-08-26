@@ -111,8 +111,8 @@ class SpareAttributeController extends Controller
     {
         $data = $request->validate([
             'spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
-            'field_name' => 'required|string|unique:spare_attributes,field_name',
-	        'display_name' => 'required|string|unique:spare_attributes,display_name',
+            'field_name' => 'required|string|unique:spare_attributes,field_name,'.$request->spare_attribute_id .',spare_attribute_id',
+	        'display_name' => 'required|string|unique:spare_attributes,display_name,'.$request->spare_attribute_id .',spare_attribute_id',
             'field_type' => 'required',
             'field_values' => 'nullable',
             'field_length' => 'required',
