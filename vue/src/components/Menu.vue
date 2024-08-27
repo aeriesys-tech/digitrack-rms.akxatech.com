@@ -388,7 +388,7 @@
                 //     this.AssetParametersColor='white !important';
                 //     this.AssetParametersActive = !this.AssetParametersActive
                 // }
-                else if (tab == "/checks" || tab == "/spares" || tab == "/services" || tab == "/variables" || tab == "/data_sources" || tab == "/break_down_lists") {
+                else if (tab == "/checks" || tab == "/spares" || name == 'Spares.Create' || tab == "/services" || tab == "/variables" || tab == "/data_sources" || tab == "/break_down_lists") {
                     this.listParameterColor = "white !important";
                     this.showList = !this.showList;
                 }

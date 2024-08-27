@@ -9,7 +9,9 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Masters</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Break Down Lists</li>
+                    <li class="breadcrumb-item active" aria-current="page"><router-link to="/break_down_lists">Break Down Lists</router-link></li>
+                    <li class="breadcrumb-item " aria-current="page" v-if="status">New Break Down List</li>
+                    <li class="breadcrumb-item active" aria-current="page" v-else>Update Break Down List</li>
                 </ol>
                 <h4 class="main-title mb-0">Break Down Lists</h4>
             </div> 
@@ -83,8 +85,8 @@
                                     
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.break_down_attribute_value" type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @blur="updateBreakDownParameters(field)" />
-                                        <input v-else type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateBreakDownParameters(field)" />
+                                        <input v-if="field.break_down_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @blur="updateBreakDownParameters(field)" />
+                                        <input v-else type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateBreakDownParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -135,7 +137,7 @@
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateBreakDownParameters(field)">
-                                            <option value="">Select {{field.display_name}}</option>
+                                            <option :value="field.field_value">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>

@@ -9,7 +9,9 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Masters</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Variables</li>
+                    <li class="breadcrumb-item active" aria-current="page"><router-link to="/variables">Variables</router-link></li>
+                    <li class="breadcrumb-item " aria-current="page" v-if="status">New Variable</li>
+                    <li class="breadcrumb-item active" aria-current="page" v-else>Update Variable</li>
                 </ol>
                 <h4 class="main-title mb-0">Variables</h4>
             </div> 
@@ -83,8 +85,8 @@
                                     
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.variable_attribute_value" type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @blur="updateVariableParameters(field)" />
-                                        <input v-else type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateVariableParameters(field)" />
+                                        <input v-if="field.variable_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @blur="updateVariableParameters(field)" />
+                                        <input v-else type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateVariableParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -135,7 +137,7 @@
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateVariableParameters(field)">
-                                            <option value="">Select {{field.display_name}}</option>
+                                            <option :value="field.field_value">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
