@@ -143,34 +143,7 @@
                                     <div v-if="field.field_type=='Color'">
                                         <label class="form-label">{{ field.display_name }}</label>
                                         <span v-if="field.is_required" class="text-danger">*</span>
-                                        <div class="input-group">
-                                            <span class="input-group-text" :style="{ backgroundColor: field?.spare_attribute_value?.field_value }"></span>
-                                            <input 
-                                                type="text" 
-                                                class="form-control" 
-                                                :value="field?.spare_attribute_value?.field_value" 
-                                                readonly
-                                                :style="{ color: selectedColor ? 'black' : 'gray', cursor: 'pointer' }"
-                                                @click="toggleDropdown"
-                                                placeholder="Select Color"
-                                            />
-                                            <div class="dropdown-menu" :class="{ show: dropdownVisible }">
-                                                <ul class="list-unstyled mb-0">
-                                                    <li 
-                                                        v-for="color in colors" 
-                                                        :key="color.value" 
-                                                        @click="selectColor(color.value, color.name, field)" 
-                                                        class="dropdown-item d-flex align-items-center"
-                                                    >
-                                                        <span 
-                                                            :style="{ backgroundColor: color.value }" 
-                                                            class="color-square me-2"
-                                                        ></span>
-                                                        <span>{{ color.name }}</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                        <input type="color" class="form-control" :value="field?.spare_attribute_value?.field_value"/>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
