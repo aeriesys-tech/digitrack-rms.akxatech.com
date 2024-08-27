@@ -377,6 +377,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateBreakDownList',[BreakDownListController::class, 'updateBreakDownList']);
     Route::post('deleteBreakDownList',[BreakDownListController::class, 'deleteBreakDownList']);
     Route::post('getAssetTypeBreakDownLists',[BreakDownListController::class, 'getAssetTypeBreakDownLists']);
-    Route::post('getBreakDownListData',[BreakDownListController::class, 'getBreakDownListData']);
+    Route::post('getBreakDownData',[BreakDownListController::class, 'getBreakDownData']);
     Route::post('getBreakDownsDropdown',[BreakDownListController::class, 'getBreakDownsDropdown']);
 });
