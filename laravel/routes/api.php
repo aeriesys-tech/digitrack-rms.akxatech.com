@@ -45,6 +45,7 @@ use App\Http\Controllers\DataSourceController;
 use App\Http\Controllers\BreakDownListController;
 use App\Http\Controllers\ServiceAttributeValueController;
 use App\Http\Controllers\SpareAttributeValueController;
+use App\Http\Controllers\ListParameterController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -379,4 +380,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetTypeBreakDownLists',[BreakDownListController::class, 'getAssetTypeBreakDownLists']);
     Route::post('getBreakDownListData',[BreakDownListController::class, 'getBreakDownListData']);
     Route::post('getBreakDownsDropdown',[BreakDownListController::class, 'getBreakDownsDropdown']);
+
+    Route::post('paginateListParameters',[ListParameterController::class, 'paginateListParameters']);
+    Route::post('getListParameters', [ListParameterController::class, 'getListParameters']);
+    Route::post('addListParameter',[ListParameterController::class, 'addListParameter']);
+    Route::post('getListParameter',[ListParameterController::class, 'getListParameter']);
+    Route::post('updateListParameter',[ListParameterController::class, 'updateListParameter']);
+    Route::post('deleteListParameter',[ListParameterController::class, 'deleteListParameter']);
 });
