@@ -28,8 +28,8 @@
                                     <span v-if="errors.reason_code" class="invalid-feedback">{{ errors.reason_code[0] }}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">Activity Type</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Activity Type" class="form-control" :class="{ 'is-invalid': errors.reason_name }" v-model="reason.reason_name"/>
+                                    <label class="form-label">Activity Type Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Enter Activity Type Name" class="form-control" :class="{ 'is-invalid': errors.reason_name }" v-model="reason.reason_name"/>
                                     <span v-if="errors.reason_name" class="invalid-feedback">{{ errors.reason_name[0] }}</span>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                                                 <i v-else-if="meta.keyword=='reason_code' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                        <th @click="sort('reason_name')">Activity Type
+                                        <th @click="sort('reason_name')">Activity Type Name
                                         
                                             <span>
                                                 <i v-if="meta.keyword=='reason_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>

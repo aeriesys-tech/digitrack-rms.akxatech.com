@@ -95,14 +95,14 @@
                                         </span>
                                     </th>
 
-                                    <th @click="sort('frequency')">Frequency
+                                    <th @click="sort('frequency_id')">Frequency
                                         <span>
-                                            <i v-if="meta.keyword=='order' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                            <i v-else-if="meta.keyword=='order' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                            <i v-if="meta.keyword=='frequency_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                            <i v-else-if="meta.keyword=='frequency_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                             <i v-else class="fas fa-sort"></i>
                                         </span>
                                     </th>
-                                    <th @click="sort('asset_type_id')">
+                                    <th>
                                         Asset Type.
                                         <span>
                                             <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>

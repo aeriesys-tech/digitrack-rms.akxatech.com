@@ -28,11 +28,11 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                        <th @click="sort('break_down_list_type_id')">
-                                            Break Down List Type
+                                        <th @click="sort('break_down_list_id')">
+                                            Break Down Type
                                             <span>
-                                                <i v-if="meta.keyword=='break_down_list_type_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='break_down_list_type_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='break_down_list_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='break_down_list_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
@@ -53,7 +53,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('asset_type_id')">
+                                        <th >
                                             Asset Type.
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
@@ -67,11 +67,11 @@
                                 </thead>
                                 <tbody>
                                     <tr v-if="break_down_lists.length==0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="7" class="text-center">No records found</td>
                                     </tr>
                                     <tr v-for="break_down_list, key in break_down_lists" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{break_down_list.break_down_list_type?.break_down_list_type_name}}</td>
+                                        <td>{{break_down_list.break_down_type?.break_down_type_name}}</td>
                                         <td>{{break_down_list.break_down_list_code}}</td>
                                         <td>{{break_down_list.break_down_list_name}}</td>
                                         <td>
@@ -154,13 +154,10 @@
             index() {
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store
-                    .dispatch("post", {
-                        uri: "paginateBreakDownLists",
-                        data: vm.meta,
-                    })
+                this.$store.dispatch("post", {uri: "paginateBreakDownLists", data: vm.meta,})
                     .then((response) => {
                         loader.hide();
+                        console.log("breakdown-response",response)
                         this.break_down_lists = response.data.data;
                         this.meta.totalRows = response.data.meta.total;
                         this.meta.from = response.data.meta.from;
@@ -169,12 +166,14 @@
                     })
                     .catch(function (error) {
                         loader.hide();
+                        console.log("breakdown-error",error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
 
             editBreakDownList(break_down_list) {
+            console.log("ddd---",break_down_list)
                 this.$store.commit("setCurrentPage", this.meta.page);
                 this.$router.push("/break_down_lists/" + break_down_list.break_down_list_id + "/edit");
             },
