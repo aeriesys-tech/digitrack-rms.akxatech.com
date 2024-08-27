@@ -80,41 +80,41 @@
 
                                 <div class="col-md-4" v-for="field, key in show_services" :key="key">
                                     <div v-if="field.field_type=='Text'">
-                                        <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.service_attribute_value" type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.service_attribute_value.field_value" @blur="updateServiceParameters(field)" />
-                                        <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateServiceParameters(field)" />
-                                        <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                        <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                        <input v-if="field.service_attribute_value" type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" @blur="updateServiceParameters(field)" />
+                                        <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateServiceParameters(field)" />
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     
                                     <div v-if="field.field_type=='Number'">
-                                        <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.service_attribute_value" type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.service_attribute_value.field_value" @blur="updateServiceParameters(field)" />
-                                        <input v-else type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateServiceParameters(field)" />
-                                        <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                        <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                        <input v-if="field.service_attribute_value" type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" @blur="updateServiceParameters(field)" />
+                                        <input v-else type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateServiceParameters(field)" />
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
                                     <div v-if="field.field_type === 'Date'">
                                         <label class="form-label">
-                                            {{ field.field_name }}
+                                            {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input v-if="field.service_attribute_value"  type="date" class="form-control" :placeholder="'Enter ' + field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.service_attribute_value.field_value" @blur="updateServiceParameters(field)" />
-                                        <input v-else type="date" class="form-control" :placeholder="'Enter ' + field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateServiceParameters(field)" />
-                                        <span v-if="errors[field.field_name]" class="invalid-feedback">
-                                            {{ errors[field.field_name][0] }}
+                                        <input v-if="field.service_attribute_value"  type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" @blur="updateServiceParameters(field)" />
+                                        <input v-else type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateServiceParameters(field)" />
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">
+                                            {{ errors[field.display_name][0] }}
                                         </span>
                                     </div>
 
                                     <div v-if="field.field_type === 'Date&Time'">
                                         <label class="form-label">
-                                            {{ field.field_name }}
+                                            {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
                                         <input v-if="field.service_attribute_value"
                                             type="datetime-local" 
                                             class="form-control" 
-                                            :placeholder="'Enter ' + field.field_name" 
-                                            :class="{'is-invalid': errors[field.field_name]}" 
+                                            :placeholder="'Enter ' + field.display_name" 
+                                            :class="{'is-invalid': errors[field.display_name]}" 
                                             v-model="field.service_attribute_value.field_value" 
                                             @blur="updateServiceParameters(field)" 
                                             step="1" 
@@ -122,39 +122,40 @@
                                         <input v-else
                                             type="datetime-local" 
                                             class="form-control" 
-                                            :placeholder="'Enter ' + field.field_name" 
-                                            :class="{'is-invalid': errors[field.field_name]}" 
+                                            :placeholder="'Enter ' + field.display_name" 
+                                            :class="{'is-invalid': errors[field.display_name]}" 
                                             v-model="field.field_value" 
                                             @blur="updateServiceParameters(field)" 
                                             step="1" 
                                         />
-                                        <span v-if="errors[field.field_name]" class="invalid-feedback">
-                                            {{ errors[field.field_name][0] }}
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">
+                                            {{ errors[field.display_name][0] }}
                                         </span>
                                     </div>
 
                                     <div v-if="field.field_type=='Dropdown'">
-                                        <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <select v-if="field.service_attribute_value" class="form-control" :class="{'is-invalid': errors[field.field_name]}" v-model="field.service_attribute_value.field_value" @change="updateServiceParameters(field)">
-                                            <option value="">Select {{field.field_name}}</option>
+                                        <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                        <select v-if="field.service_attribute_value" class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" @change="updateServiceParameters(field)">
+                                            <option value="">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
-                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @change="updateServiceParameters(field)">
-                                            <option value="">Select {{field.field_name}}</option>
+                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateServiceParameters(field)">
+                                            <option value="">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
-                                        <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
+
                                     <div v-if="field.field_type=='Color'">
-                                        <label class="form-label">{{ field.field_name }}</label>
+                                        <label class="form-label">{{ field.display_name }}</label>
                                         <span v-if="field.is_required" class="text-danger">*</span>
                                         <div class="input-group">
-                                            <span class="input-group-text" :style="{ backgroundColor: selectedColor }" v-if="selectedColor"></span>
+                                            <span class="input-group-text" :style="{ backgroundColor: field?.service_attribute_value?.field_value }"></span>
                                             <input 
                                                 type="text" 
                                                 class="form-control" 
-                                                :value="selectedColorDisplay" 
+                                                :value="field?.service_attribute_value?.field_value" 
                                                 readonly
                                                 :style="{ color: selectedColor ? 'black' : 'gray', cursor: 'pointer' }"
                                                 @click="toggleDropdown"
@@ -177,7 +178,7 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
                                 </div>
@@ -205,6 +206,9 @@ export default {
     },
     data() {
         return {
+            selectedColor: null,
+            selectedColorName: '',
+            dropdownVisible: false,
             services: [],
             service: {
                 service_id: '',
@@ -215,6 +219,13 @@ export default {
                 asset_types:[],
                 frequency_id:'',
             },
+            colors: [
+                    { name: 'Green', value: '#008000' },
+                    { name: 'Blue', value: '#0000FF' },
+                    { name: 'Red', value: '#FF0000' },
+                    { name: 'Orange', value: '#FFA500' },
+                    { name: 'Gray', value: '#808080' },
+                ],
             status: true,
             errors: [],
             service_types: [],
@@ -259,9 +270,15 @@ export default {
                     field.service_attribute_value.field_value = colorValue;
                 }
                 else{
+                    field.service_attribute_value = {
+                        field_value : colorValue
+                    }
                     field.field_value = colorValue;
                 }
-                this.updateAssetParameters(field);
+                this.updateServiceParameters(field);
+            },
+            toggleDropdown() {
+                this.dropdownVisible = !this.dropdownVisible;
             },
         toggleAssetTypeStatus(){
             this.asset_type_status = !this.asset_type_status

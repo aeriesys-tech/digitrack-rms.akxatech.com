@@ -72,16 +72,16 @@
                         <router-link to="/activity_types" v-bind:class="{ active: $route.path === '/activity_types' }" class="nav-link"><i class="ri-color-filter-line"></i> <span>Activity Types</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/data_source_type" v-bind:class="{ active: $route.path === '/data_source_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Data Source Types</span></router-link>
+                        <router-link to="/data_source_type" v-bind:class="{ active: $route.path === '/data_source_type' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source Types</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/break_down_type" v-bind:class="{ active: $route.path === '/break_down_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Break Down Types</span></router-link>
+                        <router-link to="/break_down_type" v-bind:class="{ active: $route.path === '/break_down_type' }" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Break Down Types</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/accessory_type" v-bind:class="{ active: $route.path === '/accessory_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Accessory Types</span></router-link>
+                        <router-link to="/accessory_type" v-bind:class="{ active: $route.path === '/accessory_type' }" class="nav-link"><i class="ri-briefcase-line"></i> <span>Accessory Types</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/variable_type" v-bind:class="{ active: $route.path === '/variable_type' }" class="nav-link"><i class="ri-focus-line"></i> <span>Variable Types</span></router-link>
+                        <router-link to="/variable_type" v-bind:class="{ active: $route.path === '/variable_type' }" class="nav-link"><i class="ri-infinity-line"></i> <span>Variable Types</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -97,22 +97,22 @@
                 <a href="javascript:void(0)" class="nav-label" :style="{color:AttributesColor}"><i class="ri-stack-fill icn"></i> Attributes</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item" >
-                        <router-link to="/asset_attributes" v-bind:class="{ active: $route.path === '/asset_attributes' }" class="nav-link"><i class="ri-focus-line"></i> <span>Asset Attribute</span></router-link>
+                        <router-link to="/asset_attributes" v-bind:class="{ active: $route.path === '/asset_attributes' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/spare_attributes" v-bind:class="{ active: $route.path === '/spare_attributes' }" class="nav-link"><i class="ri-focus-line"></i> <span>Spare Attribute</span></router-link>
+                        <router-link to="/spare_attributes" v-bind:class="{ active: $route.path === '/spare_attributes' }" class="nav-link"><i class="ri-shapes-line"></i> <span>Spare Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/data_source_attributes" v-bind:class="{ active: $route.path === '/data_source_attributes' }" class="nav-link"><i class="ri-focus-line"></i> <span>Data Source Attribute</span></router-link>
+                        <router-link to="/data_source_attributes" v-bind:class="{ active: $route.path === '/data_source_attributes' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/variable_attributes" v-bind:class="{ active: $route.path === '/variable_attributes' }" class="nav-link"><i class="ri-focus-line"></i> <span>Variable Attribute</span></router-link>
+                        <router-link to="/variable_attributes" v-bind:class="{ active: $route.path === '/variable_attributes' }" class="nav-link"><i class="ri-infinity-line"></i> <span>Variable Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/service_attributes" v-bind:class="{ active: $route.path === '/service_attributes' }" class="nav-link"><i class="ri-focus-line"></i> <span>Service Attribute</span></router-link>
+                        <router-link to="/service_attributes" v-bind:class="{ active: $route.path === '/service_attributes' }" class="nav-link"><i class="ri-layout-fill"></i> <span>Service Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' }" class="nav-link"><i class="ri-focus-line"></i> <span>Breakdown Attribute</span></router-link>
+                        <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' }" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Breakdown Attribute</span></router-link>
                     </li>
                 </ul>
             </div>

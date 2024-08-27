@@ -29,7 +29,7 @@
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
                                         <th @click="sort('break_down_list_type_id')">
-                                            Break Down List Type
+                                            Break Down Type
                                             <span>
                                                 <i v-if="meta.keyword=='break_down_list_type_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='break_down_list_type_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -71,7 +71,7 @@
                                     </tr>
                                     <tr v-for="break_down_list, key in break_down_lists" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{break_down_list.break_down_list_type?.break_down_list_type_name}}</td>
+                                        <td>{{break_down_list.break_down_type?.break_down_type_name}}</td>
                                         <td>{{break_down_list.break_down_list_code}}</td>
                                         <td>{{break_down_list.break_down_list_name}}</td>
                                         <td>
@@ -173,6 +173,7 @@
             },
 
             editBreakDownList(break_down_list) {
+            console.log("ddd---",break_down_list)
                 this.$store.commit("setCurrentPage", this.meta.page);
                 this.$router.push("/break_down_lists/" + break_down_list.break_down_list_id + "/edit");
             },
