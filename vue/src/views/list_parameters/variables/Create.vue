@@ -32,9 +32,10 @@
                                         <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                         <div class="dropdown" @click="toggleAssetTypeStatus()">
                                             <div class="overselect"></div>
-                                            <select class="form-control"  >
+                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }" >
                                                 <option value="">Select Asset Type</option>
                                             </select>
+                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
                                         </div>
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
@@ -140,36 +141,9 @@
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     <div v-if="field.field_type=='Color'">
-                                        <label class="form-label">{{ field.display_name }}</label>
-                                        <span v-if="field.is_required" class="text-danger">*</span>
-                                        <div class="input-group">
-                                            <span class="input-group-text" :style="{ backgroundColor: field?.variable_attribute_value?.field_value }"></span>
-                                            <input 
-                                                type="text" 
-                                                class="form-control" 
-                                                :value="field?.variable_attribute_value?.field_value" 
-                                                readonly
-                                                :style="{ color: selectedColor ? 'black' : 'gray', cursor: 'pointer' }"
-                                                @click="toggleDropdown"
-                                                placeholder="Select Color"
-                                            />
-                                            <div class="dropdown-menu" :class="{ show: dropdownVisible }">
-                                                <ul class="list-unstyled mb-0">
-                                                    <li 
-                                                        v-for="color in colors" 
-                                                        :key="color.value" 
-                                                        @click="selectColor(color.value, color.name, field)" 
-                                                        class="dropdown-item d-flex align-items-center"
-                                                    >
-                                                        <span 
-                                                            :style="{ backgroundColor: color.value }" 
-                                                            class="color-square me-2"
-                                                        ></span>
-                                                        <span>{{ color.name }}</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                        <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
+                                            <input v-if="field.variable_attribute_value" type="color" class="form-control" v-model="field.variable_attribute_value.field_value" @change="updateVariableParameters(field)" style="height: 2.2rem;"/>
+                                            <input v-else type="color" class="form-control" v-model="field.field_value" @change="updateVariableParameters(field)" style="height: 2.2rem;"/>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -198,9 +172,6 @@ export default {
     },
     data() {
         return {
-            selectedColor: null,
-            selectedColorName: '',
-            dropdownVisible: false,
             variables: [],
             variable: {
                 variable_id: '',
@@ -211,13 +182,6 @@ export default {
                 asset_types:[],
                 frequency_id:'',
             },
-            colors: [
-                    { name: 'Green', value: '#008000' },
-                    { name: 'Blue', value: '#0000FF' },
-                    { name: 'Red', value: '#FF0000' },
-                    { name: 'Orange', value: '#FFA500' },
-                    { name: 'Gray', value: '#808080' },
-                ],
             status: true,
             errors: [],
             variable_types: [],
@@ -241,8 +205,6 @@ export default {
                         .then(function (response) {
                             vm.variable = response.data.data;
                             vm.show_variables  = response.data.data?.variable_attributes
-
-            
                         })
                         .catch(function (error) {
                             vm.errors = error.response.data.errors;
@@ -253,25 +215,6 @@ export default {
         },
 
     methods: {
-        selectColor(colorValue, colorName, field) {
-                this.selectedColor = colorValue;
-                this.selectedColorName = colorName;
-                this.dropdownVisible = false;
-                // field.field_value = colorValue;
-                if(field.variable_attribute_value){
-                    field.variable_attribute_value.field_value = colorValue;
-                }
-                else{
-                    field.variable_attribute_value = {
-                        field_value : colorValue
-                    }
-                    field.field_value = colorValue;
-                }
-                this.updateVariableParameters(field);
-            },
-            toggleDropdown() {
-                this.dropdownVisible = !this.dropdownVisible;
-            },
         toggleAssetTypeStatus(){
             this.asset_type_status = !this.asset_type_status
         },

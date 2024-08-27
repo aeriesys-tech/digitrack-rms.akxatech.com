@@ -691,7 +691,7 @@ const routes = [
      component:Test,
   },
   {
-    path: "/spare_compaign",
+    path: "/spare_campaign",
     name: "SpareCompaingn",
      component:SpareCompaingn,
   },

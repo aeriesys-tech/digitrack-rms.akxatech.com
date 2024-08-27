@@ -215,7 +215,7 @@
                         <router-link to="/asset_details" v-bind:class="{ active: $route.path === '/asset_details' }" class="nav-link"><i class="ri-focus-line"></i> <span>Asset Details</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/spare_compaign" v-bind:class="{ active: $route.path === '/spare_compaign' }" class="nav-link"><i class="ri-focus-line"></i> <span>Spare Compaign</span></router-link>
+                        <router-link to="/spare_campaign" v-bind:class="{ active: $route.path === '/spare_campaign' }" class="nav-link"><i class="ri-focus-line"></i> <span>Spare Campaign</span></router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/compliance" v-bind:class="{ active: $route.path === '/compliance' }" class="nav-link"><i class="ri-focus-line"></i> <span>Compliance</span></router-link>
@@ -364,7 +364,7 @@
                 this.ReviewColor = "rgba(255, 255, 255, .6) !important";
                 this.PredictionColor = "rgba(255, 255, 255, .6) !important";
 
-                if (tab == "/areas" || tab == "/plants" || tab == "/section" || tab == "/frequency" || tab == "/department") {
+                if (tab == "/areas" || tab == "/plants" || tab == "/section" || tab == "/frequency" || tab == "/department" || tab == "/functional") {
                     this.color = "white !important";
                     this.showLinage = !this.showLinage;
                 } else if (
@@ -422,7 +422,7 @@
                 } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes") {
                     this.AttributesColor = "white !important";
                     this.showAttributes = !this.showAttributes;
-                } else if (tab == "/asset_details" || tab == "/spare_compaign" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {
+                } else if (tab == "/asset_details" || tab == "/spare_campaign" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {
                     this.ReviewColor = "white !important";
                     this.showReview = !this.showReview;
                 } else if (tab == "/asset_life" || tab == "/upcoming_repairs") {
