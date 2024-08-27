@@ -1,17 +1,21 @@
 <template>
     <div class="">
-        <div>
-            <ol class="breadcrumb fs-sm mb-1">
-                <li class="breadcrumb-item">
-                    <router-link to="/dashboard">Dashboard</router-link>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="javascript:void(0)">Masters</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Services</li>
-            </ol>
-            <h4 class="main-title mb-2">Services</h4>
-        </div> 
+        <div class="d-sm-flex align-items-center justify-content-between mb-2">
+            <div>
+                <ol class="breadcrumb fs-sm mb-1">
+                    <li class="breadcrumb-item">
+                        <router-link to="/dashboard">Dashboard</router-link>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript:void(0)">Masters</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Services</li>
+                </ol>
+                <h4 class="main-title mb-0">Services</h4>
+            </div> 
+            <router-link to="/services" type="submit" class="btn btn-primary" style="float: right;"><i
+                class="ri-list-check"></i> SERVICES</router-link>
+        </div>
         <div class="row g-2">
             <div class="col-12" >
                 <form @submit.prevent="submitForm()">
