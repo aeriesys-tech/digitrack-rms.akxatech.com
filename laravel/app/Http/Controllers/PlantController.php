@@ -57,7 +57,7 @@ class PlantController extends Controller
         ]);
         
         $plant = Plant::create($data);
-        return response()->json(["message" => "Plant Created Successfully"]);       
+        return response()->json(["message" => "Shop Created Successfully"]);       
     }
 
     public function getPlant(Request $request)
@@ -84,7 +84,7 @@ class PlantController extends Controller
 
         $plant = Plant::where('plant_id', $request->plant_id)->first();
         $plant->update($data);
-        return response()->json(["message" => "Plant Updated Successfully"]);  
+        return response()->json(["message" => "Shop Updated Successfully"]);  
     }
     
     public function deletePlant(Request $request)
@@ -98,14 +98,14 @@ class PlantController extends Controller
         {
             $plant->restore();
             return response()->json([
-                "message" =>"Plant Activated successfully"
+                "message" =>"Shop Activated successfully"
             ],200);
         }
         else
         {
             $plant->delete();
             return response()->json([
-                "message" =>"Plant Deactivated successfully"
+                "message" =>"Shop Deactivated successfully"
             ], 200);
         }
     }
