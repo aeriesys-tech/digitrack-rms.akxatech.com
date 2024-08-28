@@ -30,14 +30,6 @@
                             <div class="row g-2">
                                 
                                 <div class="col-md-6">
-                                    <MultiSelect 
-                                        :options="options" 
-                                        v-model="selectedValues" 
-                                        optionLabel="name" 
-                                        filter 
-                                        showClear 
-                                        placeholder="Select items"
-                                        />
                                     <div class="form-group">
                                         <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                         <div class="dropdown" @click="toggleAssetTypeStatus()">
@@ -199,14 +191,8 @@ export default {
             show_break_downs:[],
             asset_type_status:false,
 
-
-            options: [
-        { name: 'Option 1', code: '1' },
-        { name: 'Option 2', code: '2' },
-        { name: 'Option 3', code: '3' }
-      ],
-      selectedValues: []
-
+            value: null,
+            options: ['list', 'of', 'options']
         }
     },
     

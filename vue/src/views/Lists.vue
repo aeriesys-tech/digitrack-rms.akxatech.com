@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Field Values</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values }" v-model="list.field_values"/>
+                                    <textarea rows="2" type="text" placeholder="Enter Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values }" v-model="list.field_values"></textarea>
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
                             </div>
@@ -81,8 +81,8 @@
                                         <td>{{ list.field_values }}</td>
                                         <td class="text-center" >
                                             <div class="form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" :id="'list' + list.list_id" :checked="list.status" :value="list.status" @change="deleteList(list)" />
-                                                <label class="custom-control-label" :for="'list' + list.list_id"></label>
+                                                <input class="form-check-input" type="checkbox" role="switch" :id="'list' + list.list_parameter_id" :checked="list.status" :value="list.status" @change="deleteList(list)" />
+                                                <label class="custom-control-label" :for="'list' + list.list_parameter_id"></label>
                                             </div>
                                         </td>
                                         <td class="text-center" >
@@ -123,7 +123,7 @@ export default {
             meta: {
                 search: "",
                 order_by: "asc",
-                keyword: "list_id",
+                keyword: "list_parameter_id",
                 per_page: 10,
                 totalRows: 0,
                 page: 1,
@@ -135,7 +135,7 @@ export default {
             },
             lists: [],
             list: {
-                list_id: '',
+                list_parameter_id: '',
                 list_parameter_name: '',
                 field_values: '',
                 status: '',

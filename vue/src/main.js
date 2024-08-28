@@ -7,9 +7,14 @@ import {LoadingPlugin} from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
 import 'remixicon/fonts/remixicon.css';
 
+import PrimeVue from 'primevue/config';
+import MultiSelect from 'primevue/multiselect';
+
 const app = createApp(App);
 app.use(store);
 app.use(router);
+app.use(MultiSelect);
+app.use(PrimeVue);
 app.use(LoadingPlugin);
 app.directive('can',{
     mounted: function(el, binding){
