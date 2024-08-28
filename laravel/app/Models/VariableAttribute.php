@@ -18,6 +18,7 @@ class VariableAttribute extends Model
         'field_length',
         'is_required',
         'user_id',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'variable_attribute_id';

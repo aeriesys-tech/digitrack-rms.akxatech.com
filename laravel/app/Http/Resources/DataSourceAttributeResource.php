@@ -23,6 +23,7 @@ class DataSourceAttributeResource extends JsonResource
 	        'field_length' => $this->field_length,
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
+            'list_parameter_id' => $this->list_parameter_id,
 	        'data_source_attribute_types' => DataSourceAttributeTypeResource::collection($this->DataSourceAttributeTypes),
             'status' => $this->deleted_at?false:true,
             'data_source_types' => $data_source_types

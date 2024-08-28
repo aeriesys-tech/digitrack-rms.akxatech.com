@@ -23,6 +23,7 @@ class SpareAttributeResource extends JsonResource
 	        'field_length' => $this->field_length,
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
+            'list_parameter_id' => $this->list_parameter_id,
 	        'spare_attribute_types' => SpareAttributeTypeResource::collection($this->SpareAttributeTypes),
             'status' => $this->deleted_at?false:true,
             'spare_types' => $spare_types

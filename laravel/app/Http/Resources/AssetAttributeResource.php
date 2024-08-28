@@ -23,6 +23,7 @@ class AssetAttributeResource extends JsonResource
 	        'field_length' => $this->field_length,
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
+            'list_parameter_id' => $this->list_parameter_id,
 	        'asset_attribute_types' => AssetAttributeTypeResource::collection($this->AssetAttributeTypes),
             'status' => $this->deleted_at?false:true,
             'asset_types' => $asset_types
