@@ -73,7 +73,7 @@
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                 </div> 
                                 <div class="col-md-4">
-                                    <label class="form-label">Field Value</label>
+                                    <label class="form-label">Field Value</label><span v-if="service_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="service_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>

@@ -29,6 +29,13 @@
                     </li>
                 </ul>
             </div>
+            <div class="nav-group show">
+                <ul class="nav nav-sidebar">
+                    <li class="nav-item">
+                        <router-link to="/lists" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>Lists</span></router-link>
+                    </li>
+                </ul>
+            </div>
             <div class="nav-group" :class="{show:showLinage}" @click="showTab('LineageParameters')" v-if="permission('LineageParameters')">
                 <a href="javascript:void(0)" :style="{color:color}" class="nav-label"><i class="ri-equalizer-line icn"></i> Lineage parameters</a>
                 <ul class="nav nav-sidebar">
@@ -309,6 +316,7 @@
                 AssetParametersColor: "rgba(255, 255, 255, .6) !important",
                 AttributesColor: "rgba(255, 255, 255, .6) !important",
                 assetActive: "white !important",
+                listsActive: "white !important",
                 showLinage: false,
                 showType: false,
                 showMotor: false,
@@ -363,6 +371,7 @@
                 this.AttributesColor = "rgba(255, 255, 255, .6) !important";
                 this.ReviewColor = "rgba(255, 255, 255, .6) !important";
                 this.PredictionColor = "rgba(255, 255, 255, .6) !important";
+                this.listActive = "rgba(255, 255, 255, .6) !important";
 
                 if (tab == "/areas" || tab == "/plants" || tab == "/section" || tab == "/frequency" || tab == "/department" || tab == "/functional") {
                     this.color = "white !important";
@@ -429,10 +438,16 @@
                     this.PredictionColor = "white !important";
                     this.showPredictions = !this.showPredictions;
                 }
+                else if (tab == "/lists") {
+                    this.listActive = "white !important";
+                }
 
                 switch (tab) {
                     case "Dashboard":
                         this.dashboardActive = "white !important";
+                        break;
+                    case "List":
+                        this.listActive = "white !important";
                         break;
                     case "LineageParameters":
                         this.color = "white !important";

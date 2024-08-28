@@ -6,6 +6,8 @@ import Profile from "@/views/auth/Profile.vue";
 import ForgotPassword from "@/views/auth/ForgotPassword.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
 
+// list
+import Lists from "@/views/Lists.vue";
 
 // configuration
 import EquipmentVue from "@/views/masters/Equipments.vue";
@@ -159,6 +161,12 @@ const routes = [
     component: Permissions,
   },
 
+// lists
+  {
+    path: "/lists",
+    name: "Lists",
+    component: Lists,
+  },
   // Type parameters
   {
     path: "/equipment_types",
