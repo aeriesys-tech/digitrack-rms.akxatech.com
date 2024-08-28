@@ -18,6 +18,7 @@ class DataSourceAttribute extends Model
         'field_length',
         'is_required',
         'user_id',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'data_source_attribute_id';

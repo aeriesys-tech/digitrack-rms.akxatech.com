@@ -62,6 +62,7 @@ class AssetAttributeController extends Controller
 	        'field_values' => 'nullable|required_if:field_type,Dropdown',
 	        'field_length' => 'required',
 	        'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -88,6 +89,7 @@ class AssetAttributeController extends Controller
             'field_values' => 'nullable|required_if:field_type,Dropdown',
             'field_length' => 'required',
             'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'asset_types' => 'required|array',
             'asset_types.*' => 'required|exists:asset_type,asset_type_id'
         ]);

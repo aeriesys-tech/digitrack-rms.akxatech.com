@@ -68,6 +68,7 @@ class ServiceAttributeController extends Controller
 	        'field_values' => 'nullable|required_if:field_type,Dropdown',
 	        'field_length' => 'required',
 	        'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'service_types' => 'required|array',
 	        'service_type_id.*' => 'required|exists:service_types,service_type_id'
         ]);
@@ -104,6 +105,7 @@ class ServiceAttributeController extends Controller
             'field_values' => 'nullable|required_if:field_type,Dropdown',
             'field_length' => 'required',
             'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'service_types' => 'required|array',
             'service_types.*' => 'required|exists:service_type,service_type_id'
         ]);

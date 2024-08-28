@@ -18,6 +18,7 @@ class BreakDownAttribute extends Model
         'field_length',
         'is_required',
         'user_id',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'break_down_attribute_id';

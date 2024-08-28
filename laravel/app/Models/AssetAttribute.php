@@ -18,6 +18,7 @@ class AssetAttribute extends Model
         'field_length',
         'is_required',
         'user_id',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'asset_attribute_id';

@@ -68,6 +68,7 @@ class VariableAttributeController extends Controller
 	        'field_values' => 'nullable|required_if:field_type,Dropdown',
 	        'field_length' => 'required',
 	        'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'variable_types' => 'required|array',
 	        'variable_type_id.*' => 'required|exists:variable_types,variable_type_id'
         ]);
@@ -104,6 +105,7 @@ class VariableAttributeController extends Controller
             'field_values' => 'nullable|required_if:field_type,Dropdown',
             'field_length' => 'required',
             'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'variable_types' => 'required|array',
             'variable_types.*' => 'required|exists:variable_types,variable_type_id'
         ]);

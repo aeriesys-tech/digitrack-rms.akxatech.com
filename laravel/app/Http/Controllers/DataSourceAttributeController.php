@@ -68,6 +68,7 @@ class DataSourceAttributeController extends Controller
 	        'field_values' => 'nullable|required_if:field_type,Dropdown',
 	        'field_length' => 'required',
 	        'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'data_source_types' => 'required|array',
 	        'data_source_type_id.*' => 'required|exists:data_source_types,data_source_type_id'
         ]);
@@ -104,6 +105,7 @@ class DataSourceAttributeController extends Controller
             'field_values' => 'nullable|required_if:field_type,Dropdown',
             'field_length' => 'required',
             'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'data_source_types' => 'required|array',
             'data_source_types.*' => 'required|exists:data_source_types,data_source_type_id'
         ]);

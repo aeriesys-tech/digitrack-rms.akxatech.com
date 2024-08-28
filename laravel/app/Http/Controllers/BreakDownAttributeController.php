@@ -68,6 +68,7 @@ class BreakDownAttributeController extends Controller
 	        'field_values' => 'nullable|required_if:field_type,Dropdown',
 	        'field_length' => 'required',
 	        'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'break_down_types' => 'required|array',
 	        'break_down_type_id.*' => 'required|exists:break_down_types,break_down_type_id'
         ]);
@@ -104,6 +105,7 @@ class BreakDownAttributeController extends Controller
             'field_values' => 'nullable|required_if:field_type,Dropdown',
             'field_length' => 'required',
             'is_required' => 'required|boolean',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'break_down_types' => 'required|array',
             'break_down_types.*' => 'required|exists:break_down_types,break_down_type_id'
         ]);
