@@ -25,12 +25,12 @@
                                 <div class="col-md-12">
                                     <label class="form-label">Activity Type Code</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Enter Activity Type Code" class="form-control" :class="{ 'is-invalid': errors.reason_code }" v-model="reason.reason_code" ref="reason_code"/>
-                                    <span v-if="errors.reason_code" class="invalid-feedback">{{ errors.reason_code[0] }}</span>
+                                    <span v-if="errors.reason_code" class="invalid-feedback">The activity type code field is required.</span>
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Activity Type Name</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Enter Activity Type Name" class="form-control" :class="{ 'is-invalid': errors.reason_name }" v-model="reason.reason_name"/>
-                                    <span v-if="errors.reason_name" class="invalid-feedback">{{ errors.reason_name[0] }}</span>
+                                    <span v-if="errors.reason_name" class="invalid-feedback">The activity type name field is required.</span>
                                 </div>
                             </div>
                         </div>
