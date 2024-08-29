@@ -13,7 +13,8 @@ class DataSource extends Model
     protected $fillable = [
         'data_source_type_id',
         'data_source_code',
-        'data_source_name'
+        'data_source_name',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'data_source_id';
@@ -26,5 +27,10 @@ class DataSource extends Model
     public function DataSourceAssetTypes()
     {
         return $this->hasMany(DataSourceAssetType::class, 'data_source_id', 'data_source_id');
+    }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

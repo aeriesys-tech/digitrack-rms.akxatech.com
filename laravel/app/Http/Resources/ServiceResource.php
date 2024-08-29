@@ -26,11 +26,11 @@ class ServiceResource extends JsonResource
             'service_type' => new ServiceTypeResource($this->ServiceType),
             'service_code' => $this->service_code,
             'service_name' => $this->service_name,
+            'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter),
             'status' => $this->deleted_at?false:true,
             'service_asset_types' => ServiceAssetTypeResource::collection($this->ServiceAssetTypes),
             'asset_types' => $asset_types,
-            'frequency_id' => $this->frequency_id,
-            'frequency' => new FrequencyResource($this->Frequency),
             'service_attributes' => ServiceValueResource::collection($service_attributes->map(function ($serviceAttribute) {
                 return ['resource' => $serviceAttribute, 'service_id' => $this->service_id];
             })),

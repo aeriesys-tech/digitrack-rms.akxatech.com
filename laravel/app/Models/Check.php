@@ -19,7 +19,7 @@ class Check extends Model
         'lcl',
         'field_values',
         'order',
-        'frequency_id'
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'check_id';
@@ -29,8 +29,8 @@ class Check extends Model
         return $this->hasMany(CheckAssetType::class, 'check_id', 'check_id');
     }
 
-    public function Frequency()
+    public function ListParameter()
     {
-        return $this->belongsTo(Frequency::class, 'frequency_id');
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

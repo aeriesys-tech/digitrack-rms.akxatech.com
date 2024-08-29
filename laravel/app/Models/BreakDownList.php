@@ -13,7 +13,8 @@ class BreakDownList extends Model
     protected $fillable = [
         'break_down_type_id',
         'break_down_list_code',
-        'break_down_list_name'
+        'break_down_list_name',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'break_down_list_id';
@@ -26,5 +27,10 @@ class BreakDownList extends Model
     public function BreakDownListAssetTypes()
     {
         return $this->hasMany(BreakDownListAssetType::class, 'break_down_list_id', 'break_down_list_id');
+    }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

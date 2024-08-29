@@ -56,7 +56,7 @@ class ServiceController extends Controller
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
             'service_attributes.*.field_value' => 'required|string',
-            'frequency_id' => 'required|exists:frequencies,frequency_id',
+            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -166,7 +166,7 @@ class ServiceController extends Controller
             'service_type_id' => 'required|exists:service_type,service_type_id',
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
-            'frequency_id' => 'required|exists:frequencies,frequency_id',
+            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);

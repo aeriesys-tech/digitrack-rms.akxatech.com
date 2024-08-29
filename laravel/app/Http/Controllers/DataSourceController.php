@@ -75,6 +75,7 @@ class DataSourceController extends Controller
         $data = $request->validate([
             'data_source_code' => 'required|string|unique:data_sources,data_source_code',
             'data_source_name' => 'required|string|unique:data_sources,data_source_name',
+            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id',
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
@@ -185,6 +186,7 @@ class DataSourceController extends Controller
             'data_source_id' => 'required|exists:data_sources,data_source_id',
             'data_source_code' => 'required|string|unique:data_sources,data_source_code,' . $request->data_source_id . ',data_source_id',
             'data_source_name' => 'required|string|unique:data_sources,data_source_name,' . $request->data_source_id . ',data_source_id',
+            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id',
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',

@@ -27,11 +27,11 @@ class DataSourceResource extends JsonResource
             'data_source_type' => new DataSourceTypeResource($this->DataSourceType),
             'data_source_code' => $this->data_source_code,
             'data_source_name' => $this->data_source_name,
+            'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter),
             'status' => $this->deleted_at?false:true,
             'data_source_asset_types' => DataSourceAssetTypeResource::collection($this->DataSourceAssetTypes),
             'asset_types' => $asset_types,
-            'frequency_id' => $this->frequency_id,
-            'frequency' => new FrequencyResource($this->Frequency),
             'data_source_attributes' => DataSourceValueResource::collection($data_source_attributes->map(function ($DataSourceAttribute) {
                 return ['resource' => $DataSourceAttribute, 'data_source_id' => $this->data_source_id];
             })),
