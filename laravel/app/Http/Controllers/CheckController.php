@@ -66,7 +66,7 @@ class CheckController extends Controller
             'is_required' => 'required',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
-            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id'
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id'
         ]);
         
         $check = Check::create($data);
@@ -116,7 +116,7 @@ class CheckController extends Controller
             'is_required' => 'required',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
-            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id'
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id'
         ]);
 
         $check = Check::where('check_id', $request->check_id)->first();
