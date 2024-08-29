@@ -13,7 +13,8 @@ class Spare extends Model
     protected $fillable = [
         'spare_type_id',
         'spare_code',
-        'spare_name'
+        'spare_name',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'spare_id';
@@ -26,5 +27,10 @@ class Spare extends Model
     public function SpareAssetTypes()
     {
         return $this->hasMany(SpareAssetType::class, 'spare_id', 'spare_id');
+    }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

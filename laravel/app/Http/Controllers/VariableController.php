@@ -74,6 +74,7 @@ class VariableController extends Controller
         $data = $request->validate([
             'variable_code' => 'required|string|unique:variables,variable_code',
             'variable_name' => 'required|string|unique:variables,variable_name',
+            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
             'variable_attributes' => 'required|array',
             'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
@@ -184,6 +185,7 @@ class VariableController extends Controller
             'variable_id' => 'required|exists:variables,variable_id',
             'variable_code' => 'required|string|unique:variables,variable_code,' . $request->variable_id . ',variable_id',
             'variable_name' => 'required|string|unique:variables,variable_name,' . $request->variable_id . ',variable_id',
+            'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
             'variable_attributes' => 'required|array',
             'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',

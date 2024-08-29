@@ -26,6 +26,8 @@ class SpareResource extends JsonResource
             'spare_type' => new SpareTypeResource($this->SpareType),
             'spare_code' => $this->spare_code,
             'spare_name' => $this->spare_name,
+            'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter),
             'status' => $this->deleted_at?false:true,
             'spare_asset_types' => SpareAssetTypeResource::collection($this->SpareAssetTypes),
             'asset_types' => $asset_types,

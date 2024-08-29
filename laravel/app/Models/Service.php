@@ -14,7 +14,7 @@ class Service extends Model
         'service_type_id',
         'service_code',
         'service_name',
-        'frequency_id'
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'service_id';
@@ -29,13 +29,13 @@ class Service extends Model
         return $this->hasMany(ServiceAssetType::class, 'service_id', 'service_id');
     }
 
-    public function Frequency()
-    {
-        return $this->belongsTo(Frequency::class, 'frequency_id');
-    }
-
     public function ServiceAttributes()
     {
         return $this->hasMany(ServiceAttribute::class, 'service_id', 'service_id');
+    }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

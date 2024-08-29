@@ -13,7 +13,8 @@ class Variable extends Model
     protected $fillable = [
         'variable_type_id',
         'variable_code',
-        'variable_name'
+        'variable_name',
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'variable_id';
@@ -26,5 +27,10 @@ class Variable extends Model
     public function VariableAssetTypes()
     {
         return $this->hasMany(VariableAssetType::class, 'variable_id', 'variable_id');
+    }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

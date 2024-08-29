@@ -27,8 +27,8 @@ class CheckResource extends JsonResource
             'status' => $this->deleted_at?false:true,
             'check_asset_types' => CheckAssetTypeResource::collection($this->CheckAssetTypes),
             'asset_types' => $asset_types,
-            'frequency_id' => $this->frequency_id,
-            'frequency' => new FrequencyResource($this->Frequency)
+            'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter)
         ];
     }
 }
