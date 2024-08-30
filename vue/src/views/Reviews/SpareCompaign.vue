@@ -9,16 +9,16 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Review</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Spare Compaign</li>
+                    <li class="breadcrumb-item active" aria-current="page">Spare Campaign</li>
                 </ol>
-                <h4 class="main-title mb-0">Spare Compaign</h4>
+                <h4 class="main-title mb-0">Spare Campaign</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Spare Compaign</h6>
+                        <h6 class="card-title">Spare Campaign</h6>
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">

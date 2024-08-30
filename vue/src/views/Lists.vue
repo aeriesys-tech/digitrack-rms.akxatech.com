@@ -5,32 +5,29 @@
                 <li class="breadcrumb-item">
                     <router-link to="/dashboard">Dashboard</router-link>
                 </li>
-                <li class="breadcrumb-item">
-                    <a href="javascript:void(0)">Type Parameters</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Activity Types</li>
+                <li class="breadcrumb-item active" aria-current="page">Lists</li>
             </ol>
-            <h4 class="main-title mb-2">Activity Types</h4>
+            <h4 class="main-title mb-2">Lists</h4>
         </div> 
         <div class="row g-2">
-            <div class="col-4" v-can="'reasons.create'">
+            <div class="col-4">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add Activity Type</h6>
-                            <h6 class="card-title" v-else>Update Activity Type</h6>
+                            <h6 class="card-title" v-if="status">Add List</h6>
+                            <h6 class="card-title" v-else>Update List</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-12">
-                                    <label class="form-label">Activity Type Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Activity Type Code" class="form-control" :class="{ 'is-invalid': errors.reason_code }" v-model="reason.reason_code" ref="reason_code"/>
-                                    <span v-if="errors.reason_code" class="invalid-feedback">The activity type code field is required.</span>
+                                    <label class="form-label">List Parameter Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="List Parameter Name" class="form-control" :class="{ 'is-invalid': errors.list_parameter_name }" v-model="list.list_parameter_name" ref="list_parameter_name"/>
+                                    <span v-if="errors.list_parameter_name" class="invalid-feedback">{{ errors.list_parameter_name[0] }}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">Activity Type Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Activity Type Name" class="form-control" :class="{ 'is-invalid': errors.reason_name }" v-model="reason.reason_name"/>
-                                    <span v-if="errors.reason_name" class="invalid-feedback">The activity type name field is required.</span>
+                                    <label class="form-label">Field Values</label><span class="text-danger"> *</span>
+                                    <textarea rows="2" type="text" placeholder="Enter Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values }" v-model="list.field_values"></textarea>
+                                    <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -47,7 +44,7 @@
             <div :class="column">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Activity types</h6>
+                        <h6 class="card-title">Lists</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
@@ -56,40 +53,40 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                        <th @click="sort('reason_code')">Activity Type Code
+                                        <th @click="sort('list_parameter_name')">List Parameter Name
                                             <span>
-                                                <i v-if="meta.keyword=='reason_code' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='reason_code' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='list_parameter_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='list_parameter_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                        <th @click="sort('reason_name')">Activity Type Name
+                                        <th @click="sort('field_values')">Field Values
                                         
                                             <span>
-                                                <i v-if="meta.keyword=='reason_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='reason_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='field_values' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='field_values' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                        
-                                        <th class="text-center" v-can="'reasons.delete'">Status</th>
-                                        <th class="text-center" v-can="'reasons.update'">Actions</th>
+                                        <th class="text-center" >Status</th>
+                                        <th class="text-center" >Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-if="reasons.length==0">
+                                    <tr v-if="lists.length==0">
                                         <td colspan="6" class="text-center">No records found</td>
                                     </tr>
-                                    <tr v-for="reason, key in reasons" :key="key">
+                                    <tr v-for="list, key in lists" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{reason.reason_code}}</td>
-                                        <td>{{ reason.reason_name }}</td>
-                                        <td class="text-center" v-can="'reasons.delete'">
+                                        <td>{{list.list_parameter_name}}</td>
+                                        <td>{{ list.field_values }}</td>
+                                        <td class="text-center" >
                                             <div class="form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" :id="'reason' + reason.reason_id" :checked="reason.status" :value="reason.status" @change="deleteReason(reason)" />
-                                                <label class="custom-control-label" :for="'reason' + reason.reason_id"></label>
+                                                <input class="form-check-input" type="checkbox" role="switch" :id="'list' + list.list_parameter_id" :checked="list.status" :value="list.status" @change="deleteList(list)" />
+                                                <label class="custom-control-label" :for="'list' + list.list_parameter_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center" v-can="'reasons.update'">
-                                            <a href="javascript:void(0)" v-if="reason.status" class="text-success me-2" @click="editReason(reason)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                        <td class="text-center" >
+                                            <a href="javascript:void(0)" v-if="list.status" class="text-success me-2" @click="editList(list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -126,7 +123,7 @@ export default {
             meta: {
                 search: "",
                 order_by: "asc",
-                keyword: "reason_id",
+                keyword: "list_parameter_id",
                 per_page: 10,
                 totalRows: 0,
                 page: 1,
@@ -136,50 +133,42 @@ export default {
                 maxPage: 1,
                 trashed: false,
             },
-            reasons: [],
-            reason: {
-                reason_id: '',
-                reason_code: '',
-                reason_name: '',
+            lists: [],
+            list: {
+                list_parameter_id: '',
+                list_parameter_name: '',
+                field_values: '',
                 status: '',
             },
             status: true,
             errors: [],
-            column:'col-8'
         }
     },
     mounted() {
-        this.create_reason = this.$store.getters.permissions.filter(function(element){
-            return element.ability.ability.includes('reasons.create')
-        })
-        if(this.create_reason.length){
-            this.column = 'col-8'
-        }else{
-            this.column = 'col-12'
-        }
         this.index();
+        this.$refs.list_parameter_name.focus();
     },
 
     methods: {
         submitForm() {
             let vm = this;
             if (vm.status) {
-                vm.addReason();
+                vm.addList();
             } else {
-                vm.updateReason();
+                vm.updateList();
             }
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateReasons' , data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginateListParameters' , data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.reasons = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.lists = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -188,15 +177,14 @@ export default {
                 });
         },
 
-        addReason() {
+        addList() {
             let vm = this;
             let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addReason', data: vm.reason })
+            this.$store.dispatch('post', { uri: 'addListParameter', data: vm.list })
                 .then(response => {
                     loader.hide();
                     this.$store.dispatch('success', response.data.message);
                     this.discard();
-                    this.index();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -205,14 +193,14 @@ export default {
                 });
         },
 
-        deleteReason(reason) {
+        deleteList(list) {
             let vm = this;
-            reason.status = reason.status == 1 ? 0 : 1;
+            list.status = list.status == 1 ? 0 : 1;
             vm.$store
-                .dispatch("post", { uri: "deleteReason", data: reason })
+                .dispatch("post", { uri: "deleteListParameter", data: list })
                 .then(function (response) {
                     vm.$store.dispatch('success', response.data.message);
-                    vm.index();
+                    vm.discard();
                 })
                 .catch(function (error) {
                     vm.errors = error.response.data.errors;
@@ -220,15 +208,17 @@ export default {
                 });
         },
 
-        editReason(reason) {
-            this.reason = reason;
+        editList(list) {
+           
+            this.list = list;
             this.status = false;
+            this.$refs.list_parameter_name.focus();
         },
 
-        updateReason() {
+        updateList() {
             let vm = this;
             let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateReason', data: this.reason })
+            this.$store.dispatch('post', { uri: 'updateListParameter', data: this.list })
                 .then(response => {
                     loader.hide();
                     this.$store.dispatch('success', response.data.message);
@@ -252,9 +242,9 @@ export default {
         },
         discard() {
             let vm = this;
-            vm.reason.reason_code = "";
-            vm.reason.reason_name = "";
-            vm.$refs.reason_code.focus();
+            vm.list.list_parameter_name = "";
+            vm.list.field_values = "";
+            vm.$refs.list_parameter_name.focus();
             vm.errors = [];
             vm.status = true;
             vm.index();

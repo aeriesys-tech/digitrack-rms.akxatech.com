@@ -34,9 +34,10 @@
                                             <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                             <div class="dropdown" @click="toggleAssetTypeStatus()">
                                                 <div class="overselect"></div>
-                                                <select class="form-control">
+                                                <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
                                                     <option value="">Select Asset Type</option>
                                                 </select>
+                                                <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
                                             </div>
                                             <div class="multiselect" v-if="asset_type_status">
                                                 <ul>
@@ -104,7 +105,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label class="form-label">Frequency</label><span class="text-danger"> *</span>
+                                        <label class="form-label">Frequency</label>
                                         <select class="form-control" :class="{ 'is-invalid': errors.frequency_id}" v-model="check.frequency_id">
                                             <option value="">Select Frequency</option>
                                             <option v-for="frequency, key in frequencies" :key="key" :value="frequency?.frequency_id">{{ frequency?.frequency_name }}</option>

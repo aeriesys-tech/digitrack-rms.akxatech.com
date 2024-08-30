@@ -1,21 +1,23 @@
 <template>
     <div class="">
         <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <div>
-                <ol class="breadcrumb fs-sm mb-1">
-                    <li class="breadcrumb-item">
-                        <router-link to="/dashboard">Dashboard</router-link>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Masters</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Spares</li>
-                </ol>
-                <h4 class="main-title mb-0">Spares</h4>
-            </div> 
-            <router-link to="/spares" type="submit" class="btn btn-primary" style="float: right;"><i
-                class="ri-list-check"></i> SPARES</router-link>
-        </div>
+        <div>
+            <ol class="breadcrumb fs-sm mb-1">
+                <li class="breadcrumb-item">
+                    <router-link to="/dashboard">Dashboard</router-link>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="javascript:void(0)">Masters</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page"><router-link to="/spares">Spares</router-link></li>
+                <li class="breadcrumb-item " aria-current="page" v-if="status">New Spare</li>
+                <li class="breadcrumb-item active" aria-current="page" v-else>Update Spare</li>
+            </ol>
+            <h4 class="main-title mb-0">Spares</h4>
+        </div> 
+        <router-link to="/spares" type="submit" class="btn btn-primary" style="float: right;"><i
+            class="ri-list-check"></i> SPARES</router-link>
+            </div>
         <div class="row g-2">
             <div class="col-12" >
                 <form @submit.prevent="submitForm()">
@@ -32,9 +34,10 @@
                                         <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                         <div class="dropdown" @click="toggleAssetTypeStatus()">
                                             <div class="overselect"></div>
-                                            <select class="form-control"  >
+                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }" >
                                                 <option value="">Select Asset Type</option>
                                             </select>
+                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
                                         </div>
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
@@ -75,15 +78,15 @@
                                 <div class="col-md-4" v-for="field, key in show_spares" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.spare_attribute_value" type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.spare_attribute_value.field_value" @blur="updateSpareParameters(field)" />
-                                        <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateSpareParameters(field)" />
+                                        <input v-if="field.spare_attribute_value" type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.spare_attribute_value.field_value" @blur="updateSpareParameters(field)" />
+                                        <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateSpareParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.spare_attribute_value" type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.spare_attribute_value.field_value" @blur="updateSpareParameters(field)" />
-                                        <input v-else type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateSpareParameters(field)" />
+                                        <input v-if="field.spare_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.spare_attribute_value.field_value" @blur="updateSpareParameters(field)" />
+                                        <input v-else type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateSpareParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -92,8 +95,8 @@
                                             {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input v-if="field.spare_attribute_value"  type="date" class="form-control" :placeholder="'Enter ' + field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.spare_attribute_value.field_value" @blur="updateSpareParameters(field)" />
-                                        <input v-else type="date" class="form-control" :placeholder="'Enter ' + field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateSpareParameters(field)" />
+                                        <input v-if="field.spare_attribute_value"  type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.spare_attribute_value.field_value" @blur="updateSpareParameters(field)" />
+                                        <input v-else type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateSpareParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
                                         </span>
@@ -107,8 +110,8 @@
                                         <input v-if="field.spare_attribute_value"
                                             type="datetime-local" 
                                             class="form-control" 
-                                            :placeholder="'Enter ' + field.field_name" 
-                                            :class="{'is-invalid': errors[field.field_name]}" 
+                                            :placeholder="'Enter ' + field.display_name" 
+                                            :class="{'is-invalid': errors[field.display_name]}" 
                                             v-model="field.spare_attribute_value.field_value" 
                                             @blur="updateSpareParameters(field)" 
                                             step="1" 
@@ -116,8 +119,8 @@
                                         <input v-else
                                             type="datetime-local" 
                                             class="form-control" 
-                                            :placeholder="'Enter ' + field.field_name" 
-                                            :class="{'is-invalid': errors[field.field_name]}" 
+                                            :placeholder="'Enter ' + field.display_name" 
+                                            :class="{'is-invalid': errors[field.display_name]}" 
                                             v-model="field.field_value" 
                                             @blur="updateSpareParameters(field)" 
                                             step="1" 
@@ -129,21 +132,21 @@
 
                                     <div v-if="field.field_type=='Dropdown'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <select v-if="field.spare_attribute_value" class="form-control" :class="{'is-invalid': errors[field.field_name]}" v-model="field.spare_attribute_value.field_value" @change="updateSpareParameters(field)">
-                                            <option value="">Select {{field.field_name}}</option>
+                                        <select v-if="field.spare_attribute_value" class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.spare_attribute_value.field_value" @change="updateSpareParameters(field)">
+                                            <option value="">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values?.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
-                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @change="updateSpareParameters(field)">
-                                            <option value="">Select {{field.field_name}}</option>
+                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateSpareParameters(field)">
+                                            <option :value="field.field_value">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values?.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
                                     <div v-if="field.field_type=='Color'">
-                                        <label class="form-label">{{ field.display_name }}</label>
-                                        <span v-if="field.is_required" class="text-danger">*</span>
-                                        <input type="color" class="form-control" :value="field?.spare_attribute_value?.field_value"/>
+                                        <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
+                                            <input v-if="field.spare_attribute_value" type="color" class="form-control" v-model="field.spare_attribute_value.field_value" @change="updateSpareParameters(field)" style="height: 2.2rem;"/>
+                                            <input v-else type="color" class="form-control" v-model="field.field_value" @change="updateSpareParameters(field)" style="height: 2.2rem;"/>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -172,9 +175,6 @@ export default {
     },
     data() {
         return {
-            selectedColor: null,
-            selectedColorName: '',
-            dropdownVisible: false,
             spares: [],
             spare: {
                 spare_id: '',
@@ -185,13 +185,6 @@ export default {
                 asset_types:[],
                 frequency_id:'',
             },
-            colors: [
-                    { name: 'Green', value: '#008000' },
-                    { name: 'Blue', value: '#0000FF' },
-                    { name: 'Red', value: '#FF0000' },
-                    { name: 'Orange', value: '#FFA500' },
-                    { name: 'Gray', value: '#808080' },
-                ],
             status: true,
             errors: [],
             spare_types: [],
@@ -227,28 +220,9 @@ export default {
         },
 
     methods: {
-
-        selectColor(colorValue, colorName, field) {
-                this.selectedColor = colorValue;
-                this.selectedColorName = colorName;
-                this.dropdownVisible = false;
-                if(field.spare_attribute_value){
-                    field.spare_attribute_value.field_value = colorValue
-                }
-                else{
-                    field.spare_attribute_value = {
-                        field_value : colorValue
-                    }
-                    field.field_value = colorValue
-                }
-                this.updateSpareParameters(field);
-            },
         toggleAssetTypeStatus(){
             this.asset_type_status = !this.asset_type_status
         },
-        toggleDropdown() {
-                this.dropdownVisible = !this.dropdownVisible;
-            },
         submitForm() {
             let vm = this;
             if (vm.status) {
@@ -257,8 +231,6 @@ export default {
                 vm.updateSpare();
             }
         },
-      
-
         addSpare() {
             let vm = this;
             let loader = vm.$loading.show();

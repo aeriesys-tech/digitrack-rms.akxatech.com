@@ -9,7 +9,9 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Masters</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Break Down Lists</li>
+                    <li class="breadcrumb-item active" aria-current="page"><router-link to="/break_down_lists">Break Down Lists</router-link></li>
+                    <li class="breadcrumb-item " aria-current="page" v-if="status">New Break Down List</li>
+                    <li class="breadcrumb-item active" aria-current="page" v-else>Update Break Down List</li>
                 </ol>
                 <h4 class="main-title mb-0">Break Down Lists</h4>
             </div> 
@@ -32,9 +34,10 @@
                                         <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                         <div class="dropdown" @click="toggleAssetTypeStatus()">
                                             <div class="overselect"></div>
-                                            <select class="form-control"  >
+                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }" >
                                                 <option value="">Select Asset Type</option>
                                             </select>
+                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
                                         </div>
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
@@ -82,8 +85,8 @@
                                     
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.break_down_attribute_value" type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @blur="updateBreakDownParameters(field)" />
-                                        <input v-else type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateBreakDownParameters(field)" />
+                                        <input v-if="field.break_down_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @blur="updateBreakDownParameters(field)" />
+                                        <input v-else type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateBreakDownParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -134,42 +137,15 @@
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateBreakDownParameters(field)">
-                                            <option value="">Select {{field.display_name}}</option>
+                                            <option :value="field.field_value">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     <div v-if="field.field_type=='Color'">
-                                        <label class="form-label">{{ field.display_name }}</label>
-                                        <span v-if="field.is_required" class="text-danger">*</span>
-                                        <div class="input-group">
-                                            <span class="input-group-text" :style="{ backgroundColor: field?.break_down_attribute_value?.field_value }"></span>
-                                            <input 
-                                                type="text" 
-                                                class="form-control" 
-                                                :value="field?.break_down_attribute_value?.field_value" 
-                                                readonly
-                                                :style="{ color: selectedColor ? 'black' : 'gray', cursor: 'pointer' }"
-                                                @click="toggleDropdown"
-                                                placeholder="Select Color"
-                                            />
-                                            <div class="dropdown-menu" :class="{ show: dropdownVisible }">
-                                                <ul class="list-unstyled mb-0">
-                                                    <li 
-                                                        v-for="color in colors" 
-                                                        :key="color.value" 
-                                                        @click="selectColor(color.value, color.name, field)" 
-                                                        class="dropdown-item d-flex align-items-center"
-                                                    >
-                                                        <span 
-                                                            :style="{ backgroundColor: color.value }" 
-                                                            class="color-square me-2"
-                                                        ></span>
-                                                        <span>{{ color.name }}</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                        <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
+                                            <input v-if="field.break_down_attribute_value" type="color" class="form-control" v-model="field.break_down_attribute_value.field_value" @change="updateBreakDownParameters(field)" style="height: 2.2rem;"/>
+                                            <input v-else type="color" class="form-control" v-model="field.field_value" @change="updateBreakDownParameters(field)" style="height: 2.2rem;"/>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                 </div>
@@ -197,9 +173,6 @@ export default {
     },
     data() {
         return {
-            selectedColor: null,
-            selectedColorName: '',
-            dropdownVisible: false,
             break_downs: [],
             break_down: {
                 break_down_list_id: '',
@@ -210,13 +183,6 @@ export default {
                 asset_types:[],
                 frequency_id:'',
             },
-            colors: [
-                    { name: 'Green', value: '#008000' },
-                    { name: 'Blue', value: '#0000FF' },
-                    { name: 'Red', value: '#FF0000' },
-                    { name: 'Orange', value: '#FFA500' },
-                    { name: 'Gray', value: '#808080' },
-                ],
             status: true,
             errors: [],
             break_down_types: [],
@@ -224,6 +190,9 @@ export default {
             frequencies:[],
             show_break_downs:[],
             asset_type_status:false,
+
+            value: null,
+            options: ['list', 'of', 'options']
         }
     },
     
@@ -252,28 +221,9 @@ export default {
         },
 
     methods: {
-        selectColor(colorValue, colorName, field) {
-                this.selectedColor = colorValue;
-                this.selectedColorName = colorName;
-                this.dropdownVisible = false;
-                // field.field_value = colorValue;
-                if(field.break_down_attribute_value){
-                    field.break_down_attribute_value.field_value = colorValue;
-                }
-                else{
-                    field.break_down_attribute_value = {
-                        field_value : colorValue
-                    }
-                    field.field_value = colorValue;
-                }
-                this.updateBreakDownParameters(field);
-            },
         toggleAssetTypeStatus(){
             this.asset_type_status = !this.asset_type_status
         },
-        toggleDropdown() {
-                this.dropdownVisible = !this.dropdownVisible;
-            },
         submitForm() {
             let vm = this;
             if (vm.status) {
@@ -443,5 +393,6 @@ export default {
     left: 0;
     right: 0;
 }
+
 </style>
 
