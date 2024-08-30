@@ -13,13 +13,13 @@ use App\Http\Resources\MountingResource;
 use App\Http\Resources\SectionResource;
 use App\Http\Resources\MakeResource;
 use App\Http\Resources\SpeedResource;
-use App\Models\AssetParameter;
+use App\Models\AssetAttribute;
 
 class AssetResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $asset_parameters = AssetParameter::whereHas('AssetParameterTypes', function($que){
+        $asset_attributes = AssetAttribute::whereHas('AssetAttributeTypes', function($que){
             $que->where('asset_type_id', $this->asset_type_id);
         })->get();
         return [
@@ -32,8 +32,8 @@ class AssetResource extends JsonResource
             'asset_type' => new AssetTypeResource($this->AssetType),
             // 'asset_parameter_values' => AssetParameterResource::collection($this->AssetParameters),
             'status' => $this->deleted_at?false:true,
-            'asset_parameters' => AssetAttributeVResource::collection($asset_parameters->map(function ($assetParameter) {
-                return ['resource' => $assetParameter, 'asset_id' => $this->asset_id];
+            'asset_attributes' => AssetAttributeVResource::collection($asset_attributes->map(function ($assetAttribute) {
+                return ['resource' => $assetAttribute, 'asset_id' => $this->asset_id];
             })),
             // 'asset_parameters' => $asset_parameters,
             'longitude' => $this->longitude,
