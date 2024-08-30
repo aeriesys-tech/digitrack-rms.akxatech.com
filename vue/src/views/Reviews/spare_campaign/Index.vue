@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Spare Campaign</h4>
             </div>
-            <router-link to="/assets" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ASSETS</router-link>
+            <router-link to="/spare_campaigns/create" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD SPARE CAMPAIGN</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -54,17 +54,6 @@
                                 <button class="btn btn-primary" @click="submit">Search</button>
                             </div>
                         </div>
-                        <!-- 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6 class="fw-semibold text-dark lh-4">Apple Wireless Black Airpods</h6>
-                                <div class="text-center p-3 bg-white rounded mb-3"><img src="../../assets/QR_Code.png" class="img-fluid" alt="" width="200" /></div>
-                            </div>
-                            <div class="col-md-6">
-                                <h6 class="fw-semibold text-dark lh-4">Apple Wireless Black Airpods</h6>
-                                <div class="text-center p-3 bg-white rounded mb-3"><img src="../../assets/QR_Code.png" class="img-fluid" alt="" width="200" /></div>
-                            </div>
-                        </div> -->
 
                         <div class="table-responsive">
                             <table class="table table-bordered mb-0">
@@ -72,51 +61,51 @@
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:11-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image1.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image1.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:12-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image2.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image2.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:13-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image3.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image3.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:14-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image4.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image4.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:15-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image5.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image5.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:16-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image6.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image6.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:17-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image7.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image7.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:18-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image8.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image8.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:19-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image9.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image9.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:20-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image10.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image10.png" height="180" />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -124,51 +113,51 @@
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:11-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image11.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image11.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:12-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image12.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image12.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:13-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image13.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image13.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:14-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image14.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image14.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:15-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image15.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image15.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:16-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image16.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image16.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:17-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image17.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image17.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:18-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image18.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image18.png" height="180" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">
                                             <h6>Date:19-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image19.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image19.png" height="180" />
                                         </td>
                                         <td class="text-center">
                                             <h6>Date:20-08-2024</h6>
-                                            <img src="../../../public/assets/images/spairs/image20.png" height="180" />
+                                            <img src="../../../../public/assets/images/spairs/image20.png" height="180" />
                                         </td>
                                     </tr>
                                 </tbody>

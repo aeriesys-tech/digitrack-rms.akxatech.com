@@ -59,13 +59,13 @@
                                             </span>
                                         </th>
 
-                                        <th @click="sort('frequency_id')">Frequency
+                                        <!-- <th @click="sort('frequency_id')">Frequency
                                         <span>
                                             <i v-if="meta.keyword=='frequency_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                             <i v-else-if="meta.keyword=='frequency_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                             <i v-else class="fas fa-sort"></i>
                                         </span>
-                                    </th>
+                                    </th> -->
                                        
                                        
                                         <th class="text-center">Status</th>
@@ -84,7 +84,7 @@
                                         <td>
                                             <span v-for="asset_type, key in service.service_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>
-                                        <td>{{service?.frequency?.frequency_name}}</td>
+                                        <!-- <td>{{service?.frequency?.frequency_name}}</td> -->
                                         <td class="text-center" >
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'service' + service.service_id" :checked="service.status" :value="service.status" @change="deleteService(service)" />
