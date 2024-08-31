@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Models\CampaignResult;
 use App\Models\Campaign;
+use App\Http\Resources\CampaignResource;
 
 class CampaignController extends Controller
 {
@@ -13,6 +14,35 @@ class CampaignController extends Controller
     {
         $locations = CampaignResult::select('location')->distinct()->get();
         return response()->json($locations);
+    }
+
+    public function paginateCampaigns(Request $request)
+    {
+        $request->validate([
+            'order_by' => 'required',
+            'per_page' => 'required',
+            'keyword' => 'required'
+        ]);
+
+        $query = Campaign::query();
+
+        if(isset($request->asset_id))
+        {
+            $query->where('asset_id',$request->asset_id);
+        }
+
+        if(isset($request->datasource))
+        {
+            $query->where('datasource',$request->datasource);
+        }
+    
+        if($request->search!='')
+        {
+            $query->where('asset_id', 'like', "%$request->search%")
+                 ->orWhere('datasource', 'like', "$request->search%");
+        }
+        $campaign = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+        return CampaignResource::collection($campaign);
     }
 
     public function AddCampaign(Request $request)
