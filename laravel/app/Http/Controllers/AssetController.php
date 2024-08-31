@@ -111,9 +111,9 @@ class AssetController extends Controller
 
     public function getAssets()
     {
-        $userPlantId = Auth::User()->plant_id;
-    
-        $asset = Asset::where('plant_id', $userPlantId)->get();
+        // $userPlantId = Auth::User()->plant_id;
+        // $asset = Asset::where('plant_id', $userPlantId)->get();
+        $asset = Asset::all();
         return AssetResource::collection($asset);
     }
 

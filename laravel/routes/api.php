@@ -46,6 +46,7 @@ use App\Http\Controllers\BreakDownListController;
 use App\Http\Controllers\ServiceAttributeValueController;
 use App\Http\Controllers\SpareAttributeValueController;
 use App\Http\Controllers\ListParameterController;
+use App\Http\Controllers\CampaignController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -387,4 +388,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getListParameter',[ListParameterController::class, 'getListParameter']);
     Route::post('updateListParameter',[ListParameterController::class, 'updateListParameter']);
     Route::post('deleteListParameter',[ListParameterController::class, 'deleteListParameter']);
+
+    Route::post('paginateCampaigns',[CampaignController::class, 'paginateCampaigns']);
+    Route::post('getLocations',[CampaignController::class, 'getLocations']);
+    Route::post('addCampaign',[CampaignController::class, 'addCampaign']);
+    Route::post('campaignResultImages',[CampaignController::class, 'campaignResultImages']);
 });

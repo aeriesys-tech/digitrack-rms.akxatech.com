@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('file');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('assetcampaign_id')->references('campaign_id')->on('campaigns');
+            $table->foreign('campaign_id')->references('campaign_id')->on('campaigns');
             $table->foreign('asset_id')->references('asset_id')->on('assets');
         });
     }
