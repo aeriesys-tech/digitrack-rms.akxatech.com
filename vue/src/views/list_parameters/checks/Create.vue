@@ -104,14 +104,14 @@
                                         <span v-if="errors.order" class="invalid-feedback">{{ errors.order[0] }}</span>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <!-- <div class="col-md-4">
                                         <label class="form-label">Frequency</label>
                                         <select class="form-control" :class="{ 'is-invalid': errors.frequency_id}" v-model="check.frequency_id">
                                             <option value="">Select Frequency</option>
                                             <option v-for="frequency, key in frequencies" :key="key" :value="frequency?.frequency_id">{{ frequency?.frequency_name }}</option>
                                         </select> 
                                         <span v-if="errors.frequency_id" class="invalid-feedback">{{ errors.frequency_id[0] }}</span>
-                                    </div>
+                                    </div> -->
                             </div>
                         </div>
                         <div class="card-footer text-end">

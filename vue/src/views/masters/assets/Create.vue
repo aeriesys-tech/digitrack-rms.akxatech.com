@@ -243,7 +243,7 @@
                     latitude:"",
                     longitude:"",
                     status: "",
-                    asset_parameters:[],
+                    asset_attributes:[],
                     department_id:'',
                     section_id:'',
                     radius:'',
@@ -254,7 +254,7 @@
                 },
                
                 device_code: "",
-                asset_parameters: [],
+                asset_attributes: [],
                 departments:[],
                 sections:[],
                 plants: [],
@@ -265,7 +265,7 @@
         },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
-                vm.asset.asset_parameters = []
+                vm.asset.asset_attributes = []
                 vm.getAssetsDropdown();
                 if (to.name == "Assets.Create") {
                     vm.$refs.asset_name.focus();
@@ -322,12 +322,12 @@
             },
             updateAssetParameters(field){
                 console.log(field)
-                let apid = this.asset.asset_parameters.filter(function(element){
-                    return element.asset_parameter_id == field.asset_parameter_id
+                let apid = this.asset.asset_attributes.filter(function(element){
+                    return element.asset_attribute_id == field.asset_attribute_id
                 })
                 if(!apid.length){
-                    this.asset.asset_parameters.push({
-                        'asset_parameter_id':field.asset_parameter_id,
+                    this.asset.asset_attributes.push({
+                        'asset_attribute_id':field.asset_attribute_id,
                         'field_value':field.field_value
                     })
                 }

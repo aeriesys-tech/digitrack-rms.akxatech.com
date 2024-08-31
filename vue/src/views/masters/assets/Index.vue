@@ -109,7 +109,7 @@
                                             </div>
                                         </td>
                                         <td class="text-center" v-if="get_assetviews.length || get_asset.length">
-                                            <a v-can="'assets.update'" title="Edit" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <!-- <a v-can="'assets.update'" title="Edit" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a> -->
                                             <a v-can="'assetviews.view'" title="View" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                             <!-- <a href="javascript:void(0)" title="QR code" class="text-dark me-2" @click.prevent="getQRCode(asset)"><i class="ri-qr-code-line fs-18 lh-1"></i></a> -->
                                         </td>

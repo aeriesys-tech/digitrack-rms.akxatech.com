@@ -95,13 +95,13 @@
                                         </span>
                                     </th>
 
-                                    <th @click="sort('frequency_id')">Frequency
+                                    <!-- <th @click="sort('frequency_id')">Frequency
                                         <span>
                                             <i v-if="meta.keyword=='frequency_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                             <i v-else-if="meta.keyword=='frequency_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                             <i v-else class="fas fa-sort"></i>
                                         </span>
-                                    </th>
+                                    </th> -->
                                     <th>
                                         Asset Type.
                                         <span>
@@ -129,7 +129,7 @@
                                     <td>{{ check.ucl }}</td>
                                     <td>{{ check.field_values }}</td>
                                     <td>{{ check.order }}</td>
-                                    <td>{{ check?.frequency?.frequency_name }}</td>
+                                    <!-- <td>{{ check?.frequency?.frequency_name }}</td> -->
                                     <td>
                                         <span v-for="asset_type, key in check.check_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                     </td>

@@ -21,6 +21,10 @@ import GenerateQR from "@/views/masters/assets/GenerateQRCode.vue"
 import Activities from "@/views/registers/activity/Index.vue";
 import CreateActivity from "@/views/registers/activity/Create.vue";
 
+import CreateHealthCheck from "@/views/registers/health_check/Create.vue"
+import HealthChecks from "@/views/registers/health_check/Index.vue";
+
+
 // User Services
 import UserServices from "@/views/registers/user_services/Index.vue";
 import CreateUserService from "@/views/registers/user_services/Create.vue";
@@ -120,7 +124,7 @@ import CreateBreakDownAttribute from "@/views/attributes/breakdown_attributes/Cr
 import BreakDownAttributes from "@/views/attributes/breakdown_attributes/Index.vue";
 
 
-import Test from "@/views/Test.vue";SpareCompaingn
+import Test from "@/views/Test.vue";
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
 
 const routes = [
@@ -307,6 +311,23 @@ const routes = [
     path: "/activity/:user_activity_id/edit",
     name: "Activity.Edit",
     component: CreateActivity,
+  },
+
+  // health check register
+  {
+    path: "/health_checks",
+    name: "HealthChecks.Index",
+    component: HealthChecks,
+  },
+  {
+    path: "/health_check/create",
+    name: "HealthChecks.Create",
+    component: CreateHealthCheck,
+  },
+  {
+    path: "/health_check/:health_check_id/edit",
+    name: "HealthChecks.Edit",
+    component: CreateHealthCheck,
   },
 
   //User Services
@@ -698,11 +719,18 @@ const routes = [
     name: "AssetDetails",
      component:Test,
   },
+
+  // spare campaign
   {
-    path: "/spare_campaign",
+    path: "/spare_campaigns",
     name: "SpareCompaingn",
-     component:SpareCompaingn,
+    component:SpareCompaingn,
   },
+
+
+  
+
+
   {
     path: "/compliance",
     name: "Compliance",

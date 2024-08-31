@@ -76,14 +76,14 @@
                                     <span v-if="errors.service_name" class="invalid-feedback">{{ errors.service_name[0] }}</span>
                                 </div>
 
-                                <div class="col-md-4">
+                                <!-- <div class="col-md-4">
                                     <label class="form-label">Frequency</label><span class="text-danger"> *</span>
                                     <select class="form-control" :class="{ 'is-invalid': errors.frequency_id}" v-model="service.frequency_id">
                                         <option value="">Select Frequency</option>
                                         <option v-for="frequency, key in frequencies" :key="key" :value="frequency?.frequency_id">{{ frequency?.frequency_name }}</option>
                                     </select> 
                                     <span v-if="errors.frequency_id" class="invalid-feedback">{{ errors.frequency_id[0] }}</span>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-4" v-for="field, key in show_services" :key="key">
                                     <div v-if="field.field_type=='Text'">

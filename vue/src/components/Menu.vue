@@ -48,9 +48,9 @@
                     <li class="nav-item" v-can="'sections.view'">
                         <router-link to="/section" v-bind:class="{ active: $route.path === '/section' }" class="nav-link"><i class="ri-stack-line"></i> <span>Section</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link to="/frequency" v-bind:class="{ active: $route.path === '/frequency' }" class="nav-link"><i class="ri-rfid-line"></i> <span>Frequency</span></router-link>
-                    </li>    
+                    </li>     -->
                     <li class="nav-item">
                         <router-link to="/department" v-bind:class="{ active: $route.path === '/department' }" class="nav-link"><i class="ri-government-line"></i> <span>Department</span></router-link>
                     </li>
@@ -179,6 +179,11 @@
             <div class="nav-group" v-if="permission('Registers')" :class="{show:showRegister}" @click="showTab('Registers')">
                 <a href="javascript:void(0)" :style="{color:registerColor}" class="nav-label"><i class="ri-links-fill icn"></i> Registers</a>
                 <ul class="nav nav-sidebar">
+                    <li class="nav-item">
+                        <router-link v-bind:class="{ active: $route.path === '/activities' || $route.name === 'HealthChecks.Create' || $route.name === 'HealthChecks.Edit'}" to="/health_checks" class="nav-link">
+                            <i class="ri-list-check"></i><span>Health Check Register</span>
+                        </router-link>
+                    </li>
                     <li class="nav-item" v-can="'userActivities.view'">
                         <router-link v-bind:class="{ active: $route.path === '/activities' || $route.name === 'Activity.Create' || $route.name === 'Activity.Edit'}" to="/activities" class="nav-link">
                             <i class="ri-list-check"></i><span>Activity Register</span>
@@ -222,7 +227,7 @@
                         <router-link to="/asset_details" v-bind:class="{ active: $route.path === '/asset_details' }" class="nav-link"><i class="ri-focus-line"></i> <span>Asset Details</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/spare_campaign" v-bind:class="{ active: $route.path === '/spare_campaign' }" class="nav-link"><i class="ri-focus-line"></i> <span>Spare Campaign</span></router-link>
+                        <router-link to="/spare_campaigns" v-bind:class="{ active: $route.path === '/spare_campaigns' }" class="nav-link"><i class="ri-focus-line"></i> <span>Spare Campaign</span></router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/compliance" v-bind:class="{ active: $route.path === '/compliance' }" class="nav-link"><i class="ri-focus-line"></i> <span>Compliance</span></router-link>
@@ -406,6 +411,9 @@
                 //     this.showMaster = !this.showMaster;
                 // }
                 else if (
+                    tab == "/health_checks" ||
+                    name == "HealthChecks.Create" ||
+                    name == "HealthChecks.Edit" ||
                     tab == "/activities" ||
                     name == "Activity.Create" ||
                     name == "Activity.Edit" ||
@@ -431,7 +439,7 @@
                 } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes") {
                     this.AttributesColor = "white !important";
                     this.showAttributes = !this.showAttributes;
-                } else if (tab == "/asset_details" || tab == "/spare_campaign" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {
+                } else if (tab == "/asset_details" || tab == "/spare_campaigns" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {
                     this.ReviewColor = "white !important";
                     this.showReview = !this.showReview;
                 } else if (tab == "/asset_life" || tab == "/upcoming_repairs") {

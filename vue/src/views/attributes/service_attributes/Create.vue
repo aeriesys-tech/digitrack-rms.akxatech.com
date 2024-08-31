@@ -69,9 +69,17 @@
                                         <option value="Date">Date </option>
                                         <option value="Date&Time">Date&Time </option>
                                         <option value="Color">Color</option>
+                                        <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                 </div> 
+                                <div class="col-md-4" v-if="list_parameters.length">
+                                    <label class="form-label">List Parameter</label>
+                                    <select class="form-control" v-model="service_attribute.list_parameter_id">
+                                        <option value="">Select List Parameter</option>
+                                        <option v-for="list_parameter, key in list_parameters" :key="key" :value="list_parameter.list_parameter_id">{{list_parameter.list_parameter_name}}</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Value</label><span v-if="service_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="service_attribute.field_values" />
@@ -123,9 +131,11 @@
                     is_required: "",
                     service_type_id: '',
                     service_types:[],
+                    list_parameter_id:'',
                 },
                 service_types: [],
                 service_attributes:[],
+                list_parameters:[],
                 // user_update: false,
                 errors: [],
                 status:true,
@@ -162,6 +172,16 @@
                     }
                 });
             },
+            watch:{
+            'service_attribute.field_type':function(){
+                if(this.service_attribute.field_type == 'List'){
+                    this.getListParameters()
+                }else{
+                    this.list_parameters = [];
+                    this.service_attribute.list_parameter_id = "";
+                }
+            }
+        },
         methods: {
             toggleServiceTypeStatus(){
                 this.service_type_status = !this.service_type_status
@@ -222,6 +242,21 @@
                     });
             },
     
+            getListParameters(){
+                let vm = this;
+                let loader = this.$loading.show();
+                vm.$store.dispatch('post', { uri: 'getListParameters' })
+                    .then(response => {
+                        loader.hide();
+                        vm.list_parameters = response.data.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+
+            },
             getServiceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -245,6 +280,7 @@
                     vm.service_attribute.field_length = "";
                     vm.service_attribute.is_required = "";
                     vm.service_attribute.service_type_id = "";
+                    vm.service_attribute.list_parameter_id = "";
                     // vm.$refs.field_name.focus();
                     vm.service_attribute.service_types = [],
                     vm.errors = [];

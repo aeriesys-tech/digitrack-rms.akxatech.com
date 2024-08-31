@@ -69,9 +69,17 @@
                                         <option value="Date">Date </option>
                                         <option value="Date&Time">Date&Time </option>
                                         <option value="Color">Color</option>
+                                        <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                 </div> 
+                                <div class="col-md-4" v-if="list_parameters.length">
+                                    <label class="form-label">List Parameter</label>
+                                    <select class="form-control" v-model="asset_attribute.list_parameter_id">
+                                        <option value="">Select List Parameter</option>
+                                        <option v-for="list_parameter, key in list_parameters" :key="key" :value="list_parameter.list_parameter_id">{{list_parameter.list_parameter_name}}</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Value</label><span v-if="asset_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="asset_attribute.field_values" />
@@ -79,7 +87,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Length" class="form-control" v-model="asset_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
+                                    <input type="number" placeholder="Field Length" class="form-control" v-model="asset_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
                                     <span v-if="errors.field_length" class="invalid-feedback">{{ errors.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -133,9 +141,12 @@
                     is_required: "",
                     asset_type_id: '',
                     asset_types:[],
+                    // list_parameters:[],
+                    list_parameter_id:"",
                 },
                 asset_types: [],
                 asset_attributes:[],
+                list_parameters:[],
                 // user_update: false,
                 errors: [],
                 status:true,
@@ -152,6 +163,16 @@
         //         }
         //     });
         // },
+        watch:{
+            'asset_attribute.field_type':function(){
+                if(this.asset_attribute.field_type == 'List'){
+                    this.getListParameters()
+                }else{
+                    this.list_parameters = [];
+                    this.asset_attribute.list_parameter_id = "";
+                }
+            }
+        },
         beforeRouteEnter(to, from, next) {
                 next((vm) => {
                     vm.getAssetTypes();
@@ -246,6 +267,21 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            getListParameters(){
+                let vm = this;
+                let loader = this.$loading.show();
+                this.$store.dispatch('post', { uri: 'getListParameters' })
+                    .then(response => {
+                        loader.hide();
+                        this.list_parameters = response.data.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+
+            },
             discard() {
                     let vm = this;
                     vm.asset_attribute.field_name = "";
@@ -255,6 +291,7 @@
                     vm.asset_attribute.field_length = "";
                     vm.asset_attribute.is_required = "";
                     vm.asset_attribute.asset_type_id = "";
+                    vm.asset_attribute.list_parameter_id = "";
                     // vm.$refs.field_name.focus();
                     vm.asset_attribute.asset_types = [],
                     vm.errors = [];
