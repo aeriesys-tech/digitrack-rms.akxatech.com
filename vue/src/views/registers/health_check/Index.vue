@@ -7,161 +7,68 @@
                         <router-link to="/dashboard">Dashboard</router-link>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Review</a>
+                        <a href="javascript:void(0)">Register</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Spare Campaign</li>
+                    <li class="breadcrumb-item active" aria-current="page">Health Check</li>
                 </ol>
-                <h4 class="main-title mb-0">Spare Campaign</h4>
+                <h4 class="main-title mb-0">Health Check</h4>
             </div>
-            <router-link to="/spare_campaigns/create" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD SPARE CAMPAIGN</router-link>
+            <router-link to="/health_check/create" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD HEALTH CHECK</router-link>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Spare Campaign</h6>
+                        <h6 class="card-title">Health Check</h6>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label class="form-label">Asset</label>
-                                <select class="form-control" :class="{ 'is-invalid': errors.asset_id }" v-model="spare.asset_id">
-                                    <option value="">Select Asset</option>
-                                    <option value="Ladle">Ladle</option>
-                                </select>
-                                <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Analysis</label>
-                                <select class="form-control" :class="{ 'is-invalid': errors.spare_id }" v-model="spare.spare_id">
-                                    <option value="">Select Spare</option>
-                                    <option value="Wall Contour">Wall Contour</option>
-                                    <option value="Bottom Contour">Bottom Contour</option>
-                                </select>
-                                <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">From Date</label>
-                                <input type="date" class="form-control" :class="{ 'is-invalid': errors.from_date }" v-model="spare.from_date" />
-                                <span v-if="errors.from_date" class="invalid-feedback">{{ errors.from_date[0] }}</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">To Date</label>
-                                <input type="date" class="form-control" :class="{ 'is-invalid': errors.to_date }" v-model="spare.to_date" />
-                                <span v-if="errors.to_date" class="invalid-feedback">{{ errors.to_date[0] }}</span>
-                            </div>
-                            <div class="col-md-2 mt-auto">
-                                <button class="btn btn-primary" @click="submit">Search</button>
-                            </div>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered mb-0">
-                                <tbody v-if="wall">
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:11-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image1.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:12-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image2.png" height="180" />
-                                        </td>
+                        <input class="form-control form-control-sm mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
+                        <div class="table-responsive table-responsive-sm">
+                            <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
+                                <thead>
+                                    <tr class="" style="background-color: #9b9b9b; color: white;">
+                                        <th class="text-center">#</th>
+                                        <th @click="sort('asset_id')">
+                                            Asset
+                                            <span>
+                                                <i v-if="meta.keyword == 'asset_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'asset_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
+                                        <th @click="sort('datasource')">Data Source
+                                            <span>
+                                                <i v-if="meta.keyword == 'datasource' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'datasource' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
                                     </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:13-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image3.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:14-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image4.png" height="180" />
-                                        </td>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="campaign, key in campaigns" :key="key">
+                                        <td class="text-center">{{ meta.from + key }}</td>
+                                        <td>{{campaign.asset.asset_name}}</td>
+                                        <td>{{ campaign.datasource }}</td>
                                     </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:15-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image5.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:16-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image6.png" height="180" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:17-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image7.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:18-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image8.png" height="180" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:19-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image9.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:20-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image10.png" height="180" />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody v-if="bottom">
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:11-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image11.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:12-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image12.png" height="180" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:13-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image13.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:14-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image14.png" height="180" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:15-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image15.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:16-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image16.png" height="180" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:17-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image17.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:18-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image18.png" height="180" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <h6>Date:19-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image19.png" height="180" />
-                                        </td>
-                                        <td class="text-center">
-                                            <h6>Date:20-08-2024</h6>
-                                            <img src="../../../../public/assets/images/spairs/image20.png" height="180" />
-                                        </td>
+                                    <tr v-if="campaigns.length==0">
+                                        <td colspan="3" class="text-center">No records found</td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <select class="form-select from-select-sm width-75" v-model="meta.per_page" @change="onPerPageChange">
+                                <option>10</option>
+                                <option>15</option>
+                                <option>20</option>
+                                <option>25</option>
+                                <option>30</option>
+                            </select>
+                            <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -171,61 +78,76 @@
 </template>
 
 <script>
-import moment from 'moment';
+    import Pagination from "@/components/Pagination.vue";
     export default {
-        components: {},
+        components: { Pagination },
         data() {
             return {
-                spare: {
-                    asset_id: "",
-                    spare_id: "",
-                    from_date: "",
-                    to_date: "",
+                meta: {
+                    search: "",
+                    order_by: "asc",
+                    keyword: "campaign_id",
+                    per_page: 10,
+                    totalRows: 0,
+                    page: 1,
+                    lastPage: 1,
+                    from: 1,
+                    to: 1,
+                    maxPage: 1,
+                    trashed: false,
                 },
-                wall: false,
-                bottom: false,
+                campaign: {
+                    asset_id: "",
+                    datasource: "",
+                },
+                campaigns: [],
                 errors: [],
             };
         },
 
         mounted() {
-            this.spare.from_date = moment().format('yyyy-MM-DD')
-            this.spare.to_date = moment().add(1, 'day').format('yyyy-MM-DD')
+            this.index();
         },
 
         methods: {
-            submit() {
-                console.log("asset--", this.spare.asset_id)
-                console.log("spare--", this.spare.spare_id)
-                console.log("from_date--", this.spare.from_date)
-                console.log("to_date--", this.spare.to_date)
-                console.log("asset--", this.spare.asset_id)
-                if (this.spare.asset_id == "" || this.spare.spare_id == "" || this.spare.from_date == "" || this.spare.to_date == "") {
-                    if (this.spare.asset_id == "") {
-                        this.errors.asset_id = ["Asset field cannot be empty"];
-                    }
-                    if (this.spare.spare_id == "") {
-                        this.errors.spare_id = ["Spare field cannot be empty"];
-                    }
-                    if (this.spare.from_date == "") {
-                        this.errors.from_date = ["From Date field cannot be empty"];
-                    }
-                    if (this.spare.to_date == "") {
-                        this.errors.to_date = ["To Date field cannot be empty"];
-                    }
-                }
-                 else {
-                    this.errors = [];
-                    console.log("eeee",this.spare.spare_id)
-                    if (this.spare.spare_id == "Wall Contour") {
-                        this.wall = true;
-                        this.bottom = false;
-                    }
-                    if (this.spare.spare_id == "Bottom Contour") {
-                        this.bottom = true;
-                        this.wall = false;
-                    }
-                }
+            index() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "paginateCampaigns", data: vm.meta })
+                    .then((response) => {
+                        loader.hide();
+                        vm.campaigns = response.data.data;
+                        vm.meta.totalRows = response.data.meta.total;
+                        vm.meta.from = response.data.meta.from;
+                        vm.meta.lastPage = response.data.meta.last_page;
+                        vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            search() {
+                let vm = this;
+                vm.meta.page = 1;
+                vm.index();
+            },
+
+            onPageChange(page) {
+                this.meta.page = page;
+                this.index();
+            },
+            sort(field) {
+                this.meta.keyword = field;
+                this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
+                this.index();
+            },
+            onPerPageChange() {
+                let vm = this;
+                vm.meta.page = 1;
+                vm.index();
             },
         },
     };

@@ -179,6 +179,11 @@
             <div class="nav-group" v-if="permission('Registers')" :class="{show:showRegister}" @click="showTab('Registers')">
                 <a href="javascript:void(0)" :style="{color:registerColor}" class="nav-label"><i class="ri-links-fill icn"></i> Registers</a>
                 <ul class="nav nav-sidebar">
+                    <li class="nav-item">
+                        <router-link v-bind:class="{ active: $route.path === '/activities' || $route.name === 'HealthChecks.Create' || $route.name === 'HealthChecks.Edit'}" to="/health_checks" class="nav-link">
+                            <i class="ri-list-check"></i><span>Health Check Register</span>
+                        </router-link>
+                    </li>
                     <li class="nav-item" v-can="'userActivities.view'">
                         <router-link v-bind:class="{ active: $route.path === '/activities' || $route.name === 'Activity.Create' || $route.name === 'Activity.Edit'}" to="/activities" class="nav-link">
                             <i class="ri-list-check"></i><span>Activity Register</span>
@@ -406,6 +411,9 @@
                 //     this.showMaster = !this.showMaster;
                 // }
                 else if (
+                    tab == "/health_checks" ||
+                    name == "HealthChecks.Create" ||
+                    name == "HealthChecks.Edit" ||
                     tab == "/activities" ||
                     name == "Activity.Create" ||
                     name == "Activity.Edit" ||
