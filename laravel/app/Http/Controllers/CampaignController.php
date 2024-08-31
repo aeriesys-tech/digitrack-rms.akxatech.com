@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Response;
 use App\Models\CampaignResult;
 use App\Models\Campaign;
 use App\Http\Resources\CampaignResource;
+use App\Http\Resources\CampaignResultResource;
 
 class CampaignController extends Controller
 {
@@ -53,48 +54,45 @@ class CampaignController extends Controller
             'file' => 'required|file|mimes:pdf',
         ]);
 
-        $filePath = $request->file('file')->store('uploads/campaigns', 'public');
-
+        if ($request->hasFile('file')) 
+        {
+            $fileName = time().'.'.$request->file('file')->getClientOriginalExtension();
+            $filePath = public_path('storage/files'); 
+            $request->file('file')->move($filePath, $fileName);
+            $data['file'] = $fileName;
+        } 
         $campaign = Campaign::create($data);
 
-        return response()->json(["message" => "Campaign Created Successfully"]); 
+        //Campaign Result 
+        $client = new Client();
+        $headers = [
+            // "pdf_file" => "C:\\xampp\\htdocs\\digitrack-rms.akxatech.com\\laravel\\public\\rms_script\\Ladle 9.C-31.H-68.6800.pdf"
+            "file" => $filePath . '/' . $fileName
+        ];
+        
+        $responseDatas = $client->post('http://127.0.0.1:5000/runCampain', [
+            'headers' => $headers
+        ]);
+
+        foreach($responseDatas as $response)
+        {
+            $compaign_Result = CampaignResult::create([
+                'campaign_id' => $campaign->campaign_id,
+                'asset_id' => $request->asset_id,
+                'location' => $response['location'],
+                'file' => $response['file'],
+                'date' => $response['date']
+            ]);   
+        }
+
+        return response()->json([
+            "message" => "Campaign Created Successfully"
+        ]); 
     }
 
-    public function image(Request $request)
+    public function imagesCampaignResult(Request $request)
     {
-        if ($action === 'upload') 
-        {
-            $request->validate([
-                'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            ]);
-
-            $fileName = null;
-            if ($request->hasFile('file')) {
-                $fileName = time() . '.' . $request->file('file')->getClientOriginalExtension();
-                $request->file('file')->move(public_path('storage/files'), $fileName);
-            }
-
-            $data = $request->except('file');
-            $data['file'] = $fileName;
-
-            $campaign = Campaign::create($data);
-
-            return response()->json(["message" => "Image Uploaded Successfully"]); 
-        } 
-        elseif ($action === 'retrieve') 
-        {
-            $filename = $request->query('filename'); 
-            $filePath = public_path('storage/files/' . $filename);
-
-            if (!file_exists($filePath)) 
-            {
-                return response()->json(['message' => 'File not found'], 404);
-            }
-            return Response::file($filePath);
-        } 
-        else 
-        {
-            return response()->json(['message' => 'Invalid action'], 400);
-        }
+        $compaign_result = CampaignResult::all();
+        return CampaignResultResource::collection($compaign_result);
     }
 }
