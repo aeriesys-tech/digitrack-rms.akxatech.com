@@ -40,6 +40,6 @@ class SpareAttribute extends Model
 
     public function ListParameter()
     {
-        return $this->belongsTo(ListParameter::class, 'spare_attribute_id');
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

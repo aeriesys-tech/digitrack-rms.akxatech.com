@@ -18,7 +18,7 @@ class DataSourceResource extends JsonResource
         }
 
         $data_source_attributes = DataSourceAttribute::whereHas('DataSourceAttributeTypes', function($que){
-            $que->where('data_source_type_id', $this->data_source_type_id);
+            $que->where('data_source_type_id', $this->data_source_type_id)->where('field_type', '!=', "List");
         })->get();
 
         return [

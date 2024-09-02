@@ -18,7 +18,7 @@ class BreakDownListResource extends JsonResource
         }
 
         $break_down_attributes = BreakDownAttribute::whereHas('BreakDownAttributeTypes', function($que){
-            $que->where('break_down_type_id', $this->break_down_type_id);
+            $que->where('break_down_type_id', $this->break_down_type_id)->where('field_type', '!=', "List");
         })->get();
 
         return [
@@ -27,8 +27,6 @@ class BreakDownListResource extends JsonResource
             'break_down_type' => new BreakDownTypeResource($this->BreakDownType),
             'break_down_list_code' => $this->break_down_list_code,
             'break_down_list_name' => $this->break_down_list_name,
-            // 'list_parameter_id' => $this->list_parameter_id,
-            // 'list_parameter' => new ListParameterResource($this->ListParameter),
             'status' => $this->deleted_at?false:true,
             'break_down_list_asset_types' => BreakDownListAssetTypeResource::collection($this->BreakDownListAssetTypes),
             'asset_types' => $asset_types,

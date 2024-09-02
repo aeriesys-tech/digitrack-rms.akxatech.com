@@ -47,27 +47,6 @@ class VariableController extends Controller
         return VariableResource::collection($variable);
     }
 
-    // public function addVariable(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-    //         'variable_code' => 'required|string|unique:variables,variable_code',
-    //         'variable_name' => 'required|string|unique:variables,variable_name',
-    //         'asset_types' => 'required|array',
-	//         'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
-    //     ]);
-        
-    //     $variable = Variable::create($data);
-
-    //     foreach ($data['asset_types'] as $asset_type) {
-    //         VariableAssetType::create([
-    //             'variable_id' => $variable->variable_id,
-    //             'asset_type_id' => $asset_type,
-    //         ]);
-    //     }
-    //     return response()->json(["message" => "Variable Created Successfully"]);  
-    // }  
-
     public function addVariable(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
@@ -94,29 +73,14 @@ class VariableController extends Controller
             ]);
         }
 
-        $variable_attribute_initial = VariableAttribute::whereHas('VariableAttributeTypes', function($que) use($request){
-            $que->where('variable_type_id', $request->variable_type_id);
-        })->get();
-
-        foreach ($variable_attribute_initial as $attribute) {
+        foreach ($request->variable_attributes as $attribute) {
             VariableAttributeValue::create([
                 'variable_id' => $variable->variable_id,
                 'variable_attribute_id' => $attribute['variable_attribute_id'],
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
-
-        $update_variables = VariableAttributeValue::where('variable_id',  $variable->variable_id)->get();
-
-        foreach ($update_variables as $update_variable) {
-            foreach ($data['variable_attributes'] as $variable_attribute) {
-                if ($variable_attribute['variable_attribute_id'] == $update_variable['variable_attribute_id']) {
-                    $update_variable->update([
-                        'field_value' => $variable_attribute['field_value'] ?? '',
-                    ]);
-                }
-            }
-        }                
+        
         return response()->json(["message" => "Variable Created Successfully"]);
     }
 
@@ -151,32 +115,6 @@ class VariableController extends Controller
         })->get();
         return VariableResource::collection($variables);
     }
-
-    // public function updateVariable(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'variable_id' => 'required|exists:variables,variable_id',
-    //         'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-    //         'variable_code' => 'required|string|unique:variables,variable_code,'.$request->variable_id.',variable_id',
-    //         'variable_name' => 'required|string|unique:variables,variable_name,'.$request->variable_id.',variable_id',
-    //         'asset_types' => 'required|array',
-	//         'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
-    //     ]);
-
-    //     $variable = Variable::where('variable_id', $request->variable_id)->first();
-    //     $variable->update($data);
-
-    //     VariableAssetType::where('variable_id', $variable->variable_id)->delete();
-
-    //     foreach ($data['asset_types'] as $asset_type_id) {
-    //         VariableAssetType::create([
-    //             'variable_id' => $variable->variable_id,
-    //             'asset_type_id' => $asset_type_id
-    //         ]);
-    //     }
-
-    //     return response()->json(["message" => "Variable Updated Successfully"]);
-    // }
 
     public function updateVariable(Request $request)
     {

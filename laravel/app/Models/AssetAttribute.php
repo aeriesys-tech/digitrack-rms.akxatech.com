@@ -37,4 +37,9 @@ class AssetAttribute extends Model
     {
         return $this->hasMany(AssetAttributeType::class, 'asset_attribute_id', 'asset_attribute_id');
     }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
+    }
 }

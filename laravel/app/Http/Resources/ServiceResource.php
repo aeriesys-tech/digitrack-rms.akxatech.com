@@ -17,7 +17,7 @@ class ServiceResource extends JsonResource
         }
         
         $service_attributes = ServiceAttribute::whereHas('ServiceAttributeTypes', function($que){
-            $que->where('service_type_id', $this->service_type_id);
+            $que->where('service_type_id', $this->service_type_id)->where('field_type', '!=', "List");
         })->get();
 
         return [

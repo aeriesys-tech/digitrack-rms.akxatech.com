@@ -69,29 +69,14 @@ class BreakDownListController extends Controller
             ]);
         }
 
-        $break_down_attribute_initial = BreakDownAttribute::whereHas('BreakDownAttributeTypes', function($que) use($request){
-            $que->where('break_down_type_id', $request->break_down_type_id);
-        })->get();
-
-        foreach ($break_down_attribute_initial as $attribute) {
+        foreach ($request->break_down_attributes as $attribute) 
+        {
             BreakDownAttributeValue::create([
                 'break_down_list_id' => $break_down_list->break_down_list_id,
                 'break_down_attribute_id' => $attribute['break_down_attribute_id'],
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
-        }
-
-        $update_break_downs = BreakDownAttributeValue::where('break_down_list_id',  $break_down_list->break_down_list_id)->get();
-
-        foreach ($update_break_downs as $update_break_down) {
-            foreach ($data['break_down_attributes'] as $break_down_attribute) {
-                if ($break_down_attribute['break_down_attribute_id'] == $update_break_down['break_down_attribute_id']) {
-                    $update_break_down->update([
-                        'field_value' => $break_down_attribute['field_value'] ?? '',
-                    ]);
-                }
-            }
-        }             
+        }            
         return response()->json(["message" => "BreakDownList Created Successfully"]);  
     } 
     
@@ -139,7 +124,7 @@ class BreakDownListController extends Controller
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
             'break_down_attributes' => 'required|array',
             'break_down_attributes.*.break_down_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'break_down_list_attributes.*.break_down_attribute_value.field_value' => 'required|string',
+            'break_down_attributes.*.break_down_attribute_value.field_value' => 'nullable|string',
         ]);
 
         $break_down_list = BreakDownList::where('break_down_list_id', $request->break_down_list_id)->first();

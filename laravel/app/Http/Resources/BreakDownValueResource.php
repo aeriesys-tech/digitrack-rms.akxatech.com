@@ -33,7 +33,9 @@ class BreakDownValueResource extends JsonResource
 	        // 'asset_parameter_types' => AssetParameterTypeResource::collection($this->AssetParameterTypes),
             'status' => $this->deleted_at?false:true,
             // 'asset_types' => $asset_types,
-            'break_down_attribute_value' => $break_down_attribute_value
+            'break_down_attribute_value' => $break_down_attribute_value,
+            'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter),
         ];
     }
 }

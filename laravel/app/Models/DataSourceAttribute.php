@@ -37,4 +37,9 @@ class DataSourceAttribute extends Model
     {
         return $this->hasMany(DataSourceAttributeType::class, 'data_source_attribute_id', 'data_source_attribute_id');
     }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
+    }
 }

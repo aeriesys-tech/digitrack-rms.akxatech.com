@@ -24,6 +24,7 @@ class ServiceAttributeResource extends JsonResource
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
             'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'service_attribute_types' => ServiceAttributeTypeResource::collection($this->ServiceAttributeTypes),
             'status' => $this->deleted_at?false:true,
             'service_types' => $service_types

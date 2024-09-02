@@ -18,6 +18,7 @@ use App\Http\Resources\AssetAttributeResource;
 use App\Models\AssetAttribute;
 use App\Models\AssetAttributeValue;
 use App\Http\Resources\AssetAttributeValueResource;
+use App\Models\CampaignResult;
 
 class AssetController extends Controller
 {
@@ -206,10 +207,12 @@ class AssetController extends Controller
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
         $asset = Asset::withTrashed()->where('asset_id', $request->asset_id)->first();
+        $campaign = CampaignResult::withTrashed()->where('asset_id', $request->asset_id)->first();
 
-        if($asset->trashed())
+        if($asset->trashed() && $campaign->trashed())
         {
             $asset->restore();
+            $campaign->restore();
             return response()->json([
                 "message" =>"Asset Activated successfully"
             ],200);
@@ -217,6 +220,7 @@ class AssetController extends Controller
         else
         {
             $asset->delete();
+            $campaign->delete();
             return response()->json([
                 "message" =>"Asset Deactivated successfully"
             ], 200); 

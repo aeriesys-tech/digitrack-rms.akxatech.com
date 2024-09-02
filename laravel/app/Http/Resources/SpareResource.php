@@ -17,7 +17,7 @@ class SpareResource extends JsonResource
         }
 
         $spare_attributes = SpareAttribute::whereHas('SpareAttributeTypes', function($que){
-            $que->where('spare_type_id', $this->spare_type_id);
+            $que->where('spare_type_id', $this->spare_type_id)->where('field_type', '!=', "List");
         })->get();
 
         return [

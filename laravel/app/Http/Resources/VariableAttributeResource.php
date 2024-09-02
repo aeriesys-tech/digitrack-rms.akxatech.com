@@ -24,6 +24,7 @@ class VariableAttributeResource extends JsonResource
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
             'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'variable_attribute_types' => VariableAttributeTypeResource::collection($this->VariableAttributeTypes),
             'status' => $this->deleted_at?false:true,
             'variable_types' => $variable_types

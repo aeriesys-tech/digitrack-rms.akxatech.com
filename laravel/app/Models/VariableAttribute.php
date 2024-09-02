@@ -37,4 +37,9 @@ class VariableAttribute extends Model
     {
         return $this->hasMany(VariableAttributeType::class, 'variable_attribute_id', 'variable_attribute_id');
     }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
+    }
 }

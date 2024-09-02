@@ -37,4 +37,9 @@ class BreakDownAttribute extends Model
     {
         return $this->hasMany(BreakDownAttributeType::class, 'break_down_attribute_id', 'break_down_attribute_id');
     }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
+    }
 }

@@ -37,4 +37,9 @@ class ServiceAttribute extends Model
     {
         return $this->hasMany(ServiceAttributeType::class, 'service_attribute_id', 'service_attribute_id');
     }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
+    }
 }

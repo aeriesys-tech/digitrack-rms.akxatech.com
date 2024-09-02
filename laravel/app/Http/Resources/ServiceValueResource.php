@@ -33,7 +33,9 @@ class ServiceValueResource extends JsonResource
 	        // 'asset_parameter_types' => AssetParameterTypeResource::collection($this->AssetParameterTypes),
             'status' => $this->deleted_at?false:true,
             // 'asset_types' => $asset_types,
-            'service_attribute_value' => $service_attribute_value
+            'service_attribute_value' => $service_attribute_value,
+            'list_parameter_id' => $this->list_parameter_id,
+            'list_parameter' => new ListParameterResource($this->ListParameter)
         ];
     }
 }

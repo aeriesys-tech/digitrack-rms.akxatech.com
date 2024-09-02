@@ -18,7 +18,7 @@ class VariableResource extends JsonResource
         }
 
         $variable_attributes = VariableAttribute::whereHas('VariableAttributeTypes', function($que){
-            $que->where('variable_type_id', $this->variable_type_id);
+            $que->where('variable_type_id', $this->variable_type_id)->where('field_type', '!=', "List");
         })->get();
 
         return [
@@ -30,8 +30,6 @@ class VariableResource extends JsonResource
             'status' => $this->deleted_at?false:true,
             'variable_asset_types' => VariableAssetTypeResource::collection($this->VariableAssetTypes),
             'asset_types' => $asset_types,
-            // 'list_parameter_id' => $this->list_parameter_id,
-            // 'list_parameter' => new ListParameterResource($this->ListParameter),
             'variable_attributes' => VariableValueResource::collection($variable_attributes->map(function ($VariableAttribute) {
                 return ['resource' => $VariableAttribute, 'variable_id' => $this->variable_id];
             })),

@@ -93,34 +93,14 @@ class SpareController extends Controller
             ]);
         }
 
-        $spare_attribute_initial = SpareAttribute::whereHas('SpareattributeTypes', function($que) use($request){
-            $que->where('spare_type_id', $request->spare_type_id);
-        })->get();
-
-        foreach ($spare_attribute_initial as $attribute) {
-
-            if ($attribute->is_required && empty($attribute['field_value'])) {
-                continue;
-            }
-
+        foreach ($request->spare_attributes as $attribute) 
+        {
             SpareAttributeValue::create([
                 'spare_id' => $spare->spare_id,
                 'spare_attribute_id' => $attribute['spare_attribute_id'],
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
-        }
-
-        $update_spares = SpareAttributeValue::where('spare_id',  $spare->spare_id)->get();
-
-        foreach ($update_spares as $update_spare) {
-            foreach ($data['spare_attributes'] as $spare_attribute) {
-                if ($spare_attribute['spare_attribute_id'] == $update_spare['spare_attribute_id']) {
-                    $update_spare->update([
-                        'field_value' => $spare_attribute['field_value'] ?? '',
-                    ]);
-                }
-            }
-        }                
+        }            
         return response()->json(["message" => "Spare Created Successfully"]);
     }
 
@@ -193,6 +173,7 @@ class SpareController extends Controller
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
+            'spare_attributes.*.spare_attribute_value.field_value' => 'required|string',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
