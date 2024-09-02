@@ -68,7 +68,7 @@ class SpareAttributeController extends Controller
 	        'field_values' => 'nullable|required_if:field_type,Dropdown',
 	        'field_length' => 'required',
 	        'is_required' => 'required|boolean',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'spare_types' => 'required|array',
 	        'spare_type_id.*' => 'required|exists:spare_types,spare_type_id'
         ]);
@@ -118,7 +118,7 @@ class SpareAttributeController extends Controller
             'field_values' => 'nullable|required_if:field_type,Dropdown',
             'field_length' => 'required',
             'is_required' => 'required|boolean',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
+            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'spare_types' => 'required|array',
             'spare_types.*' => 'required|exists:spare_types,spare_type_id'
         ]);

@@ -57,32 +57,35 @@ class CampaignController extends Controller
 
         if ($request->hasFile('file')) 
         {
-            $fileName = time().'.'.$request->file('file')->getClientOriginalExtension();
-            $filePath = public_path('storage/files'); 
+            $fileName = $request->file('file')->getClientOriginalName();
+            $filePath = public_path('storage\files'); 
             $request->file('file')->move($filePath, $fileName);
             $data['file'] = $fileName;
         } 
         $campaign = Campaign::create($data);
 
-        //Campaign Result 
+        //CampaignResult 
         $client = new Client();
-        $headers = [
-            // "pdf_file" => "C:\\xampp\\htdocs\\digitrack-rms.akxatech.com\\laravel\\public\\rms_script\\Ladle 9.C-31.H-68.6800.pdf"
-            "file" => $filePath . '/' . $fileName
-        ];
+        $fullFilePath = $filePath . '/' . $fileName;
         
-        $responseDatas = $client->post('http://127.0.0.1:5000/runCampain', [
-            'headers' => $headers
-        ]);
+        $response = $client->post('http://127.0.0.1:5000/runCampain', [
+            'json' => [
+                    'pdf_file' => $fullFilePath 
+                ]
+            ]
+        );
 
-        foreach($responseDatas as $response)
+        $responseContent = $response->getBody()->getContents();
+        $responseDatas = json_decode($responseContent, true);
+
+        foreach($responseDatas['result'] as $responseData)
         {
             $compaign_Result = CampaignResult::create([
                 'campaign_id' => $campaign->campaign_id,
-                'asset_id' => $request->asset_id,
-                'location' => $response['location'],
-                'file' => $response['file'],
-                'date' => $response['date']
+                'asset_id' => $campaign->asset_id,
+                'location' => $responseData['location'],
+                'file' => $responseData['file'],
+                'date' => $responseData['date']
             ]);   
         }
 
@@ -91,9 +94,17 @@ class CampaignController extends Controller
         ]); 
     }
 
-    public function imagesCampaignResult(Request $request)
+    public function campaignResultImages(Request $request)
     {
-        $compaign_result = CampaignResult::all();
+        $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id',
+            'location' => 'required',
+            'from_date' => 'required|date',
+            'to_date' => 'required|date'
+        ]);
+
+        $compaign_result = CampaignResult::where('asset_id', $request->asset_id)->where('location', $request->location)
+                ->whereBetween('date', [$request->from_date, $request->to_date])->get();
         return CampaignResultResource::collection($compaign_result);
     }
 }

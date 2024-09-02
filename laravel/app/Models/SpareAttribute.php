@@ -37,4 +37,9 @@ class SpareAttribute extends Model
     {
         return $this->hasMany(SpareAttributeType::class, 'spare_attribute_id', 'spare_attribute_id');
     }
+
+    public function ListParameter()
+    {
+        return $this->belongsTo(ListParameter::class, 'spare_attribute_id');
+    }
 }
