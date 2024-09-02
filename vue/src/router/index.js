@@ -377,7 +377,7 @@ const routes = [
   },
   {
     path: "/checks/create",
-    name: "CheckCreate",
+    name: "Checks.Create",
     component: CreateCheck,
   },
 

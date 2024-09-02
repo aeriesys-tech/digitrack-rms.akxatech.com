@@ -48,7 +48,7 @@
                                 <tbody>
                                     <tr v-for="campaign, key in campaigns" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{campaign.asset.asset_name}}</td>
+                                        <td>{{campaign?.asset?.asset_name}}</td>
                                         <td>{{ campaign.datasource }}</td>
                                     </tr>
                                     <tr v-if="campaigns.length==0">

@@ -25,7 +25,7 @@
                                     <div class="col-md-12">
                                         <label class="form-label">Department Code</label><span class="text-danger"> *</span>
                                         <input type="text" placeholder="Enter Department Code" class="form-control" ref="department_code" :class="{ 'is-invalid': errors.department_code }"
-                                            v-model="department.department_code" />
+                                            v-model="department.department_code"/>
                                         <span v-if="errors.department_code" class="invalid-feedback">{{ errors.department_code[0] }}</span>
                                     </div>
     
@@ -160,6 +160,7 @@
         //     }
             this.index();
             this.getDepartments();
+            this.$refs.department_code.focus();
         },
     
         methods: {
@@ -225,6 +226,7 @@
             editDepartment(department) {
                 this.department = department;
                 this.status = false;
+                this.$refs.department_code.focus();
             },
     
             updateDepartment() {

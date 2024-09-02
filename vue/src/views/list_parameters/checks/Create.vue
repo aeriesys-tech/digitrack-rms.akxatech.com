@@ -51,7 +51,7 @@
                                     </div>
                                 <div class="col-md-6">
                                         <label class="form-label">Field Name</label><span class="text-danger"> *</span>
-                                        <input type="text" placeholder="Field Name" class="form-control" :class="{ 'is-invalid': errors.field_name }" v-model="check.field_name" ref="field_name"/>
+                                        <input type="text" placeholder="Field Name" class="form-control" :class="{ 'is-invalid': errors.field_name }" v-model="check.field_name" />
                                         <span v-if="errors.field_name" class="invalid-feedback">{{ errors.field_name[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
@@ -129,7 +129,7 @@
 </template>
 <script>
 export default {
-    name: "Check.Create",
+    name: "Checks.Create", 
     data() {
         return {
             // check_update: false,
@@ -157,8 +157,8 @@ export default {
     beforeRouteEnter(to, from, next) {
         next(vm => {
             vm.getAssetTypes();
-            if(to.name == 'CheckCreate'){
-                vm.$refs.field_name.focus();
+            if(to.name == 'Checks.Create'){
+                // vm.$refs.field_name.focus();
             }
             else {
                     vm.status = false;
@@ -282,7 +282,7 @@ export default {
             vm.check.order = "";
             vm.check.frequency_id = "";
             vm.check.asset_types = [],
-            vm.$refs.field_name.focus();
+            // vm.$refs.field_name.focus();
             vm.errors = [];
             vm.status = true;
             // vm.index();

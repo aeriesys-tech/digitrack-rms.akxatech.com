@@ -74,11 +74,12 @@
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                 </div> 
                                 <div class="col-md-4" v-if="list_parameters.length">
-                                    <label class="form-label">List Parameter</label>
-                                    <select class="form-control" v-model="service_attribute.list_parameter_id">
-                                        <option value="">Select List Parameter</option>
+                                    <label class="form-label">List</label><span class="text-danger"> *</span>
+                                    <select class="form-control" v-model="service_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
+                                        <option value="">Select List</option>
                                         <option v-for="list_parameter, key in list_parameters" :key="key" :value="list_parameter.list_parameter_id">{{list_parameter.list_parameter_name}}</option>
                                     </select>
+                                    <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Value</label><span v-if="service_attribute.field_type==='Dropdown'" class="text-danger"> *</span>

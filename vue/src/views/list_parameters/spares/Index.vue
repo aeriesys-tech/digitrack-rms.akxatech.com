@@ -53,6 +53,14 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
+                                        <th @click="sort('list_parameter_id')">
+                                            List
+                                            <span>
+                                                <i v-if="meta.keyword=='list_parameter_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='list_parameter_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
                                         <th >
                                             Asset Type.
                                             <span>
@@ -74,6 +82,16 @@
                                         <td>{{spare.spare_type?.spare_type_name}}</td>
                                         <td>{{spare.spare_code}}</td>
                                         <td>{{spare.spare_name}}</td>
+                                        <!-- <td>
+                                            <div v-for="spare_attribute, key in spare.spare_attributes" :key="key">
+                                                {{spare_attribute?.list_parameter?.list_parameter_name  }}
+                                            </div>
+                                        </td> -->
+
+                                        <td>
+                                            {{ spare.spare_attributes.map(attr => attr.list_parameter?.list_parameter_name).filter(name => name).join(', ') }}
+                                        </td>
+                                    
                                         <td>
                                             <span v-for="asset_type, key in spare.spare_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>

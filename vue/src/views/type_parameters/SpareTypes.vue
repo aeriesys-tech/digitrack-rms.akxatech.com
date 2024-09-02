@@ -159,6 +159,7 @@ export default {
             this.column = 'col-12'
         }
         this.index();
+        this.$refs.spare_type_code.focus();
     },
 
     methods: {
@@ -229,6 +230,7 @@ export default {
             this.spare_type = spare_type;
             this.update = true;
             this.status = false;
+            this.$refs.spare_type_code.focus();
         },
 
         updateSpareType() {

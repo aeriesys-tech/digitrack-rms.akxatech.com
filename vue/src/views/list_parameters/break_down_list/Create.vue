@@ -233,7 +233,6 @@ export default {
             }
         },
       
-
         addBreakDown() {
             let vm = this;
             let loader = vm.$loading.show();

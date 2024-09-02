@@ -157,6 +157,7 @@ export default {
             this.column = 'col-12'
         }
         this.index();
+        this.$refs.service_type_code.focus();
     },
 
     methods: {
@@ -222,6 +223,7 @@ export default {
         editServiceType(service_type) {
             this.service_type = service_type;
             this.status = false;
+            this.$refs.service_type_code.focus();
         },
 
         updateServiceType() {
