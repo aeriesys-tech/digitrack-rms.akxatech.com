@@ -220,23 +220,21 @@ class AssetController extends Controller
         $new_zone_count = $data['no_of_zones'];
         $existing_zones = AssetZone::where('asset_id', $asset->asset_id)->get();
 
-        if ($existing_zones->count() > $new_zone_count) {
+        if ($existing_zones->count() > $new_zone_count) 
+        {
             $excess_zones = $existing_zones->slice($new_zone_count);
-            foreach ($excess_zones as $zone) {
+            foreach ($excess_zones as $zone) 
+            {
                 $zone->delete();
             }
         }
 
         if ($existing_zones->count() < $new_zone_count) {
-            $existing_zone_names = $existing_zones->pluck('zone_name')->toArray();
-            for ($i = $existing_zones->count(); $i < $new_zone_count; $i++) {
-                $zone_name = "Zone " . ($i + 1);
-                if (!in_array($zone_name, $existing_zone_names)) {
-                    AssetZone::create([
-                        'asset_id' => $asset->asset_id,
-                        'zone_name' => $zone_name,
-                    ]);
-                }
+            for ($i = $existing_zones->count(); $i < $new_zone_count; $i++) 
+            {
+                AssetZone::create([
+                    'asset_id' => $asset->asset_id,
+                ]);
             }
         }
         return response()->json(["message" => "Asset Updated Successfully"]);
