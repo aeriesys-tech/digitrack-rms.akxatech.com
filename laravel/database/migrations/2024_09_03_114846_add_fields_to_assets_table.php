@@ -22,7 +22,7 @@ return new class extends Migration
         Schema::table('assets', function (Blueprint $table) {
             $table->dropForeign(['area_id']);
             $table->dropColumn('area_id');
-            $table->dropColumn('no_of_zone');
+            $table->dropColumn('no_of_zones');
             $table->dropForeign(['functional_id']);
             $table->dropColumn('functional_id');
         });
