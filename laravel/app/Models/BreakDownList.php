@@ -28,9 +28,4 @@ class BreakDownList extends Model
     {
         return $this->hasMany(BreakDownListAssetType::class, 'break_down_list_id', 'break_down_list_id');
     }
-
-    public function ListParameter()
-    {
-        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
-    }
 }

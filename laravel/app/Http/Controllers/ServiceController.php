@@ -56,7 +56,6 @@ class ServiceController extends Controller
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
             'service_attributes.*.field_value' => 'required',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -99,6 +98,18 @@ class ServiceController extends Controller
             'service_id' => 'required|exists:services,service_id'
         ]);
 
+        $service_attribute_value = ServiceAttributeValue::where('service_id', $request->service_id)->get('service_attribute_id');
+        $service_attribute_initial = ServiceAttribute::whereNotIn('service_attribute_id', $service_attribute_value)->get();
+
+        foreach ($service_attribute_initial as $service) 
+        {
+            ServiceAttributeValue::create([
+                'service_id' => $request->service_id,
+                'service_attribute_id' => $service['service_attribute_id'],
+                'field_value' => $service['field_value'] ?? '',
+            ]);
+        }
+
         $service = Service::where('service_id',$request->service_id)->first();
         return new ServiceResource($service);
     }
@@ -126,7 +137,6 @@ class ServiceController extends Controller
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
             'service_attributes.*.service_attribute_value.field_value' => 'required|string',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);

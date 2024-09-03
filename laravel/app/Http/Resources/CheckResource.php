@@ -26,9 +26,7 @@ class CheckResource extends JsonResource
             'order' => $this->order,
             'status' => $this->deleted_at?false:true,
             'check_asset_types' => CheckAssetTypeResource::collection($this->CheckAssetTypes),
-            'asset_types' => $asset_types,
-            // 'list_parameter_id' => $this->list_parameter_id,
-            // 'list_parameter' => new ListParameterResource($this->ListParameter)
+            'asset_types' => $asset_types
         ];
     }
 }

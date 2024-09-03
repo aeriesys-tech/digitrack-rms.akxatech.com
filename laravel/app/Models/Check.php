@@ -18,8 +18,7 @@ class Check extends Model
         'ucl',
         'lcl',
         'field_values',
-        'order',
-        'list_parameter_id'
+        'order'
     ];
 
     protected $primaryKey = 'check_id';
@@ -27,10 +26,5 @@ class Check extends Model
     public function CheckAssetTypes()
     {
         return $this->hasMany(CheckAssetType::class, 'check_id', 'check_id');
-    }
-
-    public function ListParameter()
-    {
-        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
     }
 }

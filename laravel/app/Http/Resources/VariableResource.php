@@ -18,7 +18,7 @@ class VariableResource extends JsonResource
         }
 
         $variable_attributes = VariableAttribute::whereHas('VariableAttributeTypes', function($que){
-            $que->where('variable_type_id', $this->variable_type_id)->where('field_type', '!=', "List");
+            $que->where('variable_type_id', $this->variable_type_id);
         })->get();
 
         return [

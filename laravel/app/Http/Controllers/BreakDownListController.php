@@ -96,6 +96,18 @@ class BreakDownListController extends Controller
             'break_down_list_id' => 'required|exists:break_down_lists,break_down_list_id'
         ]);
 
+        $breakdown_attribute_value = BreakDownAttributeValue::where('break_down_list_id', $request->break_down_list_id)->get('break_down_attribute_id');
+        $breakdown_attribute_initial = BreakDownAttribute::whereNotIn('break_down_attribute_id', $breakdown_attribute_value)->get();
+
+        foreach ($breakdown_attribute_initial as $break_down) 
+        {
+            BreakDownAttributeValue::create([
+                'break_down_list_id' => $request->break_down_list_id,
+                'break_down_attribute_id' => $break_down['break_down_attribute_id'],
+                'field_value' => $break_down['field_value'] ?? '',
+            ]);
+        }
+
         $break_down = BreakDownList::where('break_down_list_id',$request->break_down_list_id)->first();
         return new BreakDownListResource($break_down);
     }

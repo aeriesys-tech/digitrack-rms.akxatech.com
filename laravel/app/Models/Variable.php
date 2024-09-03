@@ -28,9 +28,4 @@ class Variable extends Model
     {
         return $this->hasMany(VariableAssetType::class, 'variable_id', 'variable_id');
     }
-
-    public function ListParameter()
-    {
-        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
-    }
 }

@@ -28,9 +28,4 @@ class DataSource extends Model
     {
         return $this->hasMany(DataSourceAssetType::class, 'data_source_id', 'data_source_id');
     }
-
-    public function ListParameter()
-    {
-        return $this->belongsTo(ListParameter::class, 'list_parameter_id');
-    }
 }

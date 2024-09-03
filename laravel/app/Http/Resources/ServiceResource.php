@@ -17,7 +17,7 @@ class ServiceResource extends JsonResource
         }
         
         $service_attributes = ServiceAttribute::whereHas('ServiceAttributeTypes', function($que){
-            $que->where('service_type_id', $this->service_type_id)->where('field_type', '!=', "List");
+            $que->where('service_type_id', $this->service_type_id);
         })->get();
 
         return [
@@ -26,8 +26,6 @@ class ServiceResource extends JsonResource
             'service_type' => new ServiceTypeResource($this->ServiceType),
             'service_code' => $this->service_code,
             'service_name' => $this->service_name,
-            // 'list_parameter_id' => $this->list_parameter_id,
-            // 'list_parameter' => new ListParameterResource($this->ListParameter),
             'status' => $this->deleted_at?false:true,
             'service_asset_types' => ServiceAssetTypeResource::collection($this->ServiceAssetTypes),
             'asset_types' => $asset_types,

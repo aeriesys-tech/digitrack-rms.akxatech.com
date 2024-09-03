@@ -54,7 +54,6 @@ class DataSourceController extends Controller
         $data = $request->validate([
             'data_source_code' => 'required|string|unique:data_sources,data_source_code',
             'data_source_name' => 'required|string|unique:data_sources,data_source_name',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
@@ -102,6 +101,18 @@ class DataSourceController extends Controller
             'data_source_id' => 'required|exists:data_sources,data_source_id'
         ]);
 
+        $datasource_attribute_value = DataSourceAttributeValue::where('data_source_id', $request->data_source_id)->get('data_source_attribute_id');
+        $datasource_attribute_initial = DataSourceAttribute::whereNotIn('data_source_attribute_id', $datasource_attribute_value)->get();
+
+        foreach ($datasource_attribute_initial as $data_source) 
+        {
+            DataSourceAttributeValue::create([
+                'data_source_id' => $request->data_source_id,
+                'data_source_attribute_id' => $data_source['data_source_attribute_id'],
+                'field_value' => $data_source['field_value'] ?? '',
+            ]);
+        }
+
         $data_source = DataSource::where('data_source_id',$request->data_source_id)->first();
         return new DataSourceResource($data_source);
     }
@@ -125,7 +136,6 @@ class DataSourceController extends Controller
             'data_source_id' => 'required|exists:data_sources,data_source_id',
             'data_source_code' => 'required|string|unique:data_sources,data_source_code,' . $request->data_source_id . ',data_source_id',
             'data_source_name' => 'required|string|unique:data_sources,data_source_name,' . $request->data_source_id . ',data_source_id',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',

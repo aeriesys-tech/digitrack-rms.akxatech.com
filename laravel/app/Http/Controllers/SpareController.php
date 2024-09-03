@@ -46,34 +46,12 @@ class SpareController extends Controller
         return SpareResource::collection($spare);
     }
 
-    // public function addSpare(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'spare_type_id' => 'required|exists:spare_types,spare_type_id',
-    //         'spare_code' => 'required|string|unique:spares,spare_code',
-    //         'spare_name' => 'required|string|unique:spares,spare_name',
-    //         'asset_types' => 'required|array',
-	//         'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
-    //     ]);
-        
-    //     $spare = Spare::create($data);
-
-    //     foreach ($data['asset_types'] as $asset_type) {
-    //         SpareAssetType::create([
-    //             'spare_id' => $spare->spare_id,
-    //             'asset_type_id' => $asset_type,
-    //         ]);
-    //     }
-    //     return response()->json(["message" => "Spare Created Successfully"]);  
-    // }  
-
     public function addSpare(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
             'spare_code' => 'required|string|unique:spares,spare_code',
             'spare_name' => 'required|string|unique:spares,spare_name',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
@@ -120,6 +98,18 @@ class SpareController extends Controller
             'spare_id' => 'required|exists:spares,spare_id'
         ]);
 
+        $spare_attribute_value = SpareAttributeValue::where('spare_id', $request->spare_id)->get('spare_attribute_id');
+        $spare_attribute_initial = SpareAttribute::whereNotIn('spare_attribute_id', $spare_attribute_value)->get();
+
+        foreach ($spare_attribute_initial as $spare) 
+        {
+            SpareAttributeValue::create([
+                'spare_id' => $request->spare_id,
+                'spare_attribute_id' => $spare['spare_attribute_id'],
+                'field_value' => $spare['field_value'] ?? '',
+            ]);
+        }
+
         $spare = Spare::where('spare_id',$request->spare_id)->first();
         return new SpareResource($spare);
     }
@@ -135,32 +125,6 @@ class SpareController extends Controller
         })->get();
         return SpareResource::collection($spares);
     }
-    
-    // public function updateSpare(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'spare_id' => 'required|exists:spares,spare_id',
-    //         'spare_type_id' => 'required|exists:spare_types,spare_type_id',
-    //         'spare_code' => 'required|string|unique:spares,spare_code,'.$request->spare_id.',spare_id',
-    //         'spare_name' => 'required|string|unique:spares,spare_name,'.$request->spare_id.',spare_id',
-    //         'asset_types' => 'required|array',
-	//         'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
-    //     ]);
-
-    //     $spare = Spare::where('spare_id', $request->spare_id)->first();
-    //     $spare->update($data);
-
-    //     SpareAssetType::where('spare_id', $spare->spare_id)->delete();
-
-    //     foreach ($data['asset_types'] as $asset_type_id) {
-    //         SpareAssetType::create([
-    //             'spare_id' => $spare->spare_id,
-    //             'asset_type_id' => $asset_type_id
-    //         ]);
-    //     }
-
-    //     return response()->json(["message" => "Spare Updated Successfully"]);
-    // }
 
     public function updateSpare(Request $request)
     {
@@ -169,7 +133,6 @@ class SpareController extends Controller
             'spare_id' => 'required|exists:spares,spare_id',
             'spare_code' => 'required|string|unique:spares,spare_code,' . $request->spare_id . ',spare_id',
             'spare_name' => 'required|string|unique:spares,spare_name,' . $request->spare_id . ',spare_id',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
@@ -192,22 +155,25 @@ class SpareController extends Controller
             ]);
         }
     
-        foreach ($request->spare_attributes as $attribute) 
+        if (!empty($request->spare_attributes)) 
         {
-            $fieldValue = $attribute['field_value'] ?? $attribute['spare_attribute_value']['field_value'] ?? null;
+            foreach ($request->spare_attributes as $attribute) 
+            {
+                $fieldValue = $attribute['spare_attribute_value']['field_value'] ?? null;
     
-            if ($fieldValue !== null) {
-                SpareAttributeValue::updateOrCreate(
-                    [
-                        'spare_id' => $spare->spare_id,
-                        'spare_attribute_id' => $attribute['spare_attribute_id'],
-                    ],
-                    [
-                        'field_value' => $fieldValue,
-                    ]
-                );
+                if ($fieldValue !== null) {
+                    SpareAttributeValue::updateOrCreate(
+                        [
+                            'spare_id' => $spare->spare_id,
+                            'spare_attribute_id' => $attribute['spare_attribute_id'],
+                        ],
+                        [
+                            'field_value' => $fieldValue,
+                        ]
+                    );
+                }
             }
-        }
+        }    
         return response()->json(["message" => "Spare Updated Successfully"]);
     }    
 
