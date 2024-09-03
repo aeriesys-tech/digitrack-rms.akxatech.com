@@ -11,12 +11,15 @@ class Asset extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'area_id',
         'plant_id',
         'asset_code',
         'asset_name',
+        'no_of_zones',
         'asset_type_id',
         'longitude',
         'latitude',
+        'functional_id',
         'department_id',
         'section_id',
         'radius'
@@ -47,5 +50,15 @@ class Asset extends Model
     public function Section()
     {
         return $this->belongsTo(Section::class, 'section_id');
+    }
+
+    public function Area()
+    {
+        return $this->belongsTo(Area::class, 'area_id');
+    }
+
+    public function Functional()
+    {
+        return $this->belongsTo(Functional::class, 'functional_id');
     }
 }

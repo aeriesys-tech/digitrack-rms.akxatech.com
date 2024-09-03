@@ -19,6 +19,7 @@ use App\Models\AssetAttribute;
 use App\Models\AssetAttributeValue;
 use App\Http\Resources\AssetAttributeValueResource;
 use App\Models\CampaignResult;
+use App\Models\AssetZone;
 
 class AssetController extends Controller
 {
@@ -67,14 +68,17 @@ class AssetController extends Controller
     {
         $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
+            'area_id' => 'required|exists:areas,area_id',
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
+            'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'required|array',
             'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
-            'asset_attributes.*.field_value' => 'required|string',
+            'asset_attributes.*.field_values' => 'required|string',
             'longitude' => 'nullable|sometimes',
             'latitude' => 'nullable|sometimes',
+            'functional_id' => 'nullable|exists:functionals,functional_id',
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes'
@@ -105,7 +109,17 @@ class AssetController extends Controller
                     ]);
                 }
             }
-        }        
+        }  
+        
+        $n0_of_zones = $data['no_of_zones'];
+        for ($i = 1; $i <= $n0_of_zones; $i++) 
+        {
+            $zoneName = "Zone {$i}"; 
+            AssetZone::create([
+                'asset_id' => $asset->asset_id,
+                'zone_name' => $zoneName,
+            ]);
+        }
         
         return response()->json(["message" => "Asset Created Successfully"]);
     }
@@ -165,13 +179,17 @@ class AssetController extends Controller
         $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_code' => 'required|string|unique:assets,asset_code,' . $request->asset_id . ',asset_id',
-            'asset_name' => 'required|string|unique:assets,asset_name,' . $request->asset_id . ',asset_id',
+            'area_id' => 'required|exists:areas,area_id',
+            'asset_code' => 'required|string|unique:assets,asset_code',
+            'asset_name' => 'required|string|unique:assets,asset_name',
+            'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'required|array',
             'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
+            'asset_attributes.*.field_value' => 'required|string',
             'longitude' => 'nullable|sometimes',
             'latitude' => 'nullable|sometimes',
+            'functional_id' => 'nullable|exists:functionals,functional_id',
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes'
@@ -196,6 +214,29 @@ class AssetController extends Controller
                         'field_value' => $fieldValue,
                     ]
                 );
+            }
+        }
+
+        $new_zone_count = $data['no_of_zones'];
+        $existing_zones = AssetZone::where('asset_id', $asset->asset_id)->get();
+
+        if ($existing_zones->count() > $new_zone_count) {
+            $excess_zones = $existing_zones->slice($new_zone_count);
+            foreach ($excess_zones as $zone) {
+                $zone->delete();
+            }
+        }
+
+        if ($existing_zones->count() < $new_zone_count) {
+            $existing_zone_names = $existing_zones->pluck('zone_name')->toArray();
+            for ($i = $existing_zones->count(); $i < $new_zone_count; $i++) {
+                $zone_name = "Zone " . ($i + 1);
+                if (!in_array($zone_name, $existing_zone_names)) {
+                    AssetZone::create([
+                        'asset_id' => $asset->asset_id,
+                        'zone_name' => $zone_name,
+                    ]);
+                }
             }
         }
         return response()->json(["message" => "Asset Updated Successfully"]);

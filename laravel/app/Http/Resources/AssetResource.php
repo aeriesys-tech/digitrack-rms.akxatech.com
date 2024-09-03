@@ -24,10 +24,13 @@ class AssetResource extends JsonResource
         })->get();
         return [
             'asset_id' => $this->asset_id,
+            'area_id' => $this->area_id,
+            'area' => new AreaResource($this->Area),
             'plant_id' => $this->plant_id,
             'plant' => new PlantResource($this->Plant),
             'asset_code' => $this->asset_code,
             'asset_name' => $this->asset_name,
+            'no_of_zones' => $this->no_of_zones,
             'asset_type_id' => $this->asset_type_id,
             'asset_type' => new AssetTypeResource($this->AssetType),
             // 'asset_parameter_values' => AssetParameterResource::collection($this->AssetParameters),
@@ -38,6 +41,8 @@ class AssetResource extends JsonResource
             // 'asset_parameters' => $asset_parameters,
             'longitude' => $this->longitude,
             'latitude' => $this->latitude,
+            'functional_id' => $this->functional_id,
+            'functional' => new FunctionalResource($this->Functional),
             'department_id' => $this->department_id,
             'department' => new DepartmentResource($this->Department),
             'section_id' => $this->section_id,
