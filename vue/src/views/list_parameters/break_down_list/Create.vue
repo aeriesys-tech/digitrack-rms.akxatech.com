@@ -148,6 +148,18 @@
                                             <input v-else type="color" class="form-control" v-model="field.field_value" @change="updateBreakDownParameters(field)" style="height: 2.2rem;"/>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
+                                    <div v-if="field.field_type=='List'">
+                                        <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                        <select v-if="field.break_down_attribute_value" class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @change="updateBreakDownParameters(field)">
+                                            <option value="">Select {{field.display_name}}</option>
+                                            <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                        </select>
+                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateBreakDownParameters(field)">
+                                            <option :value="field.field_value">Select {{field.display_name}}</option>
+                                            <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                        </select>
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

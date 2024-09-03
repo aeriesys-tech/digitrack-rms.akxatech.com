@@ -53,14 +53,6 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('list_parameter_id')">
-                                            List
-                                            <span>
-                                                <i v-if="meta.keyword=='list_parameter_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='list_parameter_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
-                                                <i v-else class="fas fa-sort"></i>
-                                            </span>
-                                        </th>
                                         <th >
                                             Asset Type.
                                             <span>
@@ -82,9 +74,6 @@
                                         <td>{{variable.variable_type?.variable_type_name}}</td>
                                         <td>{{variable.variable_code}}</td>
                                         <td>{{variable.variable_name}}</td>
-                                        <td>
-                                            {{ variable.variable_attributes.map(attr => attr.list_parameter?.list_parameter_name).filter(name => name).join(', ') }}
-                                        </td>
                                         <td>
                                             <span v-for="asset_type, key in variable.variable_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>

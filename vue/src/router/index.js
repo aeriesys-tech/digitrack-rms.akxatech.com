@@ -270,16 +270,16 @@ const routes = [
     name: "Assets.Create",
     component: CreateAsset,
   },
-  {
-    path: "/asset/:asset_id/edit",
-    name: "Assets.Edit",
-    component: EditAsset,
-  },
   // {
   //   path: "/asset/:asset_id/edit",
   //   name: "Assets.Edit",
-  //   component: CreateAsset,
+  //   component: EditAsset,
   // },
+  {
+    path: "/asset/:asset_id/edit",
+    name: "Assets.Edit",
+    component: CreateAsset,
+  },
   {
     path: "/asset/:asset_id/view",
     name: "Assets.View",

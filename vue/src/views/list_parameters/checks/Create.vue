@@ -65,7 +65,7 @@
                                             <option value="Date & Time">Date & Time</option>
                                             <option value="Select">Dropdown</option>
                                             <option value="Color">Color</option>
-                                            <option value="File">File</option>
+                                            <!-- <option value="File">File</option> -->
                                         </select> 
                                         <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                     </div>

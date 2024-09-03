@@ -53,6 +53,14 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
+                                        <!-- <th @click="sort('list_parameter_id')">
+                                            List
+                                            <span>
+                                                <i v-if="meta.keyword=='list_parameter_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='list_parameter_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th> -->
                                         <th >
                                             Asset Type.
                                             <span>
@@ -74,6 +82,9 @@
                                         <td>{{break_down_list.break_down_type?.break_down_type_name}}</td>
                                         <td>{{break_down_list.break_down_list_code}}</td>
                                         <td>{{break_down_list.break_down_list_name}}</td>
+                                        <!-- <td>
+                                            {{ break_down_list.break_down_list_attributes.map(attr => attr.list_parameter?.list_parameter_name).filter(name => name).join(', ') }}
+                                        </td> -->
                                         <td>
                                             <span v-for="asset_type, key in break_down_list.break_down_list_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>
