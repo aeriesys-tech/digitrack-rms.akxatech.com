@@ -72,7 +72,7 @@ class AssetController extends Controller
             // 'area_id' => 'required|exists:areas,area_id',
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
-            'no_of_zones' => 'required|integer',
+            'no_of_zones' => 'required|integer|min:1',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'required|array',
             'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
@@ -82,7 +82,9 @@ class AssetController extends Controller
             'functional_id' => 'nullable|exists:functionals,functional_id',
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes'
+            'radius' => 'nullable|sometimes',
+            'zone_name' => 'required|array', 
+            'zone_name.*' => 'required|string' 
         ]);
         $data['plant_id'] = $userPlantId;
         $data['area_id'] = $areaId;
@@ -114,13 +116,18 @@ class AssetController extends Controller
         //     }
         // }  
         
-        $n0_of_zones = $request->no_of_zones;
-        for ($i = 1; $i <= $n0_of_zones; $i++) 
+        $no_of_zones = $request->no_of_zones;
+        $zoneNames = $request->zone_name;
+    
+        if (count($zoneNames) !== $no_of_zones) {
+            return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
+        }
+    
+        for ($i = 0; $i < $no_of_zones; $i++) 
         {
-            // $zoneName = "Zone {$i}"; 
             AssetZone::create([
                 'asset_id' => $asset->asset_id,
-                'zone_name' => $request->zone_name,
+                'zone_name' => $zoneNames[$i]
             ]);
         }
         
@@ -223,21 +230,22 @@ class AssetController extends Controller
         $new_zone_count = $data['no_of_zones'];
         $existing_zones = AssetZone::where('asset_id', $asset->asset_id)->get();
 
-        if ($existing_zones->count() > $new_zone_count) {
-            $excess_zones = $existing_zones->slice($new_zone_count);
-            foreach ($excess_zones as $zone) {
-                $zone->delete();
-            }
-        }
+        // if ($existing_zones->count() > $new_zone_count) {
+        //     $excess_zones = $existing_zones->slice($new_zone_count);
+        //     foreach ($excess_zones as $zone) {
+        //         $zone->delete();
+        //     }
+        // }
 
-        if ($existing_zones->count() < $new_zone_count) {
+        if ($existing_zones->count() < $new_zone_count) 
+        {
             $existing_zone_names = $existing_zones->pluck('zone_name')->toArray();
-            for ($i = $existing_zones->count(); $i < $new_zone_count; $i++) {
-                $zone_name = "Zone " . ($i + 1);
+            for ($i = $existing_zones->count(); $i < $new_zone_count; $i++) 
+            {
                 if (!in_array($zone_name, $existing_zone_names)) {
                     AssetZone::create([
                         'asset_id' => $asset->asset_id,
-                        'zone_name' => $zone_name,
+                        'zone_name' => $request->zone_name,
                     ]);
                 }
             }
