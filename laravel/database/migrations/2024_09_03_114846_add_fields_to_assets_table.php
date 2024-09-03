@@ -9,10 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('assets', function (Blueprint $table) {
-            $table->foreignId('area_id')->after('asset_id');
+            $table->foreignId('area_id')->nullable()->after('section_id');
             $table->foreign('area_id')->references('area_id')->on('areas');
-            $table->integer('no_of_zones')->after('asset_name');
-            $table->foreignId('functional_id')->nullable()->after('department_id');
+            $table->integer('no_of_zones')->after('area_id');
+            $table->foreignId('functional_id')->nullable()->after('no_of_zones');
             $table->foreign('functional_id')->references('functional_id')->on('functionals');
         });
     }

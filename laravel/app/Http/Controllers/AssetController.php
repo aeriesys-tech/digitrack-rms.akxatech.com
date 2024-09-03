@@ -67,8 +67,9 @@ class AssetController extends Controller
     public function addAsset(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+        $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
-            'area_id' => 'required|exists:areas,area_id',
+            // 'area_id' => 'required|exists:areas,area_id',
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
             'no_of_zones' => 'required|integer',
@@ -84,14 +85,16 @@ class AssetController extends Controller
             'radius' => 'nullable|sometimes'
         ]);
         $data['plant_id'] = $userPlantId;
-
+        $data['area_id'] = $areaId;
         
         $asset = Asset::create($data);
-        $asset_attribute_initial = AssetAttribute::whereHas('AssetattributeTypes', function($que) use($request){
-            $que->where('asset_type_id', $request->asset_type_id);
-        })->get();
 
-        foreach ($asset_attribute_initial as $attribute) {
+        // $asset_attribute_initial = AssetAttribute::whereHas('AssetattributeTypes', function($que) use($request){
+        //     $que->where('asset_type_id', $request->asset_type_id);
+        // })->get();
+
+        foreach ($request->asset_attributes as $attribute) 
+        {
             AssetAttributeValue::create([
                 'asset_id' => $asset->asset_id,
                 'asset_attribute_id' => $attribute['asset_attribute_id'],
@@ -99,25 +102,25 @@ class AssetController extends Controller
             ]);
         }
 
-        $update_assets = AssetAttributeValue::where('asset_id',  $asset->asset_id)->get();
+        // $update_assets = AssetAttributeValue::where('asset_id',  $asset->asset_id)->get();
 
-        foreach ($update_assets as $update_asset) {
-            foreach ($data['asset_attributes'] as $asset_attribute) {
-                if ($asset_attribute['asset_attribute_id'] == $update_asset['asset_attribute_id']) {
-                    $update_asset->update([
-                        'field_value' => $asset_attribute['field_value'] ?? '',
-                    ]);
-                }
-            }
-        }  
+        // foreach ($update_assets as $update_asset) {
+        //     foreach ($data['asset_attributes'] as $asset_attribute) {
+        //         if ($asset_attribute['asset_attribute_id'] == $update_asset['asset_attribute_id']) {
+        //             $update_asset->update([
+        //                 'field_value' => $asset_attribute['field_value'] ?? '',
+        //             ]);
+        //         }
+        //     }
+        // }  
         
-        $n0_of_zones = $data['no_of_zones'];
+        $n0_of_zones = $request->no_of_zones;
         for ($i = 1; $i <= $n0_of_zones; $i++) 
         {
-            $zoneName = "Zone {$i}"; 
+            // $zoneName = "Zone {$i}"; 
             AssetZone::create([
                 'asset_id' => $asset->asset_id,
-                'zone_name' => $zoneName,
+                'zone_name' => $request->zone_name,
             ]);
         }
         
