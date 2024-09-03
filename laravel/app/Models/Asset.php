@@ -61,4 +61,9 @@ class Asset extends Model
     {
         return $this->belongsTo(Functional::class, 'functional_id');
     }
+
+    public function Zones()
+    {
+        return $this->hasMany(AssetZone::class, 'asset_id', 'asset_id');
+    }
 }

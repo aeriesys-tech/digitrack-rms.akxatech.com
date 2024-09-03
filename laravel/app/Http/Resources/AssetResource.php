@@ -47,7 +47,8 @@ class AssetResource extends JsonResource
             'department' => new DepartmentResource($this->Department),
             'section_id' => $this->section_id,
             'section' => new SectionResource($this->Section),
-            'radius' => $this->radius
+            'radius' => $this->radius,
+            'zone_name' => AssetZoneResource::collection($this->Zones)
         ];
     }
 }
