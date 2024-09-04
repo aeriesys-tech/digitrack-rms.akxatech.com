@@ -104,22 +104,22 @@
                 <a href="javascript:void(0)" class="nav-label" :style="{color:AttributesColor}"><i class="ri-stack-fill icn"></i> Attributes</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item" >
-                        <router-link to="/asset_attributes" v-bind:class="{ active: $route.path === '/asset_attributes' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Attribute</span></router-link>
+                        <router-link to="/asset_attributes" v-bind:class="{ active: $route.path === '/asset_attributes' || $route.name === 'AssetAttributes.Create' || $route.path === 'AssetAttributes.Edit' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/spare_attributes" v-bind:class="{ active: $route.path === '/spare_attributes' }" class="nav-link"><i class="ri-shapes-line"></i> <span>Spare Attribute</span></router-link>
+                        <router-link to="/spare_attributes" v-bind:class="{ active: $route.path === '/spare_attributes' || $route.name === 'SpareAttributes.Create' || $route.path === 'SpareAttributes.Edit'  }" class="nav-link"><i class="ri-shapes-line"></i> <span>Spare Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/data_source_attributes" v-bind:class="{ active: $route.path === '/data_source_attributes' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source Attribute</span></router-link>
+                        <router-link to="/data_source_attributes" v-bind:class="{ active: $route.path === '/data_source_attributes' || $route.name === 'DataSourceAttributes.Create' || $route.path === 'DataSourceAttributes.Edit' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/variable_attributes" v-bind:class="{ active: $route.path === '/variable_attributes' }" class="nav-link"><i class="ri-infinity-line"></i> <span>Variable Attribute</span></router-link>
+                        <router-link to="/variable_attributes" v-bind:class="{ active: $route.path === '/variable_attributes' || $route.name === 'VariableAttributes.Create' || $route.path === 'VariableAttributes.Edit'}" class="nav-link"><i class="ri-infinity-line"></i> <span>Variable Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/service_attributes" v-bind:class="{ active: $route.path === '/service_attributes' }" class="nav-link"><i class="ri-layout-fill"></i> <span>Service Attribute</span></router-link>
+                        <router-link to="/service_attributes" v-bind:class="{ active: $route.path === '/service_attributes' || $route.name === 'ServiceAttributes.Create' || $route.path === 'ServiceAttributes.Edit'}" class="nav-link"><i class="ri-layout-fill"></i> <span>Service Attribute</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' }" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Breakdown Attribute</span></router-link>
+                        <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' || $route.name === 'BreakDownAttributes.Create' || $route.path === 'BreakDownAttributes.Edit'}" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Breakdown Attribute</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -128,25 +128,25 @@
                 <a href="javascript:void(0)" :style="{color:listParameterColor}" class="nav-label"><i class="ri-list-settings-line icn"></i> Masters</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item" v-can="'checks.view'">
-                        <router-link to="/checks" v-bind:class="{ active: $route.path === '/checks' }" class="nav-link"><i class="ri-command-line"></i> <span>Checks</span></router-link>
+                        <router-link to="/checks" v-bind:class="{ active: $route.path === '/checks' || $route.name === 'Checks.Create' || $route.path === 'Checks.Edit' }" class="nav-link"><i class="ri-command-line"></i> <span>Checks</span></router-link>
                     </li>
                     <li class="nav-item" v-can="'spares.view'">
-                        <router-link to="/spares" v-bind:class="{ active: $route.path === '/spares' }" class="nav-link"><i class="ri-align-left"></i> <span>Spares</span></router-link>
+                        <router-link to="/spares" v-bind:class="{ active: $route.path === '/spares' || $route.name === 'Spares.Create' || $route.path === 'Spares.Edit' }" class="nav-link"><i class="ri-align-left"></i> <span>Spares</span></router-link>
                     </li>
                     <li class="nav-item" >
-                        <router-link to="/services" v-bind:class="{ active: $route.path === '/services' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
+                        <router-link to="/services" v-bind:class="{ active: $route.path === '/services' || $route.name === 'Services.Create' || $route.path === 'Services.Edit' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
                     </li>
                     <!-- <li class="nav-item" v-can="'services.view'">
                         <router-link to="/services" v-bind:class="{ active: $route.path === '/services' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
                     </li> -->
                     <li class="nav-item">
-                        <router-link to="/variables" v-bind:class="{ active: $route.path === '/variables' }" class="nav-link"><i class="ri-archive-drawer-line"></i> <span>Variables</span></router-link>
+                        <router-link to="/variables" v-bind:class="{ active: $route.path === '/variables' || $route.name === 'Variables.Create' || $route.path === 'Variables.Edit'}" class="nav-link"><i class="ri-archive-drawer-line"></i> <span>Variables</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/data_sources" v-bind:class="{ active: $route.path === '/data_sources' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source</span></router-link>
+                        <router-link to="/data_sources" v-bind:class="{ active: $route.path === '/data_sources' || $route.name === 'DataSources.Create' || $route.path === 'DataSources.Edit' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/break_down_lists" v-bind:class="{ active: $route.path === '/break_down_lists' }" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>BreakDown List</span></router-link>
+                        <router-link to="/break_down_lists" v-bind:class="{ active: $route.path === '/break_down_lists' || $route.name === 'BreakDownLists.Create' || $route.path === 'BreakDownLists.Edit' }" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>BreakDown List</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -180,8 +180,8 @@
                 <a href="javascript:void(0)" :style="{color:registerColor}" class="nav-label"><i class="ri-links-fill icn"></i> Registers</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
-                        <router-link v-bind:class="{ active: $route.path === '/activities' || $route.name === 'HealthChecks.Create' || $route.name === 'HealthChecks.Edit'}" to="/health_checks" class="nav-link">
-                            <i class="ri-list-check"></i><span>Health Check Register</span>
+                        <router-link v-bind:class="{ active: $route.path === '/health_checks' || $route.name === 'HealthChecks.Create' || $route.name === 'HealthChecks.Edit'}" to="/health_checks" class="nav-link">
+                            <i class="ri-health-book-line"></i><span>Health Check Register</span>
                         </router-link>
                     </li>
                     <li class="nav-item" v-can="'userActivities.view'">
@@ -402,7 +402,7 @@
                 //     this.AssetParametersColor='white !important';
                 //     this.AssetParametersActive = !this.AssetParametersActive
                 // }
-                else if (tab == "/checks" || tab == "/spares" || name == 'Spares.Create' || tab == "/services" || tab == "/variables" || tab == "/data_sources" || tab == "/break_down_lists") {
+                else if (tab == "/checks" || name === "Check.Create" || name === "Checks.Edit" || tab == "/spares" || name == 'Spares.Create' || tab == "/services" || tab == "/variables" || tab == "/data_sources" || tab == "/break_down_lists") {
                     this.listParameterColor = "white !important";
                     this.showList = !this.showList;
                 }

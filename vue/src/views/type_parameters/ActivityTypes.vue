@@ -158,6 +158,7 @@ export default {
             this.column = 'col-12'
         }
         this.index();
+        this.$refs.reason_code.focus();
     },
 
     methods: {
@@ -223,6 +224,7 @@ export default {
         editReason(reason) {
             this.reason = reason;
             this.status = false;
+            this.$refs.reason_code.focus();
         },
 
         updateReason() {

@@ -162,6 +162,7 @@ export default {
             this.column = 'col-12'
         }
         this.index();
+        this.$refs.section_code.focus();
     },
 
     methods: {
@@ -225,6 +226,7 @@ export default {
         editSection(section) {
             this.section = section;
             this.status = false;
+            this.$refs.section_code.focus();
         },
 
         updateSection() {

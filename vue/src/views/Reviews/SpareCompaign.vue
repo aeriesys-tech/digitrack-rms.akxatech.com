@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Spare Campaign</h4>
             </div>
-            <router-link to="/assets" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ASSETS</router-link>
+            <!-- <router-link to="/assets" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ASSETS</router-link> -->
         </div>
         <div class="row">
             <div class="col-12">
@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-md-3">
-                                <label class="form-label">Asset</label>
+                                <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                 <select class="form-control" :class="{ 'is-invalid': errors.asset_id }" v-model="spare.asset_id">
                                     <option value="">Select Asset</option>
                                     <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">{{asset.asset_name}}</option>
@@ -32,20 +32,20 @@
                                 <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">Analysis</label>
-                                <select class="form-control" :class="{ 'is-invalid': errors.spare_id }" v-model="spare.location">
+                                <label class="form-label">Analysis</label><span class="text-danger"> *</span>
+                                <select class="form-control" :class="{ 'is-invalid': errors.location }" v-model="spare.location">
                                     <option value="">Select Analysis</option>
                                     <option v-for="location, key in locations" :key="key" :value="location.location">{{location.location}}</option>
                                 </select>
-                                <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
+                                <span v-if="errors.location" class="invalid-feedback">{{ errors.location[0] }}</span>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">From Date</label>
+                                <label class="form-label">From Date</label><span class="text-danger"> *</span>
                                 <input type="date" class="form-control" :class="{ 'is-invalid': errors.from_date }" v-model="spare.from_date" />
                                 <span v-if="errors.from_date" class="invalid-feedback">{{ errors.from_date[0] }}</span>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">To Date</label>
+                                <label class="form-label">To Date</label><span class="text-danger"> *</span>
                                 <input type="date" class="form-control" :class="{ 'is-invalid': errors.to_date }" v-model="spare.to_date" />
                                 <span v-if="errors.to_date" class="invalid-feedback">{{ errors.to_date[0] }}</span>
                             </div>
@@ -58,11 +58,11 @@
                             <table class="table table-bordered mb-0">
                                 <tbody>
                                     <tr v-for="(item, index) in groupedResults" :key="index">
-                                        <td class="text-center">
+                                        <td class="text-center" v-if="item[0]">
                                             <h6>{{ dateFormat(item[0]?.date) || '' }}</h6>
                                             <img :src="item[0]?.file" height="180" />
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" v-if="item[1]">
                                             <h6>{{ dateFormat(item[1]?.date) || '' }}</h6>
                                             <img :src="item[1]?.file" height="180" />
                                         </td>
@@ -96,6 +96,8 @@
                 assets: [],
                 locations: [],
                 campaign_results: [],
+
+
                 wall: false,
                 bottom: false,
                 errors: [],
@@ -104,8 +106,9 @@
 
         mounted() {
             this.getAssets();
-            this.spare.from_date = moment().format("yyyy-MM-DD");
-            this.spare.to_date = moment().add(1, "day").format("yyyy-MM-DD");
+            // this.spare.from_date = moment().format("yyyy-MM-DD");
+            // this.spare.to_date = moment().add(1, "day").format("yyyy-MM-DD");
+            this.spare.to_date = moment().format("yyyy-MM-DD");
         },
         computed: {
             groupedResults() {
@@ -159,6 +162,7 @@
                     .then((response) => {
                         loader.hide();
                         vm.campaign_results = response.data.data;
+                        vm.errors = [];
                     })
                     .catch(function (error) {
                         loader.hide();

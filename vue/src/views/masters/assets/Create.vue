@@ -31,8 +31,8 @@
                             <div class="row g-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Asset Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Asset Code" class="form-control" :class="{'is-invalid':errors.asset_code}" v-model="asset.asset_code" ref="asset_code" />
-                                <span v-if="errors.asset_code" class="invalid-feedback">{{ errors.asset_code[0] }}</span>
+                                    <input type="text" placeholder="Enter Asset Code" class="form-control" :class="{'is-invalid':errors?.asset_code}" v-model="asset.asset_code" ref="asset_code" />
+                                <span v-if="errors?.asset_code" class="invalid-feedback">{{ errors.asset_code[0] }}</span>
 
                                     <!-- <input type="text" disabled="true" class="form-control text-dark" :style="'background-color: ' + voltage.color + ';'" :value="getComponentCode" v-model="asset.asset_code" /> -->
                                 </div>
@@ -80,7 +80,27 @@
                                     </select> 
                                     <span v-if="errors.section_id" class="invalid-feedback">{{ errors.section_id[0] }}</span>
                                 </div>
+                               
 
+                                <div class="col-md-4">
+                                    <label class="form-label">Functional</label>
+                                    <select class="form-control" :class="{ 'is-invalid': errors.functional_id}" v-model="asset.functional_id">
+                                        <option value="">Select Functional</option>
+                                        <option v-for="functional, key in functionals" :key="key" :value="functional?.functional_id">{{ functional?.functional_name }}</option>
+                                    </select> 
+                                    <span v-if="errors.functional_id" class="invalid-feedback">{{ errors.functional_id[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">No Of Zones </label><span class="text-danger"> *</span>
+                                    <input type="number" placeholder="Enter No Of Zones " class="form-control" :class="{'is-invalid':errors.no_of_zones}" v-model="asset.no_of_zones"  />
+                                    <span v-if="errors.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
+                                </div>
+
+                                <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4 ">
+                                    <label class="form-label">Zone {{ index + 1 }}</label>
+                                    <input type="text" v-model="zone.zone_name" class="form-control"/>
+                                    <span style="color:red">{{ getZoneNameError(index) }}</span>
+                                </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                     <search
@@ -91,7 +111,7 @@
                                         label="asset_type_name"
                                         label2="asset_type_code"
                                         placeholder="Select Asset Type"
-                                        :data="asset_parameters"
+                                        :data="asset_attributes"
                                         @input="asset_type => asset.asset_type_id = asset_type"
                                         @selectsearch="getAssetType(asset.asset_type_id)"
                                     >
@@ -100,16 +120,18 @@
                                     <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                 </div>
                                 
-                                <div class="col-md-4" v-for="field, key in asset_types" :key="key">
+                                <div class="col-md-4" v-for="field, key in show_assets" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateAssetParameters(field)" />
+                                        <input v-if="field.asset_attribute_value" type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.asset_attribute_value.field_value" @blur="updateAssetParameters(field)" />
+                                        <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateAssetParameters(field)" />
                                         <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
                                     </div>
                                     
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateAssetParameters(field)" />
+                                        <input v-if="field.asset_attribute_value" type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.asset_attribute_value.field_value" @blur="updateAssetParameters(field)" />
+                                        <input v-else type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @blur="updateAssetParameters(field)" />
                                         <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
                                     </div>
 
@@ -118,7 +140,15 @@
                                             {{ field.field_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input 
+                                        <input v-if="field.asset_attribute_value"
+                                            type="date" 
+                                            class="form-control" 
+                                            :placeholder="'Enter ' + field.field_name" 
+                                            :class="{'is-invalid': errors[field.field_name]}" 
+                                            v-model="field.asset_attribute_value.field_value" 
+                                            @blur="updateAssetParameters(field)" 
+                                        />
+                                        <input  v-else
                                             type="date" 
                                             class="form-control" 
                                             :placeholder="'Enter ' + field.field_name" 
@@ -136,7 +166,16 @@
                                             {{ field.field_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input 
+                                        <input v-if="field.asset_attribute_value"
+                                            type="datetime-local" 
+                                            class="form-control" 
+                                            :placeholder="'Enter ' + field.field_name" 
+                                            :class="{'is-invalid': errors[field.field_name]}" 
+                                            v-model="field.asset_attribute_value.field_value" 
+                                            @blur="updateAssetParameters(field)" 
+                                            step="1" 
+                                        />
+                                        <input v-else
                                             type="datetime-local" 
                                             class="form-control" 
                                             :placeholder="'Enter ' + field.field_name" 
@@ -152,14 +191,18 @@
 
                                     <div v-if="field.field_type=='Dropdown'">
                                         <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <select class="form-control" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @change="updateAssetParameters(field)">
+                                        <select v-if="field.asset_attribute_value" class="form-control" :class="{'is-invalid': errors[field.field_name]}" v-model="field.asset_attribute_value.field_value" @change="updateAssetParameters(field)">
+                                            <option value="">Select {{field.field_name}}</option>
+                                            <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                        </select>
+                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.field_name]}" v-model="field.field_value" @change="updateAssetParameters(field)">
                                             <option value="">Select {{field.field_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.field_type=='Color'">
+                                    <!-- <div v-if="field.field_type=='Color'">
                                         <label class="form-label">{{ field.field_name }}</label>
                                         <span v-if="field.is_required" class="text-danger">*</span>
                                         <div class="input-group">
@@ -191,7 +234,15 @@
                                             </div>
                                         </div>
                                         <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                    </div> -->
+
+                                    <div v-if="field.field_type=='Color'">
+                                        <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
+                                            <input v-if="field.asset_attribute_value" type="color" class="form-control" v-model="field.asset_attribute_value.field_value" @change="updateAssetParameters(field)" style="height: 2.2rem;"/>
+                                            <input v-else type="color" class="form-control" v-model="field.field_value" @change="updateAssetParameters(field)" style="height: 2.2rem;"/>
+                                        <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
+
 
                                 </div>
                         
@@ -203,11 +254,15 @@
                             </div>
                         </div>
                         <div class="card-footer text-end">
-                            <router-link type="button" to="/assets" class="btn btn-danger me-2"><i class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
+                            <!-- <router-link type="button" to="/assets" class="btn btn-danger me-2"><i class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link> -->
                             <!-- <button type="button" class="btn btn-danger me-2" @click.prevent="discard()"><i class="ri-close-line fs-18 lh-1"></i> Discard</button> -->
-                            <button type="submit" class="btn btn-primary">
+                            <!-- <button type="submit" class="btn btn-primary">
                                 <span ><i class="ri-save-line fs-18 lh-1"></i> Submit</span>
-                                <!-- <span v-else><i class="ri-save-line fs-18 lh-1"></i> Update</span> -->
+                            </button> -->
+                            <button type="button" class="btn btn-danger me-2" @click="discard()"><i class="ri-close-line fs-18 lh-1"></i> Discard</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span v-if="status"><i class="ri-save-line fs-18 lh-1"></i> Submit</span>
+                                <span v-else><i class="ri-save-line fs-18 lh-1"></i> Update</span>
                             </button>
                         </div>
                     </div>
@@ -223,16 +278,16 @@
         components: { Search },
         data() {
             return {
-                selectedColor: null,
-                selectedColorName: '',
-                dropdownVisible: false,
-                colors: [
-                    { name: 'Green', value: '#008000' },
-                    { name: 'Blue', value: '#0000FF' },
-                    { name: 'Red', value: '#FF0000' },
-                    { name: 'Orange', value: '#FFA500' },
-                    { name: 'Gray', value: '#808080' },
-                ],
+                // selectedColor: null,
+                // selectedColorName: '',
+                // dropdownVisible: false,
+                // colors: [
+                //     { name: 'Green', value: '#008000' },
+                //     { name: 'Blue', value: '#0000FF' },
+                //     { name: 'Red', value: '#FF0000' },
+                //     { name: 'Orange', value: '#FFA500' },
+                //     { name: 'Gray', value: '#808080' },
+                // ],
                 sample: "",
                 asset: {
                     asset_id: "",
@@ -242,25 +297,37 @@
                     asset_type_id: "",
                     latitude:"",
                     longitude:"",
+                    no_of_zones: null,
                     status: "",
                     asset_attributes:[],
                     department_id:'',
                     section_id:'',
+                    functional_id:'',
                     radius:'',
+                    zone_name:[]
                 },
                 voltage: {
                     color: "#ffffff",
                     voltage_code: "",
                 },
+                errors: {
+                no_of_zones: []
+            },
                
                 device_code: "",
-                asset_attributes: [],
+                // asset_attributes: [],
                 departments:[],
                 sections:[],
+                functionals:[],
                 plants: [],
                 asset_types: [],
+                show_assets:[],
                 errors: [],
                 status: true,
+                zones: [],
+                initial_zone_no:null,
+                new_zone_names:[],
+                prev_zone_names:[]
             };
         },
         beforeRouteEnter(to, from, next) {
@@ -276,6 +343,9 @@
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.asset = response.data.data;
+                            vm.initial_zone_no = vm.asset.no_of_zones
+                            // console.log("t--",vm.asset)
+                            vm.show_assets  = response.data.data?.asset_attributes
                             
                             // vm.voltage = response.data.data?.voltage;
                             // vm.watt_rating = response.data.data?.watt_rating?.watt_rating_code;
@@ -294,10 +364,62 @@
                 }
             });
         },
+        
+
+
+        watch: {
+        'asset.no_of_zones': function(newVal) {
+            let vm = this
+            if(this.status){
+                if (newVal < 0) {
+                    this.asset.zone_name = [];
+                } else {
+                    this.asset.zone_name = Array.from({ length: newVal }, (_, i) => this.zones[i] || '');
+                }
+            }else{
+                let number = vm.asset.no_of_zones - vm.asset.zone_name.length
+                console.log(number)
+                this.new_zone_names = []
+                for(let i = 0; i<number; i++){
+                    this.new_zone_names.push({
+                        zone_name : ''
+                    })
+                }
+                vm.new_zone_names.map(function(element){
+                    vm.asset.zone_name.push(element)
+                })
+                // if(number < this.asset.zone_name.length && number > vm.initial_zone_no){
+                //     console.log('1')
+                //     for(let i = 0; i<number; i++){
+                //         this.asset.zone_name.pop()
+                //     }
+                // }else{
+                //     console.log('2')
+                //     console.log(number)
+                //     if(number > 0){
+                //         for(let i = 0; i<number; i++){
+                //             this.asset.zone_name.push({
+                //                 zone_name : ''
+                //             })
+                //         }
+                //     }else{
+                //         for(let i = number; i<0; i--){
+                //             this.asset.zone_name.pop()
+                //         }
+                //     }
+                // }
+
+            }
+            
+        }
+    },
+
+
+
         computed: {
-            selectedColorDisplay() {
-                return this.selectedColorName ? `${this.selectedColorName} (${this.selectedColor})` : 'Select Color';
-            },
+            // selectedColorDisplay() {
+            //     return this.selectedColorName ? `${this.selectedColorName} (${this.selectedColor})` : 'Select Color';
+            // },
             getComponentCode() {
                 // this.device_code = [this.voltage.voltage_code[0], this.watt_rating[0], this.frame.substring(0, 5), this.mounting[0], this.section[0], this.make[0], this.speed[0], this.asset.serial_no.substring(0, 5)]
                 this.device_code = [this.voltage.voltage_code, this.watt_rating, this.frame, this.mounting, this.section, this.make, this.speed, this.asset.serial_no];
@@ -310,16 +432,26 @@
             },
         },
         methods: {
-            selectColor(colorValue, colorName, field) {
-                this.selectedColor = colorValue;
-                this.selectedColorName = colorName;
-                this.dropdownVisible = false;
-                field.field_value = colorValue;
-                this.updateAssetParameters(field);
+            getZoneNameError(index) {
+                let zone_names = Object.entries(this.errors)
+                let err = zone_names.filter(function(element){
+                    return element[0].includes('zone_name') && element[0].includes(index)
+                })
+                console.log(err)
+                if(err.length){
+                    return 'Zone name field is required'
+                }
             },
-            toggleDropdown() {
-                this.dropdownVisible = !this.dropdownVisible;
-            },
+            // selectColor(colorValue, colorName, field) {
+            //     this.selectedColor = colorValue;
+            //     this.selectedColorName = colorName;
+            //     this.dropdownVisible = false;
+            //     field.field_value = colorValue;
+            //     this.updateAssetParameters(field);
+            // },
+            // toggleDropdown() {
+            //     this.dropdownVisible = !this.dropdownVisible;
+            // },
             updateAssetParameters(field){
                 console.log(field)
                 let apid = this.asset.asset_attributes.filter(function(element){
@@ -347,7 +479,7 @@
                     .dispatch("post", { uri: "getAssetTypes" })
                     .then((response) => {
                         loader.hide();
-                        vm.asset_parameters = response.data.data;
+                        vm.asset_attributes = response.data.data;
                         vm.getDepartments();
                     })
                     .catch(function (error) {
@@ -380,6 +512,21 @@
                     .then(response => {
                         loader.hide();
                         vm.sections = response.data.data;
+                        vm.getFunctionals();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getFunctionals() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store.dispatch('post', { uri: 'getFunctionals' })
+                    .then(response => {
+                        loader.hide();
+                        vm.functionals = response.data.data;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -408,7 +555,7 @@
 
             updateAsset() {
                 let vm = this;
-                vm.asset.asset_code = vm.device_code.join("");
+                // vm.asset.asset_code = vm.device_code.join("");
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "updateAsset", data: vm.asset })
@@ -463,7 +610,7 @@
                 .dispatch("post", { uri: "getAssetsDropdown", data:{asset_type_id:asset_type_id} })
                 .then((response) => {
                     loader.hide();
-                    vm.asset_types = response.data.data;
+                    vm.show_assets = response.data.data;
                 })
                 .catch(function (error) {
                     loader.hide();
