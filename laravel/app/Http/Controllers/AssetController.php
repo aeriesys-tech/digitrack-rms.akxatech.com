@@ -20,6 +20,7 @@ use App\Models\AssetAttributeValue;
 use App\Http\Resources\AssetAttributeValueResource;
 use App\Models\CampaignResult;
 use App\Models\AssetZone;
+use App\Http\Resources\AssetZoneResource;
 
 class AssetController extends Controller
 {
@@ -69,6 +70,7 @@ class AssetController extends Controller
         $userPlantId = Auth::User()->plant_id;
         $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
+            // 'area_id' => 'required|exists:areas,area_id',
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
             'no_of_zones' => 'required|integer',
@@ -83,7 +85,7 @@ class AssetController extends Controller
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes',
             'zone_name' => 'nullable|array', 
-            'zone_name.*' => 'nullable|string' 
+            'zone_name.*' => 'nullable' 
         ]);
         $data['plant_id'] = $userPlantId;
         $data['area_id'] = $areaId;
@@ -106,11 +108,11 @@ class AssetController extends Controller
             return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
         }
     
-        for ($i = 0; $i < $no_of_zones; $i++) 
+        foreach($zoneNames as $zoneName) 
         {
             AssetZone::create([
                 'asset_id' => $asset->asset_id,
-                'zone_name' => $zoneNames[$i]
+                'zone_name' => $zoneName['zone_name']
             ]);
         }
         
@@ -220,13 +222,18 @@ class AssetController extends Controller
     
         foreach ($zoneNames as $zoneName) 
         {
-            AssetZone::updateOrCreate(
-            [
-                'asset_zone_id' => $zoneName['asset_zone_id']
-            ],
-            [
-                'zone_name' => $zoneName['zone_name']
-            ]);
+            $assetZone = AssetZone::where('asset_id', $asset->asset_id)
+                              ->where('asset_zone_id', $zoneName['asset_zone_id'] ?? null)->first();
+            if($assetZone)
+            {   
+                $assetZone ->update(['zone_name' => $zoneName['zone_name']]);
+            }
+            else {
+                AssetZone::create([
+                    'asset_id' => $asset->asset_id,
+                    'zone_name' => $zoneName['zone_name'],
+                ]);
+            }
         }
     
         return response()->json(["message" => "Asset Updated Successfully"]);
@@ -307,5 +314,11 @@ class AssetController extends Controller
 
         $pdf = PDF::loadView('QRCode', $data);
         return $pdf->stream('QRCode.pdf');
+    }
+
+    public function getAssetZones(Request $request)
+    {
+        $zones = AssetZone::where('asset_id', $request->asset_id)->get();
+        return AssetZoneResource::collection($zones);
     }
 }

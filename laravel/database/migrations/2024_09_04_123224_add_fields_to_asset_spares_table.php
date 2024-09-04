@@ -9,11 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('asset_spares', function (Blueprint $table) {
-            $table->foreignId('area_id')->after('asset_spare_id');
+            $table->foreignId('area_id')->nullable()->after('asset_spare_id');
             $table->foreign('area_id')->references('area_id')->on('areas');
             $table->foreignId('asset_zone_id')->nullable()->after('asset_id');
             $table->foreign('asset_zone_id')->references('asset_zone_id')->on('asset_zones');
-            $table->foreignId('spare_type_id')->after('asset_zone_id');
+            $table->foreignId('spare_type_id')->nullable()->after('asset_zone_id');
             $table->foreign('spare_type_id')->references('spare_type_id')->on('spare_types');
         });
     }

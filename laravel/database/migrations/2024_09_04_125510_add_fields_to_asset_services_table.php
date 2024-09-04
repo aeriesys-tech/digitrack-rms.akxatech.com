@@ -9,12 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('asset_services', function (Blueprint $table) {
-            $table->foreignId('area_id')->after('asset_spare_id');
+            $table->foreignId('area_id')->nullable()->after('asset_id');
             $table->foreign('area_id')->references('area_id')->on('areas');
-            $table->foreignId('asset_zone_id')->nullable()->after('asset_id');
+            $table->foreignId('asset_zone_id')->nullable()->after('area_id');
             $table->foreign('asset_zone_id')->references('asset_zone_id')->on('asset_zones');
-            $table->foreignId('service_type_id')->after('asset_zone_id');
-            $table->foreign('service_type_id')->references('service_type_id')->on('service_types');
+            $table->foreignId('service_type_id')->nullable()->after('asset_zone_id');
+            $table->foreign('service_type_id')->references('service_type_id')->on('service_type');
         });
     }
 
