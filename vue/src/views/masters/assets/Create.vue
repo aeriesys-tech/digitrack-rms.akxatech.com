@@ -31,8 +31,8 @@
                             <div class="row g-2">
                                 <div class="col-md-6">
                                     <label class="form-label">Asset Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Asset Code" class="form-control" :class="{'is-invalid':errors.asset_code}" v-model="asset.asset_code" ref="asset_code" />
-                                <span v-if="errors.asset_code" class="invalid-feedback">{{ errors.asset_code[0] }}</span>
+                                    <input type="text" placeholder="Enter Asset Code" class="form-control" :class="{'is-invalid':errors?.asset_code}" v-model="asset.asset_code" ref="asset_code" />
+                                <span v-if="errors?.asset_code" class="invalid-feedback">{{ errors.asset_code[0] }}</span>
 
                                     <!-- <input type="text" disabled="true" class="form-control text-dark" :style="'background-color: ' + voltage.color + ';'" :value="getComponentCode" v-model="asset.asset_code" /> -->
                                 </div>
@@ -325,6 +325,9 @@
                 errors: [],
                 status: true,
                 zones: [],
+                initial_zone_no:null,
+                new_zone_names:[],
+                prev_zone_names:[]
             };
         },
         beforeRouteEnter(to, from, next) {
@@ -340,7 +343,8 @@
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.asset = response.data.data;
-                            console.log("t--",vm.asset)
+                            vm.initial_zone_no = vm.asset.no_of_zones
+                            // console.log("t--",vm.asset)
                             vm.show_assets  = response.data.data?.asset_attributes
                             
                             // vm.voltage = response.data.data?.voltage;
@@ -365,12 +369,46 @@
 
         watch: {
         'asset.no_of_zones': function(newVal) {
+            let vm = this
             if(this.status){
                 if (newVal < 0) {
                     this.asset.zone_name = [];
                 } else {
                     this.asset.zone_name = Array.from({ length: newVal }, (_, i) => this.zones[i] || '');
                 }
+            }else{
+                let number = vm.asset.no_of_zones - vm.asset.zone_name.length
+                console.log(number)
+                this.new_zone_names = []
+                for(let i = 0; i<number; i++){
+                    this.new_zone_names.push({
+                        zone_name : ''
+                    })
+                }
+                vm.new_zone_names.map(function(element){
+                    vm.asset.zone_name.push(element)
+                })
+                // if(number < this.asset.zone_name.length && number > vm.initial_zone_no){
+                //     console.log('1')
+                //     for(let i = 0; i<number; i++){
+                //         this.asset.zone_name.pop()
+                //     }
+                // }else{
+                //     console.log('2')
+                //     console.log(number)
+                //     if(number > 0){
+                //         for(let i = 0; i<number; i++){
+                //             this.asset.zone_name.push({
+                //                 zone_name : ''
+                //             })
+                //         }
+                //     }else{
+                //         for(let i = number; i<0; i--){
+                //             this.asset.zone_name.pop()
+                //         }
+                //     }
+                // }
+
             }
             
         }
