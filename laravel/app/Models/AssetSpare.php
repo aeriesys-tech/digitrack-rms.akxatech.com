@@ -11,9 +11,12 @@ class AssetSpare extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'area_id',
         'spare_id',
         'asset_id',
-        'plant_id'
+        'plant_id',
+        'asset_zone_id',
+        'spare_type_id'
     ];
 
     protected $primaryKey = 'asset_spare_id';
@@ -31,5 +34,20 @@ class AssetSpare extends Model
     public function Asset()
     {
         return $this->belongsTo(Asset::class, 'asset_id');
+    }
+
+    public function Area()
+    {
+        return $this->belongsTo(Area::class, 'area_id');
+    }
+
+    public function AssetZone()
+    {
+        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
+    }
+
+    public function SpareType()
+    {
+        return $this->belongsTo(SpareType::class, 'spare_type_id');
     }
 }

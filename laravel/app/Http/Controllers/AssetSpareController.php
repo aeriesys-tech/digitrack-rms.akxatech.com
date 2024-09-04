@@ -64,6 +64,8 @@ class AssetSpareController extends Controller
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
+            'area_id' => 'required|exists:areas,area_id',
+            'area_zone_id' => 'required|area_zones,area_zone_id'
         ]);
 
         $data['plant_id'] = $userPlantId;
@@ -104,7 +106,9 @@ class AssetSpareController extends Controller
         $data = $request->validate([
             'asset_spare_id' => 'required|exists:asset_spares,asset_spare_id',
             'spare_id' => 'required|exists:spares,spare_id',
-            'asset_id' => 'required|exists:assets,asset_id'
+            'asset_id' => 'required|exists:assets,asset_id',
+            'area_id' => 'required|exists:areas,area_id',
+            'area_zone_id' => 'required|area_zones,area_zone_id'
         ]);
 
         $data['plant_id'] = $userPlantId;
