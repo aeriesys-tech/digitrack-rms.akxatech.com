@@ -27,7 +27,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserServiceController;
 use App\Http\Controllers\UserCheckController;
 use App\Http\Controllers\AssetAttributeController;
+use App\Http\Controllers\AssetVariableController;
 use App\Http\Controllers\AssetServiceController;
+use App\Http\Controllers\AssetAccessoryController;
+use App\Http\Controllers\AssetDataSourceController;
 use App\Http\Controllers\FrequencyController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\BreakDownTypeController;
@@ -223,6 +226,27 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetCheck',[AssetCheckController::class, 'deleteAssetCheck']);
     Route::post('forceDeleteAssetCheck',[AssetCheckController::class, 'forceDeleteAssetCheck']);
     Route::post('deviationAssetChecks',[AssetCheckController::class, 'deviationAssetChecks']);
+
+    Route::post('paginateAssetVariables',[AssetVariableController::class, 'paginateAssetVariables']);
+    Route::post('getAssetVariables',[AssetVariableController::class, 'getAssetVariables']);
+    Route::post('addAssetVariable',[AssetVariableController::class, 'addAssetVariable']);
+    Route::post('getAssetVariable',[AssetVariableController::class, 'getAssetVariable']);
+    Route::post('updateAssetVariable',[AssetVariableController::class, 'updateAssetVariable']);
+    Route::post('deleteAssetVariable',[AssetVariableController::class, 'deleteAssetVariable']);
+
+    Route::post('paginateAssetDataSources',[AssetDataSourceController::class, 'paginateAssetDataSources']);
+    Route::post('getAssetDataSources',[AssetDataSourceController::class, 'getAssetDataSources']);
+    Route::post('addAssetDataSource',[AssetDataSourceController::class, 'addAssetDataSource']);
+    Route::post('getAssetDataSource',[AssetDataSourceController::class, 'getAssetDataSource']);
+    Route::post('updateAssetDataSource',[AssetDataSourceController::class, 'updateAssetDataSource']);
+    Route::post('deleteAssetDataSource',[AssetDataSourceController::class, 'deleteAssetDataSource']);
+
+    Route::post('paginateAssetAccessories',[AssetAccessoryController::class, 'paginateAssetAccessories']);
+    Route::post('getAssetAccessories',[AssetAccessoryController::class, 'getAssetAccessories']);
+    Route::post('addAssetAccessory',[AssetAccessoryController::class, 'addAssetAccessory']);
+    Route::post('getAssetAccessory',[AssetAccessoryController::class, 'getAssetAccessory']);
+    Route::post('updateAssetAccessory',[AssetAccessoryController::class, 'updateAssetAccessory']);
+    Route::post('deleteAssetAccessory',[AssetAccessoryController::class, 'deleteAssetAccessory']);
 
     Route::post('paginateReasons',[ReasonController::class, 'paginateReasons']);
     Route::post('addReason',[ReasonController::class, 'addReason']);

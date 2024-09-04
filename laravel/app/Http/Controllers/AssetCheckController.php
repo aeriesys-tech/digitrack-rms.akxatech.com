@@ -67,8 +67,8 @@ class AssetCheckController extends Controller
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'area_zone_id' => 'nullable|array', 
-            'area_zone_id.*' => 'nullable|exists:area_zones,area_zone_id'
+            'asset_zone_id' => 'nullable|array', 
+            'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $data['plant_id'] = $userPlantId;
@@ -82,9 +82,9 @@ class AssetCheckController extends Controller
 
         $createdChecks = [];
 
-        if (!empty($data['area_zone_id'])) 
+        if (!empty($data['asset_zone_id'])) 
         {
-            foreach ($data['area_zone_id'] as $zoneId) 
+            foreach ($data['asset_zone_id'] as $zoneId) 
             {              
                 if (is_null($zoneId) || $zoneId == 0) 
                 {
@@ -92,7 +92,7 @@ class AssetCheckController extends Controller
                 }
 
                 $checksData = $data;
-                $checksData['area_zone_id'] = $zoneId;
+                $checksData['asset_zone_id'] = $zoneId;
 
                 $assetChecks = AssetChecks::create($checksData);
                 $createdChecks[] = new AssetChecksResource($assetChecks);
@@ -101,7 +101,7 @@ class AssetCheckController extends Controller
         else 
         {
             $checksData = $data;
-            $checksData['area_zone_id'] = null;
+            $checksData['asset_zone_id'] = null;
 
             $assetChecks = AssetChecks::create($checksData);
             $createdChecks[] = new AssetChecksResource($assetChecks);
@@ -134,7 +134,7 @@ class AssetCheckController extends Controller
         $data = $request->validate([
             'asset_check_id' => 'required|exists:asset_checks,asset_check_id',
             'area_id' => 'required|exists:areas,area_id',
-            'area_zone_id' => 'nullable|area_zones,area_zone_id',
+            'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
             'asset_id' => 'required|exists:assets,asset_id',
             'check_id' => 'required|exists:checks,check_id',
             'lcl' => 'nullable|sometimes',

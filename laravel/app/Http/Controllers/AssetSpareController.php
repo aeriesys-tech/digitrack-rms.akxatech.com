@@ -96,8 +96,8 @@ class AssetSpareController extends Controller
             ],
             'asset_id' => 'required|exists:assets,asset_id',
             'spare_type_id' => 'required|spare_types,spare_type_id',
-            'area_zone_id' => 'nullable|array', 
-            'area_zone_id.*' => 'nullable|exists:area_zones,area_zone_id'
+            'asset_zone_id' => 'nullable|array', 
+            'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $data['plant_id'] = $userPlantId;
@@ -105,9 +105,9 @@ class AssetSpareController extends Controller
 
         $createdSpares = [];
 
-        if (!empty($data['area_zone_id'])) 
+        if (!empty($data['asset_zone_id'])) 
         {
-            foreach ($data['area_zone_id'] as $zoneId) 
+            foreach ($data['asset_zone_id'] as $zoneId) 
             {              
                 if (is_null($zoneId) || $zoneId == 0) 
                 {
@@ -115,7 +115,7 @@ class AssetSpareController extends Controller
                 }
 
                 $spareData = $data;
-                $spareData['area_zone_id'] = $zoneId;
+                $spareData['asset_zone_id'] = $zoneId;
 
                 $assetSpare = AssetSpare::create($spareData);
                 $createdSpares[] = new AssetSpareResource($assetSpare);
@@ -124,7 +124,7 @@ class AssetSpareController extends Controller
         else 
         {
             $spareData = $data;
-            $spareData['area_zone_id'] = null;
+            $spareData['asset_zone_id'] = null;
 
             $assetSpare = AssetSpare::create($spareData);
             $createdSpares[] = new AssetSpareResource($assetSpare);
@@ -166,7 +166,7 @@ class AssetSpareController extends Controller
             'spare_id' => 'required|exists:spares,spare_id',
             'asset_id' => 'required|exists:assets,asset_id',
             'area_id' => 'required|exists:areas,area_id',
-            'area_zone_id' => 'nullable|area_zones,area_zone_id',
+            'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
             'spare_type_id' => 'required|spare_types,spare_type_id'
         ]);
 
@@ -211,5 +211,5 @@ class AssetSpareController extends Controller
         return response()->json([
             "message" => "AssetSpare deleted successfully"
         ], 200);
-    }    
+    } 
 }
