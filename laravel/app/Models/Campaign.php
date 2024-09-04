@@ -20,6 +20,6 @@ class Campaign extends Model
 
     public function Asset()
     {
-        return $this->belongsTo(Asset::class, 'asset_id', 'asset_id');
+        return $this->belongsTo(Asset::class, 'asset_id')->withTrashed();
     }
 }

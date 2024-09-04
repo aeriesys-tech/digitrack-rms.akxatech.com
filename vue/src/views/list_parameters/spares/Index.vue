@@ -74,6 +74,11 @@
                                         <td>{{spare.spare_type?.spare_type_name}}</td>
                                         <td>{{spare.spare_code}}</td>
                                         <td>{{spare.spare_name}}</td>
+                                        <!-- <td>
+                                            <div v-for="spare_attribute, key in spare.spare_attributes" :key="key">
+                                                {{spare_attribute?.list_parameter?.list_parameter_name  }}
+                                            </div>
+                                        </td> -->
                                         <td>
                                             <span v-for="asset_type, key in spare.spare_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>

@@ -12,7 +12,7 @@ class AssetZoneResource extends JsonResource
         return [
             'asset_zone_id' => $this->asset_zone_id,
             'asset_id' => $this->asset_id,
-            'asset' => new AssetResource($this->Asset),
+            // 'asset' => new AssetResource($this->Asset),
             'zone_name' => $this->zone_name,
             'status' => $this->deleted_at?false:true
         ];

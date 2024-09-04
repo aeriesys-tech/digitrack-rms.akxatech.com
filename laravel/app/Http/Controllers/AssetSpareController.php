@@ -50,6 +50,7 @@ class AssetSpareController extends Controller
     public function addAssetSpare(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+        $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
             'spare_id' => [
                 'required',
@@ -64,11 +65,11 @@ class AssetSpareController extends Controller
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'area_id' => 'required|exists:areas,area_id',
             'area_zone_id' => 'required|area_zones,area_zone_id'
         ]);
 
         $data['plant_id'] = $userPlantId;
+        $data['area_id'] = $areaId;
 
         $asset_spare = AssetSpare::create($data);
         return new AssetSpareResource($asset_spare);

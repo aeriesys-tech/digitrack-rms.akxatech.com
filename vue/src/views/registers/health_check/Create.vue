@@ -38,11 +38,11 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Data Source</label><span class="text-danger"> *</span>
-                                    <select class="form-control" :class="{ 'is-invalid': errors.location }" v-model="campaign.datasource_id">
+                                    <select class="form-control" :class="{ 'is-invalid': errors.datasource }" v-model="campaign.datasource_id">
                                         <option value="">Select Data Source</option>
                                         <option value="File">File</option>
                                     </select>
-                                    <span v-if="errors.location" class="invalid-feedback">{{ errors.location[0] }}</span>
+                                    <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">File</label><span class="text-danger"> *</span>
@@ -142,6 +142,14 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            discard() {
+            let vm = this;
+            vm.campaign.asset_id = "";
+            vm.campaign.datasource_id = "";
+            vm.campaign.file= "";
+            vm.errors = [];
+            vm.status = true;
+        },
         },
     };
 </script>

@@ -157,6 +157,7 @@ export default {
             this.column = 'col-12'
         }
         this.index();
+        this.$refs.asset_type_code.focus();
     },
 
     methods: {
@@ -223,6 +224,7 @@ export default {
             this.asset_type = asset_type;
             this.update = true;
             this.status = false;
+            this.$refs.asset_type_code.focus();
         },
 
         updateAssetType() {

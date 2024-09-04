@@ -60,7 +60,6 @@ class SpareController extends Controller
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
         $data['plant_id'] = $userPlantId;
-
         
         $spare = Spare::create($data);
 

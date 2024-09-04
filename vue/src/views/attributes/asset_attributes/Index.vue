@@ -60,6 +60,14 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
+                                            <th @click="sort('list_parameter_id')">
+                                                List
+                                                <span>
+                                                    <i v-if="meta.keyword == 'list_parameter_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'list_parameter_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
                                             <th @click="sort('field_length')">
                                                 Field Length
                                                 <span>
@@ -97,6 +105,7 @@
                                             <td>{{assetattribute.display_name}}</td>
                                             <td>{{assetattribute.field_type}}</td>
                                             <td>{{assetattribute.field_values}}</td>
+                                            <td>{{ assetattribute?.list_parameter?.list_parameter_name  }}</td>
                                             <td>{{assetattribute.field_length}}</td>
                                             <!-- <td v-if="assetparameter.is_required">Yes</td> -->
                                             <td>{{assetattribute?.is_required==1 ?'Yes' : 'No'  }}</td>

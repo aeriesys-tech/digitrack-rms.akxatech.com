@@ -46,9 +46,9 @@ class User extends Authenticatable
 
     public function Plant()
     {
-        return $this->belongsTo(Plant::class, 'plant_id');
+        return $this->belongsTo(Plant::class, 'plant_id')->withTrashed();
     }
-
+    
     public function Consent()
     {
         return $this->belongsTo(Consent::class, 'user_id', 'user_id')->where('consent', true);

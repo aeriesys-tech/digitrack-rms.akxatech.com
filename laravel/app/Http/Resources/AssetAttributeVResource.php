@@ -31,9 +31,7 @@ class AssetAttributeVResource extends JsonResource
 	        'field_length' => $this->field_length,
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
-	        // 'asset_parameter_types' => AssetParameterTypeResource::collection($this->AssetParameterTypes),
             'status' => $this->deleted_at?false:true,
-            // 'asset_types' => $asset_types,
             'asset_attribute_value' => $asset_attribute_value
         ];
     }
