@@ -140,7 +140,7 @@ class AssetSpareController extends Controller
             'spare_id' => 'required|exists:spares,spare_id',
             'asset_id' => 'required|exists:assets,asset_id',
             'area_id' => 'required|exists:areas,area_id',
-            'area_zone_id' => 'nullable|area_zones,area_zone_id',
+            'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
             'spare_type_id' => 'required|spare_types,spare_type_id'
         ]);
 
@@ -185,5 +185,5 @@ class AssetSpareController extends Controller
         return response()->json([
             "message" => "AssetSpare deleted successfully"
         ], 200);
-    }    
+    } 
 }
