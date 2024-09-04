@@ -11,12 +11,14 @@ class AssetCheck extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'check_id',
-        'asset_id',
+        'area_id',
         'plant_id',
+        'asset_id',
+        'asset_zone_id',
+        'check_id',
+        'default_value',
         'lcl',
-        'ucl',
-        'default_value'
+        'ucl'
     ];
 
     protected $primaryKey = 'asset_check_id';
@@ -34,5 +36,15 @@ class AssetCheck extends Model
     public function Asset()
     {
         return $this->belongsTo(Asset::class, 'asset_id');
+    }
+
+    public function Area()
+    {
+        return $this->belongsTo(Area::class, 'area_id');
+    }
+
+    public function AssetZone()
+    {
+        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
     }
 }
