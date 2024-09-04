@@ -64,12 +64,40 @@ class AssetServiceController extends Controller
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
+            'area_zone_id' => 'nullable|array', 
+            'area_zone_id.*' => 'nullable|exists:area_zones,area_zone_id'
         ]);
 
         $data['plant_id'] = $userPlantId;
+        $data['area_id'] = $areaId;
 
-        $asset_service = AssetService::create($data);
-        return new AssetServiceResource($asset_service);
+        $createdServices = [];
+
+        if (!empty($data['area_zone_id'])) 
+        {
+            foreach ($data['area_zone_id'] as $zoneId) 
+            {              
+                if (is_null($zoneId) || $zoneId == 0) 
+                {
+                    continue;
+                }
+
+                $serviceData = $data;
+                $serviceData['area_zone_id'] = $zoneId;
+
+                $assetService = AssetService::create($serviceData);
+                $createdServices[] = new AssetServiceResource($assetService);
+            }
+        } 
+        else 
+        {
+            $serviceData = $data;
+            $serviceData['area_zone_id'] = null;
+
+            $assetService = AssetService::create($serviceData);
+            $createdServices[] = new AssetServiceResource($assetService);
+        }
+        return response()->json($createdServices, 201);
     }
 
     public function getAssetService(Request $request)
@@ -104,7 +132,10 @@ class AssetServiceController extends Controller
         $data = $request->validate([
             'asset_service_id' => 'required|exists:asset_services,asset_service_id',
             'spare_id' => 'required|exists:spares,spare_id',
-            'asset_id' => 'required|exists:assets,asset_id'
+            'asset_id' => 'required|exists:assets,asset_id',
+            'area_id' => 'required|exists:areas,area_id',
+            'area_zone_id' => 'nullable|area_zones,area_zone_id',
+            'service_type_id' => 'required|service_types,service_type_id'
         ]);
 
         $data['plant_id'] = $userPlantId;

@@ -67,17 +67,46 @@ class AssetCheckController extends Controller
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
+            'area_zone_id' => 'nullable|array', 
+            'area_zone_id.*' => 'nullable|exists:area_zones,area_zone_id'
         ]);
+
         $data['plant_id'] = $userPlantId;
+        $data['area_id'] = $areaId;
 
         $check = Check::where('check_id', $request->check_id)->first();
 
         $data['lcl'] = $request->input('lcl', $check->lcl);
         $data['ucl'] = $request->input('ucl', $check->ucl);
         $data['default_value'] = $request->input('default_value', $check->default_value);
-        
-        $asset_check = AssetCheck::create($data);
-        return new AssetCheckResource($asset_check);
+
+        $createdChecks = [];
+
+        if (!empty($data['area_zone_id'])) 
+        {
+            foreach ($data['area_zone_id'] as $zoneId) 
+            {              
+                if (is_null($zoneId) || $zoneId == 0) 
+                {
+                    continue;
+                }
+
+                $checksData = $data;
+                $checksData['area_zone_id'] = $zoneId;
+
+                $assetChecks = AssetChecks::create($checksData);
+                $createdChecks[] = new AssetChecksResource($assetChecks);
+            }
+        } 
+        else 
+        {
+            $checksData = $data;
+            $checksData['area_zone_id'] = null;
+
+            $assetChecks = AssetChecks::create($checksData);
+            $createdChecks[] = new AssetChecksResource($assetChecks);
+        }
+        return response()->json($createdChecks, 201);
     }
 
     public function getAssetCheck(Request $request)
@@ -104,6 +133,10 @@ class AssetCheckController extends Controller
         $userPlantId = Auth::User()->plant_id;
         $data = $request->validate([
             'asset_check_id' => 'required|exists:asset_checks,asset_check_id',
+            'area_id' => 'required|exists:areas,area_id',
+            'area_zone_id' => 'nullable|area_zones,area_zone_id',
+            'asset_id' => 'required|exists:assets,asset_id',
+            'check_id' => 'required|exists:checks,check_id',
             'lcl' => 'nullable|sometimes',
             'ucl' => 'nullable|sometimes',
             'default_value' =>'nullable|sometimes'
