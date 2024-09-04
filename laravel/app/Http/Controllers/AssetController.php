@@ -69,7 +69,6 @@ class AssetController extends Controller
         $userPlantId = Auth::User()->plant_id;
         $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
-            // 'area_id' => 'required|exists:areas,area_id',
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
             'no_of_zones' => 'required|integer|min:1',
@@ -219,17 +218,15 @@ class AssetController extends Controller
             return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
         }
     
-        foreach ($zoneNames as $index => $zoneName) 
+        foreach ($zoneNames as $zoneName) 
         {
-            if (isset($existingZones[$index])) {
-                $existingZones[$index]->update(['zone_name' => $zoneName['zone_name']]);
-            } 
-            else {
-                AssetZone::create([
-                    'asset_id' => $asset->asset_id,
-                    'zone_name' => $zoneName[$index],
-                ]);
-            }
+            AssetZone::updateOrCreate(
+            [
+                'asset_zone_id' => $zoneName['asset_zone_id']
+            ],
+            [
+                'zone_name' => $zoneName['zone_name']
+            ]);
         }
     
         return response()->json(["message" => "Asset Updated Successfully"]);
