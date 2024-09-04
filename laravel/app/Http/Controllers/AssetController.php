@@ -71,7 +71,7 @@ class AssetController extends Controller
         $data = $request->validate([
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
-            'no_of_zones' => 'required|integer|min:1',
+            'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'required|array',
             'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
@@ -82,8 +82,8 @@ class AssetController extends Controller
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes',
-            'zone_name' => 'required|array', 
-            'zone_name.*' => 'required|string' 
+            'zone_name' => 'nullable|array', 
+            'zone_name.*' => 'nullable|string' 
         ]);
         $data['plant_id'] = $userPlantId;
         $data['area_id'] = $areaId;
@@ -175,7 +175,7 @@ class AssetController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_code' => 'required|string|unique:assets,asset_code,' . $request->asset_id . ',asset_id',
             'asset_name' => 'required|string|unique:assets,asset_name,' . $request->asset_id . ',asset_id',
-            'no_of_zones' => 'required|integer|min:1',
+            'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'required|array',
             'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
@@ -186,7 +186,7 @@ class AssetController extends Controller
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes',
-            'zone_name' => 'required|array'
+            'zone_name' => 'nullable|array'
         ]);
     
         $data['plant_id'] = $userPlantId;
