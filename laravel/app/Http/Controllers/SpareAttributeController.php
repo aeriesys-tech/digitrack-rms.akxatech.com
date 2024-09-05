@@ -70,7 +70,7 @@ class SpareAttributeController extends Controller
             'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'spare_types' => 'required|array',
-            'spare_types.*.spare_type_id' => 'required|exists:spare_types,spare_type_id'
+            'spare_types.*' => 'required|exists:spare_types,spare_type_id'
         ]);
 
         $data['user_id'] = Auth::id();
@@ -80,7 +80,7 @@ class SpareAttributeController extends Controller
         foreach ($data['spare_types'] as $spare_type) {
             SpareAttributeType::create([
                 'spare_attribute_id' => $spare_attribute->spare_attribute_id,
-                'spare_type_id' => $spare_type['spare_type_id']
+                'spare_type_id' => $spare_type
             ]);
         }
 
@@ -122,7 +122,7 @@ class SpareAttributeController extends Controller
             'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'spare_types' => 'required|array',
-            'spare_types.*.spare_type_id' => 'required|exists:spare_types,spare_type_id' 
+            'spare_types.*' => 'required|exists:spare_types,spare_type_id' 
         ]);
 
         $data['user_id'] = Auth::id();

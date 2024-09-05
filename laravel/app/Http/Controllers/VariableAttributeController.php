@@ -70,7 +70,7 @@ class VariableAttributeController extends Controller
             'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'variable_types' => 'required|array', 
-            'variable_types.*.variable_type_id' => 'required|exists:variable_types,variable_type_id' 
+            'variable_types.*' => 'required|exists:variable_types,variable_type_id' 
         ]);
     
         $data['user_id'] = Auth::id();
@@ -80,10 +80,9 @@ class VariableAttributeController extends Controller
         foreach ($data['variable_types'] as $variable_type_id) {
             VariableAttributeType::create([
                 'variable_attribute_id' => $variable_attribute->variable_attribute_id,
-                'variable_type_id' => (int) $variable_type_id
+                'variable_type_id' => $variable_type_id
             ]);
         }
-    
         return new VariableAttributeResource($variable_attribute);  
     }
     
@@ -109,7 +108,7 @@ class VariableAttributeController extends Controller
             'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'variable_types' => 'required|array', 
-            'variable_types.*.variable_type_id' => 'required|exists:variable_types,variable_type_id' 
+            'variable_types.*' => 'required|exists:variable_types,variable_type_id' 
         ]);
 
         $data['user_id'] = Auth::id();
