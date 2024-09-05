@@ -25,12 +25,12 @@ class AssetCheck extends Model
 
     public function Plant()
     {
-        return $this->belongsTo(Plant::class, 'plant_id');
+        return $this->belongsTo(Plant::class, 'plant_id')->withTrashed();
     }
 
     public function Check()
     {
-        return $this->belongsTo(Check::class, 'check_id');
+        return $this->belongsTo(Check::class, 'check_id')->withTrashed();
     }
 
     public function Asset()
@@ -40,7 +40,7 @@ class AssetCheck extends Model
 
     public function Area()
     {
-        return $this->belongsTo(Area::class, 'area_id');
+        return $this->belongsTo(Area::class, 'area_id')->withTrashed();
     }
 
     public function AssetZone()

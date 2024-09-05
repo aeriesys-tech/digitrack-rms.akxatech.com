@@ -53,18 +53,19 @@ class AssetCheckController extends Controller
     public function addAssetCheck(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+        $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
             'check_id' => [
                 'required',
                 'exists:checks,check_id',
-                function ($attribute, $value, $fail) use ($request) {
-                    $exists = AssetCheck::where('check_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->exists();
-                    if ($exists) {
-                        $fail('The combination of Check already exists.');
-                    }
-                },
+                // function ($attribute, $value, $fail) use ($request) {
+                //     $exists = AssetCheck::where('check_id', $value)
+                //         ->where('asset_id', $request->asset_id)
+                //         ->exists();
+                //     if ($exists) {
+                //         $fail('The combination of Check already exists.');
+                //     }
+                // },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_zone_id' => 'nullable|array', 
@@ -94,8 +95,8 @@ class AssetCheckController extends Controller
                 $checksData = $data;
                 $checksData['asset_zone_id'] = $zoneId;
 
-                $assetChecks = AssetChecks::create($checksData);
-                $createdChecks[] = new AssetChecksResource($assetChecks);
+                $assetChecks = AssetCheck::create($checksData);
+                $createdChecks[] = new AssetCheckResource($assetChecks);
             }
         } 
         else 
@@ -103,8 +104,8 @@ class AssetCheckController extends Controller
             $checksData = $data;
             $checksData['asset_zone_id'] = null;
 
-            $assetChecks = AssetChecks::create($checksData);
-            $createdChecks[] = new AssetChecksResource($assetChecks);
+            $assetChecks = AssetCheck::create($checksData);
+            $createdChecks[] = new AssetCheckResource($assetChecks);
         }
         return response()->json($createdChecks, 201);
     }
