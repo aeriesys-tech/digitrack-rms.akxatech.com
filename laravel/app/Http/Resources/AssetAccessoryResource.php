@@ -22,7 +22,7 @@ class AssetAccessoryResource extends JsonResource
             'accessory_type_id' => $this->accessory_type_id,
             'accessory_type' => new AccessoryTypeResource($this->AccessoryType),
             'accessory_name' => $this->accessory_name,
-            'attachment' => $this->attachment
+            'attachment' => $this->attachment ? config('app.asset_url').'assetAttachments/'.$this->attachment : null
         ];
     }
 }

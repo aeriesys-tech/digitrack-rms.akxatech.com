@@ -56,31 +56,23 @@ class AssetAccessoryController extends Controller
     {
         $userPlantId = Auth::User()->plant_id;
         $areaId = Auth::User()->Plant->area_id;
-
         $data = $request->validate([
-            'accessory_id' => [
-                'required',
-                'exists:accessories,accessory_id',
-                function ($attribute, $value, $fail) use ($request) 
-                {
-                    $exists = AssetAccessory::where('accessory_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->exists();
-                    if ($exists) {
-                        $fail('The combination of Accessory already exists.');
-                    }
-                },
-            ],
             'asset_id' => 'required|exists:assets,asset_id',
             'accessory_type_id' => 'required|accessory_types,accessory_type_id',
             'asset_zone_id' => 'nullable|array', 
             'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id',
             'accessory_name' => 'required',
-            'attachment' => 'required'
+            'attachment' => 'nullable'
         ]);
 
         $data['plant_id'] = $userPlantId;
         $data['area_id'] = $areaId;
+
+        if ($request->hasFile('attachment')) {
+            $attachment = time() . '.' . $request->file('attachment')->getClientOriginalExtension();
+            $request->file('attachment')->move(public_path('storage/assetAttachments'), $attachment);
+            $data['attachment'] = $attachment;
+        }
 
         $createdAccessorys = [];
 
@@ -124,19 +116,33 @@ class AssetAccessoryController extends Controller
     public function updateAssetAccessory(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+        $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
             'asset_accessory_id' => 'required|exists:asset_accessories,asset_accessory_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'area_id' => 'required|exists:areas,area_id',
             'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
             'accessory_type_id' => 'required|accessory_types,accessory_type_id',
             'accessory_name' => 'required',
-            'attachment' => 'required'
+            'attachment' => 'nullable'
         ]);
 
         $data['plant_id'] = $userPlantId;
+        $data['area_id'] = $areaId;
 
         $asset_accessory = AssetAccessory::where('asset_accessory_id', $request->asset_accessory_id)->first();
+        
+        //attachment
+        if ($request->hasFile('attachment')) 
+        {
+            if ($asset_accessory->attachment && file_exists(public_path('storage/assetAttachments/' . $asset_accessory->attachment))) {
+                unlink(public_path('storage/assetAttachments/' . $asset_accessory->attachment));
+            }
+
+            $attachment = time() . '.' . $request->file('attachment')->getClientOriginalExtension();
+            $request->file('attachment')->move(public_path('storage/assetAttachments'), $attachment);
+            $data['attachment'] = $attachment;
+        }
+
         $asset_accessory->update($data);
         return new AssetAccessoryResource($asset_accessory); 
     }

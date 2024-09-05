@@ -21,8 +21,9 @@ class AssetDataSourceResource extends JsonResource
             'asset_zone' => new AssetZoneResource($this->AssetZone),
             'plant_id' => $this->plant_id,
             'plant' => new PlantResource($this->Plant),
+            'data_source_id' => $this->data_source_id,
+            'data_source' => new DataSourceResource($this->DataSource),
             'data_source_type_id' => $this->data_source_type_id,
-            'data_source_type' => new DataSourceTypeResource($this->DataSourceType)
         ];
     }
 }

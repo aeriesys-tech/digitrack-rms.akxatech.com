@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\AssetDataSourceResource;
 use App\Models\AssetDataSource;
+use App\Models\DataSource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\DataSourceResource;
 
 class AssetDataSourceController extends Controller
 {
@@ -52,63 +54,6 @@ class AssetDataSourceController extends Controller
         return AssetDataSourceResource::collection($asset_data_source);
     }
 
-    // public function addAssetDataSource(Request $request)
-    // {
-    //     $userPlantId = Auth::User()->plant_id;
-    //     $areaId = Auth::User()->Plant->area_id;
-
-    //     $data = $request->validate([
-    //         'data_source_id' => [
-    //             'required',
-    //             'exists:data_sources,data_source_id',
-    //             function ($attribute, $value, $fail) use ($request) 
-    //             {
-    //                 $exists = AssetDataSource::where('data_source_id', $value)
-    //                     ->where('asset_id', $request->asset_id)
-    //                     ->exists();
-    //                 if ($exists) {
-    //                     $fail('The combination of DataSource already exists.');
-    //                 }
-    //             },
-    //         ],
-    //         'asset_id' => 'required|exists:assets,asset_id',
-    //         'data_source_type_id' => 'required|data_source_types,data_source_type_id',
-    //         'asset_zone_id' => 'nullable|array', 
-    //         'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
-    //     ]);
-
-    //     $data['plant_id'] = $userPlantId;
-    //     $data['area_id'] = $areaId;
-
-    //     $createdDataSources = [];
-
-    //     if (!empty($data['asset_zone_id'])) 
-    //     {
-    //         foreach ($data['asset_zone_id'] as $zoneId) 
-    //         {              
-    //             if (is_null($zoneId) || $zoneId == 0) 
-    //             {
-    //                 continue;
-    //             }
-
-    //             $data_source_data = $data;
-    //             $data_source_data['asset_zone_id'] = $zoneId;
-
-    //             $assetDataSource = AssetDataSource::create($data_source_data);
-    //             $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
-    //         }
-    //     } 
-    //     else 
-    //     {
-    //         $data_source_data = $data;
-    //         $data_source_data['asset_zone_id'] = null;
-
-    //         $assetDataSource = AssetDataSource::create($data_source_data);
-    //         $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
-    //     }
-    //     return response()->json($createdDataSources, 201);
-    // }
-
     public function addAssetDataSource(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
@@ -118,23 +63,27 @@ class AssetDataSourceController extends Controller
             'data_source_id' => [
                 'required',
                 'exists:data_sources,data_source_id',
-                function ($attribute, $value, $fail) use ($request) {
-                    $exists = AssetDataSource::where('data_source_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->exists();
-                    if ($exists) {
-                        $fail('The combination of DataSource already exists.');
-                    }
-                },
+                // function ($attribute, $value, $fail) use ($request) {
+                //     $exists = AssetDataSource::where('data_source_id', $value)
+                //         ->where('asset_id', $request->asset_id)
+                //         ->exists();
+                //     if ($exists) {
+                //         $fail('The combination of DataSource already exists.');
+                //     }
+                // },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id', 
+            // 'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id', 
             'asset_zone_id' => 'nullable|array',
             'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
+        $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
+        $data_source_type = $data_source->data_source_type_id;
+
         $data['plant_id'] = $userPlantId;
         $data['area_id'] = $areaId;
+        $data['data_source_type_id'] = $data_source_type;
 
         $createdDataSources = [];
 
@@ -201,5 +150,17 @@ class AssetDataSourceController extends Controller
         return response()->json([
             'message' => "AssetDataSource Deleted Successfully"
         ]);
+    }
+
+    public function getAssetTypeDataSources(Request $request)
+    {
+        $request->validate([
+            'asset_type_id' => 'required|exists:asset_type,asset_type_id'
+        ]);
+
+        $data_source = DataSource::whereHas('DataSourceAssetTypes', function($que) use($request){
+            $que->where('asset_type_id', $request->asset_type_id);
+        })->get();
+        return DataSourceResource::collection($data_source);
     }
 }

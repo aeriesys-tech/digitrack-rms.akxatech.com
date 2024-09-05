@@ -132,9 +132,9 @@ class AssetCheckController extends Controller
     public function updateAssetCheck(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+        $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
             'asset_check_id' => 'required|exists:asset_checks,asset_check_id',
-            'area_id' => 'required|exists:areas,area_id',
             'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
             'asset_id' => 'required|exists:assets,asset_id',
             'check_id' => 'required|exists:checks,check_id',
@@ -143,6 +143,7 @@ class AssetCheckController extends Controller
             'default_value' =>'nullable|sometimes'
         ]);
         $data['plant_id'] = $userPlantId;
+        $data['area_id'] = $areaId;
 
         $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->first();
         $asset_check->update($data);

@@ -242,6 +242,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetDataSource',[AssetDataSourceController::class, 'getAssetDataSource']);
     Route::post('updateAssetDataSource',[AssetDataSourceController::class, 'updateAssetDataSource']);
     Route::post('deleteAssetDataSource',[AssetDataSourceController::class, 'deleteAssetDataSource']);
+    Route::post('getAssetTypeDataSources',[AssetDataSourceController::class, 'getAssetTypeDataSources']);
 
     Route::post('paginateAssetAccessories',[AssetAccessoryController::class, 'paginateAssetAccessories']);
     Route::post('getAssetAccessories',[AssetAccessoryController::class, 'getAssetAccessories']);

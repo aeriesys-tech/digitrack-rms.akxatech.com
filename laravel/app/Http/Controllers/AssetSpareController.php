@@ -56,15 +56,15 @@ class AssetSpareController extends Controller
             'spare_id' => [
                 'required',
                 'exists:spares,spare_id',
-                function ($attribute, $value, $fail) use ($request) 
-                {
-                    $exists = AssetSpare::where('spare_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->exists();
-                    if ($exists) {
-                        $fail('The combination of Spare already exists.');
-                    }
-                },
+                // function ($attribute, $value, $fail) use ($request) 
+                // {
+                //     $exists = AssetSpare::where('spare_id', $value)
+                //         ->where('asset_id', $request->asset_id)
+                //         ->exists();
+                //     if ($exists) {
+                //         $fail('The combination of Spare already exists.');
+                //     }
+                // },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_zone_id' => 'nullable|array', 
