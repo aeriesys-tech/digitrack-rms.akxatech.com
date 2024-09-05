@@ -117,7 +117,7 @@
                             </thead>
                             <tbody>
                                 <tr v-if="checks.length==0">
-                                    <td colspan="6" class="text-center">No records found</td>
+                                    <td colspan="12" class="text-center">No records found</td>
                                 </tr>
                                 <tr v-for="check, key in checks" :key="key">
                                     <td class="text-center">{{ meta.from + key }}</td>

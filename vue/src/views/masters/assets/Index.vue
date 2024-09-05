@@ -120,7 +120,7 @@
                                         </td>
                                     </tr>
                                     <tr v-if="assets.length==0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="10" class="text-center">No records found</td>
 
                                     </tr>
                                 </tbody>

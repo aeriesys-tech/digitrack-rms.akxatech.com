@@ -67,7 +67,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-if="data_sources.length==0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="7" class="text-center">No records found</td>
                                     </tr>
                                     <tr v-for="data_source, key in data_sources" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
