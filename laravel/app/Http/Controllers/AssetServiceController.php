@@ -50,20 +50,18 @@ class AssetServiceController extends Controller
     public function addAssetService(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
-        
         $data = $request->validate([
             'service_id' => [
                 'required',
                 'exists:services,service_id',
-                function ($attribute, $value, $fail) use ($request) {
-                    $exists = AssetService::where('service_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->exists();
-                    if ($exists) {
-                        $fail('The combination of Service already exists.');
-                    }
-                },
+                // function ($attribute, $value, $fail) use ($request) {
+                //     $exists = AssetService::where('service_id', $value)
+                //         ->where('asset_id', $request->asset_id)
+                //         ->exists();
+                //     if ($exists) {
+                //         $fail('The combination of Service already exists.');
+                //     }
+                // },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_zone_id' => 'nullable|array', 

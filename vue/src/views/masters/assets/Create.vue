@@ -38,66 +38,66 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Asset Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Asset Name" class="form-control" :class="{'is-invalid':errors.asset_name}" v-model="asset.asset_name" ref="asset_name" />
-                                    <span v-if="errors.asset_name" class="invalid-feedback">{{ errors.asset_name[0] }}</span>
+                                    <input type="text" placeholder="Enter Asset Name" class="form-control" :class="{'is-invalid':errors?.asset_name}" v-model="asset.asset_name" />
+                                    <span v-if="errors?.asset_name" class="invalid-feedback">{{ errors.asset_name[0] }}</span>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Latitude</label>
-                                    <input type="text" placeholder="Enter Latitude" class="form-control" :class="{'is-invalid':errors.latitude}" v-model="asset.latitude" />
-                                    <span v-if="errors.latitude" class="invalid-feedback">{{ errors.latitude[0] }}</span>
+                                    <input type="text" placeholder="Enter Latitude" class="form-control" :class="{'is-invalid':errors?.latitude}" v-model="asset.latitude" />
+                                    <span v-if="errors?.latitude" class="invalid-feedback">{{ errors.latitude[0] }}</span>
                                         <!-- <input type="text" disabled="true" class="form-control text-dark" :style="'background-color: ' + voltage.color + ';'" :value="getComponentCode" v-model="asset.asset_code" /> -->
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Longitude</label>
-                                    <input type="text" placeholder="Enter Longitude" class="form-control" :class="{'is-invalid':errors.longitude}" v-model="asset.longitude" />
-                                    <span v-if="errors.longitude" class="invalid-feedback">{{ errors.longitude[0] }}</span>
+                                    <input type="text" placeholder="Enter Longitude" class="form-control" :class="{'is-invalid':errors?.longitude}" v-model="asset.longitude" />
+                                    <span v-if="errors?.longitude" class="invalid-feedback">{{ errors.longitude[0] }}</span>
                                         <!-- <input type="text" disabled="true" class="form-control text-dark" :style="'background-color: ' + voltage.color + ';'" :value="getComponentCode" v-model="asset.asset_code" /> -->
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Radius</label>
-                                    <input type="text" placeholder="Enter Radius" class="form-control" :class="{'is-invalid':errors.radius}" v-model="asset.radius" />
-                                    <span v-if="errors.radius" class="invalid-feedback">{{ errors.radius[0] }}</span>
+                                    <input type="text" placeholder="Enter Radius" class="form-control" :class="{'is-invalid':errors?.radius}" v-model="asset.radius" />
+                                    <span v-if="errors?.radius" class="invalid-feedback">{{ errors.radius[0] }}</span>
                                         <!-- <input type="text" disabled="true" class="form-control text-dark" :style="'background-color: ' + voltage.color + ';'" :value="getComponentCode" v-model="asset.asset_code" /> -->
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Department</label>
-                                    <select class="form-control" :class="{ 'is-invalid': errors.department_id}" v-model="asset.department_id">
+                                    <select class="form-control" :class="{ 'is-invalid': errors?.department_id}" v-model="asset.department_id">
                                         <option value="">Select Department</option>
                                         <option v-for="department, key in departments" :key="key" :value="department?.department_id">{{ department?.department_name }}</option>
                                     </select> 
-                                    <span v-if="errors.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
+                                    <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Section</label>
-                                    <select class="form-control" :class="{ 'is-invalid': errors.section_id}" v-model="asset.section_id">
+                                    <select class="form-control" :class="{ 'is-invalid': errors?.section_id}" v-model="asset.section_id">
                                         <option value="">Select Section</option>
                                         <option v-for="section, key in sections" :key="key" :value="section?.section_id">{{ section?.section_name }}</option>
                                     </select> 
-                                    <span v-if="errors.section_id" class="invalid-feedback">{{ errors.section_id[0] }}</span>
+                                    <span v-if="errors?.section_id" class="invalid-feedback">{{ errors.section_id[0] }}</span>
                                 </div>
                                
 
                                 <div class="col-md-4">
                                     <label class="form-label">Functional</label>
-                                    <select class="form-control" :class="{ 'is-invalid': errors.functional_id}" v-model="asset.functional_id">
+                                    <select class="form-control" :class="{ 'is-invalid': errors?.functional_id}" v-model="asset.functional_id">
                                         <option value="">Select Functional</option>
                                         <option v-for="functional, key in functionals" :key="key" :value="functional?.functional_id">{{ functional?.functional_name }}</option>
                                     </select> 
-                                    <span v-if="errors.functional_id" class="invalid-feedback">{{ errors.functional_id[0] }}</span>
+                                    <span v-if="errors?.functional_id" class="invalid-feedback">{{ errors.functional_id[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">No Of Zones </label><span class="text-danger"> *</span>
-                                    <input type="number" placeholder="Enter No Of Zones " class="form-control" :class="{'is-invalid':errors.no_of_zones}" v-model="asset.no_of_zones"  />
-                                    <span v-if="errors.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
+                                    <input type="number" placeholder="Enter No Of Zones " class="form-control" :class="{'is-invalid':errors?.no_of_zones}" v-model="asset.no_of_zones"  />
+                                    <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
                                 </div>
 
                                 <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4 ">
-                                    <label class="form-label">Zone {{ index + 1 }}</label>
+                                    <label class="form-label">Zone {{ index+1 }}</label>
                                     <input type="text" v-model="zone.zone_name" class="form-control"/>
                                     <span style="color:red">{{ getZoneNameError(index) }}</span>
                                 </div>
@@ -105,7 +105,7 @@
                                     <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                     <search
                                         :class="{ 'is-invalid': errors.asset_type_id }"
-                                        :customClass="{ 'is-invalid': errors.asset_type_id }"
+                                        :customClass="{ 'is-invalid': errors?.asset_type_id }"
                                         :initialize="asset.asset_type_id"
                                         id="asset_type_id"
                                         label="asset_type_name"
@@ -117,7 +117,7 @@
                                     >
                                     </search>
                             
-                                    <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
+                                    <span v-if="errors?.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                 </div>
                                 
                                 <div class="col-md-4" v-for="field, key in show_assets" :key="key">
@@ -335,15 +335,16 @@
                 vm.asset.asset_attributes = []
                 vm.getAssetsDropdown();
                 if (to.name == "Assets.Create") {
-                    vm.$refs.asset_name.focus();
+                    vm.$refs.asset_code.focus();
                 } else {
                     vm.status = false;
-                    let uri = { uri: "getAsset", data: { asset_id: to.params.asset_id } };
+                    let uri = { uri: "getAssetdata", data: { asset_id: to.params.asset_id } };
                     vm.$store
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.asset = response.data.data;
                             vm.initial_zone_no = vm.asset.no_of_zones
+                            vm.prev_zone_names = vm.asset.zone_name
                             // console.log("t--",vm.asset)
                             vm.show_assets  = response.data.data?.asset_attributes
                             
@@ -370,24 +371,36 @@
         watch: {
         'asset.no_of_zones': function(newVal) {
             let vm = this
+            vm.asset.zone_name = []
             if(this.status){
-                if (newVal < 0) {
-                    this.asset.zone_name = [];
-                } else {
-                    this.asset.zone_name = Array.from({ length: newVal }, (_, i) => this.zones[i] || '');
-                }
-            }else{
-                let number = vm.asset.no_of_zones - vm.asset.zone_name.length
-                console.log(number)
-                this.new_zone_names = []
-                for(let i = 0; i<number; i++){
-                    this.new_zone_names.push({
-                        zone_name : ''
+                for(let i = 0; i<vm.asset.no_of_zones; i++){
+                    vm.asset.zone_name.push({
+                        zone_name : null
                     })
                 }
-                vm.new_zone_names.map(function(element){
-                    vm.asset.zone_name.push(element)
+            }else{
+                vm.prev_zone_names.map(function(pre_element){
+                    vm.asset.zone_name.push(pre_element)
                 })
+                if(vm.asset.no_of_zones && vm.asset.no_of_zones<vm.prev_zone_names.length){
+                    vm.asset.no_of_zones = vm.prev_zone_names.length
+                }
+                if(vm.asset.no_of_zones && vm.asset.no_of_zones>vm.prev_zone_names.length){
+                    let number = vm.asset.no_of_zones - vm.prev_zone_names.length
+                    console.log(number)
+                    this.new_zone_names = []
+                    for(let i = 0; i<number; i++){
+                        this.new_zone_names.push({
+                            zone_name : null
+                        })
+                    }
+                    vm.new_zone_names.map(function(element){
+                        vm.asset.zone_name.push(element)
+                    })
+                }
+
+
+
                 // if(number < this.asset.zone_name.length && number > vm.initial_zone_no){
                 //     console.log('1')
                 //     for(let i = 0; i<number; i++){
@@ -408,6 +421,10 @@
                 //         }
                 //     }
                 // }
+
+
+
+                
 
             }
             
@@ -588,8 +605,15 @@
             },
             discard() {
                 let vm = this;
-                vm.asset = {};
-                vm.$refs.asset_name.focus();
+                // vm.asset = {};
+                vm.asset.asset_code="";
+                vm.asset.asset_name="";
+                vm.asset.latitude="";
+                vm.asset.longitude="";
+                vm.asset.radius="";
+                vm.asset.department_id="";
+                vm.asset.section_id="";
+                vm.asset.functional_id="";
                 vm.errors = [];
                 vm.voltage.color = "#ffffff";
                 vm.voltage.voltage_code = "";
@@ -601,6 +625,15 @@
                 vm.section = "";
                 vm.make = "";
                 vm.speed = "";
+                vm.show_assets=[];
+                vm.asset.asset_type_id="";
+                let discard_zone=vm.asset.zone_name.filter(function(element){
+                    console.log("dd--",element)
+                    element.zone_name=""
+                })
+                vm.$refs.asset_code.focus();
+
+            
             },
 
             getAssetType(asset_type_id){

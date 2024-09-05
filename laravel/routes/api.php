@@ -234,6 +234,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetVariable',[AssetVariableController::class, 'getAssetVariable']);
     Route::post('updateAssetVariable',[AssetVariableController::class, 'updateAssetVariable']);
     Route::post('deleteAssetVariable',[AssetVariableController::class, 'deleteAssetVariable']);
+    Route::post('getAssetTypeVariables',[AssetVariableController::class, 'getAssetTypeVariables']);
 
     Route::post('paginateAssetDataSources',[AssetDataSourceController::class, 'paginateAssetDataSources']);
     Route::post('getAssetDataSources',[AssetDataSourceController::class, 'getAssetDataSources']);

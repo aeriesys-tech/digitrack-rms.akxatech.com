@@ -67,7 +67,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-if="spares.length==0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="7" class="text-center">No records found</td>
                                     </tr>
                                     <tr v-for="spare, key in spares" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>

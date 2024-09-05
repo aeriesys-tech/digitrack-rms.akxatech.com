@@ -74,8 +74,27 @@
                             </div>
                             <div class="card-body">
                                 <div class="row g-2">
-                                    <div class="col-md-6" v-can="'assetSpares.create'">
+                                    <div class="col-md-5" v-can="'assetSpares.create'">
+                                        <div class="dropdown" @click="toggleAssetZoneStatus()">
+                                            <div class="overselect"></div>
+                                            <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
+                                                <option value="">Select Asset Zone</option>
+                                            </select>
+                                            <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
+                                        </div>
+                                        <div class="multiselect" v-if="asset_zone_status">
+                                            <ul>
+                                                <li class="" v-for="(asset_zone, index) in asset_zones" :key="index">
+                                                    <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="spare.asset_zone_id" style="padding: 2px;" />
+                                                    <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5" v-can="'assetSpares.create'">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
+
+                                        
 
                                         <search
                                             :class="{ 'is-invalid': errors.spare_id }"
@@ -94,7 +113,7 @@
                                         </search>
                                         <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                     </div>
-                                    <div class="col-md-6" v-can="'assetSpares.create'">
+                                    <div class="col-md-2" v-can="'assetSpares.create'">
                                         <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
                                         </div>
@@ -107,6 +126,14 @@
                                                 <thead>
                                                     <tr class="">
                                                         <th class="text-center">#</th>
+                                                        <th @click="sort('asset_zone_id')">
+                                                            Asset Zone
+                                                            <span>
+                                                                <i v-if="meta.keyword=='asset_zone_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="meta.keyword=='asset_zone_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
                                                         <th @click="sort('spare_type_id')">
                                                             Spare Type
                                                             <span>
@@ -141,6 +168,7 @@
                                                     </tr>
                                                     <tr v-for="spare, key in asset_spares" :key="key">
                                                         <td class="text-center">{{ meta.from + key }}</td>
+                                                        <td>{{ spare.asset_zone.zone_name }}</td>
                                                         <td>{{spare.spare?.spare_type?.spare_type_name}}</td>
                                                         <td>{{spare.spare?.spare_code}}</td>
                                                         <td>{{spare.spare?.spare_name}}</td>
@@ -508,6 +536,7 @@
                     spare_code: "",
                     spare_name: "",
                     asset_id: "",
+                    asset_zone_id:[],
                 },
                 check: {
                     check_id: "",
@@ -532,8 +561,10 @@
                 checks: [],
                 asset_checks: [],
                 asset_services: [],
+                asset_zones:[],
                 errors: [],
                 status: true,
+                asset_zone_status:false,
             };
         },
         watch:{
@@ -563,6 +594,9 @@
 
         },
         methods: {
+            toggleAssetZoneStatus(){
+                this.asset_zone_status = !this.asset_zone_status
+            },
             getColor(asset_parameter){
                 let color = 'color:black'
                 if(asset_parameter.field_name = 'Color'){
@@ -711,6 +745,23 @@
                     .then((response) => {
                         loader.hide();
                         vm.asset.QR_Code = response.data.QRCode;
+                        vm.getAssetZones();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getAssetZones() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getAssetZones", data: vm.asset })
+                    .then((response) => {
+                        loader.hide();
+                        console.log("SS", response.data)
+                        vm.asset_zones = response.data.data;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -733,6 +784,7 @@
                         vm.$store.dispatch("success", response.data.message);
                         vm.spare.spare_id = "";
                         vm.errors = [];
+                        vm.spare.asset_zone_id=[];
                         vm.getAssetSpares();
                     })
                     .catch(function (error) {
@@ -900,4 +952,34 @@
         border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;
     }
+
+    /* multi seleect css */
+
+    .dropdown {
+    position: relative;
+    cursor: pointer;
+}
+.multiselect {
+    position: relative;
+}
+.multiselect ul {
+    border: 1px solid #ddd;
+    border-top: 0;
+    border-radius: 0 0 3px 3px;
+    left: 0px;
+    padding: 8px 8px;
+    top: -0.1rem;
+    width: 100%;
+    list-style: none;
+    max-height: 150px;
+    overflow: auto;
+    background: white;
+}
+.overselect {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
 </style>

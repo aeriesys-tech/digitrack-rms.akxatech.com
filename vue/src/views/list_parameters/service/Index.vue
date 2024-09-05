@@ -74,7 +74,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-if="services.length==0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="7" class="text-center">No records found</td>
                                     </tr>
                                     <tr v-for="service, key in services" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
