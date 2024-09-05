@@ -50,6 +50,8 @@ class AssetServiceController extends Controller
     public function addAssetService(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+        $areaId = Auth::User()->Plant->area_id;
+        
         $data = $request->validate([
             'service_id' => [
                 'required',

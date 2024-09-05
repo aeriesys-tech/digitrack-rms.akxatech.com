@@ -53,32 +53,6 @@ class CheckController extends Controller
         return CheckResource::collection( $check);
     }
 
-    // public function addCheck(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'field_name' => 'required|unique:checks,field_name',
-    //         'field_type' => 'required',
-    //         'default_value' => 'required',
-    //         'lcl' => 'required_if:field_type,Number',
-    //         'ucl' => 'required_if:field_type,Number',
-    //         'field_values' => 'required_if:field_type,Select',
-    //         'order' => 'required',
-    //         'is_required' => 'required',
-    //         'asset_type' => 'required|array',
-    //         'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
-    //     ]);
-        
-    //     $check = Check::create($data);
-
-    //     foreach ($data['asset_type'] as $asset_type) {
-    //         CheckAssetType::create([
-    //             'check_id' => $check->check_id,
-    //             'asset_type_id' => $asset_type,
-    //         ]);
-    //     }
-    //     return response()->json(["message" => "Check Created Successfully"]);        
-    // } 
-    
     public function addCheck(Request $request)
     {
         $data = $request->validate([
@@ -105,41 +79,6 @@ class CheckController extends Controller
 
         return response()->json(["message" => "Check Created Successfully"]);        
     }
-
-
-    // public function addCheck(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'field_name' => 'required|unique:checks,field_name',
-    //         'field_type' => 'required',
-    //         'default_value' => 'required',
-    //         'lcl' => 'required_if:field_type,Number',
-    //         'ucl' => 'required_if:field_type,Number',
-    //         'field_values' => 'required_if:field_type,Select',
-    //         'order' => 'required',
-    //         'is_required' => 'required',
-    //         'asset_type' => 'required|array', // Ensure asset_types is required and an array
-    //         'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
-    //     ]);
-
-    //     // Ensure asset_types key exists before processing
-    //     if (isset($data['asset_type'])) {
-    //         $check = Check::create($data);
-
-    //         foreach ($data['asset_type'] as $asset_type) {
-    //             CheckAssetType::create([
-    //                 'check_id' => $check->check_id,
-    //                 'asset_type_id' => $asset_type['asset_type_id'], // Access asset_type_id correctly
-    //             ]);
-    //         }
-
-    //         return response()->json(["message" => "Check Created Successfully"]); 
-    //     }
-
-    //     return response()->json(["message" => "asset_type key missing"], 400);
-    // }
-
-
     
     public function getCheck(Request $request)
     {
@@ -175,8 +114,8 @@ class CheckController extends Controller
             'field_values' => 'required_if:field_type,Select',
             'order' => 'required',
             'is_required' => 'required',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+	        'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
 
         $check = Check::where('check_id', $request->check_id)->first();
@@ -184,7 +123,7 @@ class CheckController extends Controller
 
         CheckAssetType::where('check_id', $check->check_id)->delete();
 
-        foreach ($data['asset_types'] as $asset_type_id) {
+        foreach ($data['asset_type'] as $asset_type_id) {
             CheckAssetType::create([
                 'check_id' => $check->check_id,
                 'asset_type_id' => $asset_type_id
