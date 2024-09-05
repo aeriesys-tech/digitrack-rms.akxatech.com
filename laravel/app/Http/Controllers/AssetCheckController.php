@@ -54,6 +54,10 @@ class AssetCheckController extends Controller
     {
         $userPlantId = Auth::User()->plant_id;
         $areaId = Auth::User()->Plant->area_id;
+<<<<<<<<< Temporary merge branch 1
+
+=========
+>>>>>>>>> Temporary merge branch 2
         $data = $request->validate([
             'check_id' => [
                 'required',
