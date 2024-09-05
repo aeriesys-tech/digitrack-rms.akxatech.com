@@ -50,6 +50,7 @@ class VariableController extends Controller
     public function addVariable(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+
         $data = $request->validate([
             'variable_code' => 'required|string|unique:variables,variable_code',
             'variable_name' => 'required|string|unique:variables,variable_name',
@@ -57,18 +58,18 @@ class VariableController extends Controller
             'variable_attributes' => 'required|array',
             'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
             'variable_attributes.*.field_value' => 'required|string',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+            'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
+
         $data['plant_id'] = $userPlantId;
 
-        
         $variable = Variable::create($data);
 
-        foreach ($data['asset_types'] as $asset_type) {
+        foreach ($data['asset_type'] as $asset_type) {
             VariableAssetType::create([
                 'variable_id' => $variable->variable_id,
-                'asset_type_id' => $asset_type,
+                'asset_type_id' => $asset_type['asset_type_id'], 
             ]);
         }
 
@@ -79,9 +80,10 @@ class VariableController extends Controller
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
-        
+
         return response()->json(["message" => "Variable Created Successfully"]);
     }
+
 
     public function getVariable(Request $request)
     {
@@ -138,8 +140,8 @@ class VariableController extends Controller
             'variable_attributes' => 'required|array',
             'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
             'variable_attributes.*.variable_attribute_value.field_value' => 'required|string',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+	        'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;

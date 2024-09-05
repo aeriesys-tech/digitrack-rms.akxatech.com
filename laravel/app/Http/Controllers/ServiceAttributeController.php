@@ -59,31 +59,59 @@ class ServiceAttributeController extends Controller
         return ServiceAttributeResource::collection($service_attribute);
     }
 
+    // public function addServiceAttribute(Request $request)
+    // {
+    //     $data = $request->validate([
+    //     	'field_name' => 'required|string|unique:service_attributes,field_name',
+	//         'display_name' => 'required|string|unique:service_attributes,display_name',
+	//         'field_type' => 'required', 
+	//         'field_values' => 'nullable|required_if:field_type,Dropdown',
+	//         'field_length' => 'required',
+	//         'is_required' => 'required|boolean',
+    //         'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
+    //         'service_types' => 'required|array',
+	//         'service_type_id.*' => 'required|exists:service_types,service_type_id'
+    //     ]);
+    //     $data['user_id'] = Auth::id();
+        
+    //     $service_attribute = ServiceAttribute::create($data);
+
+    //     foreach ($data['service_types'] as $service_type_id) {
+    //         ServiceAttributeType::create([
+    //             'service_attribute_id' => $service_attribute->service_attribute_id,
+    //             'service_type_id' => $service_type_id
+    //         ]);
+    //     }
+    //     return new ServiceAttributeResource($service_attribute);  
+    // }  
+
     public function addServiceAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required|string|unique:service_attributes,field_name',
-	        'display_name' => 'required|string|unique:service_attributes,display_name',
-	        'field_type' => 'required', 
-	        'field_values' => 'nullable|required_if:field_type,Dropdown',
-	        'field_length' => 'required',
-	        'is_required' => 'required|boolean',
+            'field_name' => 'required|string|unique:service_attributes,field_name',
+            'display_name' => 'required|string|unique:service_attributes,display_name',
+            'field_type' => 'required', 
+            'field_values' => 'nullable|required_if:field_type,Dropdown',
+            'field_length' => 'required',
+            'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
-            'service_types' => 'required|array',
-	        'service_type_id.*' => 'required|exists:service_types,service_type_id'
+            'service_type' => 'required|array',
+            'service_type.*.service_type_id' => 'required|exists:service_type,service_type_id'
         ]);
+
         $data['user_id'] = Auth::id();
-        
+
         $service_attribute = ServiceAttribute::create($data);
 
-        foreach ($data['service_types'] as $service_type_id) {
+        foreach ($data['service_type'] as $service_type) {
             ServiceAttributeType::create([
                 'service_attribute_id' => $service_attribute->service_attribute_id,
-                'service_type_id' => $service_type_id
+                'service_type_id' => $service_type['service_type_id'], 
             ]);
         }
+
         return new ServiceAttributeResource($service_attribute);  
-    }  
+    }
 
     public function getServiceAttribute(Request $request)
     {

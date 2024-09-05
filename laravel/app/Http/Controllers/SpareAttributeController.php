@@ -62,28 +62,30 @@ class SpareAttributeController extends Controller
     public function addSpareAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required|string|unique:spare_attributes,field_name',
-	        'display_name' => 'required|string|unique:spare_attributes,display_name',
-	        'field_type' => 'required', 
-	        'field_values' => 'nullable|required_if:field_type,Dropdown',
-	        'field_length' => 'required',
-	        'is_required' => 'required|boolean',
+            'field_name' => 'required|string|unique:spare_attributes,field_name',
+            'display_name' => 'required|string|unique:spare_attributes,display_name',
+            'field_type' => 'required', 
+            'field_values' => 'nullable|required_if:field_type,Dropdown',
+            'field_length' => 'required',
+            'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'spare_types' => 'required|array',
-	        'spare_type_id.*' => 'required|exists:spare_types,spare_type_id'
+            'spare_types.*.spare_type_id' => 'required|exists:spare_types,spare_type_id'
         ]);
+
         $data['user_id'] = Auth::id();
-        
+
         $spare_attribute = SpareAttribute::create($data);
 
-        foreach ($data['spare_types'] as $spare_type_id) {
+        foreach ($data['spare_types'] as $spare_type) {
             SpareAttributeType::create([
                 'spare_attribute_id' => $spare_attribute->spare_attribute_id,
-                'spare_type_id' => $spare_type_id
+                'spare_type_id' => $spare_type['spare_type_id']
             ]);
         }
+
         return new SpareAttributeResource($spare_attribute);  
-    }  
+    }
 
     public function getSpareAttribute(Request $request)
     {
@@ -120,7 +122,7 @@ class SpareAttributeController extends Controller
             'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'spare_types' => 'required|array',
-            'spare_types.*' => 'required|exists:spare_types,spare_type_id'
+            'spare_types.*.spare_type_id' => 'required|exists:spare_types,spare_type_id' 
         ]);
 
         $data['user_id'] = Auth::id();

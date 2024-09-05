@@ -52,6 +52,63 @@ class AssetDataSourceController extends Controller
         return AssetDataSourceResource::collection($asset_data_source);
     }
 
+    // public function addAssetDataSource(Request $request)
+    // {
+    //     $userPlantId = Auth::User()->plant_id;
+    //     $areaId = Auth::User()->Plant->area_id;
+
+    //     $data = $request->validate([
+    //         'data_source_id' => [
+    //             'required',
+    //             'exists:data_sources,data_source_id',
+    //             function ($attribute, $value, $fail) use ($request) 
+    //             {
+    //                 $exists = AssetDataSource::where('data_source_id', $value)
+    //                     ->where('asset_id', $request->asset_id)
+    //                     ->exists();
+    //                 if ($exists) {
+    //                     $fail('The combination of DataSource already exists.');
+    //                 }
+    //             },
+    //         ],
+    //         'asset_id' => 'required|exists:assets,asset_id',
+    //         'data_source_type_id' => 'required|data_source_types,data_source_type_id',
+    //         'asset_zone_id' => 'nullable|array', 
+    //         'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
+    //     ]);
+
+    //     $data['plant_id'] = $userPlantId;
+    //     $data['area_id'] = $areaId;
+
+    //     $createdDataSources = [];
+
+    //     if (!empty($data['asset_zone_id'])) 
+    //     {
+    //         foreach ($data['asset_zone_id'] as $zoneId) 
+    //         {              
+    //             if (is_null($zoneId) || $zoneId == 0) 
+    //             {
+    //                 continue;
+    //             }
+
+    //             $data_source_data = $data;
+    //             $data_source_data['asset_zone_id'] = $zoneId;
+
+    //             $assetDataSource = AssetDataSource::create($data_source_data);
+    //             $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
+    //         }
+    //     } 
+    //     else 
+    //     {
+    //         $data_source_data = $data;
+    //         $data_source_data['asset_zone_id'] = null;
+
+    //         $assetDataSource = AssetDataSource::create($data_source_data);
+    //         $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
+    //     }
+    //     return response()->json($createdDataSources, 201);
+    // }
+
     public function addAssetDataSource(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
@@ -61,8 +118,7 @@ class AssetDataSourceController extends Controller
             'data_source_id' => [
                 'required',
                 'exists:data_sources,data_source_id',
-                function ($attribute, $value, $fail) use ($request) 
-                {
+                function ($attribute, $value, $fail) use ($request) {
                     $exists = AssetDataSource::where('data_source_id', $value)
                         ->where('asset_id', $request->asset_id)
                         ->exists();
@@ -72,8 +128,8 @@ class AssetDataSourceController extends Controller
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'data_source_type_id' => 'required|data_source_types,data_source_type_id',
-            'asset_zone_id' => 'nullable|array', 
+            'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id', 
+            'asset_zone_id' => 'nullable|array',
             'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
@@ -82,12 +138,9 @@ class AssetDataSourceController extends Controller
 
         $createdDataSources = [];
 
-        if (!empty($data['asset_zone_id'])) 
-        {
-            foreach ($data['asset_zone_id'] as $zoneId) 
-            {              
-                if (is_null($zoneId) || $zoneId == 0) 
-                {
+        if (!empty($data['asset_zone_id'])) {
+            foreach ($data['asset_zone_id'] as $zoneId) {
+                if (is_null($zoneId) || $zoneId == 0) {
                     continue;
                 }
 
@@ -97,15 +150,14 @@ class AssetDataSourceController extends Controller
                 $assetDataSource = AssetDataSource::create($data_source_data);
                 $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
             }
-        } 
-        else 
-        {
+        } else {
             $data_source_data = $data;
             $data_source_data['asset_zone_id'] = null;
 
             $assetDataSource = AssetDataSource::create($data_source_data);
             $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
         }
+
         return response()->json($createdDataSources, 201);
     }
 

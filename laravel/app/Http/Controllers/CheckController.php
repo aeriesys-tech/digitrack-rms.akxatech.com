@@ -64,20 +64,21 @@ class CheckController extends Controller
             'field_values' => 'required_if:field_type,Select',
             'order' => 'required',
             'is_required' => 'required',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+            'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
         
         $check = Check::create($data);
 
-        foreach ($data['asset_types'] as $asset_type) {
+        foreach ($data['asset_type'] as $asset_type) {
             CheckAssetType::create([
                 'check_id' => $check->check_id,
-                'asset_type_id' => $asset_type,
+                'asset_type_id' => $asset_type['asset_type_id'], 
             ]);
         }
+
         return response()->json(["message" => "Check Created Successfully"]);        
-    }  
+    }
     
     public function getCheck(Request $request)
     {
@@ -113,8 +114,8 @@ class CheckController extends Controller
             'field_values' => 'required_if:field_type,Select',
             'order' => 'required',
             'is_required' => 'required',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+	        'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
 
         $check = Check::where('check_id', $request->check_id)->first();
@@ -122,7 +123,7 @@ class CheckController extends Controller
 
         CheckAssetType::where('check_id', $check->check_id)->delete();
 
-        foreach ($data['asset_types'] as $asset_type_id) {
+        foreach ($data['asset_type'] as $asset_type_id) {
             CheckAssetType::create([
                 'check_id' => $check->check_id,
                 'asset_type_id' => $asset_type_id

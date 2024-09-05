@@ -54,6 +54,63 @@ class AssetVariableController extends Controller
         return AssetVariableResource::collection($asset_variable);
     }
 
+    // public function addAssetVariable(Request $request)
+    // {
+    //     $userPlantId = Auth::User()->plant_id;
+    //     $areaId = Auth::User()->Plant->area_id;
+
+    //     $data = $request->validate([
+    //         'variable_id' => [
+    //             'required',
+    //             'exists:variables,variable_id',
+    //             function ($attribute, $value, $fail) use ($request) 
+    //             {
+    //                 $exists = AssetVariable::where('variable_id', $value)
+    //                     ->where('asset_id', $request->asset_id)
+    //                     ->exists();
+    //                 if ($exists) {
+    //                     $fail('The combination of Variable already exists.');
+    //                 }
+    //             },
+    //         ],
+    //         'asset_id' => 'required|exists:assets,asset_id',
+    //         'variable_type_id' => 'required|variable_types,variable_type_id',
+    //         'asset_zone_id' => 'nullable|array', 
+    //         'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
+    //     ]);
+
+    //     $data['plant_id'] = $userPlantId;
+    //     $data['area_id'] = $areaId;
+
+    //     $createdVariables = [];
+
+    //     if (!empty($data['asset_zone_id'])) 
+    //     {
+    //         foreach ($data['asset_zone_id'] as $zoneId) 
+    //         {              
+    //             if (is_null($zoneId) || $zoneId == 0) 
+    //             {
+    //                 continue;
+    //             }
+
+    //             $variableData = $data;
+    //             $variableData['asset_zone_id'] = $zoneId;
+
+    //             $assetVariable = AssetVariable::create($variableData);
+    //             $createdVariables[] = new AssetVariableResource($assetVariable);
+    //         }
+    //     } 
+    //     else 
+    //     {
+    //         $variableData = $data;
+    //         $variableData['asset_zone_id'] = null;
+
+    //         $assetVariable = AssetVariable::create($variableData);
+    //         $createdVariables[] = new AssetVariableResource($assetVariable);
+    //     }
+    //     return response()->json($createdVariables, 201);
+    // }
+
     public function addAssetVariable(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
@@ -110,6 +167,7 @@ class AssetVariableController extends Controller
             $assetVariable = AssetVariable::create($variableData);
             $createdVariables[] = new AssetVariableResource($assetVariable);
         }
+
         return response()->json($createdVariables, 201);
     }
 

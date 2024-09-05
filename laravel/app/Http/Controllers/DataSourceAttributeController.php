@@ -62,28 +62,30 @@ class DataSourceAttributeController extends Controller
     public function addDataSourceAttribute(Request $request)
     {
         $data = $request->validate([
-        	'field_name' => 'required|string|unique:data_source_attributes,field_name',
-	        'display_name' => 'required|string|unique:data_source_attributes,display_name',
-	        'field_type' => 'required', 
-	        'field_values' => 'nullable|required_if:field_type,Dropdown',
-	        'field_length' => 'required',
-	        'is_required' => 'required|boolean',
+            'field_name' => 'required|string|unique:data_source_attributes,field_name',
+            'display_name' => 'required|string|unique:data_source_attributes,display_name',
+            'field_type' => 'required',
+            'field_values' => 'nullable|required_if:field_type,Dropdown',
+            'field_length' => 'required',
+            'is_required' => 'required|boolean',
             'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id|required_if:field_type,List',
             'data_source_types' => 'required|array',
-	        'data_source_type_id.*' => 'required|exists:data_source_types,data_source_type_id'
+            'data_source_types.*.data_source_type_id' => 'required|exists:data_source_types,data_source_type_id' 
         ]);
+
         $data['user_id'] = Auth::id();
-        
+
         $data_source_attribute = DataSourceAttribute::create($data);
 
-        foreach ($data['data_source_types'] as $data_source_type_id) {
+        foreach ($data['data_source_types'] as $type) {
             DataSourceAttributeType::create([
                 'data_source_attribute_id' => $data_source_attribute->data_source_attribute_id,
-                'data_source_type_id' => $data_source_type_id
+                'data_source_type_id' => $type['data_source_type_id'] 
             ]);
         }
-        return new DataSourceAttributeResource($data_source_attribute);  
-    }  
+
+        return new DataSourceAttributeResource($data_source_attribute);
+    }
 
     public function getDataSourceAttribute(Request $request)
     {

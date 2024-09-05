@@ -58,30 +58,28 @@ class DataSourceController extends Controller
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
             'data_source_attributes.*.field_value' => 'required',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+            'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id' 
         ]);
         $data['plant_id'] = $userPlantId;
 
-        
         $data_source = DataSource::create($data);
 
-        foreach ($data['asset_types'] as $asset_type) {
+        foreach ($data['asset_type'] as $asset_type) {
             DataSourceAssetType::create([
                 'data_source_id' => $data_source->data_source_id,
-                'asset_type_id' => $asset_type,
-                ]);
+                'asset_type_id' => $asset_type['asset_type_id'] 
+            ]);
         }
 
-        foreach ($request->data_source_attributes as $attribute) 
-        {
+        foreach ($data['data_source_attributes'] as $attribute) {
             DataSourceAttributeValue::create([
                 'data_source_id' => $data_source->data_source_id,
                 'data_source_attribute_id' => $attribute['data_source_attribute_id'],
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
         }
-          
+        
         return response()->json(["message" => "DataSource Created Successfully"]);
     }
 
@@ -140,8 +138,8 @@ class DataSourceController extends Controller
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
             'data_source_attributes.*.data_source_attribute_value.field_value' => 'required',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+            'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -151,7 +149,7 @@ class DataSourceController extends Controller
 
         DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->delete();
 
-        foreach ($data['asset_types'] as $asset_type_id) {
+        foreach ($data['asset_type'] as $asset_type_id) {
             DataSourceAssetType::create([
                 'data_source_id' => $data_source->data_source_id,
                 'asset_type_id' => $asset_type_id

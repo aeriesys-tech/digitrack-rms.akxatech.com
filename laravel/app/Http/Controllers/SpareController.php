@@ -49,6 +49,7 @@ class SpareController extends Controller
     public function addSpare(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+
         $data = $request->validate([
             'spare_code' => 'required|string|unique:spares,spare_code',
             'spare_name' => 'required|string|unique:spares,spare_name',
@@ -56,28 +57,29 @@ class SpareController extends Controller
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
             'spare_attributes.*.field_value' => 'required|string',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+            'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
+
         $data['plant_id'] = $userPlantId;
-        
+
         $spare = Spare::create($data);
 
-        foreach ($data['asset_types'] as $asset_type) {
+        foreach ($data['asset_type'] as $asset_type) {
             SpareAssetType::create([
                 'spare_id' => $spare->spare_id,
-                'asset_type_id' => $asset_type,
+                'asset_type_id' => $asset_type['asset_type_id'], 
             ]);
         }
 
-        foreach ($request->spare_attributes as $attribute) 
-        {
+        foreach ($request->spare_attributes as $attribute) {
             SpareAttributeValue::create([
                 'spare_id' => $spare->spare_id,
                 'spare_attribute_id' => $attribute['spare_attribute_id'],
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
-        }            
+        }
+
         return response()->json(["message" => "Spare Created Successfully"]);
     }
 
@@ -136,8 +138,8 @@ class SpareController extends Controller
             'spare_attributes' => 'required|array',
             'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
             'spare_attributes.*.spare_attribute_value.field_value' => 'required|string',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+            'asset_type' => 'required|array',
+	        'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -147,7 +149,7 @@ class SpareController extends Controller
 
         SpareAssetType::where('spare_id', $spare->spare_id)->delete();
 
-        foreach ($data['asset_types'] as $asset_type) {
+        foreach ($data['asset_type'] as $asset_type) {
             SpareAssetType::create([
                 'spare_id' => $spare->spare_id,
                 'asset_type_id' => $asset_type,
