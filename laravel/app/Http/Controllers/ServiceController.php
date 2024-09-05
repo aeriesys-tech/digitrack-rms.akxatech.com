@@ -49,39 +49,38 @@ class ServiceController extends Controller
     public function addService(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
-
         $data = $request->validate([
             'service_code' => 'required|string|unique:services,service_code',
             'service_name' => 'required|string|unique:services,service_name',
             'service_type_id' => 'required|exists:service_type,service_type_id',
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
-            'service_attributes.*.field_value' => 'required|string',
-            'asset_type' => 'required|array',
-            'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
+            'service_attributes.*.field_value' => 'required',
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
-
         $data['plant_id'] = $userPlantId;
 
+        
         $service = Service::create($data);
 
-        foreach ($data['asset_type'] as $asset_type) {
+        foreach ($data['asset_types'] as $asset_type) {
             ServiceAssetType::create([
                 'service_id' => $service->service_id,
-                'asset_type_id' => $asset_type['asset_type_id'], 
+                'asset_type_id' => $asset_type,
             ]);
         }
 
-        foreach ($request->service_attributes as $attribute) {
+        foreach ($request->service_attributes as $attribute) 
+        {
             ServiceAttributeValue::create([
                 'service_id' => $service->service_id,
                 'service_attribute_id' => $attribute['service_attribute_id'],
                 'field_value' => $attribute['field_value'] ?? '',
             ]);
-        }
-
+        }      
         return response()->json(["message" => "Service Created Successfully"]);
-    }
+    } 
 
     public function getService(Request $request)
     {
@@ -138,8 +137,8 @@ class ServiceController extends Controller
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
             'service_attributes.*.service_attribute_value.field_value' => 'required|string',
-            'asset_type' => 'required|array',
-	        'asset_type.*.asset_type_id' => 'required|exists:asset_type,asset_type_id'
+            'asset_types' => 'required|array',
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -149,7 +148,7 @@ class ServiceController extends Controller
 
         ServiceAssetType::where('service_id', $service->service_id)->delete();
 
-        foreach ($data['asset_type'] as $asset_type) {
+        foreach ($data['asset_types'] as $asset_type) {
             ServiceAssetType::create([
                 'service_id' => $service->service_id,
                 'asset_type_id' => $asset_type,

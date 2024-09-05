@@ -131,6 +131,17 @@ class AssetVariableController extends Controller
             ],
             'asset_id' => 'required|exists:assets,asset_id',
             'variable_type_id' => 'required|variable_types,variable_type_id',
+                // function ($attribute, $value, $fail) use ($request) 
+                // {
+                //     $exists = AssetVariable::where('variable_id', $value)
+                //         ->where('asset_id', $request->asset_id)
+                //         ->exists();
+                //     if ($exists) {
+                //         $fail('The combination of Variable already exists.');
+                //     }
+                // },
+            ],
+            'asset_id' => 'required|exists:assets,asset_id',
             'asset_zone_id' => 'nullable|array', 
             'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
