@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('asset_checks', function (Blueprint $table) {
-            $table->foreignId('area_id')->after('asset_check_id');
+            $table->foreignId('area_id')->nullable()->after('asset_check_id');
             $table->foreign('area_id')->references('area_id')->on('areas');
             $table->foreignId('asset_zone_id')->nullable()->after('asset_id');
             $table->foreign('asset_zone_id')->references('asset_zone_id')->on('asset_zones');

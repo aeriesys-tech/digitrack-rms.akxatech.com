@@ -199,6 +199,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetQRCode',[AssetController::class, 'getAssetQRCode']);
     Route::post('getAssetCode',[AssetController::class, 'getAssetCode']);
     Route::post('getAssetdata',[AssetController::class, 'getAssetdata']);
+    Route::post('getAssetZones',[AssetController::class, 'getAssetZones']);
 
     Route::post('paginateAssetSpares',[AssetSpareController::class, 'paginateAssetSpares']);
     Route::post('addAssetSpare',[AssetSpareController::class, 'addAssetSpare']);
