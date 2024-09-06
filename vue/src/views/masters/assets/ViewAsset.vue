@@ -937,6 +937,14 @@
                                                                 <i v-else class="fas fa-sort"></i>
                                                             </span>
                                                         </th>
+                                                        <th>
+                                                            Attachment
+                                                            <span>
+                                                                <i v-if="accessory_meta_service.keyword=='attachment' && accessory_meta_service.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="accessory_meta_service.keyword=='attachment' && accessory_meta_service.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
                                                         <th class="text-center">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -949,7 +957,11 @@
                                                         <td>{{ accessory.asset_zone?.zone_name }}</td>
                                                         <td>{{ accessory.accessory_type.accessory_type_name }}</td>
                                                         <td>{{ accessory.accessory_name }}</td>
-                                                       
+                                                        <td>  <a v-if="accessory.attachment" :href="getAttachmentUrl(accessory.attachment)" target="_blank" rel="noopener noreferrer">
+                                                            {{ getAttachmentName(accessory.attachment) }}
+                                                            </a>
+                                                            <span v-else>No attachment</span>
+                                                        </td>
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteAccessory(accessory)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
@@ -1186,6 +1198,13 @@
 
         },
         methods: {
+            getAttachmentUrl(attachment) {
+            return `${attachment}`;
+            },
+            getAttachmentName(attachment) {
+            // Extract the file name from the attachment path
+            return attachment.split('/').pop();
+            },
             updateAssetZone(event, check) {
                 if(check.asset_check_id){
                     this.check.asset_zones = []
