@@ -54,63 +54,6 @@ class AssetVariableController extends Controller
         return AssetVariableResource::collection($asset_variable);
     }
 
-    // public function addAssetVariable(Request $request)
-    // {
-    //     $userPlantId = Auth::User()->plant_id;
-    //     $areaId = Auth::User()->Plant->area_id;
-
-    //     $data = $request->validate([
-    //         'variable_id' => [
-    //             'required',
-    //             'exists:variables,variable_id',
-    //             function ($attribute, $value, $fail) use ($request) 
-    //             {
-    //                 $exists = AssetVariable::where('variable_id', $value)
-    //                     ->where('asset_id', $request->asset_id)
-    //                     ->exists();
-    //                 if ($exists) {
-    //                     $fail('The combination of Variable already exists.');
-    //                 }
-    //             },
-    //         ],
-    //         'asset_id' => 'required|exists:assets,asset_id',
-    //         'variable_type_id' => 'required|variable_types,variable_type_id',
-    //         'asset_zone_id' => 'nullable|array', 
-    //         'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
-    //     ]);
-
-    //     $data['plant_id'] = $userPlantId;
-    //     $data['area_id'] = $areaId;
-
-    //     $createdVariables = [];
-
-    //     if (!empty($data['asset_zone_id'])) 
-    //     {
-    //         foreach ($data['asset_zone_id'] as $zoneId) 
-    //         {              
-    //             if (is_null($zoneId) || $zoneId == 0) 
-    //             {
-    //                 continue;
-    //             }
-
-    //             $variableData = $data;
-    //             $variableData['asset_zone_id'] = $zoneId;
-
-    //             $assetVariable = AssetVariable::create($variableData);
-    //             $createdVariables[] = new AssetVariableResource($assetVariable);
-    //         }
-    //     } 
-    //     else 
-    //     {
-    //         $variableData = $data;
-    //         $variableData['asset_zone_id'] = null;
-
-    //         $assetVariable = AssetVariable::create($variableData);
-    //         $createdVariables[] = new AssetVariableResource($assetVariable);
-    //     }
-    //     return response()->json($createdVariables, 201);
-    // }
-
     public function addAssetVariable(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
@@ -119,19 +62,27 @@ class AssetVariableController extends Controller
             'variable_id' => [
                 'required',
                 'exists:variables,variable_id',
-                // function ($attribute, $value, $fail) use ($request) 
-                // {
-                //     $exists = AssetVariable::where('variable_id', $value)
-                //         ->where('asset_id', $request->asset_id)
-                //         ->exists();
-                //     if ($exists) {
-                //         $fail('The combination of Variable already exists.');
-                //     }
-                // },
+                function ($attribute, $value, $fail) use ($request) 
+                {
+                    $exists = AssetVariable::where('variable_id', $value)
+                        ->where('asset_id', $request->asset_id)
+                        ->where(function ($query) use ($request) {
+                            if (!empty($request->asset_zones)) {
+                                $query->whereIn('asset_zone_id', $request->asset_zones);
+                            } else {
+                                $query->whereNull('asset_zone_id');
+                            }
+                        })
+                        ->exists();
+    
+                    if ($exists) {
+                        $fail('The combination of Variable and Asset Zone already exists.');
+                    }
+                },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|array', 
-            'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id'
+            'asset_zones' => 'nullable|array', 
+            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $variable = Variable::where('variable_id', $request->variable_id)->first();
@@ -143,9 +94,9 @@ class AssetVariableController extends Controller
 
         $createdVariables = [];
 
-        if (!empty($data['asset_zone_id'])) 
+        if (!empty($data['asset_zones'])) 
         {
-            foreach ($data['asset_zone_id'] as $zoneId) 
+            foreach ($data['asset_zones'] as $zoneId) 
             {              
                 if (is_null($zoneId) || $zoneId == 0) 
                 {
@@ -168,7 +119,7 @@ class AssetVariableController extends Controller
             $createdVariables[] = new AssetVariableResource($assetVariable);
         }
 
-        return response()->json($createdVariables, 201);
+        return response()->json([$createdVariables, "message" => "AssetVariable Created Successfully"]);
     }
 
     public function getAssetVariable(Request $request)
@@ -184,20 +135,49 @@ class AssetVariableController extends Controller
     public function updateAssetVariable(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;
+        $areaId = Auth::User()->Plant->area_id;
+        $asset_variable = AssetVariable::where('asset_variable_id', $request->asset_variable_id)->first();
+
         $data = $request->validate([
             'asset_variable_id' => 'required|exists:asset_variables,asset_variable_id',
-            'variable_id' => 'required|exists:variables,variable_id',
+            'variable_id' => [
+            'required',
+            'exists:variables,variable_id',
+            function ($attribute, $value, $fail) use ($request, $asset_variable) {
+                $exists = AssetVariable::where('variable_id', $value)
+                    ->where('asset_id', $request->asset_id)
+                    ->where(function ($query) use ($request) {
+                        if ($request->filled('asset_zone_id')) {
+                            $query->where('asset_zone_id', $request->asset_zone_id);
+                        } else {
+                            $query->whereNull('asset_zone_id');
+                        }
+                    })
+                    ->where('asset_variable_id', '!=', $request->asset_variable_id)->exists();
+
+                if ($exists) {
+                    $fail('The combination of DataSource, Asset, and Asset Zone already exists.');
+                }
+            },
+        ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'area_id' => 'required|exists:areas,area_id',
-            'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
-            'variable_type_id' => 'required|variable_types,variable_type_id'
+            'asset_zones' => 'nullable|array',
+            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
         ]);
 
+        $variable = Variable::where('variable_id', $request->variable_id)->first();
+        $variable_type = $variable->variable_type_id;
+
         $data['plant_id'] = $userPlantId;
+        $data['area_id'] = $areaId;
+        $data['variable_type_id'] = $variable_type;
 
         $asset_variable = AssetVariable::where('asset_variable_id', $request->asset_variable_id)->first();
         $asset_variable->update($data);
-        return new AssetVariableResource($asset_variable); 
+        return response()->json([
+            "message" => "AssetVariable Updated Successfully",
+            new AssetVariableResource($asset_variable)
+        ]); 
     }
 
     public function deleteAssetVariable(Request $request)

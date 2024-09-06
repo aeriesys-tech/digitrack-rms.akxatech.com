@@ -54,15 +54,22 @@ class AssetAccessoryController extends Controller
 
     public function addAssetAccessory(Request $request)
     {
-        $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
+        $userPlantId = Auth::user()->plant_id;
+        $areaId = Auth::user()->Plant->area_id;
+        
+        if ($request->has('asset_zone_id') && is_string($request->input('asset_zone_id'))) {
+            $request->merge([
+                'asset_zone_id' => json_decode($request->input('asset_zone_id'), true)
+            ]);
+        }
+
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'accessory_type_id' => 'required|accessory_types,accessory_type_id',
+            'accessory_type_id' => 'required|exists:accessory_types,accessory_type_id',
             'asset_zone_id' => 'nullable|array', 
             'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id',
             'accessory_name' => 'required',
-            'attachment' => 'nullable'
+            'attachment' => 'nullable|file'
         ]);
 
         $data['plant_id'] = $userPlantId;
@@ -74,14 +81,12 @@ class AssetAccessoryController extends Controller
             $data['attachment'] = $attachment;
         }
 
-        $createdAccessorys = [];
+        $createdAccessories = [];
 
-        if (!empty($data['asset_zone_id'])) 
-        {
+        if (!empty($data['asset_zone_id'])) {
             foreach ($data['asset_zone_id'] as $zoneId) 
             {              
-                if (is_null($zoneId) || $zoneId == 0) 
-                {
+                if (is_null($zoneId) || $zoneId == 0) {
                     continue;
                 }
 
@@ -89,19 +94,19 @@ class AssetAccessoryController extends Controller
                 $accessoryData['asset_zone_id'] = $zoneId;
 
                 $assetAccessory = AssetAccessory::create($accessoryData);
-                $createdAccessorys[] = new AssetAccessoryResource($assetAccessory);
+                $createdAccessories[] = new AssetAccessoryResource($assetAccessory);
             }
-        } 
-        else 
-        {
+        } else {
             $accessoryData = $data;
             $accessoryData['asset_zone_id'] = null;
 
             $assetAccessory = AssetAccessory::create($accessoryData);
-            $createdAccessorys[] = new AssetAccessoryResource($assetAccessory);
+            $createdAccessories[] = new AssetAccessoryResource($assetAccessory);
         }
-        return response()->json($createdAccessorys, 201);
+
+        return response()->json($createdAccessories, 201);
     }
+
 
     public function getAssetAccessory(Request $request)
     {
