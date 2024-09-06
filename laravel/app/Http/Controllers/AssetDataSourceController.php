@@ -75,7 +75,7 @@ class AssetDataSourceController extends Controller
                         })->exists();
     
                     if ($exists) {
-                        $fail('The combination of DataSource, Asset, and Asset Zone already exists.');
+                        $fail('The combination of DataSource and Asset Zone already exists.');
                     }
                 },
             ],
@@ -151,7 +151,7 @@ class AssetDataSourceController extends Controller
                         ->where('asset_data_source_id', '!=', $request->asset_data_source_id)->exists();
 
                     if ($exists) {
-                        $fail('The combination of DataSource, Asset, and Asset Zone already exists.');
+                        $fail('The combination of DataSource and Asset Zone already exists.');
                     }
                 },
             ],

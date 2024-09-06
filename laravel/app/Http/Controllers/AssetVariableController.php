@@ -156,7 +156,7 @@ class AssetVariableController extends Controller
                     ->where('asset_variable_id', '!=', $request->asset_variable_id)->exists();
 
                 if ($exists) {
-                    $fail('The combination of DataSource, Asset, and Asset Zone already exists.');
+                    $fail('The combination of Variable and Asset Zone already exists.');
                 }
             },
         ],
