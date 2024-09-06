@@ -1210,6 +1210,13 @@
 
         },
         methods: {
+            getAttachmentUrl(attachment) {
+            return `${attachment}`;
+            },
+            getAttachmentName(attachment) {
+            // Extract the file name from the attachment path
+            return attachment.split('/').pop();
+            },
             updateCheckAssetZone(event, check) {
                 if(check.asset_check_id){
                     this.check.asset_zones = []
