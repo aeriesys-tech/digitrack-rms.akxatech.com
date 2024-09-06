@@ -106,7 +106,7 @@
                                             <div class="multiselect" v-if="asset_zone_status_spares">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="spare.asset_zone_id" style="padding: 2px;" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="spare.asset_zones" style="padding: 2px;" @click="updateSpareAssetZone($event, spare)"/>
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -132,9 +132,18 @@
                                         <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                     </div>
                                     <div class="col-md-2" v-can="'assetSpares.create'">
-                                        <div style="float: left;">
+                                        <!-- <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
-                                        </div>
+                                        </div> -->
+
+
+                                        <button v-if="spare.asset_spare_id" class="btn btn-outline-success me-2" @click="updateSpare()">
+                                                    <i class="ri-add-circle-line icon-hgt"></i> Update
+                                                </button>
+                                                <button v-else class="btn btn-outline-success me-2" @click="addSpare()">
+                                                    <i class="ri-add-circle-line icon-hgt"></i> Add
+                                                </button>
+
                                         <!-- <button class="btn border-left btn-outline-success" type="button" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i>ADD</button> -->
                                     </div>
 
@@ -186,12 +195,12 @@
                                                     </tr>
                                                     <tr v-for="spare, key in asset_spares" :key="key">
                                                         <td class="text-center">{{ meta.from + key }}</td>
-                                                        <td>{{ spare.asset_zone.zone_name }}</td>
+                                                        <td>{{ spare.asset_zone?.zone_name }}</td>
                                                         <td>{{spare.spare?.spare_type?.spare_type_name}}</td>
                                                         <td>{{spare.spare?.spare_code}}</td>
                                                         <td>{{spare.spare?.spare_name}}</td>
                                                         <td class="text-center" v-can="'assetSpares.delete'">
-                                                            <!-- <a href="javascript:void(0)" class="text-success me-2" @click="editSpare(spare)"><i class="ri-pencil-line fs-18 lh-1"></i></a> -->
+                                                            <a href="javascript:void(0)" class="text-success me-2" @click="editSpare(spare)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteSpare(spare)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -252,7 +261,7 @@
                                             <div class="multiselect" v-if="asset_zone_status_checks">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="check.asset_zones" @click="updateAssetZone($event, check)" style="padding: 2px;" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="check.asset_zones" @click="updateCheckAssetZone($event, check)" style="padding: 2px;" />
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -412,22 +421,6 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-4" v-can="'assetChecks.create'">
-                                        <!-- <label>Asset Zone</label> -->
-                                        <!-- <div class="dropdown" @click="toggleAssetZoneStatus()">
-                                            <div class="overselect"></div>
-                                            <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
-                                                <option value="">Select Asset Zone</option>
-                                            </select>
-                                            <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
-                                        </div>
-                                        <div class="multiselect" v-if="asset_zone_status_checks">
-                                            <ul>
-                                                <li class="" v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                    <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="service.asset_zone_id" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
-                                                </li>
-                                            </ul>
-                                        </div> -->
                                         <div class="dropdown" @click="toggleAssetZoneStatus('services')">
                                             <div class="overselect"></div>
                                                 <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
@@ -438,15 +431,13 @@
                                             <div class="multiselect" v-if="asset_zone_status_services">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="service.asset_zone_id" style="padding: 2px;" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="service.asset_zones" style="padding: 2px;" @click="updateServiceAssetZone($event, service)" />
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
                                             </div>
                                     </div>
                                     <div class="col-md-5">
-                                        <!-- <div class="d-flex justify-content-between" v-can="'assetChecks.create'"> -->
-                                        <!-- <label>Service</label> -->
                                         <search
                                             :class="{ 'is-invalid': errors.service_id }"
                                             :customClass="{ 'is-invalid': errors.service_id }"
@@ -464,9 +455,17 @@
                                         <span v-if="errors.service_id" class="invalid-feedback">{{ errors.service_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3">
-                                        <div style="float: left;">
+                                        <!-- <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addService()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
-                                        </div>
+                                        </div> -->
+
+                                        <button v-if="service.asset_service_id" class="btn btn-outline-success me-2" @click="updateService()">
+                                                    <i class="ri-add-circle-line icon-hgt"></i> Update
+                                                </button>
+                                                <button v-else class="btn btn-outline-success me-2" @click="addService()">
+                                                    <i class="ri-add-circle-line icon-hgt"></i> Add
+                                                </button>
+
                                     </div>
 
                                     <div class="col-12">
@@ -521,6 +520,7 @@
                                                         <td>{{ service?.service?.service_name }}</td>
                                                         <td>{{ service?.service?.service_code }}</td>
                                                         <td class="text-center">
+                                                            <a href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -556,21 +556,6 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-5">
-                                        <!-- <div class="dropdown" @click="toggleAssetZoneStatus()">
-                                            <div class="overselect"></div>
-                                            <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
-                                                <option value="">Select Asset Zone</option>
-                                            </select>
-                                            <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
-                                        </div>
-                                        <div class="multiselect" v-if="asset_zone_status">
-                                            <ul>
-                                                <li class="" v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                    <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="variable.asset_zone_id" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
-                                                </li>
-                                            </ul>
-                                        </div> -->
                                         <div class="dropdown" @click="toggleAssetZoneStatus('variables')">
                                             <div class="overselect"></div>
                                                 <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
@@ -581,7 +566,7 @@
                                         <div class="multiselect" v-if="asset_zone_status_variables">
                                             <ul>
                                                 <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                    <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="variable.asset_zone_id" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="variable.asset_zones" style="padding: 2px;" @click="updateVariableAssetZone($event, variable)" />
                                                     <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                 </li>
                                             </ul>
@@ -607,9 +592,18 @@
                                         <span v-if="errors.variable_id" class="invalid-feedback">{{ errors.variable_id[0] }}</span>
                                     </div>
                                     <div class="col-md-2">
-                                        <div style="float: left;">
+                                        <!-- <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addVariable()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
-                                        </div>
+                                        </div> -->
+
+
+
+                                        <button v-if="variable.asset_variable_id" class="btn btn-outline-success me-2" @click="updateVariable()">
+                                                    <i class="ri-add-circle-line icon-hgt"></i> Update
+                                                </button>
+                                                <button v-else class="btn btn-outline-success me-2" @click="addVariable()">
+                                                    <i class="ri-add-circle-line icon-hgt"></i> Add
+                                                </button>
                                         <!-- <button class="btn border-left btn-outline-success" type="button" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i>ADD</button> -->
                                     </div>
 
@@ -665,6 +659,7 @@
                                                         <td>{{variable.variable?.variable_code}}</td>
                                                         <td>{{variable.variable?.variable_name}}</td>
                                                         <td class="text-center">
+                                                            <a href="javascript:void(0)" class="text-success me-2" @click="editVariable(variable)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteVariable(variable)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -724,7 +719,7 @@
                                             <div class="multiselect" v-if="asset_zone_status_datasources">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="datasource.asset_zone_id" style="padding: 2px;" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="datasource.asset_zones" style="padding: 2px;"  @click="updateDataSourceAssetZone($event, datasource)"/>
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -750,9 +745,17 @@
                                         <span v-if="errors.data_source_id" class="invalid-feedback">{{ errors.data_source_id[0] }}</span>
                                     </div>
                                     <div class="col-md-2">
-                                        <div style="float: left;">
+                                        <!-- <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addDataSource()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
-                                        </div>
+                                        </div> -->
+
+
+                                        <button v-if="datasource.asset_data_source_id" class="btn btn-outline-success me-2" @click="updateDataSource()">
+                                            <i class="ri-add-circle-line icon-hgt"></i> Update
+                                        </button>
+                                        <button v-else class="btn btn-outline-success me-2" @click="addDataSource()">
+                                            <i class="ri-add-circle-line icon-hgt"></i> Add
+                                        </button>
                                         <!-- <button class="btn border-left btn-outline-success" type="button" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i>ADD</button> -->
                                     </div>
 
@@ -808,6 +811,7 @@
                                                         <td>{{ data_source?.data_source?.data_source_code }}</td>
                                                         <td>{{ data_source?.data_source?.data_source_name }}</td>
                                                         <td class="text-center">
+                                                            <a href="javascript:void(0)" class="text-success me-2" @click="editDataSource(data_source)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteDataSource(data_source)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -1089,10 +1093,12 @@
                 },
                 spare: {
                     spare_id: "",
+                    asset_spare_id:"",
                     spare_code: "",
                     spare_name: "",
                     asset_id: "",
-                    asset_zone_id:[],
+                    asset_zone_id:'',
+                    asset_zones:[],
                 },
                 check: {
                     check_id: "",
@@ -1111,21 +1117,27 @@
                     service_code: "",
                     service_name: "",
                     asset_id: "",
-                    asset_zone_id:[],
+                    asset_zone_id:'',
+                    asset_service_id:"",
+                    asset_zones:[],
                 },
                 datasource: {
                     data_source_id: "",
                     data_source_code: "",
                     data_source_name: "",
                     asset_id: "",
-                    asset_zone_id:[],
+                    asset_zone_id:'',
+                    asset_zones:[],
+                    asset_data_source_id:"",
                 },
                 variable: {
                     variable_id: "",
                     variable_code: "",
                     variable_name: "",
                     asset_id: "",
-                    asset_zone_id:[],
+                    asset_zone_id:'',
+                    asset_zones:[],
+                    asset_variable_id:"",
                 },
                 accessory: {
                     accessory_id: "",
@@ -1186,11 +1198,39 @@
 
         },
         methods: {
-            updateAssetZone(event, check) {
+            updateCheckAssetZone(event, check) {
                 if(check.asset_check_id){
                     this.check.asset_zones = []
                     this.check.asset_zones = [parseInt(event.target.value, 10)]
                     this.check.asset_zone_id = event.target.value
+                }
+            },
+            updateSpareAssetZone(event, spare) {
+                if(spare.asset_spare_id){
+                    this.spare.asset_zones = []
+                    this.spare.asset_zones = [parseInt(event.target.value, 10)]
+                    this.spare.asset_zone_id = event.target.value
+                }
+            },
+            updateServiceAssetZone(event, service) {
+                if(service.asset_service_id){
+                    this.service.asset_zones = []
+                    this.service.asset_zones = [parseInt(event.target.value, 10)]
+                    this.service.asset_zone_id = event.target.value
+                }
+            },
+            updateVariableAssetZone(event, variable) {
+                if(variable.asset_variable_id){
+                    this.variable.asset_zones = []
+                    this.variable.asset_zones = [parseInt(event.target.value, 10)]
+                    this.variable.asset_zone_id = event.target.value
+                }
+            },
+            updateDataSourceAssetZone(event, datasource) {
+                if(datasource.asset_data_source_id){
+                    this.datasource.asset_zones = []
+                    this.datasource.asset_zones = [parseInt(event.target.value, 10)]
+                    this.datasource.asset_zone_id = event.target.value
                 }
             },
             toggleAssetZoneStatus(type) 
@@ -1225,6 +1265,19 @@
                 return color
 
             },
+            editSpare(spare){
+                console.log("spare",spare)
+                this.spare.spare_id = spare.spare_id
+                this.spare.asset_id = spare.asset_id
+                this.spare.asset_spare_id = spare.asset_spare_id
+                this.spare.spare_code = spare.spare_code
+                this.spare.spare_name = spare.spare_name
+                this.spare.asset_zones = []
+                console.log("asset_zone_id111---",spare.asset_zone_id)
+                this.spare.asset_zones.push(spare.asset_zone_id)
+                console.log("asset_zone_id---",this.spare.asset_zone_id)
+                this.spare.asset_zone_id = spare.asset_zone_id
+            },
             editCheck(check){
                 this.check.asset_id = check.asset_id
                 this.check.asset_check_id = check.asset_check_id
@@ -1235,6 +1288,36 @@
                 this.check.asset_zones = []
                 this.check.asset_zones.push(check.asset_zone_id)
                 this.check.asset_zone_id = check.asset_zone_id
+            },
+            editService(service){
+                this.service.service_id = service.service_id
+                this.service.asset_id = service.asset_id
+                this.service.asset_service_id = service.asset_service_id
+                this.service.service_code = service.service_code
+                this.service.service_name = service.service_name
+                this.service.asset_zones = []
+                this.service.asset_zones.push(service.asset_zone_id)
+                this.service.asset_zone_id = service.asset_zone_id
+            },
+            editVariable(variable){
+                this.variable.variable_id = variable.variable_id
+                this.variable.asset_id = variable.asset_id
+                this.variable.asset_variable_id = variable.asset_variable_id
+                this.variable.variable_code = variable.variable_code
+                this.variable.variable_name = variable.variable_name
+                this.variable.asset_zones = []
+                this.variable.asset_zones.push(variable.asset_zone_id)
+                this.variable.asset_zone_id = variable.asset_zone_id
+            },
+            editDataSource(datasource){
+                this.datasource.data_source_id = datasource.data_source_id
+                this.datasource.asset_id = datasource.asset_id
+                this.datasource.asset_data_source_id = datasource.asset_data_source_id
+                this.datasource.data_source_code = datasource.data_source_code
+                this.datasource.data_source_name = datasource.data_source_name
+                this.datasource.asset_zones = []
+                this.datasource.asset_zones.push(datasource.asset_zone_id)
+                this.datasource.asset_zone_id = datasource.asset_zone_id
             },
             getSpares() {
                 let vm = this;
@@ -1497,6 +1580,28 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            updateSpare(){
+                let vm = this
+                let loader = vm.$loading.show();
+                let uri = { uri: "updateAssetSpare", data: vm.spare };
+                vm.$store
+                    .dispatch("post", uri)
+                    .then(function (response) {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.spare.spare_id = "";
+                        vm.spare.asset_zone_id= "";
+                        vm.spare.asset_spare_id="";
+                        vm.spare.asset_zones = [];
+                        vm.getAssetSpares();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        console.log("error",error)
+                        vm.errors = error.response?.data?.errors;
+                        vm.$store.dispatch("error", error?.response?.data?.message);
+                    });
+            },
             addCheck() {
                 let vm = this;
                 vm.check.asset_id = vm.asset.asset_id;
@@ -1532,7 +1637,29 @@
                         vm.$store.dispatch("success", response.data.message);
                         vm.service.service_id = "";
                         vm.errors = [];
-                        vm.service.asset_zone_id=[];
+                        vm.service.asset_zone_id='';
+                        vm.service.asset_zones=[];
+                        vm.getAssetServices();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            updateService(){
+                let vm = this
+                let loader = vm.$loading.show();
+                let uri = { uri: "updateAssetService", data: vm.service };
+                vm.$store
+                    .dispatch("post", uri)
+                    .then(function (response) {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.service.service_id = "";
+                        vm.service.asset_zone_id= "";
+                        vm.service.asset_service_id = "";
+                        vm.service.asset_zones = [];
                         vm.getAssetServices();
                     })
                     .catch(function (error) {
@@ -1553,13 +1680,36 @@
                         vm.$store.dispatch("success", response.data.message);
                         vm.variable.variable_id = "";
                         vm.errors = [];
-                        vm.variable.asset_zone_id=[];
+                        vm.variable.asset_zone_id='';
+                        vm.variable.asset_zones=[];
                         vm.getAssetVariables();
                     })
                     .catch(function (error) {
                         loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            updateVariable(){
+                let vm = this
+                let loader = vm.$loading.show();
+                let uri = { uri: "updateAssetVariable", data: vm.variable };
+                vm.$store
+                    .dispatch("post", uri)
+                    .then(function (response) {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.variable.variable_id = "";
+                        vm.variable.asset_zone_id= "";
+                        vm.variable.asset_variable_id="";
+                        vm.variable.asset_zones = [];
+                        vm.getAssetVariables();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        console.log("error",error)
+                        vm.errors = error.response?.data?.errors;
+                        vm.$store.dispatch("error", error?.response?.data?.message);
                     });
             },
             addDataSource(){
@@ -1573,13 +1723,36 @@
                         vm.$store.dispatch("success", response.data.message);
                         vm.datasource.data_source_id = "";
                         vm.errors = [];
-                        vm.datasource.asset_zone_id=[];
+                        vm.datasource.asset_zone_id='';
+                        vm.datasource.asset_zones=[];
                         vm.getAssetDataSources();
                     })
                     .catch(function (error) {
                         loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            updateDataSource(){
+                let vm = this
+                let loader = vm.$loading.show();
+                let uri = { uri: "updateAssetDataSource", data: vm.datasource };
+                vm.$store
+                    .dispatch("post", uri)
+                    .then(function (response) {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.datasource.data_source_id = "";
+                        vm.datasource.asset_zone_id= "";
+                        vm.datasource.asset_data_source_id="";
+                        vm.datasource.asset_zones = [];
+                        vm.getAssetDataSources();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        console.log("error",error)
+                        vm.errors = error.response?.data?.errors;
+                        vm.$store.dispatch("error", error?.response?.data?.message);
                     });
             },
             deleteSpare(spare) {
@@ -1603,19 +1776,25 @@
             },
             updateCheck(){
                 let vm = this
+                let loader = vm.$loading.show();
                 // console.log('check:----',check)
                 let uri = { uri: "updateAssetCheck", data: vm.check };
                 vm.$store
                     .dispatch("post", uri)
-                    .then(function () {
+                    .then(function (response) {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
                         vm.check.check_id = "";
                         vm.check.lcl = "";
                         vm.check.ucl = "";
                         vm.check.default_value = "";
+                        vm.check.asset_check_id = "";
                         vm.check.asset_zones = [];
                         vm.getAssetChecks();
                     })
                     .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
