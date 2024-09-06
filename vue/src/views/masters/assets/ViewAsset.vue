@@ -728,7 +728,7 @@
                                     <div class="col-md-5">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
                                         <search
-                                            :class="{ 'is-invalid': errors.variable_id }"
+                                            :class="{ 'is-invalid': errors.data_source_id }"
                                             :customClass="{ 'is-invalid': errors.data_source_id }"
                                             aria-describedby="basic-addon2"
                                             aria-label="Select Data Source"
@@ -1253,26 +1253,55 @@
             },
             toggleAssetZoneStatus(type) 
             {
-                this.asset_zone_status_variables = false;
-                this.asset_zone_status_datasources = false;
-                this.asset_zone_status_spares = false;
-                this.asset_zone_status_checks = false;
-                this.asset_zone_status_services = false;
-                this.asset_zone_status_accessories=false;
+                // this.asset_zone_status_variables = false;
+                // this.asset_zone_status_datasources = false;
+                // this.asset_zone_status_spares = false;
+                // this.asset_zone_status_checks = false;
+                // this.asset_zone_status_services = false;
+                // this.asset_zone_status_accessories=false;
 
                 if (type === 'variables') {
                     this.asset_zone_status_variables = !this.asset_zone_status_variables;
+                    this.asset_zone_status_datasources = false;
+                    this.asset_zone_status_spares = false;
+                    this.asset_zone_status_checks = false;
+                    this.asset_zone_status_services = false;
+                    this.asset_zone_status_accessories=false;
                 } else if (type === 'datasources') {
                     this.asset_zone_status_datasources = !this.asset_zone_status_datasources;
+                    this.asset_zone_status_variables = false;
+                    this.asset_zone_status_spares = false;
+                    this.asset_zone_status_checks = false;
+                    this.asset_zone_status_services = false;
+                    this.asset_zone_status_accessories=false;
                 } else if (type === 'spares') {
-                    console.log("type", type, this.asset_zone_status_spares)
                     this.asset_zone_status_spares = !this.asset_zone_status_spares;
+                    this.asset_zone_status_variables = false;
+                    this.asset_zone_status_datasources = false;
+                    this.asset_zone_status_checks = false;
+                    this.asset_zone_status_services = false;
+                    this.asset_zone_status_accessories=false;
                 } else if (type === 'checks') {
                     this.asset_zone_status_checks = !this.asset_zone_status_checks;
+                    this.asset_zone_status_variables = false;
+                    this.asset_zone_status_datasources = false;
+                    this.asset_zone_status_spares = false;
+                    this.asset_zone_status_services = false;
+                    this.asset_zone_status_accessories=false;
                 } else if (type === 'services') {
                     this.asset_zone_status_services = !this.asset_zone_status_services;
+                    this.asset_zone_status_variables = false;
+                    this.asset_zone_status_datasources = false;
+                    this.asset_zone_status_spares = false;
+                    this.asset_zone_status_checks = false;
+                    this.asset_zone_status_accessories=false;
                 }else if (type === 'accessories') {
                     this.asset_zone_status_accessories = !this.asset_zone_status_accessories;
+                    this.asset_zone_status_variables = false;
+                    this.asset_zone_status_datasources = false;
+                    this.asset_zone_status_spares = false;
+                    this.asset_zone_status_checks = false;
+                    this.asset_zone_status_services = false;
                 }
             },
             getColor(asset_parameter){
@@ -1284,16 +1313,13 @@
 
             },
             editSpare(spare){
-                console.log("spare",spare)
                 this.spare.spare_id = spare.spare_id
                 this.spare.asset_id = spare.asset_id
                 this.spare.asset_spare_id = spare.asset_spare_id
                 this.spare.spare_code = spare.spare_code
                 this.spare.spare_name = spare.spare_name
                 this.spare.asset_zones = []
-                console.log("asset_zone_id111---",spare.asset_zone_id)
                 this.spare.asset_zones.push(spare.asset_zone_id)
-                console.log("asset_zone_id---",this.spare.asset_zone_id)
                 this.spare.asset_zone_id = spare.asset_zone_id
             },
             editCheck(check){
@@ -1565,7 +1591,6 @@
                     .dispatch("post", { uri: "getAssetZones", data: vm.asset })
                     .then((response) => {
                         loader.hide();
-                        console.log("SS", response.data)
                         vm.asset_zones = response.data.data;
                     })
                     .catch(function (error) {
@@ -1615,7 +1640,6 @@
                     })
                     .catch(function (error) {
                         loader.hide();
-                        console.log("error",error)
                         vm.errors = error.response?.data?.errors;
                         vm.$store.dispatch("error", error?.response?.data?.message);
                     });
@@ -1725,7 +1749,6 @@
                     })
                     .catch(function (error) {
                         loader.hide();
-                        console.log("error",error)
                         vm.errors = error.response?.data?.errors;
                         vm.$store.dispatch("error", error?.response?.data?.message);
                     });
@@ -1768,7 +1791,6 @@
                     })
                     .catch(function (error) {
                         loader.hide();
-                        console.log("error",error)
                         vm.errors = error.response?.data?.errors;
                         vm.$store.dispatch("error", error?.response?.data?.message);
                     });
@@ -1795,7 +1817,6 @@
             updateCheck(){
                 let vm = this
                 let loader = vm.$loading.show();
-                // console.log('check:----',check)
                 let uri = { uri: "updateAssetCheck", data: vm.check };
                 vm.$store
                     .dispatch("post", uri)
@@ -1949,11 +1970,8 @@
             addAccessory() {
                 let vm = this;
                 vm.accessory.asset_id = vm.asset.asset_id;
-                console.log("ddd",vm.$refs.attachment)
-                console.log("accceess--",vm.accessory)
                 let loader = vm.$loading.show();
                 const data = new FormData();
-                console.log("sss--",typeof(JSON.stringify(vm.accessory.asset_zone_id)))
                 data.append("asset_id", vm.accessory.asset_id);
                 data.append("asset_zone_id", JSON.stringify(vm.accessory.asset_zone_id));
                 data.append("accessory_type_id", vm.accessory.accessory_type_id);
