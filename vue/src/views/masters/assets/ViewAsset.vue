@@ -252,7 +252,7 @@
                                             <div class="multiselect" v-if="asset_zone_status_checks">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="check.asset_zone_id" style="padding: 2px;" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="check.asset_zones" @click="updateAssetZone($event, check)" style="padding: 2px;" />
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -376,7 +376,7 @@
                                                         <td>{{ check.ucl }}</td>
                                                         <td  style="white-space: normal;">{{ check.default_value }}</td>
                                                         <td class="text-center" v-can="'assetChecks.delete'">
-                                                            <!-- <a href="javascript:void(0)" class="text-success me-2" @click="editCheck(check)"><i class="ri-pencil-line fs-18 lh-1"></i></a> -->
+                                                            <a href="javascript:void(0)" class="text-success me-2" @click="editCheck(check)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteCheck(check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -1103,7 +1103,8 @@
                     ucl:"",
                     default_value:"",
                     asset_check_id:"",
-                    asset_zone_id:[],
+                    asset_zone_id:'',
+                    asset_zones:[],
                 },
                 service: {
                     service_id: "",
@@ -1185,6 +1186,13 @@
 
         },
         methods: {
+            updateAssetZone(event, check) {
+                if(check.asset_check_id){
+                    this.check.asset_zones = []
+                    this.check.asset_zones = [parseInt(event.target.value, 10)]
+                    this.check.asset_zone_id = event.target.value
+                }
+            },
             toggleAssetZoneStatus(type) 
             {
                 this.asset_zone_status_variables = false;
@@ -1218,7 +1226,15 @@
 
             },
             editCheck(check){
-                this.check = check;
+                this.check.asset_id = check.asset_id
+                this.check.asset_check_id = check.asset_check_id
+                this.check.check_id = check.check_id
+                this.check.lcl = check.lcl
+                this.check.ucl = check.ucl
+                this.check.default_value = check.default_value
+                this.check.asset_zones = []
+                this.check.asset_zones.push(check.asset_zone_id)
+                this.check.asset_zone_id = check.asset_zone_id
             },
             getSpares() {
                 let vm = this;
@@ -1596,6 +1612,7 @@
                         vm.check.lcl = "";
                         vm.check.ucl = "";
                         vm.check.default_value = "";
+                        vm.check.asset_zones = [];
                         vm.getAssetChecks();
                     })
                     .catch(function (error) {
