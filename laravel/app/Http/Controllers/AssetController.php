@@ -197,7 +197,8 @@ class AssetController extends Controller
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
     
-        foreach ($request->asset_attributes as $attribute) {
+        foreach ($request->asset_attributes as $attribute) 
+        {
             $fieldValue = $attribute['field_value'] ?? $attribute['asset_attribute_value']['field_value'] ?? null;
     
             if ($fieldValue !== null) {

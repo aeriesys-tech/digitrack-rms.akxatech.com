@@ -53,9 +53,9 @@ class SpareController extends Controller
             'spare_code' => 'required|string|unique:spares,spare_code',
             'spare_name' => 'required|string|unique:spares,spare_name',
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
-            'spare_attributes' => 'required|array',
-            'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
-            'spare_attributes.*.field_value' => 'required|string',
+            'spare_attributes' => 'nullable|array',
+            'spare_attributes.*.spare_attribute_id' => 'nullable|exists:spare_attributes,spare_attribute_id',
+            'spare_attributes.*.field_value' => 'nullable|string',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -133,9 +133,9 @@ class SpareController extends Controller
             'spare_code' => 'required|string|unique:spares,spare_code,' . $request->spare_id . ',spare_id',
             'spare_name' => 'required|string|unique:spares,spare_name,' . $request->spare_id . ',spare_id',
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
-            'spare_attributes' => 'required|array',
-            'spare_attributes.*.spare_attribute_id' => 'required|exists:spare_attributes,spare_attribute_id',
-            'spare_attributes.*.spare_attribute_value.field_value' => 'required|string',
+            'spare_attributes' => 'nullable|array',
+            'spare_attributes.*.spare_attribute_id' => 'nullable|exists:spare_attributes,spare_attribute_id',
+            'spare_attributes.*.spare_attribute_value.field_value' => 'nullable|string',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);

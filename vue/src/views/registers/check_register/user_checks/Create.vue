@@ -33,7 +33,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label">Reference Date</label><span class="text-danger"> *</span>
                                     <input
                                         type="date"
@@ -46,7 +46,7 @@
                                     />
                                     <span v-if="errors.reference_date" class="invalid-feedback">{{ errors.reference_date[0] }}</span>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <search
                                         :disabled="!status"
@@ -59,10 +59,27 @@
                                         placeholder="Select Asset"
                                         :data="assets"
                                         @input=" asset => user_check.asset_id = asset"
-                                        @selectsearch="getAssetChecks(user_check.asset_id)"
+                                        @selectsearch="getAssetZones(user_check.asset_id)"
                                     >
                                     </search>
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Asset Zone</label>
+                                    <search
+                                        :disabled="!status"
+                                        :class="{ 'is-invalid': errors.asset_zone_id }"
+                                        :customClass="{ 'is-invalid': errors.asset_zone_id }"
+                                        :initialize="user_check.asset_zone_id"
+                                        id="asset_zone_id"
+                                        label="zone_name"
+                                        placeholder="Select Asset Zone"
+                                        :data="asset_zones"
+                                        @input=" zone => user_check.asset_zone_id = zone"
+                                        @selectsearch="getAssetChecks(user_check.asset_zone_id)"
+                                    >
+                                    </search>
+                                    <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Note</label>
@@ -154,12 +171,14 @@ export default {
                 reference_no:'',
                 reference_date:'',
                 note:'',
+                asset_zone_id:"",
                 status:'',
                 asset_checks:[],
             },
             assets: [],
             status:true,
             asset_checks:[],
+            asset_zones:[],
             errors:[]
         }
     },
@@ -206,12 +225,13 @@ export default {
                 vm.$store.dispatch("error", error.response.data.message);
             });
         },
-        getAssetChecks(asset_id){
+        getAssetChecks(){
             let vm = this;
             vm.asset_checks=[];
             let loader = vm.$loading.show();
+            vm.user_check.asset_checks = []
             vm.$store
-            .dispatch("post", { uri: "getAssetChecks", data:{asset_id : asset_id} })
+            .dispatch("post", { uri: "getAssetRegisterChecks", data:vm.user_check })
             .then((response) => {
                 loader.hide();
                 // vm.assets = response.data.data;
@@ -269,6 +289,24 @@ export default {
                     loader.hide();
                     this.$store.dispatch('success',response.data.message);
                     vm.$router.push("/user_checks");
+                })
+                .catch(function (error) {
+                    loader.hide();
+                    vm.errors = error.response.data.errors;
+                    vm.$store.dispatch("error", error.response.data.message);
+                });
+        },
+        getAssetZones() {
+            let vm = this;
+            let loader = vm.$loading.show();
+            vm.$store
+                .dispatch("post", { uri: "getAssetZones", data: vm.user_check })
+                .then((response) => {
+                    loader.hide();
+                    vm.asset_zones = response.data.data;
+                    if(!vm.asset_zones.length){
+                        vm.getAssetChecks()
+                    }
                 })
                 .catch(function (error) {
                     loader.hide();

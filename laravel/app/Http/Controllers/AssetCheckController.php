@@ -137,6 +137,23 @@ class AssetCheckController extends Controller
         return AssetCheckResource::collection($asset_check);
     }
 
+    public function getAssetRegisterChecks(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id',
+            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id'
+        ]);
+        $query = AssetCheck::query();
+
+        if (isset($request->asset_zone_id)) 
+        {
+            $query->where('asset_zone_id', $request->asset_zone_id);
+        }
+
+        $asset_check = $query->where('asset_id', $request->asset_id)->get();
+        return AssetCheckResource::collection($asset_check);
+    }
+
     public function updateAssetCheck(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;

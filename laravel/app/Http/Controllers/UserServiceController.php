@@ -125,6 +125,16 @@ class UserServiceController extends Controller
 
     public function updateUserService(Request $request)
     {
+        $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
+        if ($assetZone) {
+            $request->validate([
+                'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+            ]);
+        } 
+        else {
+            $data['asset_zone_id'] = $request->input('asset_zone_id', null);
+        }
+        
         $data = $request->validate([
             'user_service_id' => 'required|exists:user_services,user_service_id',
             'service_id' => 'required|exists:services,service_id',

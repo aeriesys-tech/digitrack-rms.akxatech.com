@@ -227,6 +227,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetCheck',[AssetCheckController::class, 'deleteAssetCheck']);
     Route::post('forceDeleteAssetCheck',[AssetCheckController::class, 'forceDeleteAssetCheck']);
     Route::post('deviationAssetChecks',[AssetCheckController::class, 'deviationAssetChecks']);
+    Route::post('getAssetRegisterChecks',[AssetCheckController::class, 'getAssetRegisterChecks']);
 
     Route::post('paginateAssetVariables',[AssetVariableController::class, 'paginateAssetVariables']);
     Route::post('getAssetVariables',[AssetVariableController::class, 'getAssetVariables']);

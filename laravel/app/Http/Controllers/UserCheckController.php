@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Aws\S3\S3Client;
+use App\Models\AssetZone;
 
 class UserCheckController extends Controller
 {
@@ -55,9 +56,20 @@ class UserCheckController extends Controller
 
     public function addUserCheck(Request $request)
     {
+        $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
+        if ($assetZone) {
+            $request->validate([
+                'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+            ]);
+        } 
+        else {
+            $data['asset_zone_id'] = $request->input('asset_zone_id', null);
+        }
+
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'reference_date' => 'required|date',
+            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'note' => 'nullable|sometimes',
             'attachments.*' => 'nullable'
         ]);
@@ -120,6 +132,7 @@ class UserCheckController extends Controller
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'reference_date' => 'required|date',
+            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'note' => 'nullable|sometimes'
         ]);
         

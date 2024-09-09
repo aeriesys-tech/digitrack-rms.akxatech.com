@@ -27,7 +27,10 @@ class SpareAttributeResource extends JsonResource
             'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'spare_attribute_types' => SpareAttributeTypeResource::collection($this->SpareAttributeTypes),
             'status' => $this->deleted_at?false:true,
-            'spare_types' => $spare_types
+            'spare_types' => $spare_types,
+            'spare_attribute' => [
+                "field_value" => null
+            ]
         ];
     }
 }

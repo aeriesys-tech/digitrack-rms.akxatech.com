@@ -15,7 +15,8 @@ class UserCheck extends Model
         'asset_id',
         'reference_no',
         'reference_date',
-        'note'
+        'note',
+        'asset_zone_id'
     ];
 
     protected $primaryKey = 'user_check_id';
@@ -43,5 +44,10 @@ class UserCheck extends Model
     public function UserCheckAttachment()
     {
         return $this->hasMany(UserCheckAttachment::class, 'user_check_id','user_check_id');
+    }
+
+    public function AssetZone()
+    {
+        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
     }
 }
