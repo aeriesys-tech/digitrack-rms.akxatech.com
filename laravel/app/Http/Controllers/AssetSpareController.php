@@ -133,10 +133,18 @@ class AssetSpareController extends Controller
     public function getAssetServiceSpares(Request $request)
     {
         $request->validate([
-            'asset_id' => 'required|exists:assets,asset_id'
+            'asset_id' => 'required|exists:assets,asset_id',
+            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
-        $spare_ids = AssetSpare::where('asset_id', $request->asset_id)->get('spare_id')->toArray();
+
+        $query = AssetSpare::where('asset_id', $request->asset_id);
+        if ($request->has('asset_zone_id') && $request->asset_zone_id !== null) {
+            $query->where('asset_zone_id', $request->asset_zone_id);
+        }
+
+        $spare_ids = $query->pluck('spare_id')->toArray();
         $asset_spare = Spare::whereIn('spare_id', $spare_ids)->get();
+
         return $asset_spare;
     }
 

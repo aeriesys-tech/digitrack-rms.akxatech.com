@@ -9,6 +9,7 @@ use App\Http\Resources\UserServiceResource;
 use App\Http\Resources\UserServicePendingResource;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\AssetZone;
 
 class UserServiceController extends Controller
 {
@@ -55,37 +56,18 @@ class UserServiceController extends Controller
         return UserServiceResource::collection($user_service);
     }
 
-    // public function addUserService(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'service_id' => 'required|exists:services,service_id',
-    //         'service_cost' => 'nullable|sometimes',
-    //         'asset_id' => 'required|exists:assets,asset_id',
-    //         'service_date' => 'required',
-    //         'next_service_date' => 'nullable|sometimes',
-    //         'note' => 'nullable|sometimes',
-    //         'is_latest' => 'nuulable|sometimes|boolean'
-    //     ]);
-
-    //     $data['service_no'] = $this->generateServiceNo();
-    //     $data['plant_id'] = Auth::User()->plant_id;
-    //     $data['user_id'] =  Auth::User()->user_id;
-
-    //     $service = UserService::create($data);
-
-    //     foreach($request->user_spares as $spare) 
-    //     {
-    //         UserSpare::create([
-    //             'user_service_id' => $service->user_service_id,
-    //             'spare_id' => $spare['spare_id'],
-    //             'spare_cost' => $spare['spare_cost']
-    //         ]);
-    //     }
-    //     return response()->json(['message' => 'UserService created successfully'], 201);
-    // }
-
     public function addUserService(Request $request)
     {
+        $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
+        if ($assetZone) {
+            $request->validate([
+                'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+            ]);
+        } 
+        else {
+            $data['asset_zone_id'] = $request->input('asset_zone_id', null);
+        }
+
         $data = $request->validate([
             'service_id' => 'required|exists:services,service_id',
             'service_cost' => 'nullable|sometimes',
@@ -124,7 +106,6 @@ class UserServiceController extends Controller
 
         return response()->json(['message' => 'UserService created successfully'], 201);
     }
-
 
     public function getUserService(Request $request)
     {

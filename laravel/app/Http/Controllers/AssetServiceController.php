@@ -122,15 +122,26 @@ class AssetServiceController extends Controller
         return new AssetServiceResource($asset_service);
     }
 
+
     public function getAssetsServices(Request $request)
     {
         $request->validate([
-            'asset_id' => 'required|exists:assets,asset_id'
+            'asset_id' => 'required|exists:assets,asset_id',
+            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
-        $service_ids = AssetService::where('asset_id', $request->asset_id)->get('service_id')->toArray();
-        $asset_service = Service::whereIn('service_id', $service_ids)->get();
-        return $asset_service;
+
+        $query = AssetService::where('asset_id', $request->asset_id);
+
+        if ($request->has('asset_zone_id') && $request->asset_zone_id !== null) {
+            $query->where('asset_zone_id', $request->asset_zone_id);
+        }
+
+        $service_ids = $query->pluck('service_id')->toArray();
+        $asset_services = Service::whereIn('service_id', $service_ids)->get();
+
+        return response()->json($asset_services);
     }
+
 
     public function getAssetServices()
     {
