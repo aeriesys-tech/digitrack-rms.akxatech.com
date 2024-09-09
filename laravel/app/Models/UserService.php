@@ -16,6 +16,7 @@ class UserService extends Model
         'service_no',
         'service_cost',
         'asset_id',
+        'asset_zone_id',
         'service_date',
         'next_service_date',
         'note',
@@ -47,5 +48,10 @@ class UserService extends Model
     public function Asset()
     {
         return $this->belongsTo(Asset::class, 'asset_id');
+    }
+
+    public function AssetZone()
+    {
+        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
     }
 }

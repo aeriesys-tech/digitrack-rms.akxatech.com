@@ -23,6 +23,8 @@ class UserServiceResource extends JsonResource
             'user_spares' => UserSpareResource::collection($this->UserSpare),
             'asset_id' => $this->asset_id,
             'asset' => new AssetResource($this->Asset),
+            'asset_zone_id' => $this->asset_zone_id,
+            'asset_zone' => new AssetZoneResource($this->AssetZone),
             'service_date' => $this->service_date,
             'next_service_date' => $this->next_service_date,
             'note' => $this->note,
