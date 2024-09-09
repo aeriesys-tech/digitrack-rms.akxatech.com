@@ -76,6 +76,21 @@
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
+                                    <label class="form-label">Asset Zone</label>
+                                    <search
+                                        :class="{ 'is-invalid': errors.asset_zone_id }"
+                                        :customClass="{ 'is-invalid': errors.asset_zone_id }"
+                                        :initialize="user_service.asset_zone_id"
+                                        id="asset_zone_id"
+                                        label="zone_name"
+                                        placeholder="Select Asset Zone"
+                                        :data="asset_zones"
+                                        @input=" zone => user_service.asset_zone_id = zone"
+                                    >
+                                    </search>
+                                    <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
                                     <label class="form-label">Service</label><span class="text-danger"> *</span>
                                     <search
                                         :class="{ 'is-invalid': errors.service_id }"
@@ -187,6 +202,7 @@
                     service_cost: "",
                     next_service_date: "",
                     service_id: "",
+                    asset_zone_id:"",
                     note: "",
                     user_spares: [],
                     deleted_user_spares: [],
@@ -206,14 +222,19 @@
                 services: [],
                 spares: [],
                 errors: [],
+                asset_zones:[],
                 status: true,
             };
         },
 
         watch:{
             'user_service.asset_id': function(){
-                this.getSpares();
-                this.getServices();
+                this.getAssetZones();
+            },
+            
+            'user_service.asset_zone_id': function(){
+               this.getServices();
+               this.getSpares();
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -304,6 +325,25 @@
                     .then((response) => {
                         loader.hide();
                         vm.spares = response.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getAssetZones() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getAssetZones", data: vm.user_service })
+                    .then((response) => {
+                        loader.hide();
+                        vm.asset_zones = response.data.data;
+                        if(!vm.asset_zones.length){
+                            vm.getServices()
+                            vm.getSpares()
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();

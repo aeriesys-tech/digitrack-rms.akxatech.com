@@ -11,7 +11,7 @@
                             @keydown.up="onUpKey" @keydown.down="onDownKey" @keydown.enter="onEnterKey">
                     </div>
                     <table class="table table-responsive-sm table-bordered table-striped table-sm search-list"
-                        v-if="results.length">
+                        v-if="results?.length">
                         <tbody>
                             <tr class="search-item" v-for="(result, index) in results" @mousedown.prevent="select(result)"
                                 @mouseover.prevent="onMouse(index)"
