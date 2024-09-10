@@ -55,7 +55,7 @@ class ServiceController extends Controller
             'service_type_id' => 'required|exists:service_type,service_type_id',
             'service_attributes' => 'required|array',
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
-            'service_attributes.*.field_value' => 'required',
+            'service_attributes.*.service_attribute_value.field_value' => 'required',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -76,7 +76,7 @@ class ServiceController extends Controller
             ServiceAttributeValue::create([
                 'service_id' => $service->service_id,
                 'service_attribute_id' => $attribute['service_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
+                'field_value' => $attribute['service_attribute_value']['field_value'] ?? '',
             ]);
         }      
         return response()->json(["message" => "Service Created Successfully"]);
@@ -97,18 +97,6 @@ class ServiceController extends Controller
         $request->validate([
             'service_id' => 'required|exists:services,service_id'
         ]);
-
-        $service_attribute_value = ServiceAttributeValue::where('service_id', $request->service_id)->get('service_attribute_id');
-        $service_attribute_initial = ServiceAttribute::whereNotIn('service_attribute_id', $service_attribute_value)->get();
-
-        foreach ($service_attribute_initial as $service) 
-        {
-            ServiceAttributeValue::create([
-                'service_id' => $request->service_id,
-                'service_attribute_id' => $service['service_attribute_id'],
-                'field_value' => $service['field_value'] ?? '',
-            ]);
-        }
 
         $service = Service::where('service_id',$request->service_id)->first();
         return new ServiceResource($service);
@@ -138,7 +126,8 @@ class ServiceController extends Controller
             'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
             'service_attributes.*.service_attribute_value.field_value' => 'required|string',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'deleted_service_attribute_values' => 'nullable'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -153,6 +142,11 @@ class ServiceController extends Controller
                 'service_id' => $service->service_id,
                 'asset_type_id' => $asset_type,
             ]);
+        }
+
+        if($request->deleted_service_attribute_values > 0)
+        {
+            ServiceAttributeValue::whereIn('service_attribute_value_id', $request->deleted_service_attribute_values)->forceDelete();
         }
     
         foreach ($request->service_attributes as $attribute) 

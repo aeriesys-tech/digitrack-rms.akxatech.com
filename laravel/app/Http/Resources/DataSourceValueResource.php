@@ -21,6 +21,12 @@ class DataSourceValueResource extends JsonResource
         $data_source_attribute_value = DataSourceAttributeValue::where('data_source_id', $this->dataSourceId)
             ->where('data_source_attribute_id', $this->data_source_attribute_id)->first();
 
+        if(!$data_source_attribute_value){
+            $data_source_attribute_value = [
+                'field_value' => null
+            ];
+        }   
+
         return [
             'data_source_attribute_id' => $this->data_source_attribute_id,
         	'field_name' => $this->field_name,

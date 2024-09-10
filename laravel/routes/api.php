@@ -50,6 +50,7 @@ use App\Http\Controllers\ServiceAttributeValueController;
 use App\Http\Controllers\SpareAttributeValueController;
 use App\Http\Controllers\ListParameterController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\UserVariableController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -236,6 +237,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateAssetVariable',[AssetVariableController::class, 'updateAssetVariable']);
     Route::post('deleteAssetVariable',[AssetVariableController::class, 'deleteAssetVariable']);
     Route::post('getAssetTypeVariables',[AssetVariableController::class, 'getAssetTypeVariables']);
+    Route::post('getAssetRegisterVariables',[AssetVariableController::class, 'getAssetRegisterVariables']);
 
     Route::post('paginateAssetDataSources',[AssetDataSourceController::class, 'paginateAssetDataSources']);
     Route::post('getAssetDataSources',[AssetDataSourceController::class, 'getAssetDataSources']);
@@ -421,4 +423,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getLocations',[CampaignController::class, 'getLocations']);
     Route::post('addCampaign',[CampaignController::class, 'addCampaign']);
     Route::post('campaignResultImages',[CampaignController::class, 'campaignResultImages']);
+
+    Route::post('paginateUserVariables',[UserVariableController::class, 'paginateUserVariables']);
+    Route::post('addUserVariable',[UserVariableController::class, 'addUserVariable']);
+    Route::post('updateUserVariable',[UserVariableController::class, 'updateUserVariable']);
+    Route::post('getUserVariable',[UserVariableController::class, 'getUserVariable']);
+    Route::post('deleteUserVariable',[UserVariableController::class, 'deleteUserVariable']);
 });

@@ -27,7 +27,10 @@ class ServiceAttributeResource extends JsonResource
             'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'service_attribute_types' => ServiceAttributeTypeResource::collection($this->ServiceAttributeTypes),
             'status' => $this->deleted_at?false:true,
-            'service_types' => $service_types
+            'service_types' => $service_types,
+            'service_attribute_value' => [
+                "field_value" => null
+            ]
         ];
     }
 }

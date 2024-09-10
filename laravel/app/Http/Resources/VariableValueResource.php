@@ -20,6 +20,11 @@ class VariableValueResource extends JsonResource
     {
         $variable_attribute_value = VariableAttributeValue::where('variable_id', $this->variableId)
             ->where('variable_attribute_id', $this->variable_attribute_id)->first();
+        if(!$variable_attribute_value){
+            $variable_attribute_value = [
+                'field_value' => null
+            ];
+        }
 
         return [
             'variable_attribute_id' => $this->variable_attribute_id,

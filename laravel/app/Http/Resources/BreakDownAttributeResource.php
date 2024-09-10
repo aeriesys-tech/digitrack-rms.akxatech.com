@@ -27,7 +27,10 @@ class BreakDownAttributeResource extends JsonResource
             'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'break_down_attribute_types' => BreakDownAttributeTypeResource::collection($this->BreakDownAttributeTypes),
             'status' => $this->deleted_at?false:true,
-            'break_down_types' => $break_down_types
+            'break_down_types' => $break_down_types,
+            'break_down_attribute_value' => [
+                "field_value" => null
+            ]
         ];
     }
 }

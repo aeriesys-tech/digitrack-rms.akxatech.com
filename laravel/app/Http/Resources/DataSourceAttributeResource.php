@@ -27,7 +27,10 @@ class DataSourceAttributeResource extends JsonResource
             'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'data_source_attribute_types' => DataSourceAttributeTypeResource::collection($this->DataSourceAttributeTypes),
             'status' => $this->deleted_at?false:true,
-            'data_source_types' => $data_source_types
+            'data_source_types' => $data_source_types,
+            'data_source_attribute_value' => [
+                "field_value" => null
+            ]
         ];
     }
 }

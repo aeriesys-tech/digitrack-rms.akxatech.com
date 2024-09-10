@@ -57,7 +57,7 @@ class BreakDownListController extends Controller
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
             'break_down_attributes' => 'required|array',
             'break_down_attributes.*.break_down_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'break_down_attributes.*.field_value' => 'required|string',
+            'break_down_attributes.*.break_down_attribute_value.field_value' => 'nullable|string',
         ]);
         
         $break_down_list = BreakDownList::create($data);
@@ -74,7 +74,7 @@ class BreakDownListController extends Controller
             BreakDownAttributeValue::create([
                 'break_down_list_id' => $break_down_list->break_down_list_id,
                 'break_down_attribute_id' => $attribute['break_down_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
+                'field_value' => $attribute['break_down_attribute_value']['field_value'] ?? '',
             ]);
         }            
         return response()->json(["message" => "BreakDownList Created Successfully"]);  
@@ -95,18 +95,6 @@ class BreakDownListController extends Controller
         $request->validate([
             'break_down_list_id' => 'required|exists:break_down_lists,break_down_list_id'
         ]);
-
-        $breakdown_attribute_value = BreakDownAttributeValue::where('break_down_list_id', $request->break_down_list_id)->get('break_down_attribute_id');
-        $breakdown_attribute_initial = BreakDownAttribute::whereNotIn('break_down_attribute_id', $breakdown_attribute_value)->get();
-
-        foreach ($breakdown_attribute_initial as $break_down) 
-        {
-            BreakDownAttributeValue::create([
-                'break_down_list_id' => $request->break_down_list_id,
-                'break_down_attribute_id' => $break_down['break_down_attribute_id'],
-                'field_value' => $break_down['field_value'] ?? '',
-            ]);
-        }
 
         $break_down = BreakDownList::where('break_down_list_id',$request->break_down_list_id)->first();
         return new BreakDownListResource($break_down);

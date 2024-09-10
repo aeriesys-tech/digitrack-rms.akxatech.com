@@ -57,7 +57,7 @@ class DataSourceController extends Controller
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
             'data_source_attributes' => 'required|array',
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
-            'data_source_attributes.*.field_value' => 'required',
+            'data_source_attributes.*.data_source_attribute_value.field_value' => 'required',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -78,7 +78,7 @@ class DataSourceController extends Controller
             DataSourceAttributeValue::create([
                 'data_source_id' => $data_source->data_source_id,
                 'data_source_attribute_id' => $attribute['data_source_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
+                'field_value' => $attribute['data_source_attribute_value']['field_value'] ?? '',
             ]);
         }
           
@@ -100,18 +100,6 @@ class DataSourceController extends Controller
         $request->validate([
             'data_source_id' => 'required|exists:data_sources,data_source_id'
         ]);
-
-        $datasource_attribute_value = DataSourceAttributeValue::where('data_source_id', $request->data_source_id)->get('data_source_attribute_id');
-        $datasource_attribute_initial = DataSourceAttribute::whereNotIn('data_source_attribute_id', $datasource_attribute_value)->get();
-
-        foreach ($datasource_attribute_initial as $data_source) 
-        {
-            DataSourceAttributeValue::create([
-                'data_source_id' => $request->data_source_id,
-                'data_source_attribute_id' => $data_source['data_source_attribute_id'],
-                'field_value' => $data_source['field_value'] ?? '',
-            ]);
-        }
 
         $data_source = DataSource::where('data_source_id',$request->data_source_id)->first();
         return new DataSourceResource($data_source);
@@ -141,7 +129,8 @@ class DataSourceController extends Controller
             'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
             'data_source_attributes.*.data_source_attribute_value.field_value' => 'required',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'deleted_data_source_attribute_values' => 'nullable'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -156,6 +145,11 @@ class DataSourceController extends Controller
                 'data_source_id' => $data_source->data_source_id,
                 'asset_type_id' => $asset_type_id
             ]);
+        }
+
+        if($request->deleted_data_source_attribute_values > 0)
+        {
+            DataSourceAttributeValue::whereIn('data_source_attribute_value_id', $request->deleted_data_source_attribute_values)->forceDelete();
         }
     
         foreach ($request->data_source_attributes as $attribute) 

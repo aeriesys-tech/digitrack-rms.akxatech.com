@@ -20,6 +20,11 @@ class ServiceValueResource extends JsonResource
     {
         $service_attribute_value = ServiceAttributeValue::where('service_id', $this->serviceId)
             ->where('service_attribute_id', $this->service_attribute_id)->first();
+        if(!$service_attribute_value){
+            $service_attribute_value = [
+                'field_value' => null
+            ];
+        }    
 
         return [
             'service_attribute_id' => $this->service_attribute_id,
