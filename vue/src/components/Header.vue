@@ -1,7 +1,7 @@
 <template>
 	
     <div class="header-main px-3 px-lg-4">
-		<a id="menuSidebar" href="#" class="menu-link me-3 me-lg-4"><i class="ri-menu-2-fill"></i></a>
+		<a id="menuSidebar" href="javascript:void(0)" class="menu-link me-3 me-lg-4"><i class="ri-menu-2-fill"></i></a>
 		<div class="me-auto">
 			<h4 class="mt-1 text-dark">Refractory Management System</h4>
             <!-- <h4 class="mt-2 text-dark">{{ $store.getters?.user?.plant?.plant_name}}</h4> -->
@@ -9,7 +9,7 @@
 		</div>
 
 		<div class="dropdown dropdown-profile ms-3 ms-xl-4 mt-4">
-            <a href="#" class="dropdown-link d-flex" data-bs-toggle="dropdown" aria-expanded="false" >
+            <a href="javascript:void(0)" class="dropdown-link d-flex" data-bs-toggle="dropdown" aria-expanded="false" >
 				<div class="text-end me-2">
 				<h5 class=" mb-0 text-dark">{{ $store.getters?.user?.name}}</h5>
 				<p class="fs-sm text-secondary">{{ $store.getters.user.role?.role }}</p>
