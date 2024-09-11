@@ -2293,7 +2293,7 @@
   }
 
   .p-multiselect {
-    display: inline-flex;
+    display: inline-flex!important;
     cursor: pointer;
     user-select: none;
   }
@@ -2368,6 +2368,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding:0.5rem 1rem 0.25rem 1rem;
   }
 
   .p-multiselect-filter-container {
@@ -2400,10 +2401,10 @@
   }
 
   .p-multiselect {
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
-    border-radius: 6px;
+    background: #ffffff!important;
+    border: 1px solid #d1d5db!important;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s!important;
+    border-radius: 6px!important;
     outline-color: transparent;
   }
   .p-multiselect:not(.p-disabled):hover {
@@ -2497,7 +2498,7 @@
   .p-multiselect-panel .p-multiselect-header .p-multiselect-close:enabled:hover {
     color: #374151;
     border-color: transparent;
-    background: #f3f4f6;
+    background: #f3f4f6!important;
   }
   .p-multiselect-panel .p-multiselect-header .p-multiselect-close:focus-visible {
     outline: 0 none;

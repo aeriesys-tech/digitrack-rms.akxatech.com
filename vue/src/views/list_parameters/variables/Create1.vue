@@ -9,22 +9,22 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Masters</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page"><router-link to="/data_sources">Data Sources</router-link></li>
-                    <li class="breadcrumb-item " aria-current="page" v-if="status">New Data Source</li>
-                    <li class="breadcrumb-item active" aria-current="page" v-else>Update Data Source</li>
+                    <li class="breadcrumb-item active" aria-current="page"><router-link to="/variables">Variables</router-link></li>
+                    <li class="breadcrumb-item " aria-current="page" v-if="status">New Variable</li>
+                    <li class="breadcrumb-item active" aria-current="page" v-else>Update Variable</li>
                 </ol>
-                <h4 class="main-title mb-0">Data Sources</h4>
-            </div>
-            <router-link to="/data_sources" type="submit" class="btn btn-primary" style="float: right;"><i
-                class="ri-list-check"></i> DATA SOURCES</router-link>
-    </div> 
+                <h4 class="main-title mb-0">Variables</h4>
+            </div> 
+            <router-link to="/variables" type="submit" class="btn btn-primary" style="float: right;"><i
+                class="ri-list-check"></i> VARIABLES</router-link>
+    </div>
         <div class="row g-2">
             <div class="col-12" >
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add Data Source</h6>
-                            <h6 class="card-title" v-else>Update Data Source</h6>
+                            <h6 class="card-title" v-if="status">Add Variable</h6>
+                            <h6 class="card-title" v-else>Update Variable</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
@@ -42,7 +42,7 @@
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
                                                 <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="data_source.asset_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="variable.asset_types" style="padding: 2px;" />
                                                     <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
                                                 </li>
                                             </ul>
@@ -50,41 +50,43 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Data Source Types</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Variable Types</label><span class="text-danger"> *</span>
                                     <search
-                                        :class="{ 'is-invalid': errors.data_source_type_id }"
-                                        :customClass="{ 'is-invalid': errors.data_source_type_id }"
-                                        :initialize="data_source.data_source_type_id"
-                                        id="data_source_type_id"
-                                        label="data_source_type_name"
-                                        placeholder="Select Data Source Type"
-                                        :data=" data_source_types"
-                                        @input=" data_source_type => data_source.data_source_type_id = data_source_type"
-                                        @selectsearch="getDataSourceTypeFields(data_source.data_source_type_id)"
+                                        :class="{ 'is-invalid': errors.variable_type_id }"
+                                        :customClass="{ 'is-invalid': errors.variable_type_id }"
+                                        :initialize="variable.variable_type_id"
+                                        id="variable_type_id"
+                                        label="variable_type_name"
+                                        placeholder="Select Variable Type"
+                                        :data=" variable_types"
+                                        @input=" variable_type => variable.variable_type_id = variable_type"
+                                        @selectsearch="getVariableTypeFields(variable.variable_type_id)"
                                     >
                                     </search>
-                                    <span v-if="errors.data_source_type_id"><small class="text-danger">{{ errors.data_source_type_id[0] }}</small></span>
+                                    <span v-if="errors.variable_type_id"><small class="text-danger">{{ errors.variable_type_id[0] }}</small></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Data Source Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Data Source Code" class="form-control" :class="{ 'is-invalid': errors.data_source_code }" v-model="data_source.data_source_code"/>
-                                    <span v-if="errors.data_source_code" class="invalid-feedback">{{ errors.data_source_code[0] }}</span>
+                                    <label class="form-label">Variable Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Variable Code" class="form-control" :class="{ 'is-invalid': errors.variable_code }" v-model="variable.variable_code"/>
+                                    <span v-if="errors.variable_code" class="invalid-feedback">{{ errors.variable_code[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Data Source Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Data Source Name" class="form-control" :class="{ 'is-invalid': errors.data_source_name }" v-model="data_source.data_source_name"/>
-                                    <span v-if="errors.data_source_name" class="invalid-feedback">{{ errors.data_source_name[0] }}</span>
+                                    <label class="form-label">Variable Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Variable Name" class="form-control" :class="{ 'is-invalid': errors.variable_name }" v-model="variable.variable_name"/>
+                                    <span v-if="errors.variable_name" class="invalid-feedback">{{ errors.variable_name[0] }}</span>
                                 </div>
-                                <div class="col-md-4" v-for="field, key in data_source.data_source_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in show_variables" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value" />
+                                        <input v-if="field.variable_attribute_value" type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @blur="updateVariableParameters(field)" />
+                                        <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateVariableParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value" />
+                                        <input v-if="field.variable_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @blur="updateVariableParameters(field)" />
+                                        <input v-else type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateVariableParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -93,7 +95,8 @@
                                             {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value" />
+                                        <input v-if="field.variable_attribute_value"  type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @blur="updateVariableParameters(field)" />
+                                        <input v-else type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateVariableParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
                                         </span>
@@ -104,12 +107,22 @@
                                             {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input
+                                        <input v-if="field.variable_attribute_value"
                                             type="datetime-local" 
                                             class="form-control" 
                                             :placeholder="'Enter ' + field.display_name" 
                                             :class="{'is-invalid': errors[field.display_name]}" 
-                                            v-model="field.data_source_attribute_value.field_value" 
+                                            v-model="field.variable_attribute_value.field_value" 
+                                            @blur="updateVariableParameters(field)" 
+                                            step="1" 
+                                        />
+                                        <input v-else
+                                            type="datetime-local" 
+                                            class="form-control" 
+                                            :placeholder="'Enter ' + field.display_name" 
+                                            :class="{'is-invalid': errors[field.display_name]}" 
+                                            v-model="field.field_value" 
+                                            @blur="updateVariableParameters(field)" 
                                             step="1" 
                                         />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
@@ -119,23 +132,30 @@
 
                                     <div v-if="field.field_type=='Dropdown'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <select class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value">
-                                            <option :value="field.data_source_attribute_value.field_value" v-if="field.data_source_attribute_value.field_value">{{field.data_source_attribute_value.field_value}}</option>
-                                            <option :value="field.data_source_attribute_value.field_value" v-else>Select {{field.display_name}}</option>
+                                        <select v-if="field.variable_attribute_value" class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @change="updateVariableParameters(field)">
+                                            <option value="">Select {{field.display_name}}</option>
+                                            <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                        </select>
+                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateVariableParameters(field)">
+                                            <option :value="field.field_value">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     <div v-if="field.field_type=='Color'">
                                         <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
-                                            <input type="color" class="form-control" v-model="field.data_source_attribute_value.field_value" style="height: 2.2rem;"/>
+                                            <input v-if="field.variable_attribute_value" type="color" class="form-control" v-model="field.variable_attribute_value.field_value" @change="updateVariableParameters(field)" style="height: 2.2rem;"/>
+                                            <input v-else type="color" class="form-control" v-model="field.field_value" @change="updateVariableParameters(field)" style="height: 2.2rem;"/>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     <div v-if="field.field_type=='List'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <select class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value">
-                                            <option :value="field.data_source_attribute_value.field_value" v-if="field.data_source_attribute_value.field_value">{{field.data_source_attribute_value.field_value}}</option>
-                                            <option :value="field.data_source_attribute_value.field_value" v-else>Select {{field.display_name}}</option>
+                                        <select v-if="field.variable_attribute_value" class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @change="updateVariableParameters(field)">
+                                            <option value="">Select {{field.display_name}}</option>
+                                            <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                        </select>
+                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateVariableParameters(field)">
+                                            <option :value="field.field_value">Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
@@ -165,24 +185,22 @@ export default {
     },
     data() {
         return {
-            data_sources: [],
-            data_source: {
-                data_source_id: '',
-                data_source_type_id: '',
-                data_source_code: '',
-                data_source_name: '',
-                data_source_attributes:[],
+            variables: [],
+            variable: {
+                variable_id: '',
+                variable_type_id: '',
+                variable_code: '',
+                variable_name: '',
+                variable_attributes:[],
                 asset_types:[],
                 frequency_id:'',
-                deleted_data_source_attribute_values: [],
             },
             status: true,
             errors: [],
-            deleted_data_source_attribute_values: [],
-            data_source_types: [],
+            variable_types: [],
             asset_types:[],
             frequencies:[],
-            show_data_sources:[],
+            show_variables:[],
             asset_type_status:false,
         }
     },
@@ -190,19 +208,16 @@ export default {
     beforeRouteEnter(to, from, next) {
             next((vm) => {
                 vm.getAssetTypes();
-                if (to.name == "DataSources.Create") {
+                if (to.name == "Variables.Create") {
                     // vm.$refs.asset_name.focus();
                 } else {
                     vm.status = false;
-                    let uri = { uri: "getDataSourceData", data: { data_source_id: to.params.data_source_id } };
+                    let uri = { uri: "getVariableData", data: { variable_id: to.params.variable_id } };
                     vm.$store
                         .dispatch("post", uri)
                         .then(function (response) {
-                            vm.data_source = response.data.data;
-                            vm.data_source.data_source_attributes.map(function (element) {
-                                vm.deleted_data_source_attribute_values.push(element.data_source_attribute_value.data_source_attribute_value_id);
-                            });
-                            vm.data_source.deleted_data_source_attribute_values = [];
+                            vm.variable = response.data.data;
+                            vm.show_variables  = response.data.data?.variable_attributes
                         })
                         .catch(function (error) {
                             vm.errors = error.response.data.errors;
@@ -219,52 +234,21 @@ export default {
         submitForm() {
             let vm = this;
             if (vm.status) {
-                vm.addDataSource();
+                vm.addVariable();
             } else {
-                vm.updateDataSource();
+                vm.updateVariable();
             }
         },
-        validateFields() {
-                let isValid = true;
-                this.errors = {};
+      
 
-                if (!this.data_source.data_source_code) {
-                    this.errors.data_source_code = ["Data Source Code is required"];
-                    isValid = false;
-                }
-                if (!this.data_source.data_source_name) {
-                    this.errors.data_source_name = ["Data Source Name is required"];
-                    isValid = false;
-                }
-                if (!this.data_source.data_source_type_id) {
-                    this.errors.data_source_type_id = ["Data Source Type is required"];
-                    isValid = false;
-                }
-                if (this.data_source.asset_types.length === 0) {
-                    this.errors.asset_types = ["At least one Asset Type must be selected"];
-                    isValid = false;
-                }
-                for (const field of Object.values(this.data_source.data_source_attributes)) {
-                    if (field.is_required && !field.data_source_attribute_value.field_value) {
-                        this.errors[field.display_name] = [`${field.display_name} is required`];
-                        isValid = false;
-                    }
-                }
-
-                return isValid;
-            },
-
-        addDataSource() {
-            if (!this.validateFields()) {
-                    return;
-                }
+        addVariable() {
             let vm = this;
             let loader = vm.$loading.show();
-            vm.$store.dispatch('post', { uri: 'addDataSource', data: vm.data_source })
+            vm.$store.dispatch('post', { uri: 'addVariable', data: vm.variable })
                 .then(response => {
                     loader.hide();
                     vm.$store.dispatch('success', response.data.message);
-                    vm.$router.push("/data_sources");
+                    vm.$router.push("/variables");
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -279,7 +263,7 @@ export default {
                 .then(response => {
                     loader.hide();
                     vm.asset_types = response.data.data;
-                    vm.getDataSourceTypes();
+                    vm.getVariableTypes();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -304,17 +288,14 @@ export default {
         },
 
 
-        updateDataSource() {
-            if (!this.validateFields()) {
-                    return;
-                }
+        updateVariable() {
             let vm = this;
             let loader = vm.$loading.show();
-            vm.$store.dispatch('post', { uri: 'updateDataSource', data: vm.data_source })
+            vm.$store.dispatch('post', { uri: 'updateVariable', data: vm.variable })
                 .then(response => {
                     loader.hide();
                     vm.$store.dispatch('success', response.data.message);
-                    vm.$router.push("/data_sources");
+                    vm.$router.push("/variables");
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -322,13 +303,13 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
-        getDataSourceTypes() {
+        getVariableTypes() {
             let vm = this;
             let loader = vm.$loading.show();
-            vm.$store.dispatch('post', { uri: 'getDataSourceTypes' })
+            vm.$store.dispatch('post', { uri: 'getVariableTypes' })
                 .then(response => {
                     loader.hide();
-                    vm.data_source_types = response.data.data;
+                    vm.variable_types = response.data.data;
                     vm.getFrequencies();
                 })
                 .catch(function (error) {
@@ -337,17 +318,14 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
-        getDataSourceTypeFields(data_source_type_id){
+        getVariableTypeFields(variable_type_id){
                 let vm = this;
                 let loader = vm.$loading.show();
-                if (vm.deleted_data_source_attribute_values.length) {
-                    vm.data_source.deleted_data_source_attribute_values = vm.deleted_data_source_attribute_values;
-                }
                 vm.$store
-                .dispatch("post", { uri: "getDataSourcesDropdown", data:{data_source_type_id:data_source_type_id} })
+                .dispatch("post", { uri: "getVariablesDropdown", data:{variable_type_id:variable_type_id} })
                 .then((response) => {
                     loader.hide();
-                    vm.data_source.data_source_attributes = response.data.data;
+                    vm.show_variables = response.data.data;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -355,17 +333,37 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
             },
-           
+            updateVariableParameters(field){
+                console.log("field--",this.variable)
+                if(!this.variable.variable_attributes) {
+                    this.variable.variable_attributes=[]
+                }
+                console.log(this.variable)
+                let apid = this.variable.variable_attributes?.filter(function(element){
+                    console.log("ele",element)
+                    return element.variable_attribute_id == field.variable_attribute_id
+                })
+                if(!apid.length){
+                    this.variable.variable_attributes.push({
+                        'variable_attribute_id':field.variable_attribute_id,
+                        'field_value':field.field_value
+                    })
+                }else{
+                    apid[0].variable_attribute_id = field.variable_attribute_id
+                    apid[0].field_value = field.field_value
+                }
+            },
+
         discard() {
             let vm = this;
-            vm.data_source.data_source_type_id="";
-            vm.data_source.data_source_code = "";
-            vm.data_source.data_source_name = "";
-            vm.data_source.asset_types = [];
-            vm.data_source.frequency_id = "";
-            // vm.$refs.data_source_type_id.focus();
-            vm.show_data_sources=[];
-            vm.data_source.data_source_attributes=[];
+            vm.variable.variable_type_id="";
+            vm.variable.variable_code = "";
+            vm.variable.variable_name = "";
+            vm.variable.asset_types = [];
+            vm.variable.frequency_id = "";
+            // vm.$refs.variable_type_id.focus();
+            vm.show_variables=[];
+            vm.variable.variable_attributes=[];
             vm.errors = [];
             vm.status = true;
         },
