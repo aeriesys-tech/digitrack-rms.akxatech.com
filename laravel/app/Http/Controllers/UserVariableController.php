@@ -6,6 +6,7 @@ use App\Models\AssetZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserVariableResource;
+use App\Models\UserAssetVariable;
 
 class UserVariableController extends Controller
 {
@@ -87,35 +88,81 @@ class UserVariableController extends Controller
         ]);
     }
 
+    // public function updateUserVariable(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'asset_id' => 'required|exists:assets,asset_id',
+    //         'job_date' => 'required|date',
+    //         'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+    //         'note' => 'nullable|sometimes'
+    //     ]);
+        
+    //     $data['plant_id'] = Auth::User()->plant_id;
+    //     $data['user_id'] = Auth::User()->user_id;
+
+    //     $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->first();
+    //     $user_variable->update($data);
+        
+    //     //UserAssetCheck
+    //     foreach($request->asset_variables as $asset_variable)
+    //     {
+    //         // return $asset_variable['user_asset_variable_id'];
+    //         $UserAssetVariable = UserAssetVariable::where('user_asset_variable_id', $asset_variable['user_asset_variable_id'])->first();
+            
+    //         if ($UserAssetVariable) {
+    //             $UserAssetVariable->update([
+    //                 'value' => $asset_variable['value']
+    //             ]);
+    //         }
+    //         else {
+    //             UserAssetVariable::create([
+    //                 'user_variable_id' => $user_variable->user_variable_id,
+    //                 'variable_id' => $asset_variable['variable_id'],
+    //                 'date_time' => $asset_variable['date_time'],
+    //                 'value' => $asset_variable['value']
+    //             ]);
+    //         }
+            
+    //     }
+    //     return response()->json(["message" => "UserVariable Updated Successfully"]);
+    // }
+
     public function updateUserVariable(Request $request)
     {
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required|date',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
-            'note' => 'nullable|sometimes'
+            'note' => 'nullable|sometimes',
+            'asset_variables' => 'required|array',
+            'asset_variables.*.user_asset_variable_id' => 'nullable|integer',
+            'asset_variables.*.variable_id' => 'required|exists:variables,variable_id',
+            'asset_variables.*.date_time' => 'required|date',
+            'asset_variables.*.value' => 'required'
         ]);
-        
+
         $data['plant_id'] = Auth::User()->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
-        $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->first();
+        $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->firstOrFail();
         $user_variable->update($data);
-        
-        //UserAssetCheck
-        foreach($request->asset_variables as $asset_variable)
+
+        // UserAssetCheck
+        foreach ($request->asset_variables as $asset_variable) 
         {
             $UserAssetVariable = UserAssetVariable::where('user_asset_variable_id', $asset_variable['user_asset_variable_id'])->first();
 
-            if($UserAssetVariable)
-            {
+            if ($UserAssetVariable) {
                 $UserAssetVariable->update([
-                    'value' => $asset_variable['value'],
+                    'value' => $asset_variable['value']
                 ]);
-            }
+            } 
+            
         }
+
         return response()->json(["message" => "UserVariable Updated Successfully"]);
     }
+
 
     public function getUserVariable(Request $request)
     {

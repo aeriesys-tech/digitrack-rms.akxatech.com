@@ -212,14 +212,16 @@ class AssetVariableController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
-        $query = AssetVariable::query();
 
+        $query = AssetVariable::where('asset_id', $request->asset_id);
         if (isset($request->asset_zone_id)) 
         {
             $query->where('asset_zone_id', $request->asset_zone_id);
         }
 
-        $asset_variable = $query->where('asset_id', $request->asset_id)->get();
-        return AssetVariableResource::collection($asset_variable);
+        $asset_variable_ids =  $query->pluck('variable_id')->toArray();
+        $asset_variable = Variable::whereIn('variable_id', $asset_variable_ids)->get();
+
+        return $asset_variable;
     }
 }

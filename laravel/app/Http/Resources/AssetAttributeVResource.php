@@ -22,6 +22,12 @@ class AssetAttributeVResource extends JsonResource
             ->where('asset_attribute_id', $this->asset_attribute_id)
             ->first();
 
+        if(!$asset_attribute_value){
+            $asset_attribute_value = [
+                'field_value' => null
+            ];
+        }
+
         return [
             'asset_attribute_id' => $this->asset_attribute_id,
         	'field_name' => $this->field_name,

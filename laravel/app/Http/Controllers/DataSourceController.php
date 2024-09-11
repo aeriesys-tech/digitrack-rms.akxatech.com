@@ -36,7 +36,14 @@ class DataSourceController extends Controller
         if($request->search!='')
         {
             $query->where('data_source_code', 'like', "%$request->search%")
-                ->orWhere('data_source_name', 'like', "$request->search%");
+                ->orWhere('data_source_name', 'like', "$request->search%")
+                ->orwhereHas('DataSourceType', function($que) use($request){
+                    $que->where('data_source_type_name', 'like', "$request->search%");
+                })->orwhereHas('DataSourceAssetTypes', function($que) use($request){
+                    $que->whereHas('AssetType', function($qu) use($request){
+                        $qu->where('asset_type_name', 'like', "$request->search%");
+                    });
+                });
         }
         $data_source = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return DataSourceResource::collection($data_source);

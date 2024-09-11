@@ -17,6 +17,7 @@ class UserVariableResource extends JsonResource
             'asset_id' => $this->asset_id,
             'asset' => new AssetResource($this->Asset),
             'job_date' => $this->job_date,
+            'job_no' => $this->job_no,
             'note' => $this->note,
             'asset_zone_id' => $this->asset_zone_id,
             'asset_zone' => new AssetZoneResource($this->AssetZone),
