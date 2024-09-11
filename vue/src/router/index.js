@@ -124,6 +124,12 @@ import CreateBreakDownAttribute from "@/views/attributes/breakdown_attributes/Cr
 import BreakDownAttributes from "@/views/attributes/breakdown_attributes/Index.vue";
 
 
+// Registers
+import ViewProcessRegister from "@/views/registers/process_registers/View.vue";
+import CreateProcessRegister from "@/views/registers/process_registers/Create.vue";
+import ProcessRegisters from "@/views/registers/process_registers/Index.vue"
+
+
 import Test from "@/views/Test.vue";
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
 
@@ -701,8 +707,18 @@ const routes = [
   },
   {
     path: "/process_registers",
-    name: "ProcessRegisters",
-    component:Test,
+    name: "ProcessRegisters.Index",
+    component:ProcessRegisters,
+  },
+  {
+    path: "/process_registers/create",
+    name: "CreateProcessRegister.Create",
+    component:CreateProcessRegister,
+  },
+  {
+    path: "/process_registers/view",
+    name: "ViewProcessRegister",
+    component: ViewProcessRegister,
   },
   {
     path: "/spare_registers",
