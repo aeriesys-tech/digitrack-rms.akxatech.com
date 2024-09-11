@@ -34,7 +34,7 @@
                                     <input type="text" placeholder="Enter Service Number" class="form-control" :class="{'is-invalid':errors.service_no}" v-model="user_service.service_no" ref="service_no"/>
                                     <span v-if="errors.service_no" class="invalid-feedback">{{ errors.service_no[0] }}</span>
                                 </div> -->
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label">Service Date</label><span class="text-danger"> *</span>
                                     <input
                                         type="date"
@@ -47,7 +47,7 @@
                                     />
                                     <span v-if="errors.service_date" class="invalid-feedback">{{ errors.service_date[0] }}</span>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label">Next Service Date</label><span class="text-danger"> *</span>
                                     <input
                                         type="date"

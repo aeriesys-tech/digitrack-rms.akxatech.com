@@ -34,7 +34,14 @@ class BreakDownListController extends Controller
         if($request->search!='')
         {
             $query->where('break_down_list_code', 'like', "%$request->search%")
-                ->orWhere('break_down_list_name', 'like', "$request->search%");
+                ->orWhere('break_down_list_name', 'like', "$request->search%")
+                ->orwhereHas('BreakDownType', function($que) use($request){
+                    $que->where('break_down_type_name', 'like', "$request->search%");
+                })->orwhereHas('BreakDownListAssetTypes', function($que) use($request){
+                    $que->whereHas('AssetType', function($qu) use($request){
+                        $qu->where('asset_type_name', 'like', "$request->search%");
+                    });
+                });
         }
         $break_down_list = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return BreakDownListResource::collection($break_down_list);

@@ -13,7 +13,7 @@ class UserAssetVariableResource extends JsonResource
             'user_asset_variable_id' => $this->user_asset_variable_id,
             'user_variable_id' => $this->user_variable_id,
             'variable_id' => $this->variable_id,
-            'asset_variable_id' => $this->asset_variable_id,
+            'variable' => new VariableResource($this->Variable),
             'date_time' => $this->date_time,
             'value' => $this->value 
         ];

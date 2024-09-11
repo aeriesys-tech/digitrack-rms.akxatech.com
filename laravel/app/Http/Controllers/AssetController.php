@@ -77,7 +77,7 @@ class AssetController extends Controller
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'required|array',
             'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
-            'asset_attributes.*.field_value' => 'required|string',
+            'asset_attributes.*.asset_attribute_value.field_value' => 'required|string',
             'longitude' => 'nullable|sometimes',
             'latitude' => 'nullable|sometimes',
             'functional_id' => 'nullable|exists:functionals,functional_id',
@@ -97,7 +97,7 @@ class AssetController extends Controller
             AssetAttributeValue::create([
                 'asset_id' => $asset->asset_id,
                 'asset_attribute_id' => $attribute['asset_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
+                'field_value' => $attribute['asset_attribute_value']['field_value'] ?? '',
             ]);
         }
                 
@@ -143,18 +143,6 @@ class AssetController extends Controller
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
 
-        $asset_attribute_value = AssetAttributeValue::where('asset_id', $request->asset_id)->get('asset_attribute_id');
-        
-        $asset_attribute_initial = AssetAttribute::whereNotIn('asset_attribute_id', $asset_attribute_value)->get();
-
-        foreach ($asset_attribute_initial as $attribute) {
-            AssetAttributeValue::create([
-                'asset_id' => $request->asset_id,
-                'asset_attribute_id' => $attribute['asset_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
-            ]);
-        }
-
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         return new AssetResource($asset);
     }
@@ -188,7 +176,8 @@ class AssetController extends Controller
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes',
-            'zone_name' => 'nullable|array'
+            'zone_name' => 'nullable|array',
+            'deleted_asset_attribute_values' => 'nullable'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -196,6 +185,11 @@ class AssetController extends Controller
     
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
+
+        if($request->deleted_asset_attribute_values > 0)
+        {
+            AssetAttributeValue::whereIn('asset_attribute_value_id', $request->deleted_asset_attribute_values)->forceDelete();
+        }
     
         foreach ($request->asset_attributes as $attribute) 
         {

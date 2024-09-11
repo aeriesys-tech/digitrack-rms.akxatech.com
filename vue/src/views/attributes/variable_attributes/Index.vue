@@ -60,14 +60,14 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
-                                            <th @click="sort('list_parameter_id')">
+                                            <!-- <th @click="sort('list_parameter_id')">
                                                 List
                                                 <span>
                                                     <i v-if="meta.keyword == 'list_parameter_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword == 'list_parameter_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
-                                            </th>
+                                            </th> -->
                                             <th @click="sort('field_length')">
                                                 Field Length
                                                 <span>
@@ -105,7 +105,7 @@
                                             <td>{{variableattribute.display_name}}</td>
                                             <td>{{variableattribute.field_type}}</td>
                                             <td>{{variableattribute.field_values}}</td>
-                                            <td>{{variableattribute?.list_parameter?.list_parameter_name }}</td>
+                                            <!-- <td>{{variableattribute?.list_parameter?.list_parameter_name }}</td> -->
                                             <td>{{variableattribute.field_length}}</td>
                                             <!-- <td v-if="assetparameter.is_required">Yes</td> -->
                                             <td>{{variableattribute?.is_required==1 ?'Yes' : 'No'  }}</td>

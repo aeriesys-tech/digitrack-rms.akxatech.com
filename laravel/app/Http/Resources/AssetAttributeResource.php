@@ -27,7 +27,10 @@ class AssetAttributeResource extends JsonResource
             'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'asset_attribute_types' => AssetAttributeTypeResource::collection($this->AssetAttributeTypes),
             'status' => $this->deleted_at?false:true,
-            'asset_types' => $asset_types
+            'asset_types' => $asset_types,
+            'asset_attribute_value' => [
+                "field_value" => null
+            ]
         ];
     }
 }

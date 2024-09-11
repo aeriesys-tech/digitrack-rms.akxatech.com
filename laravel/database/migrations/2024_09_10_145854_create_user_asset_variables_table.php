@@ -12,13 +12,11 @@ return new class extends Migration
             $table->id('user_asset_variable_id');
             $table->foreignId('user_variable_id');
             $table->foreignId('variable_id');
-            $table->foreignId('asset_variable_id')->nullable();
             $table->timestamp('date_time');
             $table->string('value', 255)->nullable();
             $table->timestamps();
             $table->foreign('user_variable_id')->references('user_variable_id')->on('user_variables');
             $table->foreign('variable_id')->references('variable_id')->on('variables');
-            $table->foreign('asset_variable_id')->references('asset_variable_id')->on('asset_variables');
         });
     }
 
