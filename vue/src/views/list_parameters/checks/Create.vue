@@ -29,7 +29,7 @@
                         </div>
                         <div class="card-body ">
                             <div class="row g-2">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                             <div class="dropdown" @click="toggleAssetTypeStatus()">
@@ -49,7 +49,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                            <label class="form-label">Department</label><span class="text-danger"> *</span>
+                                            <select class="form-control" :class="{ 'is-invalid': errors?.department_id }" v-model="check.department_id">
+                                                <option value="">Select Department</option>
+                                                <option v-for="department, key in departments" :key="key" :value="department?.department_id">{{ department?.department_name }} </option>
+                                            </select>
+                                            <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
+                                        </div>
+                                <div class="col-md-4">
                                         <label class="form-label">Field Name</label><span class="text-danger"> *</span>
                                         <input type="text" placeholder="Field Name" class="form-control" :class="{ 'is-invalid': errors.field_name }" v-model="check.field_name" />
                                         <span v-if="errors.field_name" class="invalid-feedback">{{ errors.field_name[0] }}</span>
@@ -83,12 +91,12 @@
                                                 </select>
                                         <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label">LCL</label><span v-if="check.field_type=='Number'" class="text-danger"> *</span>
                                         <input type="text" placeholder="LCL" class="form-control" :class="{ 'is-invalid': errors.lcl }" v-model="check.lcl"/>
                                         <span v-if="errors.lcl" class="invalid-feedback">{{ errors.lcl[0] }}</span>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label">UCL</label><span v-if="check.field_type=='Number'" class="text-danger"> *</span>
                                         <input type="text" placeholder="UCL" class="form-control" :class="{ 'is-invalid': errors.ucl }" v-model="check.ucl"/>
                                         <span v-if="errors.ucl" class="invalid-feedback">{{ errors.ucl[0] }}</span>
@@ -98,7 +106,7 @@
                                         <input type="text" placeholder="Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values}" v-model="check.field_values"/>
                                         <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <label class="form-label">Order</label><span class="text-danger"> *</span>
                                         <input type="text" placeholder="Order" class="form-control" :class="{ 'is-invalid': errors.order}" v-model="check.order"/>
                                         <span v-if="errors.order" class="invalid-feedback">{{ errors.order[0] }}</span>
@@ -146,10 +154,12 @@ export default {
                 order: '',
                 asset_types:[],
                 frequency_id: '',
+                department_id:'',
             },
             errors:[],
             asset_types:[],
             frequencies:[],
+            departments:[],
             status:true,
             asset_type_status:false,
         }
@@ -241,6 +251,23 @@ export default {
                     .then(response => {
                         loader.hide();
                         vm.frequencies = response.data.data;
+                        vm.getDepartments()
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+
+            getDepartments() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getDepartments" })
+                    .then((response) => {
+                        loader.hide();
+                        vm.departments = response.data.data;
                     })
                     .catch(function (error) {
                         loader.hide();

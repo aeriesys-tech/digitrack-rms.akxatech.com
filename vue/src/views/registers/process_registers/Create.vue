@@ -10,23 +10,23 @@
                         <a href="javascript:void(0)">Registers</a>
                     </li>
                     <li class="breadcrumb-item" aria-current="page">
-                        <router-link to="/process_registers">User Varaiables</router-link>
+                        <router-link to="/process_registers">Process Varaiables</router-link>
                     </li>
-                    <li class="breadcrumb-item" aria-current="page" v-if="status">New User Variable</li>
-                    <li class="breadcrumb-item active" aria-current="page" v-else>Update User Variable</li>
+                    <li class="breadcrumb-item" aria-current="page" v-if="status">New Process Variable</li>
+                    <li class="breadcrumb-item active" aria-current="page" v-else>Update Process Variable</li>
                 </ol>
-                <h4 class="main-title mb-0">User Variable</h4>
+                <h4 class="main-title mb-0">Process Variable</h4>
             </div>
             <router-link to="/process_registers" type="submit" class="btn btn-primary" style="float: right;"><i
-                    class="ri-list-check"></i> USER VARIABLES</router-link>
+                    class="ri-list-check"></i> PROCESS VARIABLES</router-link>
         </div>
         <div class="row">
             <div class="col-12">
                 <form @submit.prevent="submitForm">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add User Variable</h6>
-                            <h6 class="card-title" v-else>Update User Variable</h6>
+                            <h6 class="card-title" v-if="status">Add Process Variable</h6>
+                            <h6 class="card-title" v-else>Update Process Variable</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2 mb-5">

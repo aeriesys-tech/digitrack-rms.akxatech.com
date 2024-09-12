@@ -10,11 +10,11 @@
                         <a href="javascript:void(0)">Registers</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <router-link to="/process_registers">Progress Registers</router-link>
+                        <router-link to="/process_registers">Process Registers</router-link>
                     </li>
                     <li class="breadcrumb-item" aria-current="page">View</li>
                 </ol>
-                <h4 class="main-title mb-0">View Progress Register</h4>
+                <h4 class="main-title mb-0">View Process Register</h4>
             </div>
             <router-link to="/process_registers" type="submit" class="btn btn-primary" style="float: right;"><i
                     class="ri-list-check"></i> PROCESS REGISTERS</router-link>

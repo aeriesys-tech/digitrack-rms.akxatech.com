@@ -145,9 +145,9 @@
                     <li class="nav-item">
                         <router-link to="/data_sources" v-bind:class="{ active: $route.path === '/data_sources' || $route.name === 'DataSources.Create' || $route.path === 'DataSources.Edit' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link to="/break_down_lists" v-bind:class="{ active: $route.path === '/break_down_lists' || $route.name === 'BreakDownLists.Create' || $route.path === 'BreakDownLists.Edit' }" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>BreakDown List</span></router-link>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <!-- <div class="nav-group" v-if="permission('Masters')" :class="{show:showMaster}" @click="showTab('Masters')">
@@ -202,12 +202,12 @@
                     <li class="nav-item">
                         <router-link to="/process_registers" v-bind:class="{ active: $route.path === '/process_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Process Register</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link to="/spare_registers" v-bind:class="{ active: $route.path === '/spare_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Spare Register</span></router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/qc_registers" v-bind:class="{ active: $route.path === '/qc_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>QC Register</span></router-link>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
 

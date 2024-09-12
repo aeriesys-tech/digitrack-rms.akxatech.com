@@ -61,24 +61,8 @@
                                     </search>
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Equipment</label><span class="text-danger"> *</span>
-                                    <search
-                                        :class="{ 'is-invalid': errors.equipment_id }"
-                                        :customClass="{ 'is-invalid': errors.equipment_id }"
-                                        :initialize="activity.equipment_id"
-                                        id="equipment_id"
-                                        label="equipment_name"
-                                        label2="equipment_code"
-                                        placeholder="Select Equipment"
-                                        :data="equipments"
-                                        @input=" equipment => activity.equipment_id = equipment"
-                                    >
-                                    </search>
-                                    <span v-if="errors.equipment_id" class="invalid-feedback">{{ errors.equipment_id[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Reason</label><span class="text-danger" v-if="activity.activity_status == 'Removed' || activity.activity_status == 'Scraped'"> *</span>
+                                <div class="col-md-6">
+                                    <label class="form-label">Activity Type</label><span class="text-danger" v-if="activity.activity_status == 'Removed' || activity.activity_status == 'Scraped'"> *</span>
                                     <search
                                         :class="{ 'is-invalid': errors.reason_id }"
                                         :customClass="{ 'is-invalid': errors.reason_id }"
@@ -86,14 +70,14 @@
                                         id="reason_id"
                                         label="reason_name"
                                         label2="reason_code"
-                                        placeholder="Select Reason"
+                                        placeholder="Select Activity Type"
                                         :data="reasons"
                                         @input=" reason => activity.reason_id = reason"
                                     >
                                     </search>
-                                    <span v-if="errors.reason_id" class="invalid-feedback">{{ errors.reason_id[0] }}</span>
+                                    <span v-if="errors.reason_id" class="invalid-feedback">activity type field is required when activity status is Removed</span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="form-label">Cost</label>
                                     <input type="number" placeholder="Enter Cost" class="form-control" :class="{'is-invalid':errors.cost}" v-model="activity.cost" />
                                     <span v-if="errors.cost" class="invalid-feedback">{{ errors.cost[0] }}</span>
@@ -132,7 +116,6 @@
                     activity_no: "",
                     activity_date: "",
                     asset_id: "",
-                    equipment_id: "",
                     reason_id: "",
                     cost: "",
                     note: "",
@@ -140,7 +123,6 @@
                     activity_status: "",
                 },
                 assets: [],
-                equipments: [],
                 reasons: [],
                 errors: [],
                 status: true,
@@ -193,22 +175,6 @@
                     .then((response) => {
                         loader.hide();
                         vm.assets = response.data.data;
-                        vm.getEquipments();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getEquipments() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getEquipments" })
-                    .then((response) => {
-                        loader.hide();
-                        vm.equipments = response.data.data;
                         vm.getReasons();
                     })
                     .catch(function (error) {
