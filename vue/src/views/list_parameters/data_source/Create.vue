@@ -44,7 +44,17 @@
                                     </search>
                                     <span v-if="errors.data_source_type_id"><small class="text-danger">{{ errors.data_source_type_id[0] }}</small></span>
                                 </div>
-                                 <div class="col-md-4" v-for="field, key in data_source.data_source_attributes" :key="key">
+                                <div class="col-md-4">
+                                    <label class="form-label">Data Source Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Data Source Code" class="form-control" :class="{ 'is-invalid': errors.data_source_code }" v-model="data_source.data_source_code"/>
+                                    <span v-if="errors.data_source_code" class="invalid-feedback">{{ errors.data_source_code[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Data Source Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Data Source Name" class="form-control" :class="{ 'is-invalid': errors.data_source_name }" v-model="data_source.data_source_name"/>
+                                    <span v-if="errors.data_source_name" class="invalid-feedback">{{ errors.data_source_name[0] }}</span>
+                                </div>
+                                  <div class="col-md-4" v-for="field, key in data_source.data_source_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value" />
@@ -109,16 +119,6 @@
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Data Source Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Data Source Code" class="form-control" :class="{ 'is-invalid': errors.data_source_code }" v-model="data_source.data_source_code"/>
-                                    <span v-if="errors.data_source_code" class="invalid-feedback">{{ errors.data_source_code[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Data Source Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Data Source Name" class="form-control" :class="{ 'is-invalid': errors.data_source_name }" v-model="data_source.data_source_name"/>
-                                    <span v-if="errors.data_source_name" class="invalid-feedback">{{ errors.data_source_name[0] }}</span>
                                 </div>
                                  <div class="col-md-4">
                                     <div class="form-group">

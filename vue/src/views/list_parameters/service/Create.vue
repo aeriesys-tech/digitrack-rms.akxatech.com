@@ -43,7 +43,18 @@
                                     </search>
                                     <span v-if="errors.service_type_id"><small class="text-danger">{{ errors.service_type_id[0] }}</small></span>
                                 </div>
-                                   <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Service Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Service Code" class="form-control" :class="{ 'is-invalid': errors.service_code }" v-model="service.service_code" />
+                                    <span v-if="errors.service_code" class="invalid-feedback">{{ errors.service_code[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Service Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Service Name" class="form-control" :class="{ 'is-invalid': errors.service_name }" v-model="service.service_name" />
+                                    <span v-if="errors.service_name" class="invalid-feedback">{{ errors.service_name[0] }}</span>
+                                </div>
+                                 <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" />
@@ -117,16 +128,6 @@
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Service Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Service Code" class="form-control" :class="{ 'is-invalid': errors.service_code }" v-model="service.service_code" />
-                                    <span v-if="errors.service_code" class="invalid-feedback">{{ errors.service_code[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Service Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Service Name" class="form-control" :class="{ 'is-invalid': errors.service_name }" v-model="service.service_name" />
-                                    <span v-if="errors.service_name" class="invalid-feedback">{{ errors.service_name[0] }}</span>
                                 </div>
                                  <div class="col-md-4">
                                     <div class="form-group">
