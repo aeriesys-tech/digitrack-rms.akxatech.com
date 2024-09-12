@@ -27,27 +27,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
-                                            <div class="overselect"></div>
-                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
-                                                <option value="">Select Asset Type</option>
-                                            </select>
-                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
-                                        </div>
-                                        <div class="multiselect" v-if="asset_type_status">
-                                            <ul>
-                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="service.asset_types" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label">Service Types</label><span class="text-danger"> *</span>
                                     <search
                                         :class="{ 'is-invalid': errors.service_type_id }"
@@ -63,27 +43,7 @@
                                     </search>
                                     <span v-if="errors.service_type_id"><small class="text-danger">{{ errors.service_type_id[0] }}</small></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Service Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Service Code" class="form-control" :class="{ 'is-invalid': errors.service_code }" v-model="service.service_code" />
-                                    <span v-if="errors.service_code" class="invalid-feedback">{{ errors.service_code[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Service Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Service Name" class="form-control" :class="{ 'is-invalid': errors.service_name }" v-model="service.service_name" />
-                                    <span v-if="errors.service_name" class="invalid-feedback">{{ errors.service_name[0] }}</span>
-                                </div>
-
-                                <!-- <div class="col-md-4">
-                                    <label class="form-label">Frequency</label><span class="text-danger"> *</span>
-                                    <select class="form-control" :class="{ 'is-invalid': errors.frequency_id}" v-model="service.frequency_id">
-                                        <option value="">Select Frequency</option>
-                                        <option v-for="frequency, key in frequencies" :key="key" :value="frequency?.frequency_id">{{ frequency?.frequency_name }}</option>
-                                    </select> 
-                                    <span v-if="errors.frequency_id" class="invalid-feedback">{{ errors.frequency_id[0] }}</span>
-                                </div> -->
-
-                                <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
+                                   <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" />
@@ -126,7 +86,7 @@
                                     <div v-if="field.field_type=='Dropdown'">
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <!-- <select
-                                            
+
                                             class="form-control"
                                             :class="{'is-invalid': errors[field.display_name]}"
                                             v-model="field.service_attribute_value.field_value"
@@ -156,6 +116,36 @@
                                             <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Service Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Service Code" class="form-control" :class="{ 'is-invalid': errors.service_code }" v-model="service.service_code" />
+                                    <span v-if="errors.service_code" class="invalid-feedback">{{ errors.service_code[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Service Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Service Name" class="form-control" :class="{ 'is-invalid': errors.service_name }" v-model="service.service_name" />
+                                    <span v-if="errors.service_name" class="invalid-feedback">{{ errors.service_name[0] }}</span>
+                                </div>
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Assign To</label><span class="text-danger"> *</span>
+                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                            <div class="overselect"></div>
+                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
+                                                <option value="">Select Assign To</option>
+                                            </select>
+                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
+                                        </div>
+                                        <div class="multiselect" v-if="asset_type_status">
+                                            <ul>
+                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="service.asset_types" style="padding: 2px;" />
+                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -377,7 +367,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-           
+
             discard() {
                 let vm = this;
                 vm.service.service_type_id = "";

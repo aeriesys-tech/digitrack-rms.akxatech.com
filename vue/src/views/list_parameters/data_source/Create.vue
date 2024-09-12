@@ -17,7 +17,7 @@
             </div>
             <router-link to="/data_sources" type="submit" class="btn btn-primary" style="float: right;"><i
                 class="ri-list-check"></i> DATA SOURCES</router-link>
-    </div> 
+    </div>
         <div class="row g-2">
             <div class="col-12" >
                 <form @submit.prevent="submitForm()">
@@ -28,28 +28,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
-                                            <div class="overselect"></div>
-                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }" >
-                                                <option value="">Select Asset Type</option>
-                                            </select>
-                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
-                                        </div>
-                                        <div class="multiselect" v-if="asset_type_status">
-                                            <ul>
-                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="data_source.asset_types" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label">Data Source Types</label><span class="text-danger"> *</span>
                                     <search
                                         :class="{ 'is-invalid': errors.data_source_type_id }"
@@ -65,23 +44,13 @@
                                     </search>
                                     <span v-if="errors.data_source_type_id"><small class="text-danger">{{ errors.data_source_type_id[0] }}</small></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Data Source Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Data Source Code" class="form-control" :class="{ 'is-invalid': errors.data_source_code }" v-model="data_source.data_source_code"/>
-                                    <span v-if="errors.data_source_code" class="invalid-feedback">{{ errors.data_source_code[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Data Source Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Data Source Name" class="form-control" :class="{ 'is-invalid': errors.data_source_name }" v-model="data_source.data_source_name"/>
-                                    <span v-if="errors.data_source_name" class="invalid-feedback">{{ errors.data_source_name[0] }}</span>
-                                </div>
-                                <div class="col-md-4" v-for="field, key in data_source.data_source_attributes" :key="key">
+                                 <div class="col-md-4" v-for="field, key in data_source.data_source_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
-                                    
+
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.data_source_attribute_value.field_value" />
@@ -105,12 +74,12 @@
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
                                         <input
-                                            type="datetime-local" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.display_name" 
-                                            :class="{'is-invalid': errors[field.display_name]}" 
-                                            v-model="field.data_source_attribute_value.field_value" 
-                                            step="1" 
+                                            type="datetime-local"
+                                            class="form-control"
+                                            :placeholder="'Enter ' + field.display_name"
+                                            :class="{'is-invalid': errors[field.display_name]}"
+                                            v-model="field.data_source_attribute_value.field_value"
+                                            step="1"
                                         />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
@@ -141,6 +110,37 @@
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Data Source Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Data Source Code" class="form-control" :class="{ 'is-invalid': errors.data_source_code }" v-model="data_source.data_source_code"/>
+                                    <span v-if="errors.data_source_code" class="invalid-feedback">{{ errors.data_source_code[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Data Source Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Data Source Name" class="form-control" :class="{ 'is-invalid': errors.data_source_name }" v-model="data_source.data_source_name"/>
+                                    <span v-if="errors.data_source_name" class="invalid-feedback">{{ errors.data_source_name[0] }}</span>
+                                </div>
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Assign To</label><span class="text-danger"> *</span>
+                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                            <div class="overselect"></div>
+                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }" >
+                                                <option value="">Select Assign To</option>
+                                            </select>
+                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
+                                        </div>
+                                        <div class="multiselect" v-if="asset_type_status">
+                                            <ul>
+                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="data_source.asset_types" style="padding: 2px;" />
+                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -186,7 +186,7 @@ export default {
             asset_type_status:false,
         }
     },
-    
+
     beforeRouteEnter(to, from, next) {
             next((vm) => {
                 vm.getAssetTypes();
@@ -355,7 +355,7 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
             },
-           
+
         discard() {
             let vm = this;
             vm.data_source.data_source_type_id="";
@@ -403,4 +403,3 @@ export default {
     right: 0;
 }
 </style>
-

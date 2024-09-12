@@ -27,27 +27,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
-                                            <div class="overselect"></div>
-                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
-                                                <option value="">Select Asset Type</option>
-                                            </select>
-                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
-                                        </div>
-                                        <div class="multiselect" v-if="asset_type_status">
-                                            <ul>
-                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="spare.asset_types" style="padding: 2px;" />
-                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label">Spare Types</label><span class="text-danger"> *</span>
                                     <search
                                         :class="{ 'is-invalid': errors.spare_type_id }"
@@ -63,17 +43,7 @@
                                     </search>
                                     <span v-if="errors.spare_type_id"><small class="text-danger">{{ errors.spare_type_id[0] }}</small></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Spare Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Spare Code" class="form-control" :class="{ 'is-invalid': errors.spare_code }" v-model="spare.spare_code" />
-                                    <span v-if="errors.spare_code" class="invalid-feedback">{{ errors.spare_code[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Spare Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Spare Name" class="form-control" :class="{ 'is-invalid': errors.spare_name }" v-model="spare.spare_name" />
-                                    <span v-if="errors.spare_name" class="invalid-feedback">{{ errors.spare_name[0] }}</span>
-                                </div>
-                                <div class="col-md-4" v-for="field, key in spare.spare_attributes" :key="key">
+                                  <div class="col-md-4" v-for="field, key in spare.spare_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input
@@ -159,6 +129,36 @@
                                             <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Spare Code</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Spare Code" class="form-control" :class="{ 'is-invalid': errors.spare_code }" v-model="spare.spare_code" />
+                                    <span v-if="errors.spare_code" class="invalid-feedback">{{ errors.spare_code[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Spare Name</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Spare Name" class="form-control" :class="{ 'is-invalid': errors.spare_name }" v-model="spare.spare_name" />
+                                    <span v-if="errors.spare_name" class="invalid-feedback">{{ errors.spare_name[0] }}</span>
+                                </div>
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Assign To</label><span class="text-danger"> *</span>
+                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                            <div class="overselect"></div>
+                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
+                                                <option value="">Select Assign To</option>
+                                            </select>
+                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
+                                        </div>
+                                        <div class="multiselect" v-if="asset_type_status">
+                                            <ul>
+                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="spare.asset_types" style="padding: 2px;" />
+                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
