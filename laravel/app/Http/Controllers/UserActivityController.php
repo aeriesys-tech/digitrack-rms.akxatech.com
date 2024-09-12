@@ -60,8 +60,7 @@ class UserActivityController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'status' => 'required',
             'activity_status' => 'required|sometimes',
-            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:equipment,equipment_id',
-            'equipment_id' => 'nullable|required_if:activity_status,Added,Removed|exists:equipment,equipment_id',
+            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:reasons,reason_id',
             'cost' => 'nullable',
             'note' => 'nullable'
         ]);
@@ -92,8 +91,7 @@ class UserActivityController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'status' => 'required',
             'activity_status' => 'required|sometimes',
-            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:equipment,equipment_id',
-            'equipment_id' => 'nullable|required_if:activity_status,Added,Removed|exists:equipment,equipment_id',
+            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:reasons,reason_id',
             'cost' => 'nullable',
             'note' => 'nullable'
         ]);
