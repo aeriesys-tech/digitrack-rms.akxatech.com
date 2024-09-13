@@ -57,24 +57,16 @@ class BreakDownListController extends Controller
     {
         $data = $request->validate([
             'break_down_type_id' => 'required|exists:break_down_types,break_down_type_id',
-            'break_down_list_code' => 'required|string|unique:break_down_lists,break_down_list_code',
-            'break_down_list_name' => 'required|string|unique:break_down_lists,break_down_list_name',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
-            'break_down_attributes' => 'required|array',
-            'break_down_attributes.*.break_down_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'break_down_attributes.*.break_down_attribute_value.field_value' => 'nullable|string',
+            'break_down_attributes' => 'nullable|array',
+            'break_down_attributes.*.break_down_attribute_id' => 'nullable|exists:variable_attributes,variable_attribute_id',
+            'break_down_attributes.*.break_down_attribute_value.field_value' => 'nullable',
+            'job_date' => 'required',
+            'note' => 'nullable',
+            'asset_id' => 'required|exists:assets,asset_id'
         ]);
-        
-        $break_down_list = BreakDownList::create($data);
 
-        foreach ($data['asset_types'] as $asset_type) {
-            BreakDownListAssetType::create([
-                'break_down_list_id' => $break_down_list->break_down_list_id,
-                'asset_type_id' => $asset_type,
-            ]);
-        }
+        $data['job_no'] = $this->generateBreakDownNo();
+        $break_down_list = BreakDownList::create($data);
 
         foreach ($request->break_down_attributes as $attribute) 
         {
@@ -124,26 +116,21 @@ class BreakDownListController extends Controller
         $data = $request->validate([
             'break_down_list_id' => 'required|exists:break_down_lists,break_down_list_id',
             'break_down_type_id' => 'required|exists:break_down_types,break_down_type_id',
-            'break_down_list_code' => 'required|string|unique:break_down_lists,break_down_list_code,'.$request->break_down_list_id.',break_down_list_id',
-            'break_down_list_name' => 'required|string|unique:break_down_lists,break_down_list_name,'.$request->break_down_list_id.',break_down_list_id',
-            'list_parameter_id' => 'nullable|exists:list_parameters,list_parameter_id',
-            'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
-            'break_down_attributes' => 'required|array',
-            'break_down_attributes.*.break_down_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'break_down_attributes.*.break_down_attribute_value.field_value' => 'nullable|string',
+            'break_down_attributes' => 'nullable|array',
+            'break_down_attributes.*.break_down_attribute_id' => 'nullable|exists:variable_attributes,variable_attribute_id',
+            'break_down_attributes.*.break_down_attribute_value.field_value' => 'nullable',
+            'job_date' => 'required',
+            'note' => 'nullable',
+            'asset_id' => 'required|exists:assets,asset_id',
+            'deleted_break_down_attribute_values' => 'nullable|sometimes'
         ]);
 
         $break_down_list = BreakDownList::where('break_down_list_id', $request->break_down_list_id)->first();
         $break_down_list->update($data);
 
-        BreakDownListAssetType::where('break_down_list_id', $break_down_list->break_down_list_id)->delete();
-
-        foreach ($data['asset_types'] as $asset_type_id) {
-            BreakDownListAssetType::create([
-                'break_down_list_id' => $break_down_list->break_down_list_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+        if($request->deleted_break_down_attribute_values > 0)
+        {
+            BreakDownAttributeValue::whereIn('break_down_attribute_value_id', $request->deleted_break_down_attribute_values)->forceDelete();
         }
 
         foreach ($request->break_down_attributes as $attribute) 
@@ -199,5 +186,26 @@ class BreakDownListController extends Controller
         })->get();
 
         return BreakDownAttributeResource::collection($break_down_type);
+    }
+
+    public function generateBreakDownNo()
+    {
+        $break_down = BreakDownList::latest()->first();
+        $nextServiceNumber = 1; 
+        
+        if ($break_down) {
+            $lastServiceNumber = (int) substr($break_down->service_no, 9); 
+            $nextServiceNumber = $lastServiceNumber + 1;
+        }
+        
+        $formattedNextServiceNumber = str_pad($nextServiceNumber, 4, '0', STR_PAD_LEFT);
+        $job_no = 'BreakDown_' . $formattedNextServiceNumber;
+        
+        while (BreakDownList::where('job_no', $job_no)->exists()) {
+            $nextServiceNumber++;
+            $formattedNextServiceNumber = str_pad($nextServiceNumber, 4, '0', STR_PAD_LEFT);
+            $job_no = 'Service_' . $formattedNextServiceNumber;
+        }
+        return $job_no;
     }
 }

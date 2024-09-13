@@ -23,7 +23,9 @@ class UserCheckResource extends JsonResource
             'asset_checks' => UserAssetCheckResource::collection($this->UserAssetCheck),
             'user_attachments' => UserCheckAttachmentResource::collection($this->UserCheckAttachment),
             'asset_zone_id' => $this->asset_zone_id,
-            'asset_zone' => new AssetZoneResource($this->AssetZone)
+            'asset_zone' => new AssetZoneResource($this->AssetZone),
+            'department_id' => $this->department_id,
+            'department' => new DepartmentResource($this->Department)
         ];
     }
 }

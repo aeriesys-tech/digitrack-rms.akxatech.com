@@ -53,9 +53,9 @@ class ServiceController extends Controller
             'service_code' => 'required|string|unique:services,service_code',
             'service_name' => 'required|string|unique:services,service_name',
             'service_type_id' => 'required|exists:service_type,service_type_id',
-            'service_attributes' => 'required|array',
-            'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
-            'service_attributes.*.service_attribute_value.field_value' => 'required',
+            'service_attributes' => 'nullable|array',
+            'service_attributes.*.service_attribute_id' => 'nullable|exists:service_attributes,service_attribute_id',
+            'service_attributes.*.service_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -122,9 +122,9 @@ class ServiceController extends Controller
             'service_code' => 'required|string|unique:services,service_code,' . $request->service_id . ',service_id',
             'service_name' => 'required|string|unique:services,service_name,' . $request->service_id . ',service_id',
             'service_type_id' => 'required|exists:service_type,service_type_id',
-            'service_attributes' => 'required|array',
-            'service_attributes.*.service_attribute_id' => 'required|exists:service_attributes,service_attribute_id',
-            'service_attributes.*.service_attribute_value.field_value' => 'required|string',
+            'service_attributes' => 'nullable|array',
+            'service_attributes.*.service_attribute_id' => 'nullable|exists:service_attributes,service_attribute_id',
+            'service_attributes.*.service_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
             'deleted_service_attribute_values' => 'nullable'

@@ -63,6 +63,7 @@ Route::post('forgotPassword', [UserAuthController::class, 'forgotPassword']);
 Route::post('resetPassword', [UserAuthController::class, 'resetPassword']);
 Route::get('downloadCheckAttachment',[UserCheckController::class, 'downloadCheckAttachment']);
 Route::post('addConsent', [UserAuthController::class, 'addConsent']);
+Route::post('getAssetRegisterDepartments',[UserCheckController::class, 'getAssetRegisterDepartments']);
 
 Route::get('downloadAssetQRCode',[AssetController::class, 'downloadAssetQRCode']);
 

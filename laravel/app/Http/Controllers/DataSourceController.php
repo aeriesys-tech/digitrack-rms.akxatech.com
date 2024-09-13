@@ -62,9 +62,9 @@ class DataSourceController extends Controller
             'data_source_code' => 'required|string|unique:data_sources,data_source_code',
             'data_source_name' => 'required|string|unique:data_sources,data_source_name',
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
-            'data_source_attributes' => 'required|array',
-            'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
-            'data_source_attributes.*.data_source_attribute_value.field_value' => 'required',
+            'data_source_attributes' => 'nullable|array',
+            'data_source_attributes.*.data_source_attribute_id' => 'nullable|exists:data_source_attributes,data_source_attribute_id',
+            'data_source_attributes.*.data_source_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -132,9 +132,9 @@ class DataSourceController extends Controller
             'data_source_code' => 'required|string|unique:data_sources,data_source_code,' . $request->data_source_id . ',data_source_id',
             'data_source_name' => 'required|string|unique:data_sources,data_source_name,' . $request->data_source_id . ',data_source_id',
             'data_source_type_id' => 'required|exists:data_source_types,data_source_type_id',
-            'data_source_attributes' => 'required|array',
-            'data_source_attributes.*.data_source_attribute_id' => 'required|exists:data_source_attributes,data_source_attribute_id',
-            'data_source_attributes.*.data_source_attribute_value.field_value' => 'required',
+            'data_source_attributes' => 'nullable|array',
+            'data_source_attributes.*.data_source_attribute_id' => 'nullable|exists:data_source_attributes,data_source_attribute_id',
+            'data_source_attributes.*.data_source_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
             'deleted_data_source_attribute_values' => 'nullable'

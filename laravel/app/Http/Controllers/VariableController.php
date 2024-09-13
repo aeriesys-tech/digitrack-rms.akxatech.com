@@ -54,9 +54,9 @@ class VariableController extends Controller
             'variable_code' => 'required|string|unique:variables,variable_code',
             'variable_name' => 'required|string|unique:variables,variable_name',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-            'variable_attributes' => 'required|array',
-            'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'variable_attributes.*.variable_attribute_value.field_value' => 'required|string',
+            'variable_attributes' => 'nullable|array',
+            'variable_attributes.*.variable_attribute_id' => 'nullable|exists:variable_attributes,variable_attribute_id',
+            'variable_attributes.*.variable_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -123,9 +123,9 @@ class VariableController extends Controller
             'variable_code' => 'required|string|unique:variables,variable_code,' . $request->variable_id . ',variable_id',
             'variable_name' => 'required|string|unique:variables,variable_name,' . $request->variable_id . ',variable_id',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-            'variable_attributes' => 'required|array',
-            'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'variable_attributes.*.variable_attribute_value.field_value' => 'required|string',
+            'variable_attributes' => 'nullable|array',
+            'variable_attributes.*.variable_attribute_id' => 'nullable|exists:variable_attributes,variable_attribute_id',
+            'variable_attributes.*.variable_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
             'deleted_variable_attribute_values' => 'nullable'
