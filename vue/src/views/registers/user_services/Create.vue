@@ -10,22 +10,22 @@
                         <a href="javascript:void(0)">Registers</a>
                     </li>
                     <li class="breadcrumb-item" aria-current="page">
-                        <router-link to="/user_services">User Services</router-link>
+                        <router-link to="/user_services">Service Registers</router-link>
                     </li>
-                    <li class="breadcrumb-item" aria-current="page" v-if="status">New User Service</li>
-                    <li class="breadcrumb-item active" aria-current="page" v-else>Update User Service</li>
+                    <li class="breadcrumb-item" aria-current="page" v-if="status">New Service Register</li>
+                    <li class="breadcrumb-item active" aria-current="page" v-else>Update Service Register</li>
                 </ol>
-                <h4 class="main-title mb-0">User Service</h4>
+                <h4 class="main-title mb-0">Service Register</h4>
             </div>
-            <router-link to="/user_services" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> USER SERVICES</router-link>
+            <router-link to="/user_services" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> SERVICE REGISTERS</router-link>
         </div>
         <div class="row">
             <div class="col-12">
                 <form @submit.prevent="submitForm">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add User Service</h6>
-                            <h6 class="card-title" v-else>Update User Service</h6>
+                            <h6 class="card-title" v-if="status">Add Service Register</h6>
+                            <h6 class="card-title" v-else>Update Service Register</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2 mb-5">

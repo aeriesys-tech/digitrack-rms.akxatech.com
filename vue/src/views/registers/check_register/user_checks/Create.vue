@@ -10,12 +10,12 @@
                         <a href="javascript:void(0)">Registers</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <router-link to="/user_checks">User Checks</router-link>
+                        <router-link to="/user_checks">Check Registers</router-link>
                     </li>
                     <li class="breadcrumb-item" aria-current="page" v-if="status">Add Check</li>
                     <li class="breadcrumb-item active" aria-current="page" v-else>Update Check</li>
                 </ol>
-                <h4 class="main-title mb-0">User Checks</h4>
+                <h4 class="main-title mb-0">Check Register</h4>
             </div>
             <div>
                 <router-link to="/user_checks" type="button" class="btn btn-danger me-2"><i class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
@@ -28,8 +28,8 @@
                 <form>
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add User Check</h6>
-                            <h6 class="card-title" v-else>Update User Check</h6>
+                            <h6 class="card-title" v-if="status">Add Check Register</h6>
+                            <h6 class="card-title" v-else>Update Check Register</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
