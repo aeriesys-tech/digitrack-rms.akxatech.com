@@ -129,6 +129,9 @@ import ViewProcessRegister from "@/views/registers/process_registers/View.vue";
 import CreateProcessRegister from "@/views/registers/process_registers/Create.vue";
 import ProcessRegisters from "@/views/registers/process_registers/Index.vue"
 
+import CreateBreakDownRegister from "@/views/registers/break_down_register/Create.vue";
+import BreakDownRegisters from "@/views/registers/break_down_register/Index.vue"
+
 
 import Test from "@/views/Test.vue";
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
@@ -373,6 +376,23 @@ const routes = [
     path: "/user_check/:user_check_id/view",
     name: "UserChecks.View",
     component: ViewUserCheck,
+  },
+
+  //break down register
+  {
+    path: "/break_down_registers",
+    name: "BreakDownRegisters.Index",
+    component: BreakDownRegisters,
+  },
+  {
+    path: "/break_down_registers/create",
+    name: "BreakDownRegister.Create",
+    component: CreateBreakDownRegister,
+  },
+  {
+    path: "/break_down_registers/:break_down_list_id/edit",
+    name: "BreakDownRegister.Edit",
+    component: CreateBreakDownRegister,
   },
 
   // list params

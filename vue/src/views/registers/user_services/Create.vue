@@ -30,7 +30,7 @@
                         <div class="card-body">
                             <div class="row g-2 mb-5">
                                 <!-- <div class="col-md-4">
-                                    <label class="form-label">Service Number</label><span class="text-danger"> *</span> 
+                                    <label class="form-label">Service Number</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Enter Service Number" class="form-control" :class="{'is-invalid':errors.service_no}" v-model="user_service.service_no" ref="service_no"/>
                                     <span v-if="errors.service_no" class="invalid-feedback">{{ errors.service_no[0] }}</span>
                                 </div> -->
@@ -75,7 +75,7 @@
                                     />
                                     <span v-if="errors.next_service_date" class="invalid-feedback">{{ errors.next_service_date[0] }}</span>
                                 </div>
-                               
+
                                 <div class="col-md-12">
                                     <label class="form-label">Note</label>
                                     <textarea type="text" placeholder="Enter Note" class="form-control" :class="{'is-invalid': errors.note}" v-model="user_service.note"></textarea>
@@ -107,7 +107,8 @@
                                                     label="zone_name"
                                                     placeholder="Select Asset Zone"
                                                     :data="asset_zones"
-                                                    @input=" zone => user_spare.asset_zone_id = zone"
+                                                    @input=" zone1 => user_spare.asset_zone_id = zone1"
+                                                    @selectsearch="getAssetZoneValue(user_spare.asset_zone_id)"
                                                 >
                                                 </search>
                                                 <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
@@ -122,7 +123,8 @@
                                                     label2="service_code"
                                                     placeholder="Select Service"
                                                     :data="services"
-                                                    @input=" service => user_spare.service_id = service"
+                                                    @input=" service1 => user_spare.service_id = service1"
+                                                    @selectsearch="getServiceValue(user_spare.service_id)"
                                                 >
                                                 </search>
                                                 <span v-if="errors.service_id" class="invalid-feedback">{{ errors.service_id[0] }}</span>
@@ -162,9 +164,9 @@
                                         </tbody>
                                         <tbody>
                                             <tr v-for="spare, index in user_service.user_spares" :key="index">
-                                            <td>{{ spare?.spare?.asset_zone?.zone_name }}</td>
-                                            <td>{{ spare?.spare?.service?.service_name }}</td>
-                                            <td>{{ spare?.spare?.service_cost }}</td>
+                                            <td>{{ spare?.asset_zone?.zone_name}}</td>
+                                            <td>{{ spare?.service?.service_name }}</td>
+                                            <td>{{ spare?.service_cost }}</td>
                                                 <td>{{ spare?.spare?.spare_name }}</td>
                                                 <td>{{ spare?.spare_cost }}</td>
                                                 <td class="text-center">
@@ -215,12 +217,20 @@
                 user_spare: {
                     user_spare_id: "",
                     spare_id: "",
-                    asset_zone_id:"",
-                    service_id: "",
-                    service_cost: "",
-                    spare: {
+                     spare: {
                         spare_name: "",
                     },
+                    asset_zone_id: "",
+                    asset_zone: {
+                        zone_name: "",
+                    },
+                    service_id: "",
+                     service: {
+                        service_name:"",
+                    },
+                    service_cost: "",
+
+
                     spare_cost: "",
                     status: true,
                 },
@@ -238,8 +248,8 @@
             'user_service.asset_id': function(){
                 this.getAssetZones();
             },
-            
-            'user_service.asset_zone_id': function(){
+
+            'user_spare.asset_zone_id': function(){
                this.getServices();
                this.getSpares();
             }
@@ -284,6 +294,16 @@
                     vm.updateUserService();
                 }
             },
+             getAssetZoneValue(value) {
+                let vm = this;
+                let asset_zone = vm.asset_zones?.filter(function (ele) {
+                    return ele.asset_zone_id == value;
+                });
+                console.log("aaa--",asset_zone,value)
+                if (asset_zone.length) {
+                    vm.user_spare.asset_zone.zone_name = asset_zone[0].zone_name;
+                }
+            },
             getValue(value) {
                 let vm = this;
                 let spare = vm.spares?.filter(function (ele) {
@@ -291,6 +311,15 @@
                 });
                 if (spare.length) {
                     vm.user_spare.spare.spare_name = spare[0].spare_name;
+                }
+            },
+            getServiceValue(value) {
+                let vm = this;
+                let service = vm.services?.filter(function (ele) {
+                    return ele.service_id == value;
+                });
+                if (service.length) {
+                    vm.user_spare.service.service_name = service[0].service_name;
                 }
             },
             getAssets() {
@@ -316,7 +345,7 @@
                     .then((response) => {
                         loader.hide();
                         vm.services = response.data;
-                       
+
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -415,7 +444,13 @@
                     vm.user_service.user_spares.push({
                         user_spare_id: "",
                         asset_zone_id: vm.user_spare.asset_zone_id,
+                        asset_zone: {
+                            zone_name: vm.user_spare.asset_zone.zone_name,
+                        },
                         service_id: vm.user_spare.service_id,
+                         service: {
+                            service_name: vm.user_spare.service.service_name,
+                        },
                         service_cost: vm.user_spare.service_cost,
                         spare_id: vm.user_spare.spare_id,
                         spare: {
@@ -441,7 +476,9 @@
             editSpare(spare, key) {
                 let vm = this;
                 vm.user_spare.asset_zone_id = spare.asset_zone_id;
+                vm.user_spare.asset_zone.asset_zone_name = spare.asset_zone.asset_zone_name;
                 vm.user_spare.service_id = spare.service_id;
+                vm.user_spare.service.service_name = spare.service.service_name;
                 vm.user_spare.service_cost = spare.service_cost;
                 vm.user_spare.user_spare_id = spare.user_spare_id;
                 vm.user_spare.spare_id = spare.spare_id;
@@ -476,9 +513,16 @@
                     });
                     vm.user_service.user_spares[spare_data.key] = spare_data;
                     vm.user_service.user_spares.splice(vm.user_spare.key, 1);
+                    console.log("push",vm.user_spare)
                     vm.user_service.user_spares.push({
                         asset_zone_id: vm.user_spare.asset_zone_id,
+                         asset_zone: {
+                            zone_name: vm.user_spare.asset_zone.zone_name,
+                        },
                         service_id: vm.user_spare.service_id,
+                        service: {
+                            service_name: vm.user_spare.service.service_name,
+                        },
                         service_cost: vm.user_spare.service_cost,
                         user_spare_id: vm.user_spare.user_spare_id,
                         spare_id: vm.user_spare.spare_id,
