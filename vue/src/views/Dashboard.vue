@@ -10,7 +10,7 @@
 		</div>
 	</div>
 	<div class="row g-2 mt-2">
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<router-link to="/users">
 				<div class="task-category p-3 bg-info">
 					<h2 class="category-percent mb-2 text-center">{{ total_users }}</h2>
@@ -20,7 +20,7 @@
 				</div>
 			</router-link>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<router-link to="/assets">
 				<div class="task-category p-3 bg-warning">
 					<h2 class="category-percent mb-2 text-center">{{ total_asset }}</h2>
@@ -30,7 +30,7 @@
 				</div>
 			</router-link>
 		</div>
-		<div class="col-sm-3">
+		<!-- <div class="col-sm-3">
 			<router-link to="/equipment">
 				<div class="task-category p-3 bg-secondary">
 					<h2 class="category-percent mb-2 text-center">{{ total_equipment }}</h2>
@@ -39,8 +39,8 @@
 						</span></div>
 				</div>
 			</router-link>
-		</div>
-		<div class="col-sm-3">
+		</div> -->
+		<div class="col-sm-4">
 			<router-link to="/service_types">
 				<div class="task-category p-3" style="background-color: coral;">
 					<h2 class="category-percent mb-2 text-center">{{ total_service_types }}</h2>
@@ -50,7 +50,7 @@
 				</div>
 			</router-link>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<router-link to="/Deviations">
 				<div style="position: relative; width: 200px; height: 150px; display: flex; justify-content: center; align-items: center; text-align: center;  margin-left: 40px;">
 					<img src="assets/images/blue_triangle.png" width="200px" height="150px" alt="" style="z-index: -1; position: absolute;">
@@ -62,7 +62,7 @@
 			</router-link>		
 		</div>
 		
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<router-link to="/Pendings">
 				<div style="position: relative; width: 200px; height: 150px; display: flex; justify-content: center; align-items: center; text-align: center; margin-left: 40px;">
 					<img src="assets/images/pending_triangle.png" width="200px" height="150px" alt="" style="z-index: -1; position: absolute;">
@@ -76,7 +76,7 @@
 			</router-link>		
 		</div>
 
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<router-link to="/UpcomingJobs">
 				<div style="position: relative; width: 200px; height: 150px; display: flex; justify-content: center; align-items: center; text-align: center;  margin-left: 40px;">
 				<img src="assets/images/purple_triangle.png" alt="" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
