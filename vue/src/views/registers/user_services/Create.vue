@@ -35,6 +35,22 @@
                                     <span v-if="errors.service_no" class="invalid-feedback">{{ errors.service_no[0] }}</span>
                                 </div> -->
                                 <div class="col-md-4">
+                                    <label class="form-label">Asset</label><span class="text-danger"> *</span>
+                                    <search
+                                        :class="{ 'is-invalid': errors.asset_id }"
+                                        :customClass="{ 'is-invalid': errors.asset_id }"
+                                        :initialize="user_service.asset_id"
+                                        id="asset_id"
+                                        label="asset_name"
+                                        label2="asset_code"
+                                        placeholder="Select Asset"
+                                        :data="assets"
+                                        @input=" asset => user_service.asset_id = asset"
+                                    >
+                                    </search>
+                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
                                     <label class="form-label">Service Date</label><span class="text-danger"> *</span>
                                     <input
                                         type="date"
@@ -59,58 +75,7 @@
                                     />
                                     <span v-if="errors.next_service_date" class="invalid-feedback">{{ errors.next_service_date[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Asset</label><span class="text-danger"> *</span>
-                                    <search
-                                        :class="{ 'is-invalid': errors.asset_id }"
-                                        :customClass="{ 'is-invalid': errors.asset_id }"
-                                        :initialize="user_service.asset_id"
-                                        id="asset_id"
-                                        label="asset_name"
-                                        label2="asset_code"
-                                        placeholder="Select Asset"
-                                        :data="assets"
-                                        @input=" asset => user_service.asset_id = asset"
-                                    >
-                                    </search>
-                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Asset Zone</label>
-                                    <search
-                                        :class="{ 'is-invalid': errors.asset_zone_id }"
-                                        :customClass="{ 'is-invalid': errors.asset_zone_id }"
-                                        :initialize="user_service.asset_zone_id"
-                                        id="asset_zone_id"
-                                        label="zone_name"
-                                        placeholder="Select Asset Zone"
-                                        :data="asset_zones"
-                                        @input=" zone => user_service.asset_zone_id = zone"
-                                    >
-                                    </search>
-                                    <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Service</label><span class="text-danger"> *</span>
-                                    <search
-                                        :class="{ 'is-invalid': errors.service_id }"
-                                        :customClass="{ 'is-invalid': errors.service_id }"
-                                        :initialize="user_service.service_id"
-                                        id="service_id"
-                                        label="service_name"
-                                        label2="service_code"
-                                        placeholder="Select Service"
-                                        :data="services"
-                                        @input=" service => user_service.service_id = service"
-                                    >
-                                    </search>
-                                    <span v-if="errors.service_id" class="invalid-feedback">{{ errors.service_id[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Service Cost</label>
-                                    <input type="number" placeholder="Enter Service Cost" min="0" oninput="validity.valid||(value='');" class="form-control" :class="{'is-invalid':errors.service_cost}" v-model="user_service.service_cost" />
-                                    <span v-if="errors.service_cost" class="invalid-feedback">{{ errors.service_cost[0] }}</span>
-                                </div>
+                               
                                 <div class="col-md-12">
                                     <label class="form-label">Note</label>
                                     <textarea type="text" placeholder="Enter Note" class="form-control" :class="{'is-invalid': errors.note}" v-model="user_service.note"></textarea>
@@ -123,6 +88,9 @@
                                     <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                         <thead>
                                             <tr>
+                                                <th>Asset Zone <span class="text-danger"> *</span></th>
+                                                <th>Service <span class="text-danger"> *</span></th>
+                                                <th>Service Cost <span class="text-danger"> *</span></th>
                                                 <th>Spare <span class="text-danger"> *</span></th>
                                                 <th>Spare Cost <span class="text-danger"> *</span></th>
                                                 <th class="text-center">Actions</th>
@@ -130,6 +98,39 @@
                                         </thead>
                                         <tbody>
                                             <tr>
+                                           <td>
+                                                <search
+                                                    :class="{ 'is-invalid': errors.asset_zone_id }"
+                                                    :customClass="{ 'is-invalid': errors.asset_zone_id }"
+                                                    :initialize="user_spare.asset_zone_id"
+                                                    id="asset_zone_id"
+                                                    label="zone_name"
+                                                    placeholder="Select Asset Zone"
+                                                    :data="asset_zones"
+                                                    @input=" zone => user_spare.asset_zone_id = zone"
+                                                >
+                                                </search>
+                                                <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
+                                            </td>
+                                            <td>
+                                                <search
+                                                    :class="{ 'is-invalid': errors.service_id }"
+                                                    :customClass="{ 'is-invalid': errors.service_id }"
+                                                    :initialize="user_spare.service_id"
+                                                    id="service_id"
+                                                    label="service_name"
+                                                    label2="service_code"
+                                                    placeholder="Select Service"
+                                                    :data="services"
+                                                    @input=" service => user_spare.service_id = service"
+                                                >
+                                                </search>
+                                                <span v-if="errors.service_id" class="invalid-feedback">{{ errors.service_id[0] }}</span>
+                                            </td>
+                                            <td>
+                                                <input type="number" placeholder="Enter Service Cost" min="0" oninput="validity.valid||(value='');" class="form-control" :class="{'is-invalid':errors.service_cost}" v-model="user_spare.service_cost" />
+                                                <span v-if="errors.service_cost" class="invalid-feedback">{{ errors.service_cost[0] }}</span>
+                                            </td>
                                                 <td>
                                                     <search
                                                         :class="{ 'is-invalid': errors.spare_id }"
@@ -161,6 +162,9 @@
                                         </tbody>
                                         <tbody>
                                             <tr v-for="spare, index in user_service.user_spares" :key="index">
+                                            <td>{{ spare?.spare?.asset_zone?.zone_name }}</td>
+                                            <td>{{ spare?.spare?.service?.service_name }}</td>
+                                            <td>{{ spare?.spare?.service_cost }}</td>
                                                 <td>{{ spare?.spare?.spare_name }}</td>
                                                 <td>{{ spare?.spare_cost }}</td>
                                                 <td class="text-center">
@@ -199,10 +203,10 @@
                     service_no: "",
                     service_date: "",
                     asset_id: "",
-                    service_cost: "",
+                    // service_cost: "",
                     next_service_date: "",
-                    service_id: "",
-                    asset_zone_id:"",
+                    // service_id: "",
+                    // asset_zone_id:"",
                     note: "",
                     user_spares: [],
                     deleted_user_spares: [],
@@ -211,6 +215,9 @@
                 user_spare: {
                     user_spare_id: "",
                     spare_id: "",
+                    asset_zone_id:"",
+                    service_id: "",
+                    service_cost: "",
                     spare: {
                         spare_name: "",
                     },
@@ -388,7 +395,16 @@
             addRow() {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "") {
+                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                    if (vm.user_spare.asset_zone_id == "") {
+                        vm.errors.asset_zone_id = ["Asset Zone cannot be empty"];
+                    }
+                    if (vm.user_spare.service_id == "") {
+                        vm.errors.service_id = ["Service cannot be empty"];
+                    }
+                    if (vm.user_spare.service_cost == "") {
+                        vm.errors.service_cost = ["Service Cost cannot be empty"];
+                    }
                     if (vm.user_spare.spare_id == "") {
                         vm.errors.spare_id = ["Spare field cannot be empty"];
                     }
@@ -398,6 +414,9 @@
                 } else {
                     vm.user_service.user_spares.push({
                         user_spare_id: "",
+                        asset_zone_id: vm.user_spare.asset_zone_id,
+                        service_id: vm.user_spare.service_id,
+                        service_cost: vm.user_spare.service_cost,
                         spare_id: vm.user_spare.spare_id,
                         spare: {
                             spare_name: vm.user_spare.spare.spare_name,
@@ -409,6 +428,9 @@
             },
             discardNewRow() {
                 let vm = this;
+                vm.user_spare.asset_zone_id = "";
+                vm.user_spare.service_id = "";
+                vm.user_spare.service_cost = "";
                 vm.user_spare.user_spare_id = "";
                 vm.user_spare.spare_id = "";
                 vm.user_spare.spare_cost = "";
@@ -418,6 +440,9 @@
             },
             editSpare(spare, key) {
                 let vm = this;
+                vm.user_spare.asset_zone_id = spare.asset_zone_id;
+                vm.user_spare.service_id = spare.service_id;
+                vm.user_spare.service_cost = spare.service_cost;
                 vm.user_spare.user_spare_id = spare.user_spare_id;
                 vm.user_spare.spare_id = spare.spare_id;
                 vm.user_spare.spare.spare_name = spare.spare.spare_name;
@@ -429,7 +454,16 @@
             updateRow(spare) {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "") {
+                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                    if (vm.user_spare.asset_zone_id == "") {
+                        vm.errors.asset_zone_id = ["Asset Zone cannot be empty"];
+                    }
+                    if (vm.user_spare.service_id == "") {
+                        vm.errors.service_id = ["Service cannot be empty"];
+                    }
+                    if (vm.user_spare.service_cost == "") {
+                        vm.errors.service_cost = ["Service Cost cannot be empty"];
+                    }
                     if (vm.user_spare.spare_id == "") {
                         vm.errors.spare_id = ["Spare field cannot be empty"];
                     }
@@ -443,6 +477,9 @@
                     vm.user_service.user_spares[spare_data.key] = spare_data;
                     vm.user_service.user_spares.splice(vm.user_spare.key, 1);
                     vm.user_service.user_spares.push({
+                        asset_zone_id: vm.user_spare.asset_zone_id,
+                        service_id: vm.user_spare.service_id,
+                        service_cost: vm.user_spare.service_cost,
                         user_spare_id: vm.user_spare.user_spare_id,
                         spare_id: vm.user_spare.spare_id,
                         spare: {
