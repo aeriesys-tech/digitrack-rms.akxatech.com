@@ -64,7 +64,6 @@
                                         placeholder="Select Department"
                                         :data="departments"
                                         @input=" department => user_check.department_id = department"
-                                        @selectsearch="getDepartments(user_check.department_id)"
                                     >
                                     </search>
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
@@ -235,9 +234,9 @@ export default {
                 this.getDepartments();
             },
 
-            // 'user_check.asset_zone_id': function(){
-            //    this.getAssetChecks();
-            // }
+            'user_check.department_id': function(){
+               this.getAssetChecks();
+            }
         },
     mounted() {
         this.user_check.reference_date = moment().format("yyyy-MM-DD");
@@ -357,9 +356,9 @@ export default {
                 .then((response) => {
                     loader.hide();
                     vm.asset_zones = response.data.data;
-                    if(!vm.asset_zones.length){
-                        vm.getAssetChecks()
-                    }
+                    // if(!vm.asset_zones.length){
+                    //     vm.getAssetChecks()
+                    // }
                 })
                 .catch(function (error) {
                     loader.hide();

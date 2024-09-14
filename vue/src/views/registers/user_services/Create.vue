@@ -88,7 +88,7 @@
                                     <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Asset Zone <span class="text-danger"> *</span></th>
+                                                <th>Asset Zone</th>
                                                 <th>Service <span class="text-danger"> *</span></th>
                                                 <th>Service Cost <span class="text-danger"> *</span></th>
                                                 <th>Spare <span class="text-danger"> *</span></th>
@@ -424,10 +424,7 @@
             addRow() {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
-                    if (vm.user_spare.asset_zone_id == "") {
-                        vm.errors.asset_zone_id = ["Asset Zone cannot be empty"];
-                    }
+                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
@@ -476,7 +473,7 @@
             editSpare(spare, key) {
                 let vm = this;
                 vm.user_spare.asset_zone_id = spare.asset_zone_id;
-                vm.user_spare.asset_zone.asset_zone_name = spare.asset_zone.asset_zone_name;
+                vm.user_spare.asset_zone.zone_name = spare.asset_zone.zone_name;
                 vm.user_spare.service_id = spare.service_id;
                 vm.user_spare.service.service_name = spare.service.service_name;
                 vm.user_spare.service_cost = spare.service_cost;
@@ -491,10 +488,7 @@
             updateRow(spare) {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
-                    if (vm.user_spare.asset_zone_id == "") {
-                        vm.errors.asset_zone_id = ["Asset Zone cannot be empty"];
-                    }
+                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
