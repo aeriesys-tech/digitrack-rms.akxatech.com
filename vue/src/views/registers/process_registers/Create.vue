@@ -228,10 +228,8 @@ export default {
                     .dispatch("post", uri)
                     .then(function (response) {
                         vm.user_variable = response.data.data;
-                        console.log("user---", vm.user_variable)
                     })
                     .catch(function (error) {
-
                         console.log("error", error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
@@ -407,12 +405,12 @@ export default {
             vm.user_variable_data.value = user_variable_data1.value;
             vm.user_variable_data.status = false;
             vm.user_variable_data.key = key;
+            vm.user_variable_data.user_asset_variable_id = user_variable_data1.user_asset_variable_id;
+            vm.user_variable_data.user_variable_id=user_variable_data1.user_variable_id
             vm.errors = [];
         },
         updateRow(user_variable_data) {
             let vm = this;
-            console.log("user variable", user_variable_data)
-            // console.log("user variable", vm.user_variable_data)
             vm.errors = [];
             if (vm.user_variable_data.variable_id == "" || vm.user_variable_data.date_time == "" || vm.user_variable_data.value == "") {
                 if (vm.user_variable_data.variable_id == "") {
@@ -449,6 +447,9 @@ export default {
                     },
                     date_time: vm.user_variable_data.date_time,
                     value: vm.user_variable_data.value,
+                    user_asset_variable_id: vm.user_variable_data.user_asset_variable_id,
+                    user_variable_id:vm.user_variable_data.user_variable_id
+
                 });
                 vm.discardNewRow();
 
@@ -475,7 +476,7 @@ export default {
             //     return element.spare_id == spare.user_spare_id;
             // });
             if (confirm("Are you sure you want to delete")) {
-                vm.deleted_data_variables.push(user_variable_data1?.user_variable_data_id);
+                vm.deleted_data_variables?.push(user_variable_data1?.user_variable_data_id);
                 vm.user_variable.asset_variables.splice(key, 1);
                 vm.discardNewRow();
             }

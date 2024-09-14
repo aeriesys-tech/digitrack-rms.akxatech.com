@@ -213,6 +213,7 @@
                     user_spares: [],
                     deleted_user_spares: [],
                     status: true,
+                    asset_zone_id:""
                 },
                 user_spare: {
                     user_spare_id: "",
@@ -300,7 +301,8 @@
                     return ele.asset_zone_id == value;
                 });
                 console.log("aaa--",asset_zone,value)
-                if (asset_zone.length) {
+                 if (asset_zone.length) {
+                    vm.user_service.asset_zone_id = asset_zone[0].asset_zone_id
                     vm.user_spare.asset_zone.zone_name = asset_zone[0].zone_name;
                 }
             },
