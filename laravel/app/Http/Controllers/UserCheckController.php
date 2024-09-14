@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Aws\S3\S3Client;
 use App\Models\AssetZone;
+use App\Models\Department;
 
 class UserCheckController extends Controller
 {
@@ -70,6 +71,7 @@ class UserCheckController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'reference_date' => 'required|date',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes',
             'attachments.*' => 'nullable'
         ]);
@@ -133,6 +135,7 @@ class UserCheckController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'reference_date' => 'required|date',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes'
         ]);
         
@@ -212,5 +215,18 @@ class UserCheckController extends Controller
             $service_no = 'Reference_' . $formattedNextServiceNumber;
         }
         return $service_no;
+    }
+
+    public function getAssetRegisterDepartments(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id',
+        ]);
+
+        $checkIds = AssetCheck::where('asset_id', $request->asset_id)->pluck('check_id'); 
+        $department_ids = Check::whereIn('check_id', $checkIds)->pluck('department_id')->unique()->toArray();
+
+        $asset_departments = Department::whereIn('department_id', $department_ids)->get();
+        return $asset_departments;
     }
 }
