@@ -97,7 +97,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Shop</label><span class="text-danger"> *</span>
-                                            <select class="form-control" :class="{ 'is-invalid': errors?.plant_id }" v-model="asset.plant_id">
+                                            <select class="form-control" :class="{ 'is-invalid': errors?.plant_id }" v-model="asset.plant_id" @change="getAreaValue()" >
                                                 <option value="">Select Shop</option>
                                                 <option v-for="plant, key in plants" :key="key" :value="plant?.plant_id">{{ plant.plant_name }} </option>
                                             </select>
@@ -105,10 +105,12 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Area</label><span class="text-danger"> *</span>
-                                            <select class="form-control" :class="{ 'is-invalid': errors?.area_id }" v-model="asset.area_id">
+                                            <input type="text" disabled="disabled" class="form-control"  :value="asset?.area_name" />
+                                            <!-- <input type="text" disabled="disabled" v-else class="form-control"  :value="asset?.area?.area_name" /> -->
+                                            <!-- <select class="form-control" :class="{ 'is-invalid': errors?.area_id }" v-model="asset.area_id">
                                                 <option value="">Select Area</option>
                                                 <option v-for="area, key in areas" :key="key" :value="area?.area_id">{{ area?.area_name }} </option>
-                                            </select>
+                                            </select> -->
                                             <span v-if="errors?.area_id" class="invalid-feedback">{{ errors.area_id[0] }}</span>
                                         </div>
                                     </div>
@@ -261,10 +263,13 @@
                     section_id: "",
                     functional_id: "",
                     area_id: "",
+                    area_name:null,
                     radius: "",
                     zone_name: [],
                     deleted_asset_attribute_values: [],
+                    area_name: "",
                 },
+
                 voltage: {
                     color: "#ffffff",
                     voltage_code: "",
@@ -306,8 +311,9 @@
                             vm.asset = response.data.data;
                             vm.initial_zone_no = vm.asset.no_of_zones;
                             vm.prev_zone_names = vm.asset.zone_name;
-                            // console.log("t--",vm.asset)
                             vm.show_assets = response.data.data?.asset_attributes;
+                             vm.asset.area_id = vm.asset.area.area_id
+                            vm.asset.area_name=vm.asset.area.area_name
 
                             vm.asset.asset_attributes.map(function (element) {
                                 vm.deleted_asset_attribute_values.push(element.asset_attribute_value.asset_attribute_value_id);
@@ -342,7 +348,6 @@
                     }
                     if (vm.asset.no_of_zones && vm.asset.no_of_zones > vm.prev_zone_names.length) {
                         let number = vm.asset.no_of_zones - vm.prev_zone_names.length;
-                        console.log(number);
                         this.new_zone_names = [];
                         for (let i = 0; i < number; i++) {
                             this.new_zone_names.push({
@@ -353,27 +358,6 @@
                             vm.asset.zone_name.push(element);
                         });
                     }
-
-                    // if(number < this.asset.zone_name.length && number > vm.initial_zone_no){
-                    //     console.log('1')
-                    //     for(let i = 0; i<number; i++){
-                    //         this.asset.zone_name.pop()
-                    //     }
-                    // }else{
-                    //     console.log('2')
-                    //     console.log(number)
-                    //     if(number > 0){
-                    //         for(let i = 0; i<number; i++){
-                    //             this.asset.zone_name.push({
-                    //                 zone_name : ''
-                    //             })
-                    //         }
-                    //     }else{
-                    //         for(let i = number; i<0; i--){
-                    //             this.asset.zone_name.pop()
-                    //         }
-                    //     }
-                    // }
                 }
             },
         },
@@ -415,7 +399,6 @@
             //     this.dropdownVisible = !this.dropdownVisible;
             // },
             updateAssetParameters(field) {
-                console.log(field);
                 let apid = this.asset.asset_attributes.filter(function (element) {
                     return element.asset_attribute_id == field.asset_attribute_id;
                 });
@@ -551,10 +534,10 @@
                     this.errors.plant_id = ["Shop id is required"];
                     isValid = false;
                 }
-                if (!this.asset.area_id) {
-                    this.errors.area_id = ["Area id is required"];
-                    isValid = false;
-                }
+                // if (!this.asset.area_id) {
+                //     this.errors.area_id = ["Area id is required"];
+                //     isValid = false;
+                // }
                 if (!this.asset.no_of_zones) {
                     this.errors.no_of_zones = ["No. of zones id is required"];
                     isValid = false;
@@ -661,7 +644,6 @@
                 vm.show_assets = [];
                 vm.asset.asset_type_id = "";
                 let discard_zone = vm.asset.zone_name.filter(function (element) {
-                    console.log("dd--", element);
                     element.zone_name = "";
                 });
                 // vm.$refs.asset_code.focus();
@@ -686,6 +668,20 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            getAreaValue() {
+                let vm = this;
+                let area = vm.plants.filter(function (element) {
+                    return element.plant_id == vm.asset.plant_id
+                })
+                if (area.length) {
+                    if ('Area' in area[0]) {
+                        vm.asset.area_id = area[0].Area?.area_id
+                        vm.asset.area_name = area[0].Area?.area_name
+                    }
+                }
+                console.log('asset')
+                console.log(vm.asset)
+            }
         },
     };
 </script>

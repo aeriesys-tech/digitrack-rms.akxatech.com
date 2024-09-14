@@ -82,10 +82,10 @@
                                         <td>{{ user_variable.job_date }}</td>
                                         <td>{{ user_variable?.asset_zone?.zone_name }}</td>
                                         <td class="text-center">
-                                            <!-- <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)"
+                                            <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)"
                                                 class="text-success me-2" @click="editUserVariable(user_variable)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
-                                            </a> -->
+                                            </a>
                                             <a title="View" href="javascript:void(0)"
                                                 @click="viewUserVariable(user_variable)" class="text-primary me-2"><i
                                                     class="ri-eye-fill fs-18 lh-1"></i></a>
