@@ -221,12 +221,14 @@ class UserCheckController extends Controller
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
+            'department_id' => 'nullable|exists:departments,department_id'
         ]);
 
         $checkIds = AssetCheck::where('asset_id', $request->asset_id)->pluck('check_id'); 
         $department_ids = Check::whereIn('check_id', $checkIds)->pluck('department_id')->unique()->toArray();
 
         $asset_departments = Department::whereIn('department_id', $department_ids)->get();
+        
         return $asset_departments;
     }
 }

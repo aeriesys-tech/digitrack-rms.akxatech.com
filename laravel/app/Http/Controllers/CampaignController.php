@@ -89,8 +89,12 @@ class CampaignController extends Controller
             ]);   
         }
 
+        //Images
+        $compaign_images = CampaignResult::where('campaign_id', $campaign->campaign_id)->get();
+
         return response()->json([
-            "message" => "Campaign Created Successfully"
+            "message" => "Campaign Created Successfully",
+            CampaignResultResource::collection($compaign_images)
         ]); 
     }
 

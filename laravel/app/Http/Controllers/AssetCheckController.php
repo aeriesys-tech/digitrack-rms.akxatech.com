@@ -141,7 +141,8 @@ class AssetCheckController extends Controller
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id'
+            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'department_id' => 'nullable|exists:departments,department_id'
         ]);
         $query = AssetCheck::query();
 
@@ -150,6 +151,12 @@ class AssetCheckController extends Controller
             $query->where('asset_zone_id', $request->asset_zone_id);
         }
 
+        if (isset($request->department_id)) 
+        {
+            $query->whereHas('Check', function($que) use($request){
+                $que->where('department_id', $request->department_id);
+            });
+        }
         $asset_check = $query->where('asset_id', $request->asset_id)->get();
         return AssetCheckResource::collection($asset_check);
     }

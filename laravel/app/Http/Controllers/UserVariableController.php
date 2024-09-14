@@ -157,6 +157,14 @@ class UserVariableController extends Controller
                     'value' => $asset_variable['value']
                 ]);
             } 
+            else {
+                UserAssetVariable::Create([
+                    'user_variable_id' => $user_variable->user_variable_id,
+                    'variable_id' => $asset_variable['variable_id'],
+                    'date_time' => $asset_variable['date_time'],
+                    'value' => $asset_variable['value'],
+                ]);
+            }
             
         }
 
