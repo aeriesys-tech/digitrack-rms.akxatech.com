@@ -10,12 +10,12 @@
                         <a href="javascript:void(0)">Registers</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <router-link to="/user_checks">User Checks</router-link>
+                        <router-link to="/user_checks">Check Registers</router-link>
                     </li>
                     <li class="breadcrumb-item" aria-current="page" v-if="status">Add Check</li>
                     <li class="breadcrumb-item active" aria-current="page" v-else>Update Check</li>
                 </ol>
-                <h4 class="main-title mb-0">User Checks</h4>
+                <h4 class="main-title mb-0">Check Register</h4>
             </div>
             <div>
                 <router-link to="/user_checks" type="button" class="btn btn-danger me-2"><i class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
@@ -28,25 +28,12 @@
                 <form>
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add User Check</h6>
-                            <h6 class="card-title" v-else>Update User Check</h6>
+                            <h6 class="card-title" v-if="status">Add Check Register</h6>
+                            <h6 class="card-title" v-else>Update Check Register</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-md-4">
-                                    <label class="form-label">Reference Date</label><span class="text-danger"> *</span>
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        placeholder="Enter Reference Date"
-                                        :class="{'is-invalid': errors.reference_date}"
-                                        :value="convertDateFormat(user_check.reference_date)"
-                                        v-model="user_check.reference_date"
-                                        ref="reference_date"
-                                    />
-                                    <span v-if="errors.reference_date" class="invalid-feedback">{{ errors.reference_date[0] }}</span>
-                                </div>
-                                <div class="col-md-4">
+                                 <div class="col-md-3">
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <search
                                         :disabled="!status"
@@ -59,12 +46,30 @@
                                         placeholder="Select Asset"
                                         :data="assets"
                                         @input=" asset => user_check.asset_id = asset"
-                                        @selectsearch="getAssetZones(user_check.asset_id)"
+                                        @selectsearch="checkAssets()"
                                     >
                                     </search>
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
+                                 <div class="col-md-3">
+                                    <label class="form-label">Department</label><span class="text-danger"> *</span>
+                                    <search
+                                        :disabled="!status"
+                                        :class="{ 'is-invalid': errors.department_id }"
+                                        :customClass="{ 'is-invalid': errors.department_id }"
+                                        :initialize="user_check.department_id"
+                                        id="department_id"
+                                        label="department_name"
+                                        label2="department_code"
+                                        placeholder="Select Department"
+                                        :data="departments"
+                                        @input=" department => user_check.department_id = department"
+                                        @selectsearch="getDepartments(user_check.department_id)"
+                                    >
+                                    </search>
+                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                </div>
+                                <div class="col-md-3">
                                     <label class="form-label">Asset Zone</label>
                                     <search
                                         :disabled="!status"
@@ -81,6 +86,19 @@
                                     </search>
                                     <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
                                 </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Reference Date</label><span class="text-danger"> *</span>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        placeholder="Enter Reference Date"
+                                        :class="{'is-invalid': errors.reference_date}"
+                                        :value="convertDateFormat(user_check.reference_date)"
+                                        v-model="user_check.reference_date"
+                                        ref="reference_date"
+                                    />
+                                    <span v-if="errors.reference_date" class="invalid-feedback">{{ errors.reference_date[0] }}</span>
+                                </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Note</label>
                                     <textarea type="text" placeholder="Enter Note" class="form-control" :class="{'is-invalid': errors.note}" v-model="user_check.note"></textarea>
@@ -89,7 +107,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
                 </form>
             </div>
@@ -142,7 +160,7 @@
                                                 <select class="form-control" v-model="check.value">
                                                     <option value="">Select</option>
                                                     <option v-for="value, key in check?.field_values?.split(',')" :key="key" :value="value">{{ value }}</option>
-                                                </select> 
+                                                </select>
                                             </td>
                                             <!-- <td></td> -->
                                         </tr>
@@ -171,14 +189,16 @@ export default {
                 reference_no:'',
                 reference_date:'',
                 note:'',
-                asset_zone_id:"",
+                asset_zone_id: "",
+                department_id:"",
                 status:'',
                 asset_checks:[],
             },
             assets: [],
             status:true,
             asset_checks:[],
-            asset_zones:[],
+            asset_zones: [],
+            departments:[],
             errors:[]
         }
     },
@@ -188,7 +208,7 @@ export default {
             if (to.name == "UserChecks.Create") {
                 if(vm.$store.getters.asset_id){
                     vm.user_check.asset_id = vm.$store.getters.asset_id
-                    vm.getAssetChecks(vm.user_check.asset_id)
+                    vm.getAssetChecks()
                 }
                 vm.$refs.reference_date.focus();
             } else {
@@ -198,6 +218,9 @@ export default {
                     .dispatch("post", uri)
                     .then(function (response) {
                         vm.user_check = response.data.data;
+                        console.log("ss--",vm.user_check)
+
+
                     })
                     .catch(function (error) {
                         vm.errors = error.response.data.errors;
@@ -206,10 +229,23 @@ export default {
             }
         });
     },
+     watch:{
+            'user_check.asset_id': function(){
+                this.getAssetZones();
+                this.getDepartments();
+            },
+
+            // 'user_check.asset_zone_id': function(){
+            //    this.getAssetChecks();
+            // }
+        },
     mounted() {
         this.user_check.reference_date = moment().format("yyyy-MM-DD");
     },
     methods: {
+        checkAssets() {
+            this.user_check.asset_zone_id = '';
+        },
         getAssets() {
             let vm = this;
             let loader = vm.$loading.show();
@@ -218,6 +254,22 @@ export default {
             .then((response) => {
                 loader.hide();
                 vm.assets = response.data.data;
+
+            })
+            .catch(function (error) {
+                loader.hide();
+                vm.errors = error.response.data.errors;
+                vm.$store.dispatch("error", error.response.data.message);
+            });
+        },
+        getDepartments() {
+            let vm = this;
+            let loader = vm.$loading.show();
+            vm.$store
+            .dispatch("post", { uri: "getAssetRegisterDepartments", data:vm.user_check  })
+            .then((response) => {
+                loader.hide();
+                vm.departments = response.data;
             })
             .catch(function (error) {
                 loader.hide();
@@ -227,15 +279,16 @@ export default {
         },
         getAssetChecks(){
             let vm = this;
-            vm.asset_checks=[];
-            let loader = vm.$loading.show();
+            vm.asset_checks = [];
             vm.user_check.asset_checks = []
+            let loader = vm.$loading.show();
             vm.$store
             .dispatch("post", { uri: "getAssetRegisterChecks", data:vm.user_check })
             .then((response) => {
                 loader.hide();
                 // vm.assets = response.data.data;
-                if(response.data.data?.length){
+                if (response.data.data?.length) {
+                    vm.user_check.asset_checks = []
                     let asset_check = response.data.data.filter(function(ele){
                         // vm.asset_checks.push(ele.check)
                         // ele.check.value=ele.check.default_value
@@ -266,7 +319,7 @@ export default {
             });
         },
         addUserCheck(){
-            
+
             let vm = this;
             let loader = this.$loading.show();
             this.$store.dispatch('post', { uri: 'addUserCheck', data:vm.user_check })
@@ -317,10 +370,10 @@ export default {
         convertDateFormat(date) {
                 let vm = this;
                 return moment(date).format('yyyy-MM-DD')
-    
+
             },
-            
-         
+
+
     }
 }
 </script>

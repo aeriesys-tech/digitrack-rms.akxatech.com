@@ -56,7 +56,7 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="/functional" v-bind:class="{ active: $route.path === '/functional' }" class="nav-link"><i class="ri-rfid-line"></i> <span>Functional</span></router-link>
-                    </li> 
+                    </li>
                 </ul>
             </div>
 
@@ -155,10 +155,10 @@
                 <ul class="nav nav-sidebar">
                     <li class="nav-item" v-can="'equipment.view'">
                         <router-link to="/equipment" v-bind:class="{ active: $route.path === '/equipment' }" class="nav-link"><img src="assets/images/machine.png" class="me-2" style="width: 22px;" alt=""><span>Equipment</span></router-link>
-                    </li>                    
+                    </li>
                     <li class="nav-item" v-can="'assets.view'">
                         <router-link to="/assets" v-bind:class="{ active: $route.path === '/assets' || $route.path === '/asset/create' || $route.name === 'Assets.Edit' || $route.name === 'Assets.View' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Asset</span></router-link>
-                    </li>         
+                    </li>
                 </ul>
             </div> -->
             <div class="nav-group show">
@@ -202,6 +202,9 @@
                     <li class="nav-item">
                         <router-link to="/process_registers" v-bind:class="{ active: $route.path === '/process_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Process Register</span></router-link>
                     </li>
+                     <li class="nav-item">
+                        <router-link to="/break_down_registers" v-bind:class="{ active: $route.path === '/break_down_registers' }" class="nav-link"><i class="ri-bubble-chart-line"></i><span>Break Down Register</span></router-link>
+                    </li>
                     <!-- <li class="nav-item">
                         <router-link to="/spare_registers" v-bind:class="{ active: $route.path === '/spare_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Spare Register</span></router-link>
                     </li>
@@ -216,7 +219,7 @@
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
                         <router-link to="/user_services" class="nav-link"><i class="ri-contacts-line"></i><span>User Services</span></router-link>
-                    </li>           
+                    </li>
                 </ul>
             </div>  -->
 
@@ -424,6 +427,7 @@
                     name == "UserChecks.Create" ||
                     name == "UserChecks.Edit" ||
                     tab == "/process_registers" ||
+                     tab == "/break_down_registers" ||
                     tab == "/spare_registers" ||
                     tab == "/qc_registers"
                 ) {

@@ -53,7 +53,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Asset Code</label><span class="text-danger"> *</span>
-                                            <input type="text" placeholder="Enter Asset Code" class="form-control" :class="{ 'is-invalid': errors?.asset_code }" v-model="asset.asset_code"/>
+                                            <input type="text" placeholder="Enter Asset Code" class="form-control" :class="{ 'is-invalid': errors?.asset_code }" v-model="asset.asset_code" />
                                             <span v-if="errors?.asset_code" class="invalid-feedback">{{ errors.asset_code[0] }}</span>
                                         </div>
                                         <div class="col-md-4">
@@ -126,9 +126,9 @@
                                             <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
                                         </div>
                                         <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4">
-                                            <label class="form-label">Zone {{ index + 1 }}</label>
-                                            <input type="text" v-model="zone.zone_name" class="form-control" />
-                                            <span style="color: red;">{{ getZoneNameError(index) }}</span>
+                                            <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
+                                            <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" />
+                                            <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Latitude</label>
@@ -151,67 +151,67 @@
                             </div>
 
                             <div class="card mb-3">
-                                  <div class="card-header d-flex justify-content-between">
+                                <div class="card-header d-flex justify-content-between">
                                     <h6 class="card-title">Attributes</h6>
                                 </div>
-                                 <div class="card-body">
-                                     <div class="row g-2">
+                                <div class="card-body">
+                                    <div class="row g-2">
                                         <div class="col-md-4" v-for="field, key in asset.asset_attributes" :key="key">
                                             <div v-if="field.field_type == 'Text'">
-                                                <label class="form-label">{{ field.field_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                                <input type="text" class="form-control" :placeholder="'Enter ' + field.field_name" :class="{ 'is-invalid': errors[field.field_name] }" v-model="field.asset_attribute_value.field_value" />
+                                                <label class="form-label">{{ field.display_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                                <input type="text" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{ 'is-invalid': errors[field.display_name] }" v-model="field.asset_attribute_value.field_value" />
 
-                                                <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                                <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                             </div>
                                             <div v-if="field.field_type == 'Number'">
-                                                <label class="form-label">{{ field.field_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                                <label class="form-label">{{ field.display_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
                                                 <input
                                                     type="text"
                                                     class="form-control"
                                                     min="0"
                                                     oninput="validity.valid||(value='');"
-                                                    :placeholder="'Enter ' + field.field_name"
-                                                    :class="{ 'is-invalid': errors[field.field_name] }"
+                                                    :placeholder="'Enter ' + field.display_name"
+                                                    :class="{ 'is-invalid': errors[field.display_name] }"
                                                     v-model="field.asset_attribute_value.field_value"
                                                 />
-                                                <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                                <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                             </div>
                                             <div v-if="field.field_type === 'Date'">
                                                 <label class="form-label">
-                                                    {{ field.field_name }}
+                                                    {{ field.display_name }}
                                                     <span v-if="field.is_required" class="text-danger">*</span>
                                                 </label>
-                                                <input type="date" class="form-control" :placeholder="'Enter ' + field.field_name" :class="{ 'is-invalid': errors[field.field_name] }" v-model="field.asset_attribute_value.field_value" />
+                                                <input type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{ 'is-invalid': errors[field.display_name] }" v-model="field.asset_attribute_value.field_value" />
 
-                                                <span v-if="errors[field.field_name]" class="invalid-feedback">
-                                                    {{ errors[field.field_name][0] }}
+                                                <span v-if="errors[field.display_name]" class="invalid-feedback">
+                                                    {{ errors[field.display_name][0] }}
                                                 </span>
                                             </div>
                                             <div v-if="field.field_type === 'Date&Time'">
                                                 <label class="form-label">
-                                                    {{ field.field_name }}
+                                                    {{ field.display_name }}
                                                     <span v-if="field.is_required" class="text-danger">*</span>
                                                 </label>
                                                 <input
                                                     type="datetime-local"
                                                     class="form-control"
-                                                    :placeholder="'Enter ' + field.field_name"
-                                                    :class="{ 'is-invalid': errors[field.field_name] }"
+                                                    :placeholder="'Enter ' + field.display_name"
+                                                    :class="{ 'is-invalid': errors[field.display_name] }"
                                                     v-model="field.asset_attribute_value.field_value"
                                                     step="1"
                                                 />
-                                                <span v-if="errors[field.field_name]" class="invalid-feedback">
-                                                    {{ errors[field.field_name][0] }}
+                                                <span v-if="errors[field.display_name]" class="invalid-feedback">
+                                                    {{ errors[field.display_name][0] }}
                                                 </span>
                                             </div>
                                             <div v-if="field.field_type == 'Dropdown'">
-                                                <label class="form-label">{{ field.field_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                                <label class="form-label">{{ field.display_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
                                                 <select class="form-control" :class="{ 'is-invalid': errors[field.display_name] }" v-model="field.asset_attribute_value.field_value">
                                                     <option :value="field.asset_attribute_value.field_value" v-if="field.asset_attribute_value.field_value"> {{ field.asset_attribute_value.field_value }}</option>
                                                     <option :value="field.asset_attribute_value.field_value" v-else>Select {{ field.display_name }}</option>
                                                     <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{ value }}</option>
                                                 </select>
-                                                <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
+                                                <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                             </div>
 
                                             <div v-if="field.field_type == 'Color'">
@@ -222,7 +222,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                 </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -260,7 +260,7 @@
                     department_id: "",
                     section_id: "",
                     functional_id: "",
-                    area_id:"",
+                    area_id: "",
                     radius: "",
                     zone_name: [],
                     deleted_asset_attribute_values: [],
@@ -279,7 +279,7 @@
                 departments: [],
                 sections: [],
                 functionals: [],
-                areas:[],
+                areas: [],
                 plants: [],
                 asset_types: [],
                 show_assets: [],
@@ -500,7 +500,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-             getShops() {
+            getShops() {
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.$store
@@ -516,7 +516,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-             getAreas() {
+            getAreas() {
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.$store
@@ -531,8 +531,61 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            validateFields() {
+                let isValid = true;
+                this.errors = {};
+
+                if (!this.asset.asset_code) {
+                    this.errors.asset_code = ["Asset Code is required"];
+                    isValid = false;
+                }
+                if (!this.asset.asset_name) {
+                    this.errors.asset_name = ["Asset Name is required"];
+                    isValid = false;
+                }
+                if (!this.asset.asset_type_id) {
+                    this.errors.asset_type_id = ["Asset Type is required"];
+                    isValid = false;
+                }
+                if (!this.asset.plant_id) {
+                    this.errors.plant_id = ["Shop id is required"];
+                    isValid = false;
+                }
+                if (!this.asset.area_id) {
+                    this.errors.area_id = ["Area id is required"];
+                    isValid = false;
+                }
+                if (!this.asset.no_of_zones) {
+                    this.errors.no_of_zones = ["No. of zones id is required"];
+                    isValid = false;
+                } else {
+                    // Validate dynamic zone fields
+                    this.asset.zone_name.forEach((zone, index) => {
+                        if (!zone.zone_name) {
+                            this.errors[`zone_name_${index}`] = [`Zone ${index + 1} is required`];
+                            isValid = false;
+                        }
+                    });
+                }
+                for (const field of Object.values(this.asset.asset_attributes)) {
+                    if (field.is_required && !field.asset_attribute_value.field_value) {
+                        if (field.field_type === "Color") {
+                            // Set default color if not provided
+                            field.asset_attribute_value.field_value = "#000000"; // Default to black
+                        } else {
+                            this.errors[field.display_name] = [`${field.display_name} is required`];
+                            isValid = false;
+                        }
+                    }
+                }
+                console.log("Validation Errors:", this.errors);
+                return isValid;
+            },
 
             addAsset() {
+                if (!this.validateFields()) {
+                    return;
+                }
                 let vm = this;
                 // vm.asset.asset_code = vm.device_code.join("");
                 let loader = vm.$loading.show();
@@ -611,7 +664,7 @@
                     console.log("dd--", element);
                     element.zone_name = "";
                 });
-                vm.$refs.asset_code.focus();
+                // vm.$refs.asset_code.focus();
             },
 
             getAssetType(asset_type_id) {

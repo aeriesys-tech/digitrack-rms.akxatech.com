@@ -9,18 +9,18 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Registers</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">User Services</li>
+                    <li class="breadcrumb-item active" aria-current="page">Service Registers</li>
                 </ol>
-                <h4 class="main-title mb-0">User Services</h4>
+                <h4 class="main-title mb-0">Service Registers</h4>
             </div>
-            <router-link v-can="'userServices.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add User Service</router-link>
+            <router-link v-can="'userServices.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Service Register</router-link>
         </div>
 
         <div class="row">
             <div class="col-12">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">User Services</h6>
+                        <h6 class="card-title">Service Registers</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control form-control-sm mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />

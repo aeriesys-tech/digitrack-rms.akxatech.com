@@ -9,18 +9,18 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Registers</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Process Variables</li>
+                    <li class="breadcrumb-item active" aria-current="page">Process Registers</li>
                 </ol>
-                <h4 class="main-title mb-0">Process Variables</h4>
+                <h4 class="main-title mb-0">Process Registers</h4>
             </div>
             <router-link to="/process_registers/create" class="btn btn-primary" style="float: right;"><i
-                    class="ri-list-check"></i> Add Process Variable</router-link>
+                    class="ri-list-check"></i> Add Process Register</router-link>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Process Variables</h6>
+                        <h6 class="card-title">Process Registers</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control form-control-sm mb-2" type="text"
