@@ -76,7 +76,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th> -->
-                                        <th class="text-center">Status</th>
+                                        <!-- <th class="text-center">Status</th> -->
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -90,14 +90,15 @@
                                         <td>{{break_down_list.break_down_type?.break_down_type_name}}</td>
                                         <td>{{break_down_list.job_no}}</td>
                                         <td>{{break_down_list.job_date}}</td>
-                                        <td class="text-center">
+                                        <!-- <td class="text-center">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'break_down_list' + break_down_list.break_down_list_id" :checked="break_down_list.status" :value="break_down_list.status" @change="deleteBreakDownList(break_down_list)" />
                                                 <label class="custom-control-label" :for="'break_down_list' + break_down_list.break_down_list_id"></label>
                                             </div>
-                                        </td>
+                                        </td> -->
                                         <td class="text-center">
                                             <a href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -193,6 +194,7 @@
 
             deleteBreakDownList(break_down_list) {
                 let vm = this;
+                alert('are you sure you want delete it!')
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "deleteBreakDownList", data: break_down_list })

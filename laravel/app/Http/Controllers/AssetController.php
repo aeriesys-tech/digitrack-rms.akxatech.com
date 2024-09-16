@@ -86,7 +86,7 @@ class AssetController extends Controller
             'zone_name' => 'nullable|array', 
             'zone_name.*' => 'nullable',
             'plant_id' => 'required|exists:plants,plant_id' ,
-            'area_id' => 'required|exists:areas,area_id'
+            'area_id' => 'nullable|exists:areas,area_id'
         ]);
         // $data['plant_id'] = $userPlantId;
         // $data['area_id'] = $areaId;
@@ -135,7 +135,20 @@ class AssetController extends Controller
         ]);
 
         $asset = Asset::where('asset_id', $request->asset_id)->first();
-        return new AssetResource($asset);
+
+        //QR Code
+        $assetCode = $asset->asset_code;
+
+        $qrCode = new DNS2D();
+        $qrCodeData = $qrCode->getBarcodePNG($assetCode, 'QRCODE', 10, 10);
+    
+        $dataUri = 'data:image/jpeg;base64,' . $qrCodeData;
+
+        return response()->json([
+            'asset' => new AssetResource($asset),
+            'QRCode' => $dataUri,
+            'asset_code' => $assetCode
+        ]);
     }
 
     public function getAssetdata(Request $request)
@@ -180,7 +193,7 @@ class AssetController extends Controller
             'zone_name' => 'nullable|array',
             'deleted_asset_attribute_values' => 'nullable',
             'plant_id' => 'required|exists:plants,plant_id' ,
-            'area_id' => 'required|exists:areas,area_id'
+            'area_id' => 'nullable|exists:areas,area_id'
         ]);
     
         // $data['plant_id'] = $userPlantId;

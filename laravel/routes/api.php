@@ -424,6 +424,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getLocations',[CampaignController::class, 'getLocations']);
     Route::post('addCampaign',[CampaignController::class, 'addCampaign']);
     Route::post('campaignResultImages',[CampaignController::class, 'campaignResultImages']);
+    Route::post('deleteHealthCheck',[CampaignController::class, 'deleteHealthCheck']);
 
     Route::post('paginateUserVariables',[UserVariableController::class, 'paginateUserVariables']);
     Route::post('addUserVariable',[UserVariableController::class, 'addUserVariable']);

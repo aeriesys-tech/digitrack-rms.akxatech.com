@@ -111,4 +111,18 @@ class CampaignController extends Controller
                 ->whereBetween('date', [$request->from_date, $request->to_date])->get();
         return CampaignResultResource::collection($compaign_result);
     }
+
+    public function deleteHealthCheck(Request $request)
+    {
+        $request->validate([
+            'campaign_id' => 'required|exists:campaigns,campaign_id'
+        ]);
+
+        CampaignResult::where('campaign_id', $request->campaign_id)->forceDelete();
+        Campaign::where('campaign_id', $request->campaign_id)->forceDelete();
+
+        return response()->json([
+            'message' => 'HealthCheck Deleted Successfully'
+        ]);
+    }
 }

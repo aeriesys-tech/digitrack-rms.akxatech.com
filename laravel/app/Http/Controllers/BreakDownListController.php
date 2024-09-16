@@ -157,22 +157,13 @@ class BreakDownListController extends Controller
         $request->validate([
             'break_down_list_id' => 'required|exists:break_down_lists,break_down_list_id'
         ]);
-        $break_down_list = BreakDownList::withTrashed()->where('break_down_list_id', $request->break_down_list_id)->first();
 
-        if($break_down_list->trashed())
-        {
-            $break_down_list->restore();
-            return response()->json([
-                "message" => "BreakDownList Activated successfully"
-            ],200);
-        }
-        else
-        {
-            $break_down_list->delete();
-            return response()->json([
-                "message" => "BreakDownList Deactivated successfully"
-            ], 200);
-        }
+        BreakDownAttributeValue::where('break_down_list_id', $request->break_down_list_id)->forceDelete();
+        BreakDownList::where('break_down_list_id', $request->break_down_list_id)->forceDelete();
+
+        return response()->json([
+            "message" => "BreakDownRegister Deleted successfully"
+        ], 200);
     }
 
     public function getBreakDownsDropdown(Request $request)

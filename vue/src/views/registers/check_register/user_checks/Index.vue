@@ -177,6 +177,7 @@ export default {
         },
         deleteUserCheck(user_check) {
             let vm = this;
+            alert('are you sure you want delete it!')
             let loader = vm.$loading.show();
             vm.$store
                 .dispatch("post", {uri: "deleteUserCheck",data: user_check,})

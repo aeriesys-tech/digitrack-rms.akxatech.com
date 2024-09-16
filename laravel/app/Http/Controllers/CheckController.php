@@ -91,18 +91,6 @@ class CheckController extends Controller
         return new CheckResource($check);
     }
 
-    public function getAssetTypeChecks1(Request $request)
-    {
-        $request->validate([
-            'asset_type_id' => 'required|exists:asset_type,asset_type_id'
-        ]);
-
-        $checks = Check::whereHas('CheckAssetTypes', function($que) use($request){
-            $que->where('asset_type_id', $request->asset_type_id);
-        })->get();
-        return CheckResource::collection($checks);
-    }
-
     public function getAssetTypeChecks(Request $request)
     {
         $request->validate([

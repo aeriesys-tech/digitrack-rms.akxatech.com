@@ -196,6 +196,7 @@ export default {
         },
         deleteUserVariable(user_variable) {
             let vm = this;
+            alert('are you sure you want delete it!')
             let loader = vm.$loading.show();
             vm.$store
                 .dispatch("post", { uri: "deleteUserVariable", data: user_variable, })

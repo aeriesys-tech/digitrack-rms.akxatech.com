@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\AssetAccessoryResource;
 use App\Models\AssetAccessory;
+use App\Models\Asset;
+use App\Models\AssetZone;
+use App\Models\AccessoryType;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\AccessoryTypeResource;
 
 class AssetAccessoryController extends Controller
 {
@@ -43,7 +47,20 @@ class AssetAccessoryController extends Controller
             });
         }
         $asset_accessory = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
-        return AssetAccessoryResource::collection($asset_accessory);
+
+        //Accessories
+        $accessory_type = AccessoryType::all();
+
+        return response()->json([
+            'paginate_accessories' => AssetAccessoryResource::collection($asset_accessory),
+            'meta' => [
+                'current_page' => $asset_accessory->currentPage(),
+                'last_page' => $asset_accessory->lastPage(),
+                'per_page' => $asset_accessory->perPage(),
+                'total' => $asset_accessory->total(),
+            ],
+            'accessory_types' => AccessoryTypeResource::collection($accessory_type)
+        ]);
     }
 
     public function getAssetAccessories()
@@ -54,26 +71,25 @@ class AssetAccessoryController extends Controller
 
     public function addAssetAccessory(Request $request)
     {
-        $userPlantId = Auth::user()->plant_id;
-        $areaId = Auth::user()->Plant->area_id;
-        
         if ($request->has('asset_zone_id') && is_string($request->input('asset_zone_id'))) {
             $request->merge([
                 'asset_zone_id' => json_decode($request->input('asset_zone_id'), true)
             ]);
         }
+        $hasAssetZones = AssetZone::where('asset_id', $request->asset_id)->exists();
 
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'accessory_type_id' => 'required|exists:accessory_types,accessory_type_id',
-            'asset_zone_id' => 'nullable|array', 
+            'accessory_asset_zone_id' => $hasAssetZones ? 'required' : 'nullable',
             'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id',
             'accessory_name' => 'required',
             'attachment' => 'nullable|file'
         ]);
-
-        $data['plant_id'] = $userPlantId;
-        $data['area_id'] = $areaId;
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
+        
+        $data['plant_id'] = $asset->plant_id;
+        $data['area_id'] = $asset->area_id;
 
         if ($request->hasFile('attachment')) {
             $attachment = time() . '.' . $request->file('attachment')->getClientOriginalExtension();
@@ -83,27 +99,31 @@ class AssetAccessoryController extends Controller
 
         $createdAccessories = [];
 
-        if (!empty($data['asset_zone_id'])) {
-            foreach ($data['asset_zone_id'] as $zoneId) 
+        $accessoryZones = (array) $data['accessory_asset_zone_id'];
+
+        if (!empty($accessoryZones)) 
+        {
+            foreach ($accessoryZones as $zoneId) 
             {              
                 if (is_null($zoneId) || $zoneId == 0) {
                     continue;
                 }
-
+    
                 $accessoryData = $data;
                 $accessoryData['asset_zone_id'] = $zoneId;
-
+    
                 $assetAccessory = AssetAccessory::create($accessoryData);
                 $createdAccessories[] = new AssetAccessoryResource($assetAccessory);
             }
-        } else {
+        } 
+        else {
             $accessoryData = $data;
             $accessoryData['asset_zone_id'] = null;
-
+    
             $assetAccessory = AssetAccessory::create($accessoryData);
             $createdAccessories[] = new AssetAccessoryResource($assetAccessory);
         }
-
+    
         return response()->json($createdAccessories, 201);
     }
 
@@ -120,8 +140,8 @@ class AssetAccessoryController extends Controller
 
     public function updateAssetAccessory(Request $request)
     {
-        $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
+        // $userPlantId = Auth::User()->plant_id;
+        // $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
             'asset_accessory_id' => 'required|exists:asset_accessories,asset_accessory_id',
             'asset_id' => 'required|exists:assets,asset_id',
@@ -130,9 +150,10 @@ class AssetAccessoryController extends Controller
             'accessory_name' => 'required',
             'attachment' => 'nullable'
         ]);
-
-        $data['plant_id'] = $userPlantId;
-        $data['area_id'] = $areaId;
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
+        
+        $data['plant_id'] = $asset->plant_id;
+        $data['area_id'] = $asset->area_id;
 
         $asset_accessory = AssetAccessory::where('asset_accessory_id', $request->asset_accessory_id)->first();
         
