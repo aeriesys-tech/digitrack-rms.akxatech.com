@@ -43,7 +43,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th> Action </th>
+                                        <th class="text-center"> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody>
