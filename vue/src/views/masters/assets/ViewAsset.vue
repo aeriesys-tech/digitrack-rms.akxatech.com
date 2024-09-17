@@ -1037,6 +1037,7 @@
                     trashed: false,
                     asset_id: "",
                     asset_type_id:"",
+                    department_id:"",
                 },
                 check_meta_service: {
                     search: "",
@@ -1502,6 +1503,7 @@
                 let vm = this;
                 vm.check_meta.asset_id = vm.asset.asset_id;
                 vm.check_meta.asset_type_id = vm.asset.asset_type_id;
+                vm.check_meta.department_id = vm.asset.department_id;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetChecks", data: vm.check_meta })
