@@ -161,6 +161,9 @@
                                                     <button class="btn btn-outline-danger mx-1" @click.prevent="discardNewRow()"><i class="ri-close-line fs-18 lh-1"></i></button>
                                                 </td>
                                             </tr>
+                                             <tr>
+                                                <td colspan="6" class="text-danger text-center">{{ errors.user_spares }}</td>
+                                            </tr>
                                         </tbody>
                                         <tbody>
                                             <tr v-for="spare, index in user_service.user_spares" :key="index">
@@ -392,6 +395,16 @@
             addUserService() {
                 let vm = this;
                 let loader = vm.$loading.show();
+                // Check if user_spares is empty
+                if (vm.user_service.user_spares.length === 0) {
+                    loader.hide();
+                    // Set an error indicating that at least one entry is required
+                    vm.errors.user_spares = "At least one entry is required";
+
+                    // Display the error message to the user
+                    vm.$store.dispatch("error", "At least one entry is required.");
+                    return; // Prevent further execution
+                }
                 vm.$store
                     .dispatch("post", { uri: "addUserService", data: vm.user_service })
                     .then((response) => {
@@ -410,6 +423,15 @@
                 let vm = this;
                 vm.user_service.deleted_user_spares = vm.deleted_spares;
                 let loader = vm.$loading.show();
+                 if (vm.user_service.user_spares.length === 0) {
+                    loader.hide();
+                    // Set an error indicating that at least one entry is required
+                    vm.errors.user_spares = "At least one entry is required";
+
+                    // Display the error message to the user
+                    vm.$store.dispatch("error", "At least one entry is required.");
+                    return; // Prevent further execution
+                }
                 vm.$store
                     .dispatch("post", { uri: "updateUserService", data: vm.user_service })
                     .then((response) => {

@@ -68,7 +68,7 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{user_check.asset?.asset_code}}</td>
                                         <td>{{user_check.reference_no}}</td>
-                                        <td>{{user_check.reference_date}}</td>
+                                        <td>{{convertDateFormat(user_check.reference_date)}}</td>
                                         <td>{{user_check?.asset_zone?.zone_name}}</td>
                                         <td class="text-center">
                                             <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)" class="text-success me-2" @click="editUserCheck(user_check)">
@@ -105,6 +105,7 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
 export default {
     name: "UserChecks.Index",
     components: {
@@ -147,7 +148,12 @@ export default {
         this.$store.commit("setAssetId", '');
         this.index();
     },
-    methods:{
+    methods: {
+         convertDateFormat(date) {
+                let vm = this;
+            // return moment(date).format("yyyy-MM-DD");
+                return moment(date).format("DD-MM-YYYY");
+            },
         index() {
             let vm = this;
             let loader = vm.$loading.show();

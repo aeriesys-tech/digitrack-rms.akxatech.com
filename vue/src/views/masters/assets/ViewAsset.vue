@@ -1188,14 +1188,17 @@
                 asset_zone_status_checks: false,
                 asset_zone_status_services: false,
                 asset_zone_status_accessories: false,
+
+                // on add other api should not call
+                initial_status: true,
             };
         },
-        watch:{
-            'check.check_id':function(){
-                if(typeof this.check.check_id === 'number' && !this.check.asset_check_id)
-                    this.getCheck()
-            }
-        },
+        // watch:{
+        //     'check.check_id':function(){
+        //         if(typeof this.check.check_id === 'number' && !this.check.asset_check_id)
+        //             this.getCheck()
+        //     }
+        // },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
                 vm.asset.asset_id = to.params.asset_id;
@@ -1207,9 +1210,7 @@
                         // vm.asset_zones = response.data.zones;
                          vm.asset_zones = response?.data?.asset?.zone_name;
                         vm.asset.QR_Code = response?.data?.QRCode;
-                        // vm.getSpares();
                         vm.getAssetSpares();
-                        // vm.getQRCode();
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -1375,105 +1376,91 @@
                 this.datasource.data_source_asset_zones.push(datasource.asset_zone_id)
                 this.datasource.asset_zone_id = datasource.asset_zone_id
             },
-            getSpares() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeSpares" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.spares = response.data.data;
-                        vm.getAssetSpares();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getChecks() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeChecks" ,data: vm.asset})
-                    .then((response) => {
-                        loader.hide();
-                        vm.checks = response.data.data;
-                        vm.getAssetChecks();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
 
-            getVariables() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeVariables" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.variables = response.data.data;
-                        vm.getAssetVariables();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getDataSources() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeDataSources" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.data_sources = response.data.data;
-                        vm.getAssetDataSources();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getCheck() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getCheck" ,data: vm.check})
-                    .then((response) => {
-                        loader.hide();
-                        // vm.check = response.data.data;
-                        vm.check.lcl = response.data.data.lcl;
-                        vm.check.ucl = response.data.data.uclcl;
-                        vm.check.default_value = response.data.data.default_value;
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getServices() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeServices" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.services = response.data.data;
-                        vm.getAssetServices();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
+            // getChecks() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeChecks" ,data: vm.asset})
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.checks = response.data.data;
+            //             vm.getAssetChecks();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+
+            // getVariables() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeVariables" ,data: vm.asset })
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.variables = response.data.data;
+            //             vm.getAssetVariables();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+            // getDataSources() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeDataSources" ,data: vm.asset })
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.data_sources = response.data.data;
+            //             vm.getAssetDataSources();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+            // getCheck() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getCheck" ,data: vm.check})
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.check = response.data.data;
+            //             vm.check.lcl = response.data.data.lcl;
+            //             vm.check.ucl = response.data.data.uclcl;
+            //             vm.check.default_value = response.data.data.default_value;
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+            // getServices() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeServices" ,data: vm.asset })
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.services = response.data.data;
+            //             vm.getAssetServices();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+
             getAssetSpares() {
                 let vm = this;
                 vm.meta.asset_id = vm.asset.asset_id;
@@ -1490,7 +1477,10 @@
                         vm.meta.lastPage = response.data.meta.last_page;
                         vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                         // vm.getChecks();
-                        vm.getAssetChecks();
+                        if (vm.initial_status) {
+                            vm.getAssetChecks();
+                        }
+
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1517,7 +1507,9 @@
                         vm.check_meta.lastPage = response.data.meta.last_page;
                         vm.check_meta.maxPage = vm.check_meta.lastPage >= 3 ? 3 : vm.check_meta.lastPage;
                         // vm.getServices();
-                        vm.getAssetServices();
+                        if (vm.initial_status) {
+                            vm.getAssetServices();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1542,7 +1534,9 @@
                         vm.check_meta_service.lastPage = response.data.meta.last_page;
                         vm.check_meta_service.maxPage = vm.check_meta_service.lastPage >= 3 ? 3 : vm.check_meta_service.lastPage;
                         // vm.getVariables();
-                         vm.getAssetVariables();
+                        if (vm.initial_status) {
+                            vm.getAssetVariables();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1567,7 +1561,9 @@
                         vm.variable_meta_service.lastPage = response.data.meta.last_page;
                         vm.variable_meta_service.maxPage = vm.variable_meta_service.lastPage >= 3 ? 3 : vm.variable_meta_service.lastPage;
                         // vm.getDataSources();
-                        vm.getAssetDataSources();
+                        if (vm.initial_status) {
+                            vm.getAssetDataSources();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1591,8 +1587,9 @@
                         // vm.datasource_meta_service.from = response.data.meta.from;
                         vm.datasource_meta_service.lastPage = response.data.meta.last_page;
                         vm.datasource_meta_service.maxPage = vm.datasource_meta_service.lastPage >= 3 ? 3 : vm.meta.lastPage;
-                        // vm.getAccessoryTypes();
-                        vm.getAssetAccessories();
+                        if (vm.initial_status) {
+                            vm.getAssetAccessories();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1602,37 +1599,6 @@
                     });
             },
 
-            getQRCode() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetQRCode", data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.asset.QR_Code = response.data.QRCode;
-                        // vm.getAssetZones();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getAssetZones() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetZones", data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        // vm.asset_zones = response.data.data;
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
             downloadQR() {
                 let vm = this;
                 window.open(vm.$store.state.apiUrl + "downloadAssetQRCode?asset_code=" + vm.asset.asset_code);
@@ -1980,22 +1946,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            getAccessoryTypes() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAccessoryTypes" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.accessory_types = response.data.data;
-                        vm.getAssetAccessories();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
+
             getAssetAccessories() {
                 let vm = this;
                 vm.accessory_meta_service.asset_id = vm.asset.asset_id;
@@ -2005,7 +1956,8 @@
                     .dispatch("post", { uri: "paginateAssetAccessories", data: vm.accessory_meta_service })
                     .then((response) => {
                         loader.hide();
-                        console.log("access reposne",response.data)
+                        console.log("access reposne", response.data)
+                        vm.initial_status = false;
                         vm.accessory_types = response.data.accessory_types;
                         vm.asset_accessories = response.data.paginate_accessories;
                         vm.accessory_meta_service.totalRows = response.data.meta.total;

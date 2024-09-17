@@ -129,6 +129,9 @@
                                                             class="ri-close-line fs-18 lh-1"></i></button>
                                                 </td>
                                             </tr>
+                                             <tr>
+                                                <td colspan="6" class="text-danger text-center">{{ errors.asset_variables }}</td>
+                                            </tr>
                                         </tbody>
                                         <tbody>
                                             <tr v-for="user_variable_data1, index in user_variable.asset_variables"
@@ -329,6 +332,16 @@ export default {
         addUserVariable() {
             let vm = this;
             let loader = vm.$loading.show();
+             // Check if user_spares is empty
+                if (vm.user_variable.asset_variables.length === 0) {
+                    loader.hide();
+                    // Set an error indicating that at least one entry is required
+                    vm.errors.asset_variables = "At least one entry is required";
+
+                    // Display the error message to the user
+                    vm.$store.dispatch("error", "At least one entry is required.");
+                    return; // Prevent further execution
+                }
             vm.$store
                 .dispatch("post", { uri: "addUserVariable", data: vm.user_variable })
                 .then((response) => {
@@ -347,6 +360,16 @@ export default {
             let vm = this;
             vm.user_variable.deleted_user_spares = vm.deleted_spares;
             let loader = vm.$loading.show();
+             // Check if user_spares is empty
+                if (vm.user_variable.asset_variables.length === 0) {
+                    loader.hide();
+                    // Set an error indicating that at least one entry is required
+                    vm.errors.asset_variables = "At least one entry is required";
+
+                    // Display the error message to the user
+                    vm.$store.dispatch("error", "At least one entry is required.");
+                    return; // Prevent further execution
+                }
             vm.$store
                 .dispatch("post", { uri: "updateUserVariable", data: vm.user_variable })
                 .then((response) => {

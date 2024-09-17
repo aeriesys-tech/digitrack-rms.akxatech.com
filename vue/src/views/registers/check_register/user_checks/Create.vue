@@ -37,8 +37,8 @@
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <search
                                         :disabled="!status"
-                                        :class="{ 'is-invalid': errors.asset_id }"
-                                        :customClass="{ 'is-invalid': errors.asset_id }"
+                                        :class="{ 'is-invalid': errors?.asset_id }"
+                                        :customClass="{ 'is-invalid': errors?.asset_id }"
                                         :initialize="user_check.asset_id"
                                         id="asset_id"
                                         label="asset_name"
@@ -49,7 +49,7 @@
                                         @selectsearch="checkAssets()"
                                     >
                                     </search>
-                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                    <span v-if="errors?.asset_id" class="invalid-feedback">{{ errors?.asset_id[0] }}</span>
                                 </div>
                                  <div class="col-md-3">
                                     <label class="form-label">Department</label><span class="text-danger"> *</span>
@@ -207,7 +207,7 @@ export default {
             if (to.name == "UserChecks.Create") {
                 if(vm.$store.getters.asset_id){
                     vm.user_check.asset_id = vm.$store.getters.asset_id
-                    vm.getAssetChecks()
+                    // vm.getAssetChecks()
                 }
                 vm.$refs.reference_date.focus();
             } else {
@@ -234,8 +234,10 @@ export default {
                 this.getDepartments();
             },
 
-            'user_check.department_id': function(){
-               this.getAssetChecks();
+         'user_check.department_id': function () {
+                if (this.status) {
+                    this.getAssetChecks();
+                }
             }
         },
     mounted() {
