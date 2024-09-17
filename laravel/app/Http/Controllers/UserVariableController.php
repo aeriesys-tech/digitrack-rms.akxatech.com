@@ -84,7 +84,7 @@ class UserVariableController extends Controller
 
         return response()->json([
             'user_variable' => new UserVariableResource($user_variable),
-            "message" => "UserVariable Created Successfully"
+            "message" => "Process Register Created Successfully"
         ]);
     }
 
@@ -168,7 +168,7 @@ class UserVariableController extends Controller
             
         }
 
-        return response()->json(["message" => "UserVariable Updated Successfully"]);
+        return response()->json(["message" => "Process Register Updated Successfully"]);
     }
 
 

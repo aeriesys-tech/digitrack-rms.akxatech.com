@@ -115,7 +115,7 @@ class UserServiceController extends Controller
             }
         }
 
-        return response()->json(['message' => 'UserService created successfully'], 201);
+        return response()->json(['message' => 'Service Register created successfully'], 201);
     }
 
     public function getUserService(Request $request)
@@ -190,7 +190,7 @@ class UserServiceController extends Controller
         }
 
         UserSpare::whereIn('user_spare_id',$request->deleted_user_spares)->delete();
-        return response()->json(['message' => 'UserService updated successfully'], 201);
+        return response()->json(['message' => 'Service Register updated successfully'], 201);
     }
 
     public function deleteUserService(Request $request)

@@ -125,7 +125,7 @@ class UserCheckController extends Controller
 
         return response()->json([
             'user_check' => new UserCheckResource($user_check),
-            "message" => "UserCheck Created Successfully"
+            "message" => "Check Register Created Successfully"
         ]);
     }
 
@@ -157,7 +157,7 @@ class UserCheckController extends Controller
                 ]);
             }
         }
-        return response()->json(["message" => "UserCheck Updated Successfully"]);
+        return response()->json(["message" => "Check Register Updated Successfully"]);
     }
 
     public function getUserCheck(Request $request)

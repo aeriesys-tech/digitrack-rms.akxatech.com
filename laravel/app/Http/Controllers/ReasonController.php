@@ -41,6 +41,11 @@ class ReasonController extends Controller
         $data = $request->validate([
             'reason_code' => 'required|unique:reasons,reason_code',
             'reason_name' => 'required|unique:reasons,reason_name'
+        ], [
+            'reason_name.required' => 'activity type code is required.',
+            'reason_code.required' => 'activity type name is required.',
+            'reason_name.unique' => 'activity type code has already been taken.',
+            'reason_code.unique' => 'activity type name has already been taken.'
         ]);
 
         $reason = Reason::create($data);
@@ -69,6 +74,11 @@ class ReasonController extends Controller
             'reason_id' => 'required|exists:reasons,reason_id',
             'reason_code' => 'required|unique:reasons,reason_code,'.$request->reason_id.',reason_id',
             'reason_name' => 'required|unique:reasons,reason_name,'.$request->reason_id.',reason_id'
+        ],[
+            'reason_name.required' => 'activity type name is required.',
+            'reason_name.unique' => 'activity type name has already been taken.',
+            'reason_code.required' => 'activity type code is required.',
+            'reason_code.unique' => 'activity type code has already been taken.'
         ]);
 
         $reason = Reason::where('reason_id', $request->reason_id)->first();

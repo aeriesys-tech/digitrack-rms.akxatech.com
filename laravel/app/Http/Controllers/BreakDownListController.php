@@ -76,7 +76,7 @@ class BreakDownListController extends Controller
                 'field_value' => $attribute['break_down_attribute_value']['field_value'] ?? '',
             ]);
         }            
-        return response()->json(["message" => "BreakDownList Created Successfully"]);  
+        return response()->json(["message" => "BreakDown Register Created Successfully"]);  
     } 
     
     public function getBreakDownList(Request $request)
@@ -149,7 +149,7 @@ class BreakDownListController extends Controller
                 );
             }
         }
-        return response()->json(["message" => "BreakDownList Updated Successfully"]);
+        return response()->json(["message" => "BreakDown Register Updated Successfully"]);
     }
 
     public function deleteBreakDownList(Request $request)

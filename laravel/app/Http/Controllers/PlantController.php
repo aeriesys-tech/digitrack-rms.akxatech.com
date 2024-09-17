@@ -54,6 +54,11 @@ class PlantController extends Controller
             'latitude' => 'nullable|sometimes',
             'longitude' => 'nullable|sometimes',
             'radius' => 'nullable|sometimes'
+        ],[
+            'plant_code.required' => 'shop code is required',
+            'plant_code.unique' => 'shop code is already taken',
+            'plant_name.required' => 'shop name is required',
+            'plant_name.unique' => 'shop name is already taken'
         ]);
         
         $plant = Plant::create($data);
@@ -80,6 +85,11 @@ class PlantController extends Controller
             'latitude' => 'nullable|sometimes',
             'longitude' => 'nullable|sometimes',
             'radius' => 'nullable|sometimes'
+        ],[
+            'plant_code.required' => 'shop code is required',
+            'plant_name.required' => 'shop name is required',
+            'plant_code.unique' => 'shop code is already taken',
+            'plant_name.unique' => 'shop name is already taken'
         ]);
 
         $plant = Plant::where('plant_id', $request->plant_id)->first();

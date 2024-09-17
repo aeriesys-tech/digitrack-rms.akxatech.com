@@ -112,7 +112,10 @@ export default {
                     // vm.index();
 					vm.$router.go();
                 }
-				vm.getDashboardContent();
+		if(vm.$store.getters.user){
+			vm.getDashboardContent();
+		}
+				
 				
             });
         },

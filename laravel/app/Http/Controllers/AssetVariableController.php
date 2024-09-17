@@ -185,8 +185,7 @@ class AssetVariableController extends Controller
             ],
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_zone_id' => [
-                $assetHasZones ? 'required' : 'nullable', 
-                'array',
+                $assetHasZones ? 'required' : 'nullable',
             ],
         ]);
 

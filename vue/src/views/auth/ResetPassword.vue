@@ -3,9 +3,9 @@
         <div class="card card-sign">
             <div class="card-header d-flex flex-column align-items-center">
                 <div class="mb-2">
-                    <img src="../../assets/ultratech-cement-logo.png" class="img" width="80" />
+                    <img src="../../assets/jsw.png" class="img" width="180"/>
                     </div>
-                <a href="javascript:void(0)" class="header-logo mb-2">digiTRACK</a>
+                <a href="javascript:void(0)" class="header-logo mb-2" style="font-size: 25px; width: 350px; display: inline-block; white-space: nowrap;">Refractory Management System</a>
                 <h3 class="card-title text-center">Reset Your Password</h3>
                 <p class="card-text text-center">Enter the otp and reset your password here.</p>
             </div>
