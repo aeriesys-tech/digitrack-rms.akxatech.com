@@ -74,7 +74,7 @@
                                             <option value="Select">Dropdown</option>
                                             <option value="Color">Color</option>
                                             <!-- <option value="File">File</option> -->
-                                        </select> 
+                                        </select>
                                         <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
@@ -101,8 +101,8 @@
                                         <input type="text" placeholder="UCL" class="form-control" :class="{ 'is-invalid': errors.ucl }" v-model="check.ucl"/>
                                         <span v-if="errors.ucl" class="invalid-feedback">{{ errors.ucl[0] }}</span>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Field Values</label><span v-if="check.field_type=='Select'" class="text-danger"> *</span>
+                                    <div class="col-md-4" v-if="check.field_type=='Select'">
+                                        <label class="form-label">Field Values</label><span  class="text-danger"> *</span>
                                         <input type="text" placeholder="Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values}" v-model="check.field_values"/>
                                         <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                     </div>
@@ -117,7 +117,7 @@
                                         <select class="form-control" :class="{ 'is-invalid': errors.frequency_id}" v-model="check.frequency_id">
                                             <option value="">Select Frequency</option>
                                             <option v-for="frequency, key in frequencies" :key="key" :value="frequency?.frequency_id">{{ frequency?.frequency_name }}</option>
-                                        </select> 
+                                        </select>
                                         <span v-if="errors.frequency_id" class="invalid-feedback">{{ errors.frequency_id[0] }}</span>
                                     </div> -->
                             </div>
@@ -137,11 +137,11 @@
 </template>
 <script>
 export default {
-    name: "Checks.Create", 
+    name: "Checks.Create",
     data() {
         return {
             // check_update: false,
-            
+
             check: {
                 check_id: '',
                 field_name: '',
@@ -275,7 +275,7 @@ export default {
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-        
+
         // editCheck(check) {
         //     this.check = check;
         //     this.update = true;
