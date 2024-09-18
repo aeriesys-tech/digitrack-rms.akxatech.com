@@ -70,6 +70,14 @@
                                                 </span>
                                             </th>
                                             <th>
+                                               Reference No.
+                                                <span>
+                                                    <i v-if="meta.keyword == 'reference_no' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'reference_no' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
+                                            <th>
                                                 Check Date
                                                 <span>
                                                     <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
@@ -82,6 +90,22 @@
                                                 <span>
                                                     <i v-if="meta.keyword == 'field_name' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword == 'field_name' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
+                                            <th @click="sort('lcl')">
+                                                Lcl
+                                                <span>
+                                                    <i v-if="meta.keyword == 'lcl' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'lcl' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
+                                            <th @click="sort('ucl')">
+                                                Ucl
+                                                <span>
+                                                    <i v-if="meta.keyword == 'ucl' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'ucl' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
@@ -111,10 +135,13 @@
                                             <td>{{ deviation.department?.department_name }}</td>
                                             <td>{{deviation?.asset?.asset_name}}</td>
                                             <td>{{deviation.asset_type?.asset_type_name}}</td>
+                                            <td>{{deviation.user_check?.reference_no}}</td>
                                             <td>{{ deviation.user_check?.reference_date}}</td>
                                             <td>{{ deviation.check?.field_name}}</td>
-                                            <td>{{ deviation.default_value }}</td>
-                                            <td>{{ deviation.value }}</td>
+                                            <td>{{ deviation?.lcl }}</td>
+                                            <td>{{ deviation?.ucl }}</td>
+                                            <td>{{ deviation?.default_value }}</td>
+                                            <td>{{ deviation?.value }}</td>
                                             <!-- <td class="text-center" v-can="'users.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'user' + user.user_id" :checked="user.status" :value="user.status" @change="deleteUser(user)" />

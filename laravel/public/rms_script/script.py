@@ -100,13 +100,13 @@ def pdf_converter(filepath):
             result_img.append(cropped_image_name)
 
             #print(cropped_image_name)
-            img.save(open(os.path.split(filepath)[0]+ "\\"+ f"image{counter}.{extension}", "wb"))
+            img.save(open(os.path.split(filepath)[0]+ "/"+ f"image{counter}.{extension}", "wb"))
 
             dir_path = os.path.split(filepath)[0]
             
             img_nm = "image" + str(counter) + "." + extension
             
-            img_path = dir_path + '\\' +  img_nm
+            img_path = dir_path + '/' +  img_nm
             
             ext_img = cv2.imread(img_path)
 
@@ -121,7 +121,7 @@ def pdf_converter(filepath):
             #print(cropped_img_path)
 
 
-            dest_path = cropped_img_path + '\\' + cropped_image_name
+            dest_path = cropped_img_path + '/' + cropped_image_name
 
             #print(dest_path)
 

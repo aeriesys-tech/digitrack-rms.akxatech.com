@@ -99,13 +99,28 @@ class AssetAttributeController extends Controller
         $asset_attribute = AssetAttribute::where('asset_attribute_id', $request->asset_attribute_id)->first();
         $asset_attribute->update($data);
 
-        AssetAttributeType::where('asset_attribute_id', $asset_attribute->asset_attribute_id)->delete();
+        if(isset($request->deleted_asset_attribute_types) > 0)
+        {
+            AssetAttributeType::whereIn('asset_attribute_type_id', $request->deleted_asset_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type_id) {
-            AssetAttributeType::create([
-                'asset_attribute_id' => $asset_attribute->asset_attribute_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+        foreach ($data['asset_types'] as $asset_type_id) 
+        {
+            $assetType = AssetAttributeType::where('asset_attribute_id', $asset_attribute->asset_attribute_id)
+                ->where('asset_type_id', $asset_type_id)->first();
+            
+            if($assetType)
+            {
+                $assetType->update([
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
+            else{
+                AssetAttributeType::create([
+                    'asset_attribute_id' => $asset_attribute->asset_attribute_id,
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
         }
 
         return new AssetAttributeResource($asset_attribute);

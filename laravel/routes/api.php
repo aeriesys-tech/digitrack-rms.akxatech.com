@@ -51,6 +51,7 @@ use App\Http\Controllers\SpareAttributeValueController;
 use App\Http\Controllers\ListParameterController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\UserVariableController;
+use App\Http\Controllers\ActivityAttributeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -431,4 +432,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateUserVariable',[UserVariableController::class, 'updateUserVariable']);
     Route::post('getUserVariable',[UserVariableController::class, 'getUserVariable']);
     Route::post('deleteUserVariable',[UserVariableController::class, 'deleteUserVariable']);
+
+    Route::post('paginateActivityAttributes',[ActivityAttributeController::class, 'paginateActivityAttributes']);
+    Route::post('addActivityAttribute',[ActivityAttributeController::class, 'addActivityAttribute']);
+    Route::post('getActivityAttributes',[ActivityAttributeController::class, 'getActivityAttributes']);
+    Route::post('getActivityAttribute',[ActivityAttributeController::class, 'getActivityAttribute']);
+    Route::post('updateActivityAttribute',[ActivityAttributeController::class, 'updateActivityAttribute']);
+    Route::post('deleteActivityAttribute',[ActivityAttributeController::class, 'deleteActivityAttribute']);
 });

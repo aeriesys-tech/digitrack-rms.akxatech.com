@@ -60,7 +60,7 @@ class CampaignController extends Controller
         if ($request->hasFile('file')) 
         {
             $fileName = $request->file('file')->getClientOriginalName();
-            $filePath = public_path('storage\files'); 
+            $filePath = public_path('storage/files'); 
             $request->file('file')->move($filePath, $fileName);
             $data['file'] = $fileName;
         } 

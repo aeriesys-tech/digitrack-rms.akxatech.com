@@ -318,9 +318,12 @@ class AssetCheckController extends Controller
 
         $authPlantId = Auth::User()->plant_id;
         $query = UserAssetCheck::query();
-        $query->whereHas('UserCheck', function($query) use ($authPlantId) {
+
+        
+        $query->where('field_type', 'Number')->whereRaw('value < lcl OR value > ucl')
+          ->orwhere('field_type', '!=', 'Number')->whereHas('UserCheck', function ($query) use ($authPlantId) {
                 $query->where('plant_id', $authPlantId);
-            })->whereColumn('default_value', '!=', 'value')->get();
+            })->whereColumn('default_value', '!=', 'value');
 
         if (isset($request->department_id)) {
             $query->whereHas('UserCheck', function($quer) use ($request) {
@@ -356,7 +359,6 @@ class AssetCheckController extends Controller
                 });
             });
         }
-       
     
         // Sort by related table columns
         if ($request->keyword == 'field_name') {
