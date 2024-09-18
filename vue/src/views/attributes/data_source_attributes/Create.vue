@@ -45,7 +45,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +72,7 @@
                                         <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
-                                </div> 
+                                </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
                                     <select class="form-control" v-model="data_source_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
@@ -81,8 +81,8 @@
                                     </select>
                                     <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Field Value</label><span v-if="data_source_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
+                                <div class="col-md-4" v-if="data_source_attribute.field_type==='Dropdown'">
+                                    <label class="form-label">Field Value</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="data_source_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
@@ -101,7 +101,7 @@
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>
 
-                               
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -134,8 +134,10 @@
                     is_required: "",
                     data_source_type_id: '',
                     data_source_types:[],
-                    list_parameter_id:'',
+                    list_parameter_id: '',
+                    // deleted_data_source_attribute_types:[],
                 },
+                // deleted_data_source_attribute_types:[],
                 data_source_types: [],
                 data_source_attributes:[],
                 list_parameters:[],
@@ -167,6 +169,7 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.data_source_attribute = response.data.data;
+                                // vm.data_source_attribute.deleted_data_source_attribute_types = []
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -186,6 +189,32 @@
             }
         },
         methods: {
+            //   updateActivityType(event, activity_type) {
+            //     let vm = this
+            //     const isChecked = event.target.checked;
+            //     console.log("activity_type",activity_type)
+            //     let data_source_attribute_type = activity_type.data_source_types.filter(function (element) {
+            //         console.log("eell---", element)
+            //         return element.data_source_type_id == event.target.value
+            //     })
+            //     if (data_source_attribute_type.length) {
+            //         let data_source_attribute_type_id = data_source_attribute_type[0].data_source_attribute_type_id
+            //         if (isChecked) {
+            //             if (vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
+            //                 let deleted_data_source_attribute_types = this.data_source_attribute.deleted_data_source_attribute_types.filter(function (element) {
+            //                     return element != data_source_attribute_type_id
+            //                 })
+            //                 vm.data_source_attribute.deleted_data_source_attribute_types = deleted_data_source_attribute_types
+            //             }
+            //         } else {
+            //             if (!vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
+            //                 vm.data_source_attribute.deleted_data_source_attribute_types.push(data_source_attribute_type_id)
+            //             }
+            //         }
+            //     }
+            //      console.log('Checked IDs:', this.data_source_attribute.data_source_types);
+            //     console.log('Unchecked IDs:', vm.data_source_attribute.deleted_data_source_attribute_types);
+            // },
             toggleDataSourceTypeStatus(){
                 this.data_source_type_status = !this.data_source_type_status
             },
@@ -212,7 +241,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addDataSourceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -228,7 +257,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             updateDataSourceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -244,7 +273,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getDataSourceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -289,7 +318,7 @@
                     vm.errors = [];
                     vm.status = true;
                 },
-             
+
         }
     }
     </script>
@@ -323,4 +352,3 @@
     right: 0;
 }
 </style>
-    

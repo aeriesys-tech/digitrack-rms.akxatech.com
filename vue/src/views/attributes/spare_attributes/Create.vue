@@ -40,12 +40,12 @@
                                         <div class="multiselect" v-if="spare_type_status">
                                             <ul>
                                                 <li class="" v-for="(spare_type, index) in spare_types" :key="index">
-                                                    <input type="checkbox" :value="spare_type.spare_type_id" v-model="spare_attribute.spare_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="spare_type.spare_type_id" v-model="spare_attribute.spare_types" style="padding: 2px;" @click="updateActivityType($event, spare_attribute)" />
                                                     <label style="margin-left: 5px;">{{ spare_type.spare_type_name }}</label>
                                                 </li>
                                             </ul>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +72,7 @@
                                         <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
-                                </div> 
+                                </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
                                     <select class="form-control" v-model="spare_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
@@ -81,8 +81,8 @@
                                     </select>
                                     <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Field Value</label><span v-if="spare_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
+                                <div class="col-md-4" v-if="spare_attribute.field_type==='Dropdown'">
+                                    <label class="form-label">Field Value</label><span  class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="spare_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
@@ -101,7 +101,7 @@
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>
 
-                               
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -134,8 +134,10 @@
                     is_required: "",
                     spare_type_id: '',
                     spare_types:[],
-                    list_parameter_id:"",
+                    list_parameter_id: "",
+                    deleted_spare_attribute_types:[],
                 },
+                deleted_spare_attribute_types:[],
                 spare_types: [],
                 spare_attributes:[],
                 list_parameters:[],
@@ -167,6 +169,7 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.spare_attribute = response.data.data;
+                                vm.spare_attribute.deleted_spare_attribute_types = []
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -186,6 +189,30 @@
             }
         },
         methods: {
+               updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let spare_attribute_type = activity_type.spare_attribute_types.filter(function (element) {
+                    return element.spare_type_id == event.target.value
+                })
+                if (spare_attribute_type.length) {
+                    let spare_attribute_type_id = spare_attribute_type[0].spare_attribute_type_id
+                    if (isChecked) {
+                        if (vm.spare_attribute.deleted_spare_attribute_types.includes(spare_attribute_type_id)) {
+                            let deleted_spare_attribute_types = this.spare_attribute.deleted_spare_attribute_types.filter(function (element) {
+                                return element != spare_attribute_type_id
+                            })
+                            vm.spare_attribute.deleted_spare_attribute_types = deleted_spare_attribute_types
+                        }
+                    } else {
+                        if (!vm.spare_attribute.deleted_spare_attribute_types.includes(spare_attribute_type_id)) {
+                            vm.spare_attribute.deleted_spare_attribute_types.push(spare_attribute_type_id)
+                        }
+                    }
+                }
+                 console.log('Checked IDs:', this.spare_attribute.spare_types);
+                console.log('Unchecked IDs:', vm.spare_attribute.deleted_spare_attribute_types);
+            },
             toggleSpareTypeStatus(){
                 this.spare_type_status = !this.spare_type_status
             },
@@ -242,7 +269,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             updateSpareAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -258,7 +285,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getSpareAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -288,7 +315,7 @@
                     vm.errors = [];
                     vm.status = true;
                 },
-             
+
         }
     }
     </script>
@@ -322,4 +349,3 @@
     right: 0;
 }
 </style>
-    

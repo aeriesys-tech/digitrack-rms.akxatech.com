@@ -29,13 +29,6 @@
                     </li>
                 </ul>
             </div>
-            <div class="nav-group show">
-                <ul class="nav nav-sidebar">
-                    <li class="nav-item">
-                        <router-link to="/lists" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>Lists</span></router-link>
-                    </li>
-                </ul>
-            </div>
             <div class="nav-group" :class="{show:showLinage}" @click="showTab('LineageParameters')" v-if="permission('LineageParameters')">
                 <a href="javascript:void(0)" :style="{color:color}" class="nav-label"><i class="ri-equalizer-line icn"></i> Lineage parameters</a>
                 <ul class="nav nav-sidebar">
@@ -59,7 +52,13 @@
                     </li>
                 </ul>
             </div>
-
+             <div class="nav-group show">
+                <ul class="nav nav-sidebar">
+                    <li class="nav-item">
+                        <router-link to="/lists" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>Lists</span></router-link>
+                    </li>
+                </ul>
+            </div>
             <div class="nav-group" :class="{show:showType}" @click="showTab('TypeParameters')" v-if="permission('TypeParameters')">
                 <a href="javascript:void(0)" :style="{color:typeParameterColor}" class="nav-label"><i class="ri-corner-up-right-double-line icn"></i> Type Parameters</a>
                 <ul class="nav nav-sidebar">
@@ -120,6 +119,9 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' || $route.name === 'BreakDownAttributes.Create' || $route.path === 'BreakDownAttributes.Edit'}" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Breakdown Attribute</span></router-link>
+                    </li>
+                      <li class="nav-item">
+                        <router-link to="/activity_attributes" v-bind:class="{ active: $route.path === '/activity_attributes' || $route.name === 'ActivityAttributes.Create' || $route.path === 'ActivityAttributes.Edit'}" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Activity Attribute</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -440,7 +442,7 @@
                     this.dashboardActive = "white !important";
                 } else if (tab == "/assets" || name == "Assets.Create" || name == "Assets.Edit" || name == "Assets.View") {
                     this.assetActive = "white !important";
-                } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes") {
+                } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes" || tab == "/activity_attributes") {
                     this.AttributesColor = "white !important";
                     this.showAttributes = !this.showAttributes;
                 } else if (tab == "/asset_details" || tab == "/spare_campaigns" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {

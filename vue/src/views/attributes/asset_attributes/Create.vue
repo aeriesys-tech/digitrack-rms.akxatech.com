@@ -40,12 +40,12 @@
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
                                                 <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="asset_attribute.asset_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="asset_attribute.asset_types" style="padding: 2px;" @click="updateActivityType($event, asset_attribute)"/>
                                                     <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
                                                 </li>
                                             </ul>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +72,7 @@
                                         <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
-                                </div> 
+                                </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
                                     <select class="form-control" v-model="asset_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
@@ -81,8 +81,8 @@
                                     </select>
                                     <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Field Value</label><span v-if="asset_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
+                                <div class="col-md-4"  v-if="asset_attribute.field_type==='Dropdown'">
+                                    <label class="form-label">Field Value</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="asset_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
@@ -109,7 +109,7 @@
                                     <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                 </div> -->
 
-                               
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -143,11 +143,13 @@
                     asset_type_id: '',
                     asset_types:[],
                     // list_parameters:[],
-                    list_parameter_id:"",
+                    list_parameter_id: "",
+                    deleted_asset_attribute_types:[],
                 },
                 asset_types: [],
                 asset_attributes:[],
-                list_parameters:[],
+                list_parameters: [],
+                deleted_asset_attribute_types:[],
                 // user_update: false,
                 errors: [],
                 status:true,
@@ -186,6 +188,7 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.asset_attribute = response.data.data;
+                                vm.asset_attribute.deleted_asset_attribute_types = []
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -195,6 +198,30 @@
                 });
             },
         methods: {
+              updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let asset_attribute_type = activity_type.asset_attribute_types.filter(function (element) {
+                    return element.asset_type_id == event.target.value
+                })
+                if (asset_attribute_type.length) {
+                    let asset_attribute_type_id = asset_attribute_type[0].asset_attribute_type_id
+                    if (isChecked) {
+                        if (vm.asset_attribute.deleted_asset_attribute_types.includes(asset_attribute_type_id)) {
+                            let deleted_asset_attribute_types = this.asset_attribute.deleted_asset_attribute_types.filter(function (element) {
+                                return element != asset_attribute_type_id
+                            })
+                            vm.asset_attribute.deleted_asset_attribute_types = deleted_asset_attribute_types
+                        }
+                    } else {
+                        if (!vm.asset_attribute.deleted_asset_attribute_types.includes(asset_attribute_type_id)) {
+                            console.log(asset_attribute_type_id)
+                            vm.asset_attribute.deleted_asset_attribute_types.push(asset_attribute_type_id)
+                        }
+                    }
+                }
+            },
+
             toggleAssetTypeStatus(){
                 this.asset_type_status = !this.asset_type_status
             },
@@ -221,7 +248,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addAssetAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -237,7 +264,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             updateAssetAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -253,7 +280,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getAssetAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -298,7 +325,7 @@
                     vm.errors = [];
                     vm.status = true;
                 },
-             
+
         }
     }
     </script>
@@ -332,4 +359,3 @@
     right: 0;
 }
 </style>
-    

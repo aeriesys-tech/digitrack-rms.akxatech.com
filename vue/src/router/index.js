@@ -123,6 +123,9 @@ import ServiceAttributes from "@/views/attributes/service_attributes/Index.vue";
 import CreateBreakDownAttribute from "@/views/attributes/breakdown_attributes/Create.vue"
 import BreakDownAttributes from "@/views/attributes/breakdown_attributes/Index.vue";
 
+import CreateActivityAttribute from "@/views/attributes/activity_attributes/Create.vue"
+import ActivityAttributes from "@/views/attributes/activity_attributes/Index.vue";
+
 
 // Registers
 import ViewProcessRegister from "@/views/registers/process_registers/View.vue";
@@ -588,6 +591,25 @@ const routes = [
     name: "BreakDownAttributes.Edit",
     component: CreateBreakDownAttribute,
   },
+
+  // activity attribute
+  {
+    path: "/activity_attributes",
+    name: "ActivityAttributes.Index",
+    component: ActivityAttributes,
+  },
+  {
+    path: "/activity_attributes/create",
+    name: "ActivityAttributes.Create",
+    component: CreateActivityAttribute,
+  },
+
+  {
+    path: "/activity_attributes/:activity_attribute_id/edit",
+    name: "ActivityAttributes.Edit",
+    component: CreateActivityAttribute,
+  },
+
 
 
   //Deviation
