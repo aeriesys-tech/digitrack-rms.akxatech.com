@@ -18,7 +18,6 @@ class UserActivity extends Model
         'status',
         'activity_status',
         'reason_id',
-        'equipment_id',
         'cost',
         'note'
     ];
@@ -33,11 +32,6 @@ class UserActivity extends Model
     public function Asset()
     {
         return $this->belongsTo(Asset::class, 'asset_id');
-    }
-
-    public function Equipment()
-    {
-        return $this->belongsTo(Equipment::class, 'equipment_id');
     }
 
     public function Reason()

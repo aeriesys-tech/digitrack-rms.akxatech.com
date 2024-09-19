@@ -18,7 +18,8 @@ class Check extends Model
         'ucl',
         'lcl',
         'field_values',
-        'order'
+        'order',
+        'department_id'
     ];
 
     protected $primaryKey = 'check_id';
@@ -26,5 +27,10 @@ class Check extends Model
     public function CheckAssetTypes()
     {
         return $this->hasMany(CheckAssetType::class, 'check_id', 'check_id');
+    }
+
+    public function Department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 }

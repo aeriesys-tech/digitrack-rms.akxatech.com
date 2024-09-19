@@ -23,8 +23,6 @@ class UserActivityResource extends JsonResource
             'activity_status' => $this->activity_status,
             'reason_id' => $this->reason_id,
             'reason' => new ReasonResource($this->Reason),
-            'equipment_id' => $this->equipment_id,
-            'equipment' => new EquipmentResource($this->Equipment),
             'cost' => $this->cost,
             'note' => $this->note
         ];

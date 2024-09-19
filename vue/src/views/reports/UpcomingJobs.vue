@@ -69,14 +69,14 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
-                                            <th @click="sort('service_cost')">
+                                            <!-- <th @click="sort('service_cost')">
                                                 Service Cost
                                                 <span>
                                                     <i v-if="meta.keyword == 'service_cost' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword == 'service_cost' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
-                                            </th>
+                                            </th> -->
                                             <th @click="sort('next_service_date')">
                                                 Next Service Date
                                                 <span>
@@ -85,14 +85,14 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
-                                            <th @click="sort('service_id')">
+                                            <!-- <th @click="sort('service_id')">
                                                 Service Name
                                                 <span>
                                                     <i v-if="meta.keyword == 'service_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword == 'service_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
-                                            </th>
+                                            </th> -->
 
                                             <th @click="sort('asset_id')">
                                                 Asset Code
@@ -109,9 +109,9 @@
                                             <td>{{ service.asset?.department?.department_name }}</td>
                                             <td>{{service?.service_no}}</td>
                                             <td>{{service?.service_date}}</td>
-                                            <td>{{ service?.service_cost}}</td>
+                                            <!-- <td>{{ service?.service_cost}}</td> -->
                                             <td>{{ service?.next_service_date}}</td>
-                                            <td>{{ service?.service?.service_name }}</td>
+                                            <!-- <td>{{ service?.service?.service_name }}</td> -->
                                             <td>{{ service.asset?.asset_code }}</td>
                                         </tr>
                                     </tbody>

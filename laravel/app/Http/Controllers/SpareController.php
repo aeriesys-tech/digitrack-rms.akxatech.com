@@ -55,7 +55,7 @@ class SpareController extends Controller
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'nullable|array',
             'spare_attributes.*.spare_attribute_id' => 'nullable|exists:spare_attributes,spare_attribute_id',
-            'spare_attributes.*.field_value' => 'nullable|string',
+            'spare_attributes.*.spare_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -75,7 +75,7 @@ class SpareController extends Controller
             SpareAttributeValue::create([
                 'spare_id' => $spare->spare_id,
                 'spare_attribute_id' => $attribute['spare_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
+                'field_value' => $attribute['spare_attribute_value']['field_value'] ?? '',
             ]);
         }            
         return response()->json(["message" => "Spare Created Successfully"]);
@@ -96,18 +96,6 @@ class SpareController extends Controller
         $request->validate([
             'spare_id' => 'required|exists:spares,spare_id'
         ]);
-
-        $spare_attribute_value = SpareAttributeValue::where('spare_id', $request->spare_id)->get('spare_attribute_id');
-        $spare_attribute_initial = SpareAttribute::whereNotIn('spare_attribute_id', $spare_attribute_value)->get();
-
-        foreach ($spare_attribute_initial as $spare) 
-        {
-            SpareAttributeValue::create([
-                'spare_id' => $request->spare_id,
-                'spare_attribute_id' => $spare['spare_attribute_id'],
-                'field_value' => $spare['field_value'] ?? '',
-            ]);
-        }
 
         $spare = Spare::where('spare_id',$request->spare_id)->first();
         return new SpareResource($spare);
@@ -135,9 +123,10 @@ class SpareController extends Controller
             'spare_type_id' => 'required|exists:spare_types,spare_type_id',
             'spare_attributes' => 'nullable|array',
             'spare_attributes.*.spare_attribute_id' => 'nullable|exists:spare_attributes,spare_attribute_id',
-            'spare_attributes.*.spare_attribute_value.field_value' => 'nullable|string',
+            'spare_attributes.*.spare_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'deleted_spare_attribute_values' => 'nullable'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -153,12 +142,17 @@ class SpareController extends Controller
                 'asset_type_id' => $asset_type,
             ]);
         }
+
+        if($request->deleted_spare_attribute_values > 0)
+        {
+            SpareAttributeValue::whereIn('spare_attribute_value_id', $request->deleted_spare_attribute_values)->forceDelete();
+        }
     
         if (!empty($request->spare_attributes)) 
         {
             foreach ($request->spare_attributes as $attribute) 
             {
-                $fieldValue = $attribute['spare_attribute_value']['field_value'] ?? null;
+                $fieldValue = $attribute['spare_attribute_value']['field_value'];
     
                 if ($fieldValue !== null) {
                     SpareAttributeValue::updateOrCreate(

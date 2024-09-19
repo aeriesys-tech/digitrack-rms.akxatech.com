@@ -54,9 +54,9 @@ class VariableController extends Controller
             'variable_code' => 'required|string|unique:variables,variable_code',
             'variable_name' => 'required|string|unique:variables,variable_name',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-            'variable_attributes' => 'required|array',
-            'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'variable_attributes.*.field_value' => 'required|string',
+            'variable_attributes' => 'nullable|array',
+            'variable_attributes.*.variable_attribute_id' => 'nullable|exists:variable_attributes,variable_attribute_id',
+            'variable_attributes.*.variable_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
         ]);
@@ -76,7 +76,7 @@ class VariableController extends Controller
             VariableAttributeValue::create([
                 'variable_id' => $variable->variable_id,
                 'variable_attribute_id' => $attribute['variable_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
+                'field_value' => $attribute['variable_attribute_value']['field_value'] ?? '',
             ]);
         }
         
@@ -98,18 +98,6 @@ class VariableController extends Controller
         $request->validate([
             'variable_id' => 'required|exists:variables,variable_id'
         ]);
-
-        $variable_attribute_value = VariableAttributeValue::where('variable_id', $request->variable_id)->get('variable_attribute_id');
-        $variable_attribute_initial = VariableAttribute::whereNotIn('variable_attribute_id', $variable_attribute_value)->get();
-
-        foreach ($variable_attribute_initial as $variable) 
-        {
-            VariableAttributeValue::create([
-                'variable_id' => $request->variable_id,
-                'variable_attribute_id' => $variable['variable_attribute_id'],
-                'field_value' => $variable['field_value'] ?? '',
-            ]);
-        }
 
         $variable = Variable::where('variable_id',$request->variable_id)->first();
         return new VariableResource($variable);
@@ -135,11 +123,12 @@ class VariableController extends Controller
             'variable_code' => 'required|string|unique:variables,variable_code,' . $request->variable_id . ',variable_id',
             'variable_name' => 'required|string|unique:variables,variable_name,' . $request->variable_id . ',variable_id',
             'variable_type_id' => 'required|exists:variable_types,variable_type_id',
-            'variable_attributes' => 'required|array',
-            'variable_attributes.*.variable_attribute_id' => 'required|exists:variable_attributes,variable_attribute_id',
-            'variable_attributes.*.variable_attribute_value.field_value' => 'required|string',
+            'variable_attributes' => 'nullable|array',
+            'variable_attributes.*.variable_attribute_id' => 'nullable|exists:variable_attributes,variable_attribute_id',
+            'variable_attributes.*.variable_attribute_value.field_value' => 'nullable',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'deleted_variable_attribute_values' => 'nullable'
         ]);
     
         $data['plant_id'] = $userPlantId;
@@ -154,6 +143,11 @@ class VariableController extends Controller
                 'variable_id' => $variable->variable_id,
                 'asset_type_id' => $asset_type,
             ]);
+        }
+
+        if($request->deleted_variable_attribute_values > 0)
+        {
+            VariableAttributeValue::whereIn('variable_attribute_value_id', $request->deleted_variable_attribute_values)->forceDelete();
         }
     
         foreach ($request->variable_attributes as $attribute) 

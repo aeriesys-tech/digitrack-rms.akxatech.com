@@ -8,6 +8,8 @@ use App\Models\AssetDataSource;
 use App\Models\DataSource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\DataSourceResource;
+use App\Models\Asset;
+use App\Models\AssetZone;
 
 class AssetDataSourceController extends Controller
 {
@@ -16,7 +18,8 @@ class AssetDataSourceController extends Controller
         $request->validate([
             'order_by' => 'required',
             'per_page' => 'required',
-            'keyword' => 'required'
+            'keyword' => 'required',
+            'asset_type_id' => 'required|exists:asset_type,asset_type_id',
         ]);
 
         $query = AssetDataSource::query();
@@ -45,7 +48,22 @@ class AssetDataSourceController extends Controller
             });
         }
         $asset_data_source = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
-        return AssetDataSourceResource::collection($asset_data_source);
+
+        //DropDown DataSources
+        $data_source = DataSource::whereHas('DataSourceAssetTypes', function($que) use($request){
+            $que->where('asset_type_id', $request->asset_type_id);
+        })->get();
+
+        return response()->json([
+            'paginate_data_sources' => AssetDataSourceResource::collection($asset_data_source),
+            'meta' => [
+                'current_page' => $asset_data_source->currentPage(),
+                'last_page' => $asset_data_source->lastPage(),
+                'per_page' => $asset_data_source->perPage(),
+                'total' => $asset_data_source->total(),
+            ],
+            'data_sources' => DataSourceResource::collection($data_source)
+        ]);
     }
 
     public function getAssetDataSources()
@@ -56,45 +74,53 @@ class AssetDataSourceController extends Controller
 
     public function addAssetDataSource(Request $request)
     {
-        $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
-
+        // $userPlantId = Auth::User()->plant_id;
+        // $areaId = Auth::User()->Plant->area_id;
+        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'data_source_id' => [
                 'required',
                 'exists:data_sources,data_source_id',
-                function ($attribute, $value, $fail) use ($request) {
+                function ($attribute, $value, $fail) use ($request, $assetHasZones) {
                     $exists = AssetDataSource::where('data_source_id', $value)
                         ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request) {
-                            if ($request->has('asset_zones')) {
-                                $query->whereIn('asset_zone_id', $request->asset_zones);
+                        ->where(function ($query) use ($request, $assetHasZones) {
+                            if ($assetHasZones && $request->filled('variable_asset_zones')) {
+                                $query->whereIn('asset_zone_id', $request->variable_asset_zones);
                             } else {
                                 $query->whereNull('asset_zone_id');
                             }
                         })->exists();
-    
+
                     if ($exists) {
-                        $fail('The combination of DataSource and Asset Zone already exists.');
+                        if ($request->filled('variable_asset_zones') && $assetHasZones) {
+                            $fail('The combination of DataSource and Asset Zone already exists.');
+                        } else {
+                            $fail('The combination of DataSource and Asset already exists.');
+                        }
                     }
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zones' => 'nullable|array',
+            'data_source_asset_zones' => [
+                $assetHasZones ? 'required' : 'nullable', 
+                'array',
+            ],
             'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
         $data_source_type = $data_source->data_source_type_id;
-
-        $data['plant_id'] = $userPlantId;
-        $data['area_id'] = $areaId;
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
+        
+        $data['plant_id'] = $asset->plant_id;
+        $data['area_id'] = $asset->area_id;
         $data['data_source_type_id'] = $data_source_type;
 
         $createdDataSources = [];
 
-        if (!empty($data['asset_zones'])) {
-            foreach ($data['asset_zones'] as $zoneId) {
+        if (!empty($data['data_source_asset_zones'])) {
+            foreach ($data['data_source_asset_zones'] as $zoneId) {
                 if (is_null($zoneId) || $zoneId == 0) {
                     continue;
                 }
@@ -128,44 +154,46 @@ class AssetDataSourceController extends Controller
 
     public function updateAssetDataSource(Request $request)
     {
-        $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
-
-        $asset_data_source = AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->first();
-
+        $asset_data_sources = AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->first();
+        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'asset_data_source_id' => 'required|exists:asset_data_sources,asset_data_source_id',
             'data_source_id' => [
-            'required',
-            'exists:data_sources,data_source_id',
-                function ($attribute, $value, $fail) use ($request, $asset_data_source) {
-                    $exists = AssetDataSource::where('data_source_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request) {
-                            if ($request->filled('asset_zone_id')) {
-                                $query->where('asset_zone_id', $request->asset_zone_id);
-                            } else {
-                                $query->whereNull('asset_zone_id');
-                            }
-                        })
-                        ->where('asset_data_source_id', '!=', $request->asset_data_source_id)->exists();
-
-                    if ($exists) {
-                        $fail('The combination of DataSource and Asset Zone already exists.');
+                'required',
+                'exists:data_sources,data_source_id',
+                function ($attribute, $value, $fail) use ($request, $asset_data_sources) 
+                {
+                    if ($value != $asset_data_sources->data_source_id) {
+                        $exists = AssetDataSource::where('data_source_id', $value)
+                            ->where('asset_id', $request->asset_id)
+                            ->where(function ($query) use ($request) {
+                                if ($request->filled('asset_zone_id')) {
+                                    $query->where('asset_zone_id', $request->asset_zone_id);
+                                } else {
+                                    $query->whereNull('asset_zone_id');
+                                }
+                            })->where('asset_data_source_id', '!=', $request->asset_data_source_id)->exists();
+    
+                        if ($exists) {
+                            $fail('The combination of DataSource, Asset, and Asset Zone already exists.');
+                        }
                     }
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zones' => 'nullable|array',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'asset_zone_id' => [
+                $assetHasZones ? 'required' : 'nullable',
+            ],
         ]);
 
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
         $data_source_type = $data_source->data_source_type_id;
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
+        
+        $data['plant_id'] = $asset->plant_id;
+        $data['area_id'] = $asset->area_id;
 
-        $data['plant_id'] = $userPlantId;
         $data['data_source_type_id'] = $data_source_type;
-        $data['area_id'] = $areaId;
 
         $asset_data_source = AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->first();
         $asset_data_source->update($data);

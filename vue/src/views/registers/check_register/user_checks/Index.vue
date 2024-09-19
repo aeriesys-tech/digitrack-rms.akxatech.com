@@ -9,17 +9,17 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Registers</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">User Checks</li>
+                    <li class="breadcrumb-item active" aria-current="page">Check Registers</li>
                 </ol>
-                <h4 class="main-title mb-0">User Checks</h4>
+                <h4 class="main-title mb-0">Check Registers</h4>
             </div>
-            <router-link v-can="'userChecks.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add User Check</router-link>
+            <router-link v-can="'userChecks.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Check Register</router-link>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">User Checks</h6>
+                        <h6 class="card-title">Check Registers</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control form-control-sm mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
@@ -52,6 +52,14 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
+                                        <th>
+                                            Asset Zone.
+                                            <span>
+                                                <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -60,7 +68,8 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{user_check.asset?.asset_code}}</td>
                                         <td>{{user_check.reference_no}}</td>
-                                        <td>{{user_check.reference_date}}</td>
+                                        <td>{{convertDateFormat(user_check.reference_date)}}</td>
+                                        <td>{{user_check?.asset_zone?.zone_name}}</td>
                                         <td class="text-center">
                                             <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)" class="text-success me-2" @click="editUserCheck(user_check)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
@@ -96,6 +105,7 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
 export default {
     name: "UserChecks.Index",
     components: {
@@ -138,7 +148,12 @@ export default {
         this.$store.commit("setAssetId", '');
         this.index();
     },
-    methods:{
+    methods: {
+         convertDateFormat(date) {
+                let vm = this;
+            // return moment(date).format("yyyy-MM-DD");
+                return moment(date).format("DD-MM-YYYY");
+            },
         index() {
             let vm = this;
             let loader = vm.$loading.show();
@@ -168,6 +183,7 @@ export default {
         },
         deleteUserCheck(user_check) {
             let vm = this;
+            alert('are you sure you want delete it!')
             let loader = vm.$loading.show();
             vm.$store
                 .dispatch("post", {uri: "deleteUserCheck",data: user_check,})

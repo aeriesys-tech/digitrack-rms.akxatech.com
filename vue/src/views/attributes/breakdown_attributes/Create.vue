@@ -45,7 +45,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +72,7 @@
                                         <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
-                                </div> 
+                                </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
                                     <select class="form-control" v-model="break_down_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
@@ -81,8 +81,8 @@
                                     </select>
                                     <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Field Value</label><span v-if="break_down_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
+                                <div class="col-md-4" v-if="break_down_attribute.field_type==='Dropdown'">
+                                    <label class="form-label">Field Value</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="break_down_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
@@ -109,7 +109,7 @@
                                     <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                 </div> -->
 
-                               
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -220,7 +220,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addBreakDownAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -236,7 +236,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             updateBreakDownAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -252,7 +252,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getListParameters(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -297,7 +297,7 @@
                     vm.errors = [];
                     vm.status = true;
                 },
-             
+
         }
     }
     </script>
@@ -331,4 +331,3 @@
     right: 0;
 }
 </style>
-    

@@ -21,6 +21,12 @@ class BreakDownValueResource extends JsonResource
         $break_down_attribute_value = BreakDownAttributeValue::where('break_down_list_id', $this->breakDownListId)
             ->where('break_down_attribute_id', $this->break_down_attribute_id)->first();
 
+        if(!$break_down_attribute_value){
+            $break_down_attribute_value = [
+                'field_value' => null
+            ];
+        }      
+
         return [
             'break_down_attribute_id' => $this->break_down_attribute_id,
         	'field_name' => $this->field_name,

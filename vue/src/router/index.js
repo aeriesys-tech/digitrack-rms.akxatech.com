@@ -65,7 +65,7 @@ import DataSources from "@/views/list_parameters/data_source/Index.vue";
 import CreateBreakDownList from "@/views/list_parameters/break_down_list/Create.vue"
 import BreakDownLists from "@/views/list_parameters/break_down_list/Index.vue";
 
-// user management 
+// user management
 import Role from "@/views/userManagement/Role.vue";
 import CreateUser from "@/views/userManagement/users/Create.vue"
 import Users from "@/views/userManagement/users/Index.vue";
@@ -123,6 +123,18 @@ import ServiceAttributes from "@/views/attributes/service_attributes/Index.vue";
 import CreateBreakDownAttribute from "@/views/attributes/breakdown_attributes/Create.vue"
 import BreakDownAttributes from "@/views/attributes/breakdown_attributes/Index.vue";
 
+import CreateActivityAttribute from "@/views/attributes/activity_attributes/Create.vue"
+import ActivityAttributes from "@/views/attributes/activity_attributes/Index.vue";
+
+
+// Registers
+import ViewProcessRegister from "@/views/registers/process_registers/View.vue";
+import CreateProcessRegister from "@/views/registers/process_registers/Create.vue";
+import ProcessRegisters from "@/views/registers/process_registers/Index.vue"
+
+import CreateBreakDownRegister from "@/views/registers/break_down_register/Create.vue";
+import BreakDownRegisters from "@/views/registers/break_down_register/Index.vue"
+
 
 import Test from "@/views/Test.vue";
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
@@ -165,7 +177,7 @@ const routes = [
     component: Permissions,
   },
 
-// lists
+  // lists
   {
     path: "/lists",
     name: "Lists",
@@ -210,12 +222,12 @@ const routes = [
   {
     path: "/accessory_type",
     name: "AccessoryTypes",
-    component:AccessoryTypes,
+    component: AccessoryTypes,
   },
   {
     path: "/variable_type",
     name: "VariableTypes",
-    component:VariableTypes,
+    component: VariableTypes,
   },
 
   // configuration
@@ -235,7 +247,7 @@ const routes = [
     component: PlantsVue,
   },
 
-  //Frequency 
+  //Frequency
   {
     path: "/frequency",
     name: "Frequency",
@@ -369,6 +381,23 @@ const routes = [
     component: ViewUserCheck,
   },
 
+  //break down register
+  {
+    path: "/break_down_registers",
+    name: "BreakDownRegisters.Index",
+    component: BreakDownRegisters,
+  },
+  {
+    path: "/break_down_registers/create",
+    name: "BreakDownRegister.Create",
+    component: CreateBreakDownRegister,
+  },
+  {
+    path: "/break_down_registers/:break_down_list_id/edit",
+    name: "BreakDownRegister.Edit",
+    component: CreateBreakDownRegister,
+  },
+
   // list params
   {
     path: "/checks",
@@ -386,7 +415,7 @@ const routes = [
     name: "Checks.Edit",
     component: CreateCheck,
   },
- 
+
   // {
   //   path: "/spares",
   //   name: "Spares",
@@ -398,7 +427,7 @@ const routes = [
   //   component: Test,
   // },
 
-  
+
   // Component Management
   {
     path: "/components",
@@ -508,11 +537,11 @@ const routes = [
     component: CreateDataSourceAttribute,
   },
 
-   //variable Parameters
-   {
+  //variable Parameters
+  {
     path: "/variable_attributes",
     name: "VariableAttributes.Index",
-    component:VariableAttributes,
+    component: VariableAttributes,
   },
   {
     path: "/variable_attributes/create",
@@ -531,7 +560,7 @@ const routes = [
   {
     path: "/service_attributes",
     name: "ServiceAttributes.Index",
-    component:ServiceAttributes,
+    component: ServiceAttributes,
   },
   {
     path: "/service_attributes/create",
@@ -549,7 +578,7 @@ const routes = [
   {
     path: "/break_down_attributes",
     name: "BreakDownAttributes.Index",
-    component:BreakDownAttributes,
+    component: BreakDownAttributes,
   },
   {
     path: "/break_down_attributes/create",
@@ -562,6 +591,25 @@ const routes = [
     name: "BreakDownAttributes.Edit",
     component: CreateBreakDownAttribute,
   },
+
+  // activity attribute
+  {
+    path: "/activity_attributes",
+    name: "ActivityAttributes.Index",
+    component: ActivityAttributes,
+  },
+  {
+    path: "/activity_attributes/create",
+    name: "ActivityAttributes.Create",
+    component: CreateActivityAttribute,
+  },
+
+  {
+    path: "/activity_attributes/:activity_attribute_id/edit",
+    name: "ActivityAttributes.Edit",
+    component: CreateActivityAttribute,
+  },
+
 
 
   //Deviation
@@ -582,14 +630,14 @@ const routes = [
     name: "UpcomingJobs.Index",
     component: UpcomingJobs,
   },
- 
-  
+
+
   // masteres
 
   {
     path: "/spares",
     name: "Spares.Index",
-    component:Spares,
+    component: Spares,
   },
   {
     path: "/spares/create",
@@ -607,7 +655,7 @@ const routes = [
   {
     path: "/services",
     name: "Services.Index",
-    component:Services,
+    component: Services,
   },
   {
     path: "/services/create",
@@ -624,7 +672,7 @@ const routes = [
   {
     path: "/variables",
     name: "Variables.Index",
-    component:Variables,
+    component: Variables,
   },
   {
     path: "/variables/create",
@@ -641,7 +689,7 @@ const routes = [
   {
     path: "/data_sources",
     name: "DataSources.Index",
-    component:DataSources,
+    component: DataSources,
   },
   {
     path: "/data_sources/create",
@@ -658,7 +706,7 @@ const routes = [
   {
     path: "/break_down_lists",
     name: "BreakDownLists.Index",
-    component:BreakDownLists,
+    component: BreakDownLists,
   },
   {
     path: "/break_down_lists/create",
@@ -677,84 +725,99 @@ const routes = [
   {
     path: "/asset_attributes",
     name: "AssetAttributes",
-    component:Test,
+    component: Test,
   },
   {
     path: "/spre_attributes",
     name: "SpareAttributes",
-    component:Test,
+    component: Test,
   },
   {
     path: "/service_attributes",
     name: "ServiceAttributes",
-    component:Test,
+    component: Test,
   },
   {
     path: "/break_down_attributes",
     name: "BreakDownAttributes",
-    component:Test,
+    component: Test,
   },
   {
     path: "/break_down_lists",
     name: "BreakDownLists",
-    component:Test,
+    component: Test,
   },
   {
     path: "/process_registers",
-    name: "ProcessRegisters",
-    component:Test,
+    name: "ProcessRegisters.Index",
+    component: ProcessRegisters,
+  },
+  {
+    path: "/process_registers/create",
+    name: "CreateProcessRegister.Create",
+    component: CreateProcessRegister,
+  },
+  {
+    path: "/process_registers/:user_variable_id/edit",
+    name: "CreateProcessRegister.Edit",
+    component: CreateProcessRegister,
+  },
+  {
+    path: "/process_registers/:user_variable_id/view",
+    name: "ViewProcessRegister",
+    component: ViewProcessRegister,
   },
   {
     path: "/spare_registers",
     name: "SpareRegisters",
-     component:Test,
+    component: Test,
   },
   {
     path: "/qc_registers",
     name: "QCRegisters",
-     component:Test,
+    component: Test,
   },
   {
     path: "/asset_details",
     name: "AssetDetails",
-     component:Test,
+    component: Test,
   },
 
   // spare campaign
   {
     path: "/spare_campaigns",
     name: "SpareCompaingn",
-    component:SpareCompaingn,
+    component: SpareCompaingn,
   },
 
 
-  
+
 
 
   {
     path: "/compliance",
     name: "Compliance",
-     component:Test,
+    component: Test,
   },
   {
     path: "/deviations_review",
     name: "Deviations",
-     component:Test,
+    component: Test,
   },
   {
     path: "/alerts",
     name: "Alerts",
-     component:Test,
+    component: Test,
   },
   {
     path: "/asset_life",
     name: "AssetLife",
-     component:Test,
+    component: Test,
   },
   {
     path: "/upcoming_repairs",
     name: "UpcomingRepairs",
-     component:Test,
+    component: Test,
   },
 
 
@@ -767,7 +830,7 @@ const router = createRouter({
     // always scroll to top
     return { top: 0 }
   },
-//  }
+  //  }
 });
 
 

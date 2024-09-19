@@ -45,14 +45,6 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('equipment_id')">
-                                            Equipment
-                                            <span>
-                                                <i v-if="meta.keyword == 'equipment_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'equipment_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                <i v-else class="fas fa-sort"></i>
-                                            </span>
-                                        </th>
                                         <th @click="sort('reason_id')">
                                             Reason
                                             <span>
@@ -79,7 +71,6 @@
                                         <td>{{activity.activity_no}}</td>
                                         <td>{{activity.activity_date}}</td>
                                         <td>{{activity.asset?.asset_code}}</td>
-                                        <td>{{activity.equipment?.equipment_name}}</td>
                                         <td>{{activity.reason?.reason_code}}</td>
                                         <td>{{activity.cost}}</td>
                                         <td>{{activity.activity_status}}</td>
@@ -186,6 +177,7 @@
             },
             deleteActivity(activity) {
                 let vm = this;
+                alert('are you sure you want delete it!')
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", {

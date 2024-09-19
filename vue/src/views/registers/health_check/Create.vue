@@ -16,7 +16,7 @@
             <router-link to="/health_checks" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> HEALTH CHECK REGISTERS</router-link>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 mb-3">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
@@ -61,6 +61,52 @@
                     </div>
                 </form>
             </div>
+            <div class="col-12" v-if="groupedResults.length">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0">
+                                <tbody>
+                                    <!-- <tr v-for="item,key in campaign_results" :key="key">
+                                         <td class="text-center">
+                                            <h6>{{ item?.location }}</h6>
+                                            <img :src="item?.file" height="180" />
+                                        </td>
+                                    </tr> -->
+
+
+                                      <tr v-for="(item, index) in groupedResults" :key="index">
+                                        <td class="text-center" v-if="item[0]">
+                                            <h6>{{ item[0]?.location }}</h6>
+                                            <img :src="item[0]?.file" height="180" width="250"/>
+                                        </td>
+                                        <td class="text-center" v-if="item[1]">
+                                            <h6>{{ item[1]?.location }}</h6>
+                                            <img :src="item[1]?.file" height="180"  width="250"/>
+                                        </td>
+                                    </tr>
+
+
+                                    <!-- <tr v-for="(item, index) in campaign_results" :key="index">
+                                        <td class="text-center" v-if="item[0]">
+                                            <h6>{{ item[0]?.location }}</h6>
+                                            <img :src="item[0]?.file" height="180" />
+                                        </td>
+                                        <td class="text-center" v-if="item[1]">
+                                            <h6>{{ item[1]?.location}}</h6>
+                                            <img :src="item[1]?.file" height="180" />
+                                        </td>
+                                    </tr>
+                                    <tr v-if="groupedResults.length==0">
+                                        <td colspan="3" class="text-center text-danger">No records found</td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </template>
@@ -77,6 +123,7 @@
                     file: "",
                 },
                 assets: [],
+                campaign_results:[],
                 errors: [],
                 status: true,
             };
@@ -84,6 +131,18 @@
 
         mounted() {
             this.getAssets();
+    },
+          computed: {
+            groupedResults() {
+                const results = this.campaign_results;
+                const grouped = [];
+
+                for (let i = 0; i < results.length; i += 2) {
+                    grouped.push(results.slice(i, i + 2));
+                }
+
+                return grouped;
+            },
         },
 
         methods: {
@@ -133,8 +192,11 @@
                     .then((response) => {
                         loader.hide();
                         this.$store.dispatch("success", "Health check created successfully");
-                        vm.$router.push("/health_checks");
+
+                        // vm.$router.push("/health_checks");
+                        vm.campaign_results = response.data[0];
                         vm.errors = [];
+                        vm.discard();
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -146,7 +208,9 @@
             let vm = this;
             vm.campaign.asset_id = "";
             vm.campaign.datasource_id = "";
-            vm.campaign.file= "";
+            vm.campaign.file = null;
+            // Reset the file input
+            vm.$refs.file.value = null;
             vm.errors = [];
             vm.status = true;
         },

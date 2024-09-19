@@ -39,14 +39,14 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Shop Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Shop Code" class="form-control" :class="{ 'is-invalid': errors.plant_code }"
+                                    <input type="text" placeholder="Enter Shop Code" class="form-control" :class="{ 'is-invalid': errors.plant_code }"
                                         v-model="plant.plant_code" />
                                     <span v-if="errors.plant_code" class="invalid-feedback">{{ errors.plant_code[0] }}</span>
                                 </div>
 
                                 <div class="col-md-12">
                                     <label class="form-label">Shop Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Enter Shop name" class="form-control" :class="{ 'is-invalid': errors.plant_name }"
+                                    <input type="text" placeholder="Enter Shop Name" class="form-control" :class="{ 'is-invalid': errors.plant_name }"
                                         v-model="plant.plant_name" />
                                     <span v-if="errors.plant_name" class="invalid-feedback">{{ errors.plant_name[0] }}</span>
                                 </div>

@@ -32,10 +32,10 @@ class AssetController extends Controller
             'keyword' => 'required'
         ]);
 
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query = Asset::query();
 
-        $query->where('plant_id', $authPlantId);
+        // $query->where('plant_id', $authPlantId);
 
         if(isset($request->asset_type_id))
         {
@@ -67,28 +67,29 @@ class AssetController extends Controller
 
     public function addAsset(Request $request)
     {
-        $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
+        // $userPlantId = Auth::User()->plant_id;
+        // $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
-            // 'area_id' => 'required|exists:areas,area_id',
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
             'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
-            'asset_attributes' => 'required|array',
-            'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
-            'asset_attributes.*.field_value' => 'required|string',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
+            'asset_attributes' => 'nullable|array',
+            'asset_attributes.*.asset_attribute_id' => 'nullable|exists:asset_attributes,asset_attribute_id',
+            'asset_attributes.*.asset_attribute_value.field_value' => 'nullable',
+            'longitude' => 'nullable|sometimes|numeric',
+            'latitude' => 'nullable|sometimes|numeric',
             'functional_id' => 'nullable|exists:functionals,functional_id',
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes',
+            'radius' => 'nullable|sometimes|numeric',
             'zone_name' => 'nullable|array', 
-            'zone_name.*' => 'nullable' 
+            'zone_name.*' => 'nullable',
+            'plant_id' => 'required|exists:plants,plant_id' ,
+            'area_id' => 'nullable|exists:areas,area_id'
         ]);
-        $data['plant_id'] = $userPlantId;
-        $data['area_id'] = $areaId;
+        // $data['plant_id'] = $userPlantId;
+        // $data['area_id'] = $areaId;
         
         $asset = Asset::create($data);
 
@@ -97,7 +98,7 @@ class AssetController extends Controller
             AssetAttributeValue::create([
                 'asset_id' => $asset->asset_id,
                 'asset_attribute_id' => $attribute['asset_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
+                'field_value' => $attribute['asset_attribute_value']['field_value'] ?? '',
             ]);
         }
                 
@@ -134,7 +135,20 @@ class AssetController extends Controller
         ]);
 
         $asset = Asset::where('asset_id', $request->asset_id)->first();
-        return new AssetResource($asset);
+
+        //QR Code
+        $assetCode = $asset->asset_code;
+
+        $qrCode = new DNS2D();
+        $qrCodeData = $qrCode->getBarcodePNG($assetCode, 'QRCODE', 10, 10);
+    
+        $dataUri = 'data:image/jpeg;base64,' . $qrCodeData;
+
+        return response()->json([
+            'asset' => new AssetResource($asset),
+            'QRCode' => $dataUri,
+            'asset_code' => $assetCode
+        ]);
     }
 
     public function getAssetdata(Request $request)
@@ -142,18 +156,6 @@ class AssetController extends Controller
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
-
-        $asset_attribute_value = AssetAttributeValue::where('asset_id', $request->asset_id)->get('asset_attribute_id');
-        
-        $asset_attribute_initial = AssetAttribute::whereNotIn('asset_attribute_id', $asset_attribute_value)->get();
-
-        foreach ($asset_attribute_initial as $attribute) {
-            AssetAttributeValue::create([
-                'asset_id' => $request->asset_id,
-                'asset_attribute_id' => $attribute['asset_attribute_id'],
-                'field_value' => $attribute['field_value'] ?? '',
-            ]);
-        }
 
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         return new AssetResource($asset);
@@ -171,31 +173,39 @@ class AssetController extends Controller
 
     public function updateAsset(Request $request)
     {
-        $userPlantId = Auth::user()->plant_id;
-        $areaId = Auth::user()->Plant->area_id;
+        // $userPlantId = Auth::user()->plant_id;
+        // $areaId = Auth::user()->Plant->area_id;
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_code' => 'required|string|unique:assets,asset_code,' . $request->asset_id . ',asset_id',
             'asset_name' => 'required|string|unique:assets,asset_name,' . $request->asset_id . ',asset_id',
             'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
-            'asset_attributes' => 'required|array',
-            'asset_attributes.*.asset_attribute_id' => 'required|exists:asset_attributes,asset_attribute_id',
-            'asset_attributes.*.asset_attribute_value.field_value' => 'required|string',
-            'longitude' => 'nullable|sometimes',
-            'latitude' => 'nullable|sometimes',
+            'asset_attributes' => 'nullable|array',
+            'asset_attributes.*.asset_attribute_id' => 'nullable|exists:asset_attributes,asset_attribute_id',
+            'asset_attributes.*.asset_attribute_value.field_value' => 'nullable',
+            'longitude' => 'nullable|sometimes|numeric',
+            'latitude' => 'nullable|sometimes|numeric',
             'functional_id' => 'nullable|exists:functionals,functional_id',
             'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
-            'radius' => 'nullable|sometimes',
-            'zone_name' => 'nullable|array'
+            'radius' => 'nullable|sometimes|numeric',
+            'zone_name' => 'nullable|array',
+            'deleted_asset_attribute_values' => 'nullable',
+            'plant_id' => 'required|exists:plants,plant_id' ,
+            'area_id' => 'nullable|exists:areas,area_id'
         ]);
     
-        $data['plant_id'] = $userPlantId;
-        $data['area_id'] = $areaId;
+        // $data['plant_id'] = $userPlantId;
+        // $data['area_id'] = $areaId;
     
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
+
+        if($request->deleted_asset_attribute_values > 0)
+        {
+            AssetAttributeValue::whereIn('asset_attribute_value_id', $request->deleted_asset_attribute_values)->forceDelete();
+        }
     
         foreach ($request->asset_attributes as $attribute) 
         {

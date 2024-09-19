@@ -27,7 +27,10 @@ class VariableAttributeResource extends JsonResource
             'list_parameter' => new ListParameterResource($this->ListParameter),
 	        'variable_attribute_types' => VariableAttributeTypeResource::collection($this->VariableAttributeTypes),
             'status' => $this->deleted_at?false:true,
-            'variable_types' => $variable_types
+            'variable_types' => $variable_types,
+            'variable_attribute_value' => [
+                "field_value" => null
+            ]
         ];
     }
 }

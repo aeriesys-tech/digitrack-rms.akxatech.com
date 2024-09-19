@@ -20,6 +20,11 @@ class SpareValueResource extends JsonResource
     {
         $spare_attribute_value = SpareAttributeValue::where('spare_id', $this->spareId)
             ->where('spare_attribute_id', $this->spare_attribute_id)->first();
+        if(!$spare_attribute_value){
+            $spare_attribute_value = [
+                'field_value' => null
+            ];
+        }
 
         return [
             'spare_attribute_id' => $this->spare_attribute_id,

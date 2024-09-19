@@ -130,13 +130,26 @@ class SpareAttributeController extends Controller
         $spare_attribute = SpareAttribute::where('spare_attribute_id', $request->spare_attribute_id)->first();
         $spare_attribute->update($data);
 
-        SpareAttributeType::where('spare_attribute_id', $spare_attribute->spare_attribute_id)->delete();
+        if(isset($request->deleted_spare_attribute_types) > 0)
+        {
+            SpareAttributeType::whereIn('spare_attribute_type_id', $request->deleted_spare_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['spare_types'] as $spare_type_id) {
-            SpareAttributeType::create([
-                'spare_attribute_id' => $spare_attribute->spare_attribute_id,
-                'spare_type_id' => $spare_type_id
-            ]);
+        foreach ($data['spare_types'] as $spare_type_id) 
+        {
+            $spare_type = SpareAttributeType::where('spare_attribute_id', $spare_attribute->spare_attribute_id)->where('spare_type_id', $spare_type_id)->first();
+            if($spare_type)
+            {
+                $spare_type->update([
+                    'spare_type_id' => $spare_type_id
+                ]);
+            }
+            else{
+                SpareAttributeType::create([
+                    'spare_attribute_id' => $spare_attribute->spare_attribute_id,
+                    'spare_type_id' => $spare_type_id
+                ]);
+            }
         }
         return new SpareAttributeResource($spare_attribute);
     }

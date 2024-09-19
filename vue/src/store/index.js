@@ -6,13 +6,13 @@ import axios from "axios";
 export default createStore({
   state: {
     // apiUrl:"https://digitrack-rms.akxatech.com/api/",
-    apiUrl:"http://192.168.0.213/digitrack-rms.akxatech.com/laravel/public/api/",
+    apiUrl: "http://192.168.0.213/digitrack-rms.akxatech.com/laravel/public/api/",
     user: null,
     token: '',
-    permissions:[],
-    current_page:'',
-    page:'',
-    asset_id:''
+    permissions: [],
+    current_page: '',
+    page: '',
+    asset_id: ''
   },
   getters: {
     user(state) {
@@ -41,7 +41,7 @@ export default createStore({
     setToken(state, token) {
       state.token = token;
     },
-    setPermissions(state,permissions){
+    setPermissions(state, permissions) {
       state.permissions = permissions;
     },
     setPage(state, page) {
@@ -61,8 +61,8 @@ export default createStore({
     async setToken(context, payload) {
       await context.commit('setToken', payload);
     },
-    async setPermissions(context, payload){
-      await context.commit('setPermissions',payload);
+    async setPermissions(context, payload) {
+      await context.commit('setPermissions', payload);
     },
     async setPage(context, payload) {
       await context.commit('setPage', payload);
@@ -91,16 +91,16 @@ export default createStore({
     },
     get(context, payload) {
       return new Promise((resolve, reject) => {
-          axios
-              .get(this.state.apiUrl + payload.uri)
-              .then(function (response) {
-                  resolve(response);
-              })
-              .catch(function (error) {
-                  reject(error);
-              });
+        axios
+          .get(this.state.apiUrl + payload.uri)
+          .then(function (response) {
+            resolve(response);
+          })
+          .catch(function (error) {
+            reject(error);
+          });
       });
-  },
+    },
 
     post(context, payload) {
       return new Promise((resolve, reject) => {

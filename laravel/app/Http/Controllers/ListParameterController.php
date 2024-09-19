@@ -46,7 +46,7 @@ class ListParameterController extends Controller
     public function addListParameter(Request $request)
     {
         $data = $request->validate([
-            'list_parameter_name' => 'required',
+            'list_parameter_name' => 'required|unique:list_parameters,list_parameter_name',
             'field_values' => 'required'
         ]);
 
@@ -68,7 +68,7 @@ class ListParameterController extends Controller
     {
         $data = $request->validate([
             'list_parameter_id' => 'required|exists:list_parameters,list_parameter_id',
-            'list_parameter_name' => 'required',
+            'list_parameter_name' => 'required|unique:list_parameters,list_parameter_name,'.$request->list_parameter_id.',list_parameter_id',
             'field_values' => 'required'
         ]);
 

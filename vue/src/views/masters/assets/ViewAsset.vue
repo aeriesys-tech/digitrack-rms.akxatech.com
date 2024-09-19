@@ -17,7 +17,7 @@
             <router-link to="/assets" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ASSETS</router-link>
         </div>
         <div class="row g-2">
-            <div class="col-xl-4 mb-1">
+            <div class="col-xl-3 mb-1">
                 <div class="row">
                     <div class="col-12 mb-2">
                         <div class="card card-one">
@@ -36,7 +36,7 @@
                                     <span class="nav-link text-dark"><span>Section</span> <span class="badge text-dark">{{asset.section?.section_name}}</span></span>
                                     <span class="nav-link text-dark"><span>Functional</span> <span class="badge text-dark">{{asset.functional?.functional_name}}</span></span>
                                     <span class="nav-link text-dark" v-for="(zone, index) in asset.zone_name" :key="zone.asset_zone_id">
-                                        <span>Zone {{ index + 1 }}</span> 
+                                        <span>Zone {{ index + 1 }}</span>
                                         <span class="badge text-dark">{{ zone.zone_name }}</span>
                                     </span>
                                     <h6 class="nav-link text-dark d-flex justify-content-between" v-for="asset_attribute, key in asset.asset_attributes" :key="key">
@@ -64,13 +64,13 @@
                                 </div>
                             </div>
                             <!-- card-body -->
-                        </div>  
+                        </div>
                     </div>
                 </div>
-                
+
             </div>
             <!-- try -->
-            <div class="col-xl-8 mb-2" style="height: 950px; overflow-y: scroll;">
+            <div class="col-xl-9 mb-2" style="height: 950px; overflow-y: scroll;">
                 <div class="row">
                     <div class="col-12 mb-2" v-can="'assetSpares.view'">
                         <div class="card card-one">
@@ -98,15 +98,15 @@
 
                                         <div class="dropdown" @click="toggleAssetZoneStatus('spares')">
                                             <div class="overselect"></div>
-                                                <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
+                                                <select class="form-control form-control" :class="{'is-invalid':errors?.spare_asset_zones}">
                                                     <option value="">Select Asset Zone</option>
                                                 </select>
-                                                <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
+                                                <span v-if="errors?.spare_asset_zones" class="invalid-feedback">{{ errors?.spare_asset_zones[0] }}</span>
                                             </div>
                                             <div class="multiselect" v-if="asset_zone_status_spares">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="spare.asset_zones" style="padding: 2px;" @click="updateSpareAssetZone($event, spare)"/>
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="spare.spare_asset_zones" style="padding: 2px;" @click="updateSpareAssetZone($event, spare)"/>
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -190,7 +190,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-if="asset_spares.length==0">
+                                                    <tr v-if="asset_spares?.length==0">
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="spare, key in asset_spares" :key="key">
@@ -253,15 +253,15 @@
                                         </div> -->
                                         <div class="dropdown" @click="toggleAssetZoneStatus('checks')">
                                             <div class="overselect"></div>
-                                                <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
+                                                <select class="form-control form-control" :class="{'is-invalid':errors.check_asset_zones}">
                                                     <option value="">Select Asset Zone</option>
                                                 </select>
-                                                <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
+                                                <span v-if="errors.check_asset_zones" class="invalid-feedback">{{ errors.check_asset_zones[0] }}</span>
                                             </div>
                                             <div class="multiselect" v-if="asset_zone_status_checks">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="check.asset_zones" @click="updateCheckAssetZone($event, check)" style="padding: 2px;" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="check.check_asset_zones" @click="updateCheckAssetZone($event, check)" style="padding: 2px;" />
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -343,7 +343,7 @@
                                                                 <i v-else class="fas fa-sort"></i>
                                                             </span>
                                                         </th>
-                                                       
+
                                                         <th @click="sortCheck('lcl')" width="8%">
                                                            Lcl
                                                             <span>
@@ -373,8 +373,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-if="asset_checks.length==0">
-                                                        <td colspan="6" class="text-center">No records found</td>
+                                                    <tr v-if="asset_checks?.length==0">
+                                                        <td colspan="8" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="check, key in asset_checks" :key="key">
                                                         <td class="text-center">{{ check_meta.from + key }}</td>
@@ -393,7 +393,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -423,15 +423,15 @@
                                     <div class="col-md-4" v-can="'assetChecks.create'">
                                         <div class="dropdown" @click="toggleAssetZoneStatus('services')">
                                             <div class="overselect"></div>
-                                                <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
+                                                <select class="form-control form-control" :class="{'is-invalid':errors.service_asset_zones}">
                                                     <option value="">Select Asset Zone</option>
                                                 </select>
-                                                <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
+                                                <span v-if="errors.service_asset_zones" class="invalid-feedback">{{ errors.service_asset_zones[0] }}</span>
                                             </div>
                                             <div class="multiselect" v-if="asset_zone_status_services">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="service.asset_zones" style="padding: 2px;" @click="updateServiceAssetZone($event, service)" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="service.service_asset_zones" style="padding: 2px;" @click="updateServiceAssetZone($event, service)" />
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -510,7 +510,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-if="asset_services.length==0">
+                                                    <tr v-if="asset_services?.length==0">
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="service, key in asset_services" :key="key">
@@ -528,7 +528,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -558,15 +558,15 @@
                                     <div class="col-md-5">
                                         <div class="dropdown" @click="toggleAssetZoneStatus('variables')">
                                             <div class="overselect"></div>
-                                                <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
+                                                <select class="form-control form-control" :class="{'is-invalid':errors.variable_asset_zones}">
                                                     <option value="">Select Asset Zone</option>
                                                 </select>
-                                                <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
+                                                <span v-if="errors.variable_asset_zones" class="invalid-feedback">{{ errors.variable_asset_zones[0] }}</span>
                                             </div>
                                         <div class="multiselect" v-if="asset_zone_status_variables">
                                             <ul>
                                                 <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                    <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="variable.asset_zones" style="padding: 2px;" @click="updateVariableAssetZone($event, variable)" />
+                                                    <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="variable.variable_asset_zones" style="padding: 2px;" @click="updateVariableAssetZone($event, variable)" />
                                                     <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                 </li>
                                             </ul>
@@ -649,7 +649,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-if="asset_variables.length==0">
+                                                    <tr v-if="asset_variables?.length==0">
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="variable, key in asset_variables" :key="key">
@@ -711,15 +711,15 @@
                                         </div> -->
                                         <div class="dropdown" @click="toggleAssetZoneStatus('datasources')">
                                             <div class="overselect"></div>
-                                                <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
+                                                <select class="form-control form-control" :class="{'is-invalid':errors.data_source_asset_zones}">
                                                     <option value="">Select Asset Zone</option>
                                                 </select>
-                                                <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
+                                                <span v-if="errors.data_source_asset_zones" class="invalid-feedback">{{ errors.data_source_asset_zones[0] }}</span>
                                             </div>
                                             <div class="multiselect" v-if="asset_zone_status_datasources">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="datasource.asset_zones" style="padding: 2px;"  @click="updateDataSourceAssetZone($event, datasource)"/>
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="datasource.data_source_asset_zones" style="padding: 2px;"  @click="updateDataSourceAssetZone($event, datasource)"/>
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -864,15 +864,15 @@
                                         </div> -->
                                         <div class="dropdown" @click="toggleAssetZoneStatus('accessories')">
                                             <div class="overselect"></div>
-                                                <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
+                                                <select class="form-control form-control" :class="{'is-invalid':errors.accessory_asset_zone_id}">
                                                     <option value="">Select Asset Zone</option>
                                                 </select>
-                                                <span v-if="errors.asset_zones" class="invalid-feedback">{{ errors.asset_zones[0] }}</span>
+                                                <span v-if="errors.accessory_asset_zone_id" class="invalid-feedback">{{ errors.accessory_asset_zone_id[0] }}</span>
                                             </div>
                                             <div class="multiselect" v-if="asset_zone_status_accessories">
                                                 <ul>
                                                     <li v-for="(asset_zone, index) in asset_zones" :key="index">
-                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="accessory.asset_zone_id" style="padding: 2px;" />
+                                                        <input type="checkbox" :value="asset_zone.asset_zone_id" v-model="accessory.accessory_asset_zone_id" style="padding: 2px;" />
                                                         <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                     </li>
                                                 </ul>
@@ -953,7 +953,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-if="asset_accessories.length==0">
+                                                    <tr v-if="asset_accessories?.length==0">
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="accessory, key in asset_accessories" :key="key">
@@ -1021,6 +1021,7 @@
                     maxPage: 1,
                     trashed: false,
                     asset_id: "",
+                    asset_type_id:"",
                 },
                 check_meta: {
                     search: "",
@@ -1035,6 +1036,8 @@
                     maxPage: 1,
                     trashed: false,
                     asset_id: "",
+                    asset_type_id:"",
+                    department_id:"",
                 },
                 check_meta_service: {
                     search: "",
@@ -1049,6 +1052,7 @@
                     maxPage: 1,
                     trashed: false,
                     asset_id: "",
+                    asset_type_id:'',
                 },
                 variable_meta_service: {
                     search: "",
@@ -1063,6 +1067,7 @@
                     maxPage: 1,
                     trashed: false,
                     asset_id: "",
+                    asset_type_id:'',
                 },
                 datasource_meta_service: {
                     search: "",
@@ -1077,6 +1082,7 @@
                     maxPage: 1,
                     trashed: false,
                     asset_id: "",
+                    asset_type_id:'',
                 },
                 accessory_meta_service: {
                     search: "",
@@ -1091,6 +1097,7 @@
                     maxPage: 1,
                     trashed: false,
                     asset_id: "",
+                    asset_type_id:'',
                 },
                 asset: {
                     asset_id: "",
@@ -1110,7 +1117,7 @@
                     spare_name: "",
                     asset_id: "",
                     asset_zone_id:'',
-                    asset_zones:[],
+                    spare_asset_zones:[],
                 },
                 check: {
                     check_id: "",
@@ -1122,7 +1129,7 @@
                     default_value:"",
                     asset_check_id:"",
                     asset_zone_id:'',
-                    asset_zones:[],
+                    check_asset_zones:[],
                 },
                 service: {
                     service_id: "",
@@ -1131,7 +1138,7 @@
                     asset_id: "",
                     asset_zone_id:'',
                     asset_service_id:"",
-                    asset_zones:[],
+                    service_asset_zones:[],
                 },
                 datasource: {
                     data_source_id: "",
@@ -1139,7 +1146,7 @@
                     data_source_name: "",
                     asset_id: "",
                     asset_zone_id:'',
-                    asset_zones:[],
+                    data_source_asset_zones:[],
                     asset_data_source_id:"",
                 },
                 variable: {
@@ -1148,18 +1155,18 @@
                     variable_name: "",
                     asset_id: "",
                     asset_zone_id:'',
-                    asset_zones:[],
+                    variable_asset_zones:[],
                     asset_variable_id:"",
                 },
                 accessory: {
                     accessory_id: "",
                     asset_id: "",
-                    asset_zone_id:[],
+                    accessory_asset_zone_id:[],
                     accessory_name:"",
                     accessory_type_id:"",
                     attachment:"",
                 },
-               
+
                 device_code: "",
                 spares: [],
                 asset_spares: [],
@@ -1181,14 +1188,17 @@
                 asset_zone_status_checks: false,
                 asset_zone_status_services: false,
                 asset_zone_status_accessories: false,
+
+                // on add other api should not call
+                initial_status: true,
             };
         },
-        watch:{
-            'check.check_id':function(){
-                if(typeof this.check.check_id === 'number' && !this.check.asset_check_id)
-                    this.getCheck()
-            }
-        },
+        // watch:{
+        //     'check.check_id':function(){
+        //         if(typeof this.check.check_id === 'number' && !this.check.asset_check_id)
+        //             this.getCheck()
+        //     }
+        // },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
                 vm.asset.asset_id = to.params.asset_id;
@@ -1196,18 +1206,21 @@
                 vm.$store
                     .dispatch("post", uri)
                     .then(function (response) {
-                        vm.asset = response.data.data
-                        vm.getSpares();
-                        vm.getQRCode();
+                        vm.asset = response.data.asset;
+                        // vm.asset_zones = response.data.zones;
+                         vm.asset_zones = response?.data?.asset?.zone_name;
+                        vm.asset.QR_Code = response?.data?.QRCode;
+                        vm.getAssetSpares();
                     })
                     .catch(function (error) {
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
+                        console.log(error)
+                        // vm.errors = error.response.data.errors;
+                        // vm.$store.dispatch("error", error.response.data.message);
                     });
             });
         },
         mounted() {
-
+            document.body.classList.add('sidebar-hide');
         },
         methods: {
             getAttachmentUrl(attachment) {
@@ -1218,40 +1231,40 @@
             },
             updateCheckAssetZone(event, check) {
                 if(check.asset_check_id){
-                    this.check.asset_zones = []
-                    this.check.asset_zones = [parseInt(event.target.value, 10)]
+                    this.check.check_asset_zones = []
+                    this.check.check_asset_zones = [parseInt(event.target.value, 10)]
                     this.check.asset_zone_id = event.target.value
                 }
             },
             updateSpareAssetZone(event, spare) {
                 if(spare.asset_spare_id){
-                    this.spare.asset_zones = []
-                    this.spare.asset_zones = [parseInt(event.target.value, 10)]
+                    this.spare.spare_asset_zones = []
+                    this.spare.spare_asset_zones = [parseInt(event.target.value, 10)]
                     this.spare.asset_zone_id = event.target.value
                 }
             },
             updateServiceAssetZone(event, service) {
                 if(service.asset_service_id){
-                    this.service.asset_zones = []
-                    this.service.asset_zones = [parseInt(event.target.value, 10)]
+                    this.service.service_asset_zones = []
+                    this.service.service_asset_zones = [parseInt(event.target.value, 10)]
                     this.service.asset_zone_id = event.target.value
                 }
             },
             updateVariableAssetZone(event, variable) {
                 if(variable.asset_variable_id){
-                    this.variable.asset_zones = []
-                    this.variable.asset_zones = [parseInt(event.target.value, 10)]
+                    this.variable.variable_asset_zones = []
+                    this.variable.variable_asset_zones = [parseInt(event.target.value, 10)]
                     this.variable.asset_zone_id = event.target.value
                 }
             },
             updateDataSourceAssetZone(event, datasource) {
                 if(datasource.asset_data_source_id){
-                    this.datasource.asset_zones = []
-                    this.datasource.asset_zones = [parseInt(event.target.value, 10)]
+                    this.datasource.data_source_asset_zones = []
+                    this.datasource.data_source_asset_zones = [parseInt(event.target.value, 10)]
                     this.datasource.asset_zone_id = event.target.value
                 }
             },
-            toggleAssetZoneStatus(type) 
+            toggleAssetZoneStatus(type)
             {
                 // this.asset_zone_status_variables = false;
                 // this.asset_zone_status_datasources = false;
@@ -1308,7 +1321,7 @@
                 let color = 'color:black'
                 if(asset_parameter.field_name = 'Color'){
                     color = 'background-color:'+asset_parameter.asset_parameter_value?.field_value +'; color:white; padding:5px'
-                }  
+                }
                 return color
 
             },
@@ -1318,8 +1331,8 @@
                 this.spare.asset_spare_id = spare.asset_spare_id
                 this.spare.spare_code = spare.spare_code
                 this.spare.spare_name = spare.spare_name
-                this.spare.asset_zones = []
-                this.spare.asset_zones.push(spare.asset_zone_id)
+                this.spare.spare_asset_zones = []
+                this.spare.spare_asset_zones.push(spare.asset_zone_id)
                 this.spare.asset_zone_id = spare.asset_zone_id
             },
             editCheck(check){
@@ -1329,8 +1342,8 @@
                 this.check.lcl = check.lcl
                 this.check.ucl = check.ucl
                 this.check.default_value = check.default_value
-                this.check.asset_zones = []
-                this.check.asset_zones.push(check.asset_zone_id)
+                this.check.check_asset_zones = []
+                this.check.check_asset_zones.push(check.asset_zone_id)
                 this.check.asset_zone_id = check.asset_zone_id
             },
             editService(service){
@@ -1339,8 +1352,8 @@
                 this.service.asset_service_id = service.asset_service_id
                 this.service.service_code = service.service_code
                 this.service.service_name = service.service_name
-                this.service.asset_zones = []
-                this.service.asset_zones.push(service.asset_zone_id)
+                this.service.service_asset_zones = []
+                this.service.service_asset_zones.push(service.asset_zone_id)
                 this.service.asset_zone_id = service.asset_zone_id
             },
             editVariable(variable){
@@ -1349,8 +1362,8 @@
                 this.variable.asset_variable_id = variable.asset_variable_id
                 this.variable.variable_code = variable.variable_code
                 this.variable.variable_name = variable.variable_name
-                this.variable.asset_zones = []
-                this.variable.asset_zones.push(variable.asset_zone_id)
+                this.variable.variable_asset_zones = []
+                this.variable.variable_asset_zones.push(variable.asset_zone_id)
                 this.variable.asset_zone_id = variable.asset_zone_id
             },
             editDataSource(datasource){
@@ -1359,144 +1372,144 @@
                 this.datasource.asset_data_source_id = datasource.asset_data_source_id
                 this.datasource.data_source_code = datasource.data_source_code
                 this.datasource.data_source_name = datasource.data_source_name
-                this.datasource.asset_zones = []
-                this.datasource.asset_zones.push(datasource.asset_zone_id)
+                this.datasource.data_source_asset_zones = []
+                this.datasource.data_source_asset_zones.push(datasource.asset_zone_id)
                 this.datasource.asset_zone_id = datasource.asset_zone_id
             },
-            getSpares() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeSpares" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.spares = response.data.data;
-                        vm.getAssetSpares();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getChecks() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeChecks" ,data: vm.asset})
-                    .then((response) => {
-                        loader.hide();
-                        vm.checks = response.data.data;
-                        vm.getAssetChecks();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
 
-            getVariables() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeVariables" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.variables = response.data.data;
-                        vm.getAssetVariables();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getDataSources() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeDataSources" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.data_sources = response.data.data;
-                        vm.getAssetDataSources();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getCheck() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getCheck" ,data: vm.check})
-                    .then((response) => {
-                        loader.hide();
-                        // vm.check = response.data.data;
-                        vm.check.lcl = response.data.data.lcl;
-                        vm.check.ucl = response.data.data.uclcl;
-                        vm.check.default_value = response.data.data.default_value;
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getServices() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTypeServices" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.services = response.data.data;
-                        vm.getAssetServices();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
+            // getChecks() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeChecks" ,data: vm.asset})
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.checks = response.data.data;
+            //             vm.getAssetChecks();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+
+            // getVariables() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeVariables" ,data: vm.asset })
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.variables = response.data.data;
+            //             vm.getAssetVariables();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+            // getDataSources() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeDataSources" ,data: vm.asset })
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.data_sources = response.data.data;
+            //             vm.getAssetDataSources();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+            // getCheck() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getCheck" ,data: vm.check})
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.check = response.data.data;
+            //             vm.check.lcl = response.data.data.lcl;
+            //             vm.check.ucl = response.data.data.uclcl;
+            //             vm.check.default_value = response.data.data.default_value;
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+            // getServices() {
+            //     let vm = this;
+            //     let loader = vm.$loading.show();
+            //     vm.$store
+            //         .dispatch("post", { uri: "getAssetTypeServices" ,data: vm.asset })
+            //         .then((response) => {
+            //             loader.hide();
+            //             vm.services = response.data.data;
+            //             vm.getAssetServices();
+            //         })
+            //         .catch(function (error) {
+            //             loader.hide();
+            //             vm.errors = error.response.data.errors;
+            //             vm.$store.dispatch("error", error.response.data.message);
+            //         });
+            // },
+
             getAssetSpares() {
                 let vm = this;
                 vm.meta.asset_id = vm.asset.asset_id;
+                vm.meta.asset_type_id = vm.asset.asset_type_id;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetSpares", data: vm.meta })
                     .then((response) => {
                         loader.hide();
-                        vm.asset_spares = response.data.data;
+                        vm.asset_spares = response.data.paginate_spares;
+                        vm.spares = response?.data?.spares;
                         vm.meta.totalRows = response.data.meta.total;
-                        vm.meta.from = response.data.meta.from;
+                        // vm.meta.from = response.data.meta.from;
                         vm.meta.lastPage = response.data.meta.last_page;
                         vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
-                        vm.getChecks();
+                        // vm.getChecks();
+                        if (vm.initial_status) {
+                            vm.getAssetChecks();
+                        }
+
                     })
                     .catch(function (error) {
                         loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
+                        console.log("errors",error)
+                        // vm.errors = error.response.data.errors;
+                        // vm.$store.dispatch("error", error.response.data.message);
                     });
             },
             getAssetChecks() {
                 let vm = this;
                 vm.check_meta.asset_id = vm.asset.asset_id;
+                vm.check_meta.asset_type_id = vm.asset.asset_type_id;
+                vm.check_meta.department_id = vm.asset.department_id;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetChecks", data: vm.check_meta })
                     .then((response) => {
                         loader.hide();
-                        vm.asset_checks = response.data.data;
+                        console.log("checks response", response)
+                        vm.checks = response.data.checks;
+                        vm.asset_checks = response.data.paginate_checks;
                         vm.check_meta.totalRows = response.data.meta.total;
-                        vm.check_meta.from = response.data.meta.from;
+                        // vm.check_meta.from = response.data.meta.from;
                         vm.check_meta.lastPage = response.data.meta.last_page;
                         vm.check_meta.maxPage = vm.check_meta.lastPage >= 3 ? 3 : vm.check_meta.lastPage;
-                        vm.getServices();
+                        // vm.getServices();
+                        if (vm.initial_status) {
+                            vm.getAssetServices();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1507,17 +1520,23 @@
             getAssetServices() {
                 let vm = this;
                 vm.check_meta_service.asset_id = vm.asset.asset_id;
+                vm.check_meta_service.asset_type_id = vm.asset.asset_type_id;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetServices", data: vm.check_meta_service })
                     .then((response) => {
                         loader.hide();
-                        vm.asset_services = response.data.data;
+                        console.log("service paginate",response.data)
+                        vm.services = response.data.services;
+                        vm.asset_services = response.data.paginate_services;
                         vm.check_meta_service.totalRows = response.data.meta.total;
-                        vm.check_meta_service.from = response.data.meta.from;
+                        // vm.check_meta_service.from = response.data.meta.from;
                         vm.check_meta_service.lastPage = response.data.meta.last_page;
                         vm.check_meta_service.maxPage = vm.check_meta_service.lastPage >= 3 ? 3 : vm.check_meta_service.lastPage;
-                        vm.getVariables();
+                        // vm.getVariables();
+                        if (vm.initial_status) {
+                            vm.getAssetVariables();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1528,17 +1547,23 @@
             getAssetVariables() {
                 let vm = this;
                 vm.variable_meta_service.asset_id = vm.asset.asset_id;
+                vm.variable_meta_service.asset_type_id = vm.asset.asset_type_id;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetVariables", data: vm.variable_meta_service })
                     .then((response) => {
                         loader.hide();
-                        vm.asset_variables = response.data.data;
+                        console.log("pagevariable", response.data)
+                        vm.variables=response.data.variables
+                        vm.asset_variables = response.data.paginate_variables;
                         vm.variable_meta_service.totalRows = response.data.meta.total;
-                        vm.variable_meta_service.from = response.data.meta.from;
+                        // vm.variable_meta_service.from = response.data.meta.from;
                         vm.variable_meta_service.lastPage = response.data.meta.last_page;
                         vm.variable_meta_service.maxPage = vm.variable_meta_service.lastPage >= 3 ? 3 : vm.variable_meta_service.lastPage;
-                        vm.getDataSources();
+                        // vm.getDataSources();
+                        if (vm.initial_status) {
+                            vm.getAssetDataSources();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -1549,56 +1574,31 @@
             getAssetDataSources() {
                 let vm = this;
                 vm.datasource_meta_service.asset_id = vm.asset.asset_id;
+                vm.datasource_meta_service.asset_type_id = vm.asset.asset_type_id;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetDataSources", data: vm.datasource_meta_service })
                     .then((response) => {
                         loader.hide();
-                        vm.asset_data_sources = response.data.data;
+                        console.log(" pageintae data source",response.data)
+                         vm.data_sources = response.data.data_sources;
+                        vm.asset_data_sources = response.data.paginate_data_sources;
                         vm.datasource_meta_service.totalRows = response.data.meta.total;
-                        vm.datasource_meta_service.from = response.data.meta.from;
+                        // vm.datasource_meta_service.from = response.data.meta.from;
                         vm.datasource_meta_service.lastPage = response.data.meta.last_page;
                         vm.datasource_meta_service.maxPage = vm.datasource_meta_service.lastPage >= 3 ? 3 : vm.meta.lastPage;
-                        vm.getAccessoryTypes();
+                        if (vm.initial_status) {
+                            vm.getAssetAccessories();
+                        }
                     })
                     .catch(function (error) {
                         loader.hide();
+                        console.log("error",error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-           
-            getQRCode() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetQRCode", data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.asset.QR_Code = response.data.QRCode;
-                        vm.getAssetZones();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getAssetZones() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetZones", data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.asset_zones = response.data.data;
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
+
             downloadQR() {
                 let vm = this;
                 window.open(vm.$store.state.apiUrl + "downloadAssetQRCode?asset_code=" + vm.asset.asset_code);
@@ -1613,8 +1613,10 @@
                         loader.hide();
                         vm.$store.dispatch("success", response.data.message);
                         vm.spare.spare_id = "";
-                        vm.errors = [];
-                        vm.spare.asset_zone_id=[];
+                        vm.spare.asset_zone_id = [];
+                        vm.spare.spare_asset_zones= [];
+                        vm.asset_zone_status_spares = false;
+                         vm.errors = [];
                         vm.getAssetSpares();
                     })
                     .catch(function (error) {
@@ -1635,7 +1637,8 @@
                         vm.spare.spare_id = "";
                         vm.spare.asset_zone_id= "";
                         vm.spare.asset_spare_id="";
-                        vm.spare.asset_zones = [];
+                        vm.spare.spare_asset_zones = [];
+                        vm.asset_zone_status_spares = false;
                         vm.getAssetSpares();
                     })
                     .catch(function (error) {
@@ -1658,7 +1661,9 @@
                         vm.check.ucl = "";
                         vm.check.default_value = "";
                         vm.errors = [];
-                        vm.check.asset_zone_id=[];
+                        vm.check.asset_zone_id = [];
+                        vm.check.check_asset_zones = [];
+                        vm.asset_zone_status_checks=false
                         vm.getAssetChecks();
                     })
                     .catch(function (error) {
@@ -1678,9 +1683,10 @@
                         loader.hide();
                         vm.$store.dispatch("success", response.data.message);
                         vm.service.service_id = "";
-                        vm.errors = [];
                         vm.service.asset_zone_id='';
-                        vm.service.asset_zones=[];
+                        vm.service.service_asset_zones = [];
+                        vm.asset_zone_status_services = false;
+                        vm.errors = [];
                         vm.getAssetServices();
                     })
                     .catch(function (error) {
@@ -1701,7 +1707,9 @@
                         vm.service.service_id = "";
                         vm.service.asset_zone_id= "";
                         vm.service.asset_service_id = "";
-                        vm.service.asset_zones = [];
+                        vm.service.service_asset_zones = [];
+                        vm.asset_zone_status_services = false;
+                        vm.errors = [];
                         vm.getAssetServices();
                     })
                     .catch(function (error) {
@@ -1721,13 +1729,15 @@
                         loader.hide();
                         vm.$store.dispatch("success", response.data.message);
                         vm.variable.variable_id = "";
-                        vm.errors = [];
                         vm.variable.asset_zone_id='';
-                        vm.variable.asset_zones=[];
+                        vm.variable.variable_asset_zones = [];
+                        vm.asset_zone_status_variables = false;
+                        vm.errors = [];
                         vm.getAssetVariables();
                     })
                     .catch(function (error) {
                         loader.hide();
+                        console.log("eeee-00",error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -1744,7 +1754,9 @@
                         vm.variable.variable_id = "";
                         vm.variable.asset_zone_id= "";
                         vm.variable.asset_variable_id="";
-                        vm.variable.asset_zones = [];
+                        vm.variable.variable_asset_zones = [];
+                        vm.asset_zone_status_variables = false;
+                        vm.errors = [];
                         vm.getAssetVariables();
                     })
                     .catch(function (error) {
@@ -1765,7 +1777,8 @@
                         vm.datasource.data_source_id = "";
                         vm.errors = [];
                         vm.datasource.asset_zone_id='';
-                        vm.datasource.asset_zones=[];
+                        vm.datasource.data_source_asset_zones = [];
+                        vm.asset_zone_status_datasources = false;
                         vm.getAssetDataSources();
                     })
                     .catch(function (error) {
@@ -1786,7 +1799,8 @@
                         vm.datasource.data_source_id = "";
                         vm.datasource.asset_zone_id= "";
                         vm.datasource.asset_data_source_id="";
-                        vm.datasource.asset_zones = [];
+                        vm.datasource.data_source_asset_zones = [];
+                        vm.asset_zone_status_datasources = false;
                         vm.getAssetDataSources();
                     })
                     .catch(function (error) {
@@ -1828,7 +1842,8 @@
                         vm.check.ucl = "";
                         vm.check.default_value = "";
                         vm.check.asset_check_id = "";
-                        vm.check.asset_zones = [];
+                        vm.check.check_asset_zones = [];
+                        vm.asset_zone_status_checks=false
                         vm.getAssetChecks();
                     })
                     .catch(function (error) {
@@ -1931,40 +1946,30 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            getAccessoryTypes() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAccessoryTypes" ,data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.accessory_types = response.data.data;
-                        vm.getAssetAccessories();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
+
             getAssetAccessories() {
                 let vm = this;
                 vm.accessory_meta_service.asset_id = vm.asset.asset_id;
+                vm.accessory_meta_service.asset_type_id = vm.asset.asset_type_id;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetAccessories", data: vm.accessory_meta_service })
                     .then((response) => {
                         loader.hide();
-                        vm.asset_accessories = response.data.data;
+                        console.log("access reposne", response.data)
+                        vm.initial_status = false;
+                        vm.accessory_types = response.data.accessory_types;
+                        vm.asset_accessories = response.data.paginate_accessories;
                         vm.accessory_meta_service.totalRows = response.data.meta.total;
-                        vm.accessory_meta_service.from = response.data.meta.from;
+                        // vm.accessory_meta_service.from = response.data.meta.from;
                         vm.accessory_meta_service.lastPage = response.data.meta.last_page;
                         vm.accessory_meta_service.maxPage = vm.accessory_meta_service.lastPage >= 3 ? 3 : vm.accessory_meta_service.lastPage;
                     })
                     .catch(function (error) {
                         loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
+                        console.log("errors accessories--",error)
+                        // vm.errors = error.response.data.errors;
+                        // vm.$store.dispatch("error", error.response.data.message);
                     });
             },
             addAccessory() {
@@ -1973,11 +1978,12 @@
                 let loader = vm.$loading.show();
                 const data = new FormData();
                 data.append("asset_id", vm.accessory.asset_id);
-                data.append("asset_zone_id", JSON.stringify(vm.accessory.asset_zone_id));
+                // data.append("asset_zone_id", JSON.stringify(vm.accessory.accessory_asset_zone_id));
                 data.append("accessory_type_id", vm.accessory.accessory_type_id);
                 data.append("accessory_name", vm.accessory.accessory_name);
+                data.append("accessory_asset_zone_id",vm.accessory.accessory_asset_zone_id)
                 data.append("attachment", vm.$refs.attachment.files[0]);
-                
+
 
                 axios
                     .post(vm.$store.state.apiUrl + "addAssetAccessory", data, {
@@ -1990,8 +1996,12 @@
                         loader.hide();
                         vm.$store.dispatch("success", response.data.message);
                         vm.accessory.accessory_id = "";
+                        vm.accessory.accessory_name = "";
+                        vm.accessory.accessory_asset_zone_id = [];
+                        vm.accessory.accessory_type_id="",
+                        vm.$refs.attachment.value = '';
                         vm.errors = [];
-                        vm.accessory.asset_zone_id=[];
+                        vm.asset_zone_status_accessories = false;
                         vm.getAssetAccessories();
                     })
 
@@ -2002,7 +2012,7 @@
                 //         vm.$store.dispatch("success", response.data.message);
                 //         vm.accessory.accessory_id = "";
                 //         vm.errors = [];
-                //         vm.accessory.asset_zone_id=[];
+                //         vm.accessory.accessory_asset_zone_id=[];
                 //         vm.getAssetAccessories();
                 //     })
                     .catch(function (error) {

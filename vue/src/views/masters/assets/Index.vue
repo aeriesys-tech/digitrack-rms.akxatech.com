@@ -190,6 +190,7 @@
             this.get_asset = this.$store.getters.permissions.filter(function (element) {
                 return element.ability.ability.includes("assets.update");
             });
+            document.body.classList.remove('sidebar-hide');
             this.$store.commit("setAssetId", '');
             this.index();
         },
@@ -219,6 +220,9 @@
                 this.$router.push("/asset/" + asset.asset_id + "/edit");
             },
             viewAsset(asset) {
+                 // Add the 'sidebar-hide' class to the body
+                document.body.classList.add('sidebar-hide');
+
                 this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/asset/" + asset.asset_id + "/view");
             },

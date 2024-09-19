@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Resources\AssetServiceResource;
 use App\Models\AssetService;
 use App\Models\Service;
+use App\Models\AssetZone;
+use App\Models\Asset;
+use App\Http\Resources\ServiceResource;
+use App\Http\Resources\AssetZoneResource;
 use Illuminate\Support\Facades\Auth;
 
 class AssetServiceController extends Controller
@@ -15,7 +19,8 @@ class AssetServiceController extends Controller
         $request->validate([
             'order_by' => 'required',
             'per_page' => 'required',
-            'keyword' => 'required'
+            'keyword' => 'required',
+            'asset_type_id' => 'required|exists:asset_type,asset_type_id',
         ]);
 
         $query = AssetService::query();
@@ -44,50 +49,73 @@ class AssetServiceController extends Controller
             });
         }
         $asset_service = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
-        return AssetServiceResource::collection($asset_service);
+
+        //Dropdown Service
+        $services = Service::whereHas('ServiceAssetTypes', function($que) use($request){
+            $que->where('asset_type_id', $request->asset_type_id);
+        })->get();
+
+        return response()->json([
+            'paginate_services' => AssetServiceResource::collection($asset_service),
+            'meta' => [
+                'current_page' => $asset_service->currentPage(),
+                'last_page' => $asset_service->lastPage(),
+                'per_page' => $asset_service->perPage(),
+                'total' => $asset_service->total(),
+            ],
+            'services' => ServiceResource::collection($services),
+        ]);
     }
 
     public function addAssetService(Request $request)
     {
-        $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
+        // $userPlantId = Auth::User()->plant_id;
+        // $areaId = Auth::User()->Plant->area_id;
+        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'service_id' => [
                 'required',
                 'exists:services,service_id',
-                function ($attribute, $value, $fail) use ($request) {
+                function ($attribute, $value, $fail) use ($request, $assetHasZones) {
                     $exists = AssetService::where('service_id', $value)
                         ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request) {
-                            if (!empty($request->asset_zones)) {
-                                $query->whereIn('asset_zone_id', $request->asset_zones);
+                        ->where(function ($query) use ($request, $assetHasZones) {
+                            if ($assetHasZones && $request->filled('service_asset_zones')) {
+                                $query->whereIn('asset_zone_id', $request->service_asset_zones);
                             } else {
                                 $query->whereNull('asset_zone_id');
                             }
-                        })
-                        ->exists();
-    
+                        })->exists();
+
                     if ($exists) {
-                        $fail('The combination of Service and Asset Zone already exists.');
+                        if ($request->filled('service_asset_zones') && $assetHasZones) {
+                            $fail('The combination of Service and Asset Zone already exists.');
+                        } else {
+                            $fail('The combination of Service and Asset already exists.');
+                        }
                     }
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zones' => 'nullable|array', 
+            'service_asset_zones' => [
+                $assetHasZones ? 'required' : 'nullable', 
+                'array',
+            ],
             'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $service = Service::where('service_id', $request->service_id)->first();
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         
+        $data['plant_id'] = $asset->plant_id;
+        $data['area_id'] = $asset->area_id;
         $data['service_type_id'] = $service->service_type_id;
-        $data['plant_id'] = $userPlantId;
-        $data['area_id'] = $areaId;
 
         $createdServices = [];
 
-        if (!empty($data['asset_zones'])) 
+        if (!empty($data['service_asset_zones'])) 
         {
-            foreach ($data['asset_zones'] as $zoneId) 
+            foreach ($data['service_asset_zones'] as $zoneId) 
             {              
                 if (is_null($zoneId) || $zoneId == 0) 
                 {
@@ -151,41 +179,44 @@ class AssetServiceController extends Controller
 
     public function updateAssetService(Request $request)
     {
-        $userPlantId = Auth::User()->plant_id;
-        $areaId = Auth::User()->Plant->area_id;
+        $asset_services = AssetService::where('asset_service_id', $request->asset_service_id)->first();
+        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'asset_service_id' => 'required|exists:asset_services,asset_service_id',
             'service_id' => [
                 'required',
                 'exists:services,service_id',
-                function ($attribute, $value, $fail) use ($request) {
-                    $exists = AssetService::where('service_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request) {
-                            if (!empty($request->asset_zones)) {
-                                $query->whereIn('asset_zone_id', $request->asset_zones);
-                            } else {
-                                $query->whereNull('asset_zone_id');
-                            }
-                        })
-                        ->where('asset_service_id', '!=', $request->asset_service_id) 
-                        ->exists();
+                function ($attribute, $value, $fail) use ($request, $asset_services) 
+                {
+                    if ($value != $asset_services->service_id) {
+                        $exists = AssetService::where('service_id', $value)
+                            ->where('asset_id', $request->asset_id)
+                            ->where(function ($query) use ($request) {
+                                if ($request->filled('asset_zone_id')) {
+                                    $query->where('asset_zone_id', $request->asset_zone_id);
+                                } else {
+                                    $query->whereNull('asset_zone_id');
+                                }
+                            })->where('asset_service_id', '!=', $request->asset_service_id)->exists();
     
-                    if ($exists) {
-                        $fail('The combination of Service and Asset Zone already exists.');
+                        if ($exists) {
+                            $fail('The combination of Service, Asset, and Asset Zone already exists.');
+                        }
                     }
                 },
             ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zones' => 'nullable|array',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'asset_zone_id' => [
+                $assetHasZones ? 'required' : 'nullable',
+            ],
         ]);
 
         $service = Service::where('service_id', $request->service_id)->first();
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         
+        $data['plant_id'] = $asset->plant_id;
+        $data['area_id'] = $asset->area_id;
         $data['service_type_id'] = $service->service_type_id;
-        $data['plant_id'] = $userPlantId;
-        $data['area_id'] = $areaId;
 
         $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
         $asset_service->update($data);

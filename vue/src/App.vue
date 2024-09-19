@@ -26,8 +26,15 @@ import Header from "./components/Header.vue";
 export default {
     name: "App",
     components: { Menu, Header },
-    
+
     created() {
+
+
+        // let main = document.createElement("script");
+        // main.setAttribute("src", "assets/js/script.js");
+		// 	document.head.appendChild(main);
+
+
         //Read the status information in sessionStorage when the page is loaded
         if (sessionStorage.getItem("user")) {
             this.$store.dispatch('setUser', JSON.parse(sessionStorage.getItem("user")))

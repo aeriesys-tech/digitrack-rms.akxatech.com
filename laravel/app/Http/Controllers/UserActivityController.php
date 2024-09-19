@@ -60,8 +60,7 @@ class UserActivityController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'status' => 'required',
             'activity_status' => 'required|sometimes',
-            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:equipment,equipment_id',
-            'equipment_id' => 'nullable|required_if:activity_status,Added,Removed|exists:equipment,equipment_id',
+            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:reasons,reason_id',
             'cost' => 'nullable',
             'note' => 'nullable'
         ]);
@@ -71,7 +70,7 @@ class UserActivityController extends Controller
         $data['plant_id'] = Auth::User()->plant_id;
     
         $UserActivity = UserActivity::create($data);
-        return response()->json(["message" => "UserActivity Created Successfully"]);
+        return response()->json(["message" => "Activity Register Created Successfully"]);
     }    
 
     public function getUserActivity(Request $request)
@@ -92,8 +91,7 @@ class UserActivityController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'status' => 'required',
             'activity_status' => 'required|sometimes',
-            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:equipment,equipment_id',
-            'equipment_id' => 'nullable|required_if:activity_status,Added,Removed|exists:equipment,equipment_id',
+            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:reasons,reason_id',
             'cost' => 'nullable',
             'note' => 'nullable'
         ]);
@@ -102,7 +100,7 @@ class UserActivityController extends Controller
 
         $UserActivity = UserActivity::where('user_activity_id', $request->user_activity_id)->first();
         $UserActivity->update($data);
-        return response()->json(["message" => "UserActivity Updated Successfully"]);
+        return response()->json(["message" => "Activity Register Updated Successfully"]);
     }
 
     public function deleteUserActivity(Request $request)

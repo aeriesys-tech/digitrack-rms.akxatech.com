@@ -10,20 +10,20 @@
                         <a href="javascript:void(0)">Registers</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <router-link to="/user_checks">User Checks</router-link>
+                        <router-link to="/user_checks">Check Registers</router-link>
                     </li>
                     <li class="breadcrumb-item" aria-current="page">View</li>
                 </ol>
-                <h4 class="main-title mb-0">View User Check</h4>
+                <h4 class="main-title mb-0">View Check Register</h4>
             </div>
-            <router-link to="/user_checks" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> USER CHECKS</router-link>
-            
+            <router-link to="/user_checks" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> CHECK REGISTERS</router-link>
+
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-one mb-3">
                     <div class="card-header">
-                        <h5 class="card-title">User Check</h5>
+                        <h5 class="card-title">Check Register</h5>
                         <br />
                     </div>
                     <div class="card-body p-0">
@@ -38,6 +38,10 @@
                                     <p class="font">{{user_check?.asset?.asset_code}}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
+                                    <h6>Asset Zone</h6>
+                                    <p class="font">{{user_check?.asset_zone?.zone_name}}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <h6>Reference Date</h6>
                                     <p class="font">{{convertDateFormat(user_check.reference_date)}}</p>
                                 </div>
@@ -45,7 +49,7 @@
                                     <h6 class="mb-2">Asset Checks :</h6>
                                     <div class="table-responsive table-responsive-sm">
                                         <table class="table table-responsive table-striped table-responsive-sm table-sm text-nowrap table-bordered mb-0">
-                                        
+
                                             <thead>
                                                 <!-- <tr>
                                                     <th colspan="9" class="text-center"> <strong>Asset Checks</strong></th>
@@ -63,7 +67,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="check, key in user_check.asset_checks">
+                                                <tr v-for="check, key in user_check.asset_checks" :key="key">
                                                     <td class="text-center">{{ key + 1 }}</td>
                                                     <td>{{ check.field_name}}</td>
                                                     <td>{{ check.field_type}}</td>
@@ -77,7 +81,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="row g-2" >
@@ -92,7 +96,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </template>
@@ -148,12 +152,12 @@ export default{
             window.open(vm.$store.state.apiUrl+'downloadCheckAttachment?file_name='+image);
             // // Replace 'imageURL' with the actual URL of the image you want to download
             // const imageURL = image;
-            
+
             // // Create a link element
             // const link = document.createElement('a');
             // link.href = imageURL;
             // link.download = 'image.jpg'; // Name of the downloaded file
-            
+
             // // Simulate click on the link to trigger download
             // document.body.appendChild(link);
             // link.click();
@@ -176,7 +180,7 @@ export default{
             convertDateFormat(date) {
                 let vm = this;
                 return moment(date).format('yyyy-MM-DD')
-    
+
             },
     }
 }

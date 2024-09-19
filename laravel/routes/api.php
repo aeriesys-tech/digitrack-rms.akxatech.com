@@ -50,6 +50,8 @@ use App\Http\Controllers\ServiceAttributeValueController;
 use App\Http\Controllers\SpareAttributeValueController;
 use App\Http\Controllers\ListParameterController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\UserVariableController;
+use App\Http\Controllers\ActivityAttributeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -62,6 +64,7 @@ Route::post('forgotPassword', [UserAuthController::class, 'forgotPassword']);
 Route::post('resetPassword', [UserAuthController::class, 'resetPassword']);
 Route::get('downloadCheckAttachment',[UserCheckController::class, 'downloadCheckAttachment']);
 Route::post('addConsent', [UserAuthController::class, 'addConsent']);
+Route::post('getAssetRegisterDepartments',[UserCheckController::class, 'getAssetRegisterDepartments']);
 
 Route::get('downloadAssetQRCode',[AssetController::class, 'downloadAssetQRCode']);
 
@@ -236,6 +239,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateAssetVariable',[AssetVariableController::class, 'updateAssetVariable']);
     Route::post('deleteAssetVariable',[AssetVariableController::class, 'deleteAssetVariable']);
     Route::post('getAssetTypeVariables',[AssetVariableController::class, 'getAssetTypeVariables']);
+    Route::post('getAssetRegisterVariables',[AssetVariableController::class, 'getAssetRegisterVariables']);
 
     Route::post('paginateAssetDataSources',[AssetDataSourceController::class, 'paginateAssetDataSources']);
     Route::post('getAssetDataSources',[AssetDataSourceController::class, 'getAssetDataSources']);
@@ -421,4 +425,18 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getLocations',[CampaignController::class, 'getLocations']);
     Route::post('addCampaign',[CampaignController::class, 'addCampaign']);
     Route::post('campaignResultImages',[CampaignController::class, 'campaignResultImages']);
+    Route::post('deleteHealthCheck',[CampaignController::class, 'deleteHealthCheck']);
+
+    Route::post('paginateUserVariables',[UserVariableController::class, 'paginateUserVariables']);
+    Route::post('addUserVariable',[UserVariableController::class, 'addUserVariable']);
+    Route::post('updateUserVariable',[UserVariableController::class, 'updateUserVariable']);
+    Route::post('getUserVariable',[UserVariableController::class, 'getUserVariable']);
+    Route::post('deleteUserVariable',[UserVariableController::class, 'deleteUserVariable']);
+
+    Route::post('paginateActivityAttributes',[ActivityAttributeController::class, 'paginateActivityAttributes']);
+    Route::post('addActivityAttribute',[ActivityAttributeController::class, 'addActivityAttribute']);
+    Route::post('getActivityAttributes',[ActivityAttributeController::class, 'getActivityAttributes']);
+    Route::post('getActivityAttribute',[ActivityAttributeController::class, 'getActivityAttribute']);
+    Route::post('updateActivityAttribute',[ActivityAttributeController::class, 'updateActivityAttribute']);
+    Route::post('deleteActivityAttribute',[ActivityAttributeController::class, 'deleteActivityAttribute']);
 });

@@ -75,18 +75,16 @@
                                     <input type="text" placeholder="Break Down List Name" class="form-control" :class="{ 'is-invalid': errors.break_down_list_name }" v-model="break_down.break_down_list_name"/>
                                     <span v-if="errors.break_down_list_name" class="invalid-feedback">{{ errors.break_down_list_name[0] }}</span>
                                 </div>
-                                <div class="col-md-4" v-for="field, key in show_break_downs" :key="key">
+                                <div class="col-md-4" v-for="field, key in break_down.break_down_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
-                                        <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.break_down_attribute_value" type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @blur="updateBreakDownParameters(field)" />
-                                        <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateBreakDownParameters(field)" />
+                                        <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                        <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value"  />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     
                                     <div v-if="field.field_type=='Number'">
-                                        <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input v-if="field.break_down_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @blur="updateBreakDownParameters(field)" />
-                                        <input v-else type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateBreakDownParameters(field)" />
+                                        <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                        <input type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -95,8 +93,7 @@
                                             {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input v-if="field.break_down_attribute_value"  type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @blur="updateBreakDownParameters(field)" />
-                                        <input v-else type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateBreakDownParameters(field)" />
+                                        <input type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
                                         </span>
@@ -107,22 +104,12 @@
                                             {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input v-if="field.break_down_attribute_value"
+                                        <input
                                             type="datetime-local" 
                                             class="form-control" 
                                             :placeholder="'Enter ' + field.display_name" 
                                             :class="{'is-invalid': errors[field.display_name]}" 
                                             v-model="field.break_down_attribute_value.field_value" 
-                                            @blur="updateBreakDownParameters(field)" 
-                                            step="1" 
-                                        />
-                                        <input v-else
-                                            type="datetime-local" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.display_name" 
-                                            :class="{'is-invalid': errors[field.display_name]}" 
-                                            v-model="field.field_value" 
-                                            @blur="updateBreakDownParameters(field)" 
                                             step="1" 
                                         />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
@@ -132,30 +119,23 @@
 
                                     <div v-if="field.field_type=='Dropdown'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <select v-if="field.break_down_attribute_value" class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @change="updateBreakDownParameters(field)">
-                                            <option value="">Select {{field.display_name}}</option>
-                                            <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
-                                        </select>
-                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateBreakDownParameters(field)">
-                                            <option :value="field.field_value">Select {{field.display_name}}</option>
+                                        <select class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value">
+                                            <option :value="field.break_down_attribute_value.field_value" v-if="field.break_down_attribute_value.field_value">{{field.break_down_attribute_value.field_value}}</option>
+                                            <option :value="field.break_down_attribute_value.field_value" v-else>Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     <div v-if="field.field_type=='Color'">
                                         <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
-                                            <input v-if="field.break_down_attribute_value" type="color" class="form-control" v-model="field.break_down_attribute_value.field_value" @change="updateBreakDownParameters(field)" style="height: 2.2rem;"/>
-                                            <input v-else type="color" class="form-control" v-model="field.field_value" @change="updateBreakDownParameters(field)" style="height: 2.2rem;"/>
+                                            <input type="color" class="form-control" v-model="field.break_down_attribute_value.field_value" style="height: 2.2rem;"/>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                     <div v-if="field.field_type=='List'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <select v-if="field.break_down_attribute_value" class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value" @change="updateBreakDownParameters(field)">
-                                            <option value="">Select {{field.display_name}}</option>
-                                            <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
-                                        </select>
-                                        <select v-else class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @change="updateBreakDownParameters(field)">
-                                            <option :value="field.field_value">Select {{field.display_name}}</option>
+                                        <select class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.break_down_attribute_value.field_value">
+                                            <option :value="field.break_down_attribute_value.field_value" v-if="field.break_down_attribute_value.field_value">{{field.break_down_attribute_value.field_value}}</option>
+                                            <option :value="field.break_down_attribute_value.field_value" v-else>Select {{field.display_name}}</option>
                                             <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
                                         </select>
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
@@ -194,17 +174,16 @@ export default {
                 break_down_attributes:[],
                 asset_types:[],
                 frequency_id:'',
+                deleted_break_down_attribute_values: [],
             },
             status: true,
             errors: [],
+            deleted_break_down_attribute_values: [],
             break_down_types: [],
             asset_types:[],
             frequencies:[],
             show_break_downs:[],
             asset_type_status:false,
-
-            value: null,
-            options: ['list', 'of', 'options']
         }
     },
     
@@ -220,7 +199,10 @@ export default {
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.break_down = response.data.data;
-                            vm.show_break_downs  = response.data.data?.break_down_attributes
+                            vm.break_down.break_down_attributes.map(function (element) {
+                                vm.deleted_break_down_attribute_values.push(element.break_down_attribute_value.break_down_attribute_value_id);
+                            });
+                            vm.break_down.deleted_break_down_attribute_values = [];
 
             
                         })
@@ -244,8 +226,40 @@ export default {
                 vm.updateBreakDown();
             }
         },
+        validateFields() {
+                let isValid = true;
+                this.errors = {};
+
+                if (!this.break_down.break_down_list_code) {
+                    this.errors.break_down_list_code = ["Break Down Code is required"];
+                    isValid = false;
+                }
+                if (!this.break_down.break_down_list_name) {
+                    this.errors.break_down_list_name = ["Break Down Name is required"];
+                    isValid = false;
+                }
+                if (!this.break_down.break_down_type_id) {
+                    this.errors.break_down_type_id = ["Break Down Type is required"];
+                    isValid = false;
+                }
+                if (this.break_down.asset_types.length === 0) {
+                    this.errors.asset_types = ["At least one Asset Type must be selected"];
+                    isValid = false;
+                }
+                for (const field of Object.values(this.break_down.break_down_attributes)) {
+                    if (field.is_required && !field.break_down_attribute_value.field_value) {
+                        this.errors[field.display_name] = [`${field.display_name} is required`];
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            },
       
         addBreakDown() {
+            if (!this.validateFields()) {
+                    return;
+                }
             let vm = this;
             let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'addBreakDownList', data: vm.break_down })
@@ -293,6 +307,9 @@ export default {
 
 
         updateBreakDown() {
+            if (!this.validateFields()) {
+                    return;
+                }
             let vm = this;
             let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'updateBreakDownList', data: vm.break_down })
@@ -325,37 +342,20 @@ export default {
         getBreakDownTypeFields(break_down_type_id){
                 let vm = this;
                 let loader = vm.$loading.show();
+                if (vm.deleted_break_down_attribute_values.length) {
+                    vm.break_down.deleted_break_down_attribute_values = vm.deleted_break_down_attribute_values;
+                }
                 vm.$store
                 .dispatch("post", { uri: "getBreakDownsDropdown", data:{break_down_type_id:break_down_type_id} })
                 .then((response) => {
                     loader.hide();
-                    vm.show_break_downs = response.data.data;
+                    vm.break_down.break_down_attributes = response.data.data;
                 })
                 .catch(function (error) {
                     loader.hide();
                     vm.errors = error.response.data.errors;
                     vm.$store.dispatch("error", error.response.data.message);
                 });
-            },
-            updateBreakDownParameters(field){
-                console.log("field--",this.break_down)
-                if(!this.break_down.break_down_attributes) {
-                    this.break_down.break_down_attributes=[]
-                }
-                console.log(this.break_down)
-                let apid = this.break_down.break_down_attributes?.filter(function(element){
-                    console.log("ele",element)
-                    return element.break_down_attribute_id == field.break_down_attribute_id
-                })
-                if(!apid.length){
-                    this.break_down.break_down_attributes.push({
-                        'break_down_attribute_id':field.break_down_attribute_id,
-                        'field_value':field.field_value
-                    })
-                }else{
-                    apid[0].break_down_attribute_id = field.break_down_attribute_id
-                    apid[0].field_value = field.field_value
-                }
             },
 
         discard() {

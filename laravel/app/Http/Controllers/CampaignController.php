@@ -40,8 +40,10 @@ class CampaignController extends Controller
     
         if($request->search!='')
         {
-            $query->where('asset_id', 'like', "%$request->search%")
-                 ->orWhere('datasource', 'like', "$request->search%");
+            $query->where('datasource', 'like', "$request->search%")
+                ->orwhereHas('Asset', function($que) use($request){
+                    $que->where('asset_name', 'like', "$request->search%");
+                });
         }
         $campaign = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return CampaignResource::collection($campaign);
@@ -58,7 +60,7 @@ class CampaignController extends Controller
         if ($request->hasFile('file')) 
         {
             $fileName = $request->file('file')->getClientOriginalName();
-            $filePath = public_path('storage\files'); 
+            $filePath = public_path('storage/files'); 
             $request->file('file')->move($filePath, $fileName);
             $data['file'] = $fileName;
         } 
@@ -89,8 +91,12 @@ class CampaignController extends Controller
             ]);   
         }
 
+        //Images
+        $compaign_images = CampaignResult::where('campaign_id', $campaign->campaign_id)->get();
+
         return response()->json([
-            "message" => "Campaign Created Successfully"
+            "message" => "HealthCheck Created Successfully",
+            CampaignResultResource::collection($compaign_images)
         ]); 
     }
 
@@ -106,5 +112,19 @@ class CampaignController extends Controller
         $compaign_result = CampaignResult::where('asset_id', $request->asset_id)->where('location', $request->location)
                 ->whereBetween('date', [$request->from_date, $request->to_date])->get();
         return CampaignResultResource::collection($compaign_result);
+    }
+
+    public function deleteHealthCheck(Request $request)
+    {
+        $request->validate([
+            'campaign_id' => 'required|exists:campaigns,campaign_id'
+        ]);
+
+        CampaignResult::where('campaign_id', $request->campaign_id)->forceDelete();
+        Campaign::where('campaign_id', $request->campaign_id)->forceDelete();
+
+        return response()->json([
+            'message' => 'HealthCheck Deleted Successfully'
+        ]);
     }
 }

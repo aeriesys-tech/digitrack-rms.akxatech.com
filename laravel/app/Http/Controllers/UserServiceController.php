@@ -58,21 +58,21 @@ class UserServiceController extends Controller
 
     public function addUserService(Request $request)
     {
-        $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
-        if ($assetZone) {
-            $request->validate([
-                'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
-            ]);
-        } 
-        else {
-            $data['asset_zone_id'] = $request->input('asset_zone_id', null);
-        }
+        // $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
+        // if ($assetZone) {
+        //     $request->validate([
+        //         'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+        //     ]);
+        // } 
+        // else {
+        //     $data['asset_zone_id'] = $request->input('asset_zone_id', null);
+        // }
 
         $data = $request->validate([
-            'service_id' => 'required|exists:services,service_id',
-            'service_cost' => 'nullable|sometimes',
+            // 'service_id' => 'required|exists:services,service_id',
+            // 'service_cost' => 'nullable|sometimes',
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            // 'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'service_date' => 'required',
             'next_service_date' => 'nullable|sometimes',
             'note' => 'nullable|sometimes',
@@ -83,28 +83,39 @@ class UserServiceController extends Controller
         $data['plant_id'] = Auth::User()->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
-        //Previus False
-        UserService::where('asset_id', $data['asset_id'])
-            ->where('service_id', $data['service_id'])
-            ->update(['is_latest' => false]);
+        // //Previus False
 
+        // UserService::where('asset_id', $data['asset_id'])
+        //     ->where('service_id', $data['service_id'])
+        //     ->update(['is_latest' => false]);
+
+        $userServiceIds = UserSpare::whereHas('userService', function ($query) use ($request) {
+            $query->where('asset_id', $request->asset_id);
+        })->where('service_id', $request->service_id)->pluck('user_service_id');
+    
+        // Update is_latest to false for these user_service_id
+        UserService::whereIn('user_service_id', $userServiceIds)->update(['is_latest' => false]);
 
         //New Value
         $data['is_latest'] = true;
 
         $service = UserService::create($data);
 
-        if ($request->has('user_spares')) {
+        if ($request->has('user_spares')) 
+        {
             foreach($request->user_spares as $spare) {
                 UserSpare::create([
                     'user_service_id' => $service->user_service_id,
+                    'service_id' => $spare['service_id'],
+                    'service_cost' => $spare['service_cost'],
+                    'asset_zone_id' => $spare['asset_zone_id'],
                     'spare_id' => $spare['spare_id'],
                     'spare_cost' => $spare['spare_cost']
                 ]);
             }
         }
 
-        return response()->json(['message' => 'UserService created successfully'], 201);
+        return response()->json(['message' => 'Service Register created successfully'], 201);
     }
 
     public function getUserService(Request $request)
@@ -125,22 +136,22 @@ class UserServiceController extends Controller
 
     public function updateUserService(Request $request)
     {
-        $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
-        if ($assetZone) {
-            $request->validate([
-                'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
-            ]);
-        } 
-        else {
-            $data['asset_zone_id'] = $request->input('asset_zone_id', null);
-        }
+        // $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
+        // if ($assetZone) {
+        //     $request->validate([
+        //         'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+        //     ]);
+        // } 
+        // else {
+        //     $data['asset_zone_id'] = $request->input('asset_zone_id', null);
+        // }
         
         $data = $request->validate([
             'user_service_id' => 'required|exists:user_services,user_service_id',
-            'service_id' => 'required|exists:services,service_id',
-            'service_cost' => 'nullable|sometimes',
+            // 'service_id' => 'required|exists:services,service_id',
+            // 'service_cost' => 'nullable|sometimes',
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            // 'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'service_date' => 'required',
             'next_service_date' => 'nullable|sometimes',
             'note' => 'nullable|sometimes',
@@ -160,20 +171,26 @@ class UserServiceController extends Controller
                 $userSpare->update([
                     'user_service_id' => $service->user_service_id,
                     'spare_id' => $spare['spare_id'],
-                    'spare_cost' => $spare['spare_cost']
+                    'spare_cost' => $spare['spare_cost'],
+                    'service_id' => $spare['service_id'],
+                    'service_cost' => $spare['service_cost'],
+                    'asset_zone_id' => $spare['asset_zone_id'],
                 ]);
             }
             else {
                 UserSpare::create([
                     'user_service_id' => $service->user_service_id,
                     'spare_id' => $spare['spare_id'],
-                    'spare_cost' => $spare['spare_cost']
+                    'spare_cost' => $spare['spare_cost'],
+                    'service_id' => $spare['service_id'],
+                    'service_cost' => $spare['service_cost'],
+                    'asset_zone_id' => $spare['asset_zone_id'],
                 ]);
             }
         }
 
         UserSpare::whereIn('user_spare_id',$request->deleted_user_spares)->delete();
-        return response()->json(['message' => 'UserService updated successfully'], 201);
+        return response()->json(['message' => 'Service Register updated successfully'], 201);
     }
 
     public function deleteUserService(Request $request)

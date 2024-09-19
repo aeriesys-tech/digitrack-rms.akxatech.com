@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Check;
 use App\Models\CheckAssetType;
 use App\Http\Resources\CheckResource;
+use App\Models\Asset;
 
 class CheckController extends Controller
 {
@@ -65,7 +66,8 @@ class CheckController extends Controller
             'order' => 'required',
             'is_required' => 'required',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'department_id' => 'required|exists:departments,department_id'
         ]);
         
         $check = Check::create($data);
@@ -92,14 +94,28 @@ class CheckController extends Controller
     public function getAssetTypeChecks(Request $request)
     {
         $request->validate([
-            'asset_type_id' => 'required|exists:asset_type,asset_type_id'
+            'asset_type_id' => 'required|exists:asset_type,asset_type_id',
+            'department_id' => 'nullable|exists:departments,department_id'
         ]);
 
-        $checks = Check::whereHas('CheckAssetTypes', function($que) use($request){
-            $que->where('asset_type_id', $request->asset_type_id);
-        })->get();
+        if(isset($request->department_id))
+        {
+            $asset = Asset::where('department_id', $request->department_id)->where('asset_type_id', $request->asset_type_id)->first();
+            if ($asset) 
+            {
+                $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
+                    $que->where('asset_type_id', $request->asset_type_id);
+                })->where('department_id', $request->department_id)->get();
+            } 
+        }
+        else {
+            $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
+                $que->where('asset_type_id', $request->asset_type_id);
+            })->get();
+        }
         return CheckResource::collection($checks);
     }
+
 
     public function updateCheck(Request $request)
     {
@@ -114,7 +130,8 @@ class CheckController extends Controller
             'order' => 'required',
             'is_required' => 'required',
             'asset_types' => 'required|array',
-	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id'
+	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
+            'department_id' => 'required|exists:departments,department_id'
         ]);
 
         $check = Check::where('check_id', $request->check_id)->first();

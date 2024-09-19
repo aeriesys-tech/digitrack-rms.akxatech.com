@@ -9,18 +9,18 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Registers</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">User Services</li>
+                    <li class="breadcrumb-item active" aria-current="page">Service Registers</li>
                 </ol>
-                <h4 class="main-title mb-0">User Services</h4>
+                <h4 class="main-title mb-0">Service Registers</h4>
             </div>
-            <router-link v-can="'userServices.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add User Service</router-link>
+            <router-link v-can="'userServices.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Service Register</router-link>
         </div>
 
         <div class="row">
             <div class="col-12">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">User Services</h6>
+                        <h6 class="card-title">Service Registers</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control form-control-sm mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
@@ -45,14 +45,14 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('service_cost')">
+                                        <!-- <th @click="sort('service_cost')">
                                             Service Cost
                                             <span>
                                                 <i v-if="meta.keyword == 'service_cost' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'service_cost' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
-                                        </th>
+                                        </th> -->
                                         <th @click="sort('next_service_date')">
                                             Next Service Date
                                             <span>
@@ -61,14 +61,14 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('service_id')">
+                                        <!-- <th @click="sort('service_id')">
                                             Service Name
                                             <span>
                                                 <i v-if="meta.keyword == 'service_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'service_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
-                                        </th>
+                                        </th> -->
                                         <th @click="sort('asset_id')">
                                             Asset Code
                                             <span>
@@ -77,14 +77,14 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('asset_id')">
+                                        <!-- <th @click="sort('asset_id')">
                                             Asset Zone
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
-                                        </th>
+                                        </th> -->
                                         <th class="text-center" v-if="get_service.length">Actions</th>
                                     </tr>
                                 </thead>
@@ -93,11 +93,11 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{service.service_no}}</td>
                                         <td>{{convertDateFormat(service.service_date)}}</td>
-                                        <td>{{service.service_cost}}</td>
+                                        <!-- <td>{{service.service_cost}}</td> -->
                                         <td>{{convertDateFormat(service.next_service_date)}}</td>
-                                        <td>{{service.service?.service_name}}</td>
+                                        <!-- <td>{{service.service?.service_name}}</td> -->
                                         <td>{{service.asset?.asset_code}}</td>
-                                        <td>{{service.asset_zone?.zone_name}}</td>
+                                        <!-- <td>{{service.asset_zone?.zone_name}}</td> -->
                                         <td class="text-center" v-if="get_service.length">
                                             <a title="Edit" v-can="'userServices.update'" href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             <a title="View" v-can="'userServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
@@ -206,6 +206,7 @@
             },
             deleteService(service) {
                 let vm = this;
+                alert('are you sure you want delete it!')
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", {

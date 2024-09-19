@@ -28,7 +28,7 @@ class SpareAttributeResource extends JsonResource
 	        'spare_attribute_types' => SpareAttributeTypeResource::collection($this->SpareAttributeTypes),
             'status' => $this->deleted_at?false:true,
             'spare_types' => $spare_types,
-            'spare_attribute' => [
+            'spare_attribute_value' => [
                 "field_value" => null
             ]
         ];

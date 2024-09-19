@@ -43,6 +43,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
+                                        <th class="text-center"> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -50,6 +51,7 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{campaign?.asset?.asset_name}}</td>
                                         <td>{{ campaign.datasource }}</td>
+                                        <td class="text-center align-middle"><a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a></td>
                                     </tr>
                                     <tr v-if="campaigns.length==0">
                                         <td colspan="3" class="text-center">No records found</td>
@@ -99,6 +101,7 @@
                 campaign: {
                     asset_id: "",
                     datasource: "",
+                    campaign_id:"",
                 },
                 campaigns: [],
                 errors: [],
@@ -133,6 +136,24 @@
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();
+            },
+
+            deleteHealthCheck(campaign) {
+                let vm = this;
+                alert('are you sure you want delete it!')
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", {uri: "deleteHealthCheck",data: campaign,})
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.index();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
             },
 
             onPageChange(page) {
