@@ -26,7 +26,8 @@
                                 placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                    <tr style="background-color:#9b9b9b;color:white;">
+                                    <thead>
+                                        <tr style="background-color:#9b9b9b;color:white;">
                                             <th class="text-center">#</th>
                                             <th @click="sort('field_name')">
                                                 Field Name
@@ -95,6 +96,7 @@
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Actions</th>
                                         </tr>
+                                    </thead>
                                     <tbody>
                                         <tr v-if="activity_attributes.length==0">
                                             <td colspan="10" class="text-center">No records found</td>

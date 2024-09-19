@@ -30,7 +30,7 @@
                                     <option value="">Select Asset</option>
                                     <option value="Ladle">Ladle</option>
                                 </select> -->
-                                    <select class="form-control" :class="{ 'is-invalid': errors.asset_id }" v-model="campaign.asset_id">
+                                    <select class="form-control" :class="{ 'is-invalid': errors.asset_id }" v-model="campaign.asset_id" @change="getScripts">
                                         <option value="">Select Asset</option>
                                         <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">{{asset.asset_name}}</option>
                                     </select>
@@ -45,6 +45,19 @@
                                     <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
+                                    <label class="form-label">Script</label><span class="text-danger"> *</span>
+                                    <select class="form-control" :class="{ 'is-invalid': errors.script }" v-model="campaign.script">
+                                        <option value="">Select Script</option>
+                                        <option v-for="scr, key in scripts" :value="scr" :key="key">{{scr}}</option>
+                                    </select>
+                                    <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Job DateTime</label><span class="text-danger"> *</span>
+                                    <input type="datetime-local" class="form-control" id="job_date_time" name="job_date_time" v-model="campaign.job_date_time" :class="{ 'is-invalid': errors.job_date_time }" @change="convertDateFormat(campaign.job_date_time)"/>
+                                    <span v-if="errors.job_date_time" class="invalid-feedback">{{ errors.job_date_time[0] }}</span>
+                                </div>                                
+                                <div class="col-md-6">
                                     <label class="form-label">File</label><span class="text-danger"> *</span>
                                     <input type="file" class="form-control" id="file" ref="file" name="file" :class="{ 'is-invalid': errors.file }" />
                                     <span v-if="errors.file" class="invalid-feedback">{{ errors.file[0] }}</span>
@@ -112,6 +125,7 @@
 </template>
 
 <script>
+    import moment from "moment";
     import axios from "axios";
     export default {
         components: {},
@@ -121,11 +135,14 @@
                     asset_id: "",
                     datasource_id: "",
                     file: "",
+                    job_date_time:'',
+                    script:'',
                 },
                 assets: [],
                 campaign_results:[],
                 errors: [],
                 status: true,
+                scripts:[],
             };
         },
 
@@ -169,6 +186,32 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            getScripts() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "assetDataSourceScripts", data: vm.campaign})
+                    .then((response) => {
+                        loader.hide();
+                        vm.scripts = response.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            convertDateFormat(date) {
+                let vm = this;
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                document.getElementById('job_date_time').value = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+                // return moment(date).format("yyyy-MM-DD HH:MM");
+            },
             addHealthCheck() {
                 let vm = this;
                 let loader = this.$loading.show();
@@ -176,6 +219,9 @@
                 data.append("asset_id", vm.campaign.asset_id);
                 data.append("datasource", vm.campaign.datasource_id);
                 data.append("file", vm.$refs.file.files[0]);
+                data.append("job_date_time", vm.campaign.job_date_time);
+                data.append("script", vm.campaign.script);
+
                 // this.$store.dispatch('post', { uri: 'addCampaign', data:data })
                 //     .then(response => {
                 //         loader.hide();
@@ -209,6 +255,8 @@
             vm.campaign.asset_id = "";
             vm.campaign.datasource_id = "";
             vm.campaign.file = null;
+            vm.campaign.job_date_time = '';
+            vm.campaign.script = '';
             // Reset the file input
             vm.$refs.file.value = null;
             vm.errors = [];

@@ -73,11 +73,32 @@
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <label class="form-label">Department</label>
-                                            <select class="form-control" :class="{ 'is-invalid': errors?.department_id }" v-model="asset.department_id">
+                                            <!-- <select class="form-control" :class="{ 'is-invalid': errors?.department_id }" v-model="asset.department_id">
                                                 <option value="">Select Department</option>
                                                 <option v-for="department, key in departments" :key="key" :value="department?.department_id">{{ department?.department_name }} </option>
                                             </select>
-                                            <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
+                                            <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span> -->
+
+
+
+                                            <div class="dropdown" @click="toggleDepartmentStatus">
+                                                <div class="overselect"></div>
+                                                <select class="form-control form-control" :class="{'is-invalid':errors?.department_id}">
+                                                    <option value="">Select Department</option>
+                                                </select>
+                                                <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
+                                            </div>
+                                            <div class="multiselect" v-if="showDepartment">
+                                                <ul>
+                                                    <li v-for="department, key in departments"  :key="key">
+                                                        <input type="checkbox" :value="department?.department_id" v-model="asset.asset_departments" style="padding: 2px;" @click="updateDepartemnts($event, asset)" />
+                                                        <label style="margin-left: 5px;">{{ department?.department_name }}</label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+
+
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Section</label>
@@ -124,12 +145,12 @@
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <label class="form-label">No Of Zones </label><span class="text-danger"> *</span>
-                                            <input type="number" placeholder="Enter No Of Zones " class="form-control" :class="{ 'is-invalid': errors?.no_of_zones }" v-model="asset.no_of_zones" />
+                                            <input type="number" placeholder="Enter No Of Zones " class="form-control" :class="{ 'is-invalid': errors?.no_of_zones }" v-model="asset.no_of_zones" min="1" @input="checkZoneValue($event, asset)"/>
                                             <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
                                         </div>
                                         <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4">
                                             <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                            <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" />
+                                            <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index===0" />
                                             <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
                                         </div>
                                         <div class="col-md-4">
@@ -147,6 +168,11 @@
                                             <label class="form-label">Radius</label>
                                             <input type="number" placeholder="Enter Radius" class="form-control" :class="{ 'is-invalid': errors?.radius }" v-model="asset.radius" />
                                             <span v-if="errors?.radius" class="invalid-feedback">{{ errors.radius[0] }}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Geometry Type</label>
+                                            <input type="text" placeholder="Enter Geometry Type" class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type" />
+                                            <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -256,10 +282,12 @@
                     asset_type_id: "",
                     latitude: "",
                     longitude: "",
-                    no_of_zones: null,
+                    no_of_zones: 1,
                     status: "",
                     asset_attributes: [],
                     department_id: "",
+                    asset_departments:[],
+                    asset_department_ids:[],
                     section_id: "",
                     functional_id: "",
                     area_id: "",
@@ -267,7 +295,10 @@
                     radius: "",
                     zone_name: [],
                     deleted_asset_attribute_values: [],
-                    area_name: "",
+                    area_name: "",                    
+                    deleted_asset_departments:[],
+                    deleted_asset_zones:[],
+                    geometry_type:'',
                 },
 
                 voltage: {
@@ -280,7 +311,9 @@
 
                 device_code: "",
                 deleted_asset_attribute_values: [],
+                deleted_asset_departments:[],
                 // asset_attributes: [],
+                showDepartment: false,
                 departments: [],
                 sections: [],
                 functionals: [],
@@ -302,6 +335,9 @@
                 vm.getAssetsDropdown();
                 if (to.name == "Assets.Create") {
                     // vm.$refs.asset_code.focus();
+                    vm.asset.zone_name.push({
+                        zone_name: 'Overall',
+                    });
                 } else {
                     vm.status = false;
                     let uri = { uri: "getAssetdata", data: { asset_id: to.params.asset_id } };
@@ -312,9 +348,11 @@
                             vm.initial_zone_no = vm.asset.no_of_zones;
                             vm.prev_zone_names = vm.asset.zone_name;
                             vm.show_assets = response.data.data?.asset_attributes;
-                             vm.asset.area_id = vm.asset.area.area_id
+                            vm.asset.area_id = vm.asset.area.area_id
                             vm.asset.area_name=vm.asset.area.area_name
-
+                            // vm.asset_departments = 
+                            vm.asset.deleted_asset_departments = [];
+                            vm.asset.deleted_asset_zones = []
                             vm.asset.asset_attributes.map(function (element) {
                                 vm.deleted_asset_attribute_values.push(element.asset_attribute_value.asset_attribute_value_id);
                             });
@@ -336,7 +374,7 @@
                 if (this.status) {
                     for (let i = 0; i < vm.asset.no_of_zones; i++) {
                         vm.asset.zone_name.push({
-                            zone_name: null,
+                            zone_name: i===0 ? 'Overall' : null,
                         });
                     }
                 } else {
@@ -359,6 +397,7 @@
                         });
                     }
                 }
+                console.log('vm.asset.zone_name:----', vm.asset.zone_name)
             },
         },
 
@@ -388,6 +427,28 @@
                     return "Zone name field is required";
                 }
             },
+            checkZoneValue(event, asset) {
+                if (this.asset.no_of_zones <= 0) {
+                    this.asset.no_of_zones = 1; // Reset to minimum allowed value
+                }
+
+                let value = event?.data?.replace(/[^0-9]/g, '');
+                // console.log(value)
+                if (value >= 1 ) {
+                    let popped_data = asset.no_of_zones - value
+                    console.log('asset.no_of_zones:----', asset.no_of_zones, this.status, this.prev_zone_names)
+                    for(let i=0; i<popped_data; i++){
+                        let del_asset_zone = asset.zone_name.pop()
+                        this.asset.deleted_asset_zones.push(del_asset_zone.asset_zone_id)
+                        this.prev_zone_names.pop()
+                    }
+                    // console.log('popped:------', popped, asset.no_of_zones)
+                }
+                asset.no_of_zones = asset.zone_name.length
+            },
+
+
+
             // selectColor(colorValue, colorName, field) {
             //     this.selectedColor = colorValue;
             //     this.selectedColorName = colorName;
@@ -433,7 +494,9 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-
+            toggleDepartmentStatus(){
+                this.showDepartment = !this.showDepartment
+            },
             getDepartments() {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -449,6 +512,37 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            },
+
+            updateDepartemnts(event, asset_departments) {
+                // console.log(event.target.value)
+                // console.log(asset_departments)
+                let vm = this
+                const isChecked = event.target.checked;
+                let departments = asset_departments.asset_department_ids.filter(function (element) {
+                    return element.department_id == event.target.value
+                })
+                // console.log('departments:---', departments, isChecked, vm.asset.deleted_asset_departments)
+                if (departments.length) {
+                    let department_id = departments[0].asset_department_id
+                    // console.log('department_id:-----', department_id)
+                    if (isChecked) {
+                        if (vm.asset.deleted_asset_departments.includes(department_id)) {
+                            let deleted_asset_departments = this.asset.deleted_asset_departments.filter(function (element) {
+                                return element != department_id
+                            })
+                            vm.asset.deleted_asset_departments = deleted_asset_departments
+                        }
+                    } else {
+                        if (!vm.asset.deleted_asset_departments.includes(department_id)) {
+                            console.log(department_id)
+                            vm.asset.deleted_asset_departments.push(department_id)
+                        }
+                    }
+                }
+
+                // console.log('Checked IDs:', vm.asset.asset_departments);
+                // console.log('Unchecked IDs:', vm.asset.deleted_asset_departments);
             },
 
             getSections() {
@@ -570,20 +664,20 @@
                     return;
                 }
                 let vm = this;
+                console.log('vm.asset:----', vm.asset)
                 // vm.asset.asset_code = vm.device_code.join("");
                 let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "addAsset", data: vm.asset })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.$router.push("/assets");
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                vm.$store.dispatch("post", { uri: "addAsset", data: vm.asset })
+                .then((response) => {
+                    loader.hide();
+                    vm.$store.dispatch("success", response.data.message);
+                    vm.$router.push("/assets");
+                })
+                .catch(function (error) {
+                    loader.hide();
+                    vm.errors = error.response.data.errors;
+                    vm.$store.dispatch("error", error.response.data.message);
+                });
             },
 
             updateAsset() {
@@ -627,6 +721,7 @@
                 vm.asset.latitude = "";
                 vm.asset.longitude = "";
                 vm.asset.radius = "";
+                vm.asset.geometry_type="";
                 vm.asset.department_id = "";
                 vm.asset.section_id = "";
                 vm.asset.functional_id = "";
@@ -710,5 +805,30 @@
 
     .dropdown-menu.show {
         display: block;
+    }
+
+
+    .multiselect {
+        position: relative;
+    }
+    .multiselect ul {
+        border: 1px solid #ddd;
+        border-top: 0;
+        border-radius: 0 0 3px 3px;
+        left: 0px;
+        padding: 8px 8px;
+        top: -0.1rem;
+        width: 100%;
+        list-style: none;
+        max-height: 150px;
+        overflow: auto;
+        background: white;
+    }
+    .overselect {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 </style>

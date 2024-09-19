@@ -79,7 +79,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row g-2">
-                                    <div class="col-md-5" v-can="'assetSpares.create'">
+                                    <div class="col-md-3" v-can="'assetSpares.create'">
                                         <!-- <div class="dropdown" @click="toggleAssetZoneStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
@@ -112,7 +112,7 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                    <div class="col-md-5" v-can="'assetSpares.create'">
+                                    <div class="col-md-3" v-can="'assetSpares.create'">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
                                         <search
                                             :class="{ 'is-invalid': errors.spare_id }"
@@ -131,6 +131,16 @@
                                         </search>
                                         <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                     </div>
+                                    <div class="col-md-3" v-can="'assetSpares.create'">
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder='Enter Quantity'
+                                            :class="{ 'is-invalid': errors.quantity }"
+                                            v-model="spare.quantity"
+                                        />
+                                        <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
+                                    </div>
                                     <div class="col-md-2" v-can="'assetSpares.create'">
                                         <!-- <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
@@ -138,11 +148,11 @@
 
 
                                         <button v-if="spare.asset_spare_id" class="btn btn-outline-success me-2" @click="updateSpare()">
-                                                    <i class="ri-add-circle-line icon-hgt"></i> Update
-                                                </button>
-                                                <button v-else class="btn btn-outline-success me-2" @click="addSpare()">
-                                                    <i class="ri-add-circle-line icon-hgt"></i> Add
-                                                </button>
+                                            <i class="ri-add-circle-line icon-hgt"></i> Update
+                                        </button>
+                                        <button v-else class="btn btn-outline-success me-2" @click="addSpare()">
+                                            <i class="ri-add-circle-line icon-hgt"></i> Add
+                                        </button>
 
                                         <!-- <button class="btn border-left btn-outline-success" type="button" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i>ADD</button> -->
                                     </div>
@@ -186,12 +196,21 @@
                                                                 <i v-else class="fas fa-sort"></i>
                                                             </span>
                                                         </th>
+                                                        <th @click="sort('quantity')">
+                                                            Quantity
+
+                                                            <span>
+                                                                <i v-if="meta.keyword=='quantity' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="meta.keyword=='quantity' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
                                                         <th class="text-center" v-can="'assetSpares.delete'">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr v-if="asset_spares?.length==0">
-                                                        <td colspan="6" class="text-center">No records found</td>
+                                                        <td colspan="7" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="spare, key in asset_spares" :key="key">
                                                         <td class="text-center">{{ meta.from + key }}</td>
@@ -199,6 +218,7 @@
                                                         <td>{{spare.spare?.spare_type?.spare_type_name}}</td>
                                                         <td>{{spare.spare?.spare_code}}</td>
                                                         <td>{{spare.spare?.spare_name}}</td>
+                                                        <td>{{ spare.quantity }}</td>
                                                         <td class="text-center" v-can="'assetSpares.delete'">
                                                             <a href="javascript:void(0)" class="text-success me-2" @click="editSpare(spare)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteSpare(spare)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
@@ -693,7 +713,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row g-2">
-                                    <div class="col-md-5">
+                                    <div class="col-md-3">
                                         <!-- <div class="dropdown" @click="toggleAssetZoneStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.asset_zones}">
@@ -725,7 +745,7 @@
                                                 </ul>
                                             </div>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-3">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
                                         <search
                                             :class="{ 'is-invalid': errors.data_source_id }"
@@ -743,6 +763,14 @@
                                         >
                                         </search>
                                         <span v-if="errors.data_source_id" class="invalid-feedback">{{ errors.data_source_id[0] }}</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control form-control" v-model="datasource.script" :class="{'is-invalid':errors.script}">
+                                            <option value="">Select Script</option>
+                                            <option value="Ladle Scanner">Ladle Scanner</option>
+                                            <option value="Torpedo Scanner">Torpedo Scanner</option>
+                                        </select>
+                                        <span v-if="errors.script" class="invalid-feedback">{{ errors.script[0] }}</span>
                                     </div>
                                     <div class="col-md-2">
                                         <!-- <div style="float: left;">
@@ -797,6 +825,14 @@
                                                                 <i v-else class="fas fa-sort"></i>
                                                             </span>
                                                         </th>
+                                                        <th>
+                                                            Script
+                                                            <span>
+                                                                <i v-if="datasource_meta_service.keyword=='script' && datasource_meta_service.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="datasource_meta_service.keyword=='script' && datasource_meta_service.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
                                                         <th class="text-center">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -810,6 +846,7 @@
                                                         <td>{{ data_source.data_source?.data_source_type?.data_source_type_name }}</td>
                                                         <td>{{ data_source?.data_source?.data_source_code }}</td>
                                                         <td>{{ data_source?.data_source?.data_source_name }}</td>
+                                                        <td>{{ data_source?.script }}</td>
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)" class="text-success me-2" @click="editDataSource(data_source)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteDataSource(data_source)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
@@ -1118,6 +1155,7 @@
                     asset_id: "",
                     asset_zone_id:'',
                     spare_asset_zones:[],
+                    quantity:'',
                 },
                 check: {
                     check_id: "",
@@ -1148,6 +1186,7 @@
                     asset_zone_id:'',
                     data_source_asset_zones:[],
                     asset_data_source_id:"",
+                    script:'',
                 },
                 variable: {
                     variable_id: "",
@@ -1334,6 +1373,7 @@
                 this.spare.spare_asset_zones = []
                 this.spare.spare_asset_zones.push(spare.asset_zone_id)
                 this.spare.asset_zone_id = spare.asset_zone_id
+                this.spare.quantity = spare.quantity
             },
             editCheck(check){
                 this.check.asset_id = check.asset_id
@@ -1375,6 +1415,7 @@
                 this.datasource.data_source_asset_zones = []
                 this.datasource.data_source_asset_zones.push(datasource.asset_zone_id)
                 this.datasource.asset_zone_id = datasource.asset_zone_id
+                this.datasource.script = datasource.script
             },
 
             // getChecks() {
@@ -1615,6 +1656,7 @@
                         vm.spare.spare_id = "";
                         vm.spare.asset_zone_id = [];
                         vm.spare.spare_asset_zones= [];
+                        vm.spare.quantity = '';
                         vm.asset_zone_status_spares = false;
                          vm.errors = [];
                         vm.getAssetSpares();
@@ -1638,6 +1680,7 @@
                         vm.spare.asset_zone_id= "";
                         vm.spare.asset_spare_id="";
                         vm.spare.spare_asset_zones = [];
+                        vm.spare.quantity = '';
                         vm.asset_zone_status_spares = false;
                         vm.getAssetSpares();
                     })
@@ -1778,6 +1821,7 @@
                         vm.errors = [];
                         vm.datasource.asset_zone_id='';
                         vm.datasource.data_source_asset_zones = [];
+                        vm.datasource.script = '';
                         vm.asset_zone_status_datasources = false;
                         vm.getAssetDataSources();
                     })
@@ -1800,6 +1844,7 @@
                         vm.datasource.asset_zone_id= "";
                         vm.datasource.asset_data_source_id="";
                         vm.datasource.data_source_asset_zones = [];
+                        vm.datasource.script = '';
                         vm.asset_zone_status_datasources = false;
                         vm.getAssetDataSources();
                     })
