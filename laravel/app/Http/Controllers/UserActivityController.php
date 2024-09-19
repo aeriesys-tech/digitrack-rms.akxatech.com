@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\UserActivity;
 use App\Http\Resources\UserActivityResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ActivityAttributeResource;
+use App\Models\ActivityAttribute;
+use App\Models\ActivityAttributeValue;
 
 class UserActivityController extends Controller
 {
@@ -59,8 +62,10 @@ class UserActivityController extends Controller
             'activity_date' => 'required',
             'asset_id' => 'required|exists:assets,asset_id',
             'status' => 'required',
-            'activity_status' => 'required|sometimes',
-            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:reasons,reason_id',
+            'reason_id' => 'required|exists:reasons,reason_id',
+            'activity_attributes' => 'nullable|array',
+            'activity_attributes.*.activity_attribute_id' => 'nullable|exists:activity_attributes,activity_attribute_id',
+            'activity_attributes.*.activity_attribute_value.field_value' => 'nullable',
             'cost' => 'nullable',
             'note' => 'nullable'
         ]);
@@ -70,6 +75,15 @@ class UserActivityController extends Controller
         $data['plant_id'] = Auth::User()->plant_id;
     
         $UserActivity = UserActivity::create($data);
+
+        foreach ($request->activity_attributes as $attribute) 
+        {
+            ActivityAttributeValue::create([
+                'user_activity_id' => $UserActivity->user_activity_id,
+                'activity_attribute_id' => $attribute['activity_attribute_id'],
+                'field_value' => $attribute['activity_attribute_value']['field_value'] ?? '',
+            ]);
+        }        
         return response()->json(["message" => "Activity Register Created Successfully"]);
     }    
 
@@ -90,16 +104,43 @@ class UserActivityController extends Controller
             'activity_date' => 'required',
             'asset_id' => 'required|exists:assets,asset_id',
             'status' => 'required',
-            'activity_status' => 'required|sometimes',
-            'reason_id' => 'nullable|required_if:activity_status,Removed|exists:reasons,reason_id',
+            'reason_id' => 'required|exists:reasons,reason_id',
             'cost' => 'nullable',
-            'note' => 'nullable'
+            'note' => 'nullable',
+            'activity_attributes' => 'nullable|array',
+            'activity_attributes.*.activity_attribute_id' => 'nullable|exists:activity_attributes,activity_attribute_id',
+            'activity_attributes.*.activity_attribute_value.field_value' => 'nullable',
         ]);
         $data['user_id'] = Auth::User()->user_id;
         $data['plant_id'] = Auth::User()->plant_id;
 
         $UserActivity = UserActivity::where('user_activity_id', $request->user_activity_id)->first();
         $UserActivity->update($data);
+
+        if($request->deleted_activity_attribute_values > 0)
+        {
+            ActivityAttributeValue::whereIn('activity_attribute_value_id', $request->deleted_activity_attribute_values)->forceDelete();
+        }
+    
+        if (!empty($request->activity_attributes)) 
+        {
+            foreach ($request->activity_attributes as $attribute) 
+            {
+                $fieldValue = $attribute['activity_attribute_value']['field_value'];
+    
+                if ($fieldValue !== null) {
+                    ActivityAttributeValue::updateOrCreate(
+                        [
+                            'user_activity_id' => $UserActivity->user_activity_id,
+                            'activity_attribute_id' => $attribute['activity_attribute_id'],
+                        ],
+                        [
+                            'field_value' => $fieldValue,
+                        ]
+                    );
+                }
+            }
+        }    
         return response()->json(["message" => "Activity Register Updated Successfully"]);
     }
 
@@ -134,5 +175,18 @@ class UserActivityController extends Controller
             $activity_no = 'Activity_' . $formattedNextActivityNumber;
         }
         return $activity_no;
+    }
+
+    public function getActivitiesDropdown(Request $request)
+    {
+        $request->validate([
+            'reason_id' => 'required|exists:reasons,reason_id'
+        ]);
+
+        $activity = ActivityAttribute::whereHas('ActivityAttributeTypes', function($que) use($request){
+            $que->where('reason_id', $request->reason_id);
+        })->get();
+
+        return ActivityAttributeResource::collection($activity);
     }
 }

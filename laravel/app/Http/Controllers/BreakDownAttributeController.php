@@ -115,13 +115,28 @@ class BreakDownAttributeController extends Controller
         $break_down_attribute = BreakDownAttribute::where('break_down_attribute_id', $request->break_down_attribute_id)->first();
         $break_down_attribute->update($data);
 
-        BreakDownAttributeType::where('break_down_attribute_id', $break_down_attribute->break_down_attribute_id)->delete();
+        if(isset($request->deleted_break_down_attribute_types) > 0)
+        {
+            BreakDownAttributeType::whereIn('break_down_attribute_type_id', $request->deleted_break_down_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['break_down_types'] as $break_down_type_id) {
-            BreakDownAttributeType::create([
-                'break_down_attribute_id' => $break_down_attribute->break_down_attribute_id,
-                'break_down_type_id' => $break_down_type_id
-            ]);
+        foreach ($data['break_down_types'] as $break_down_type_id) 
+        {
+            $breakdownType = BreakDownAttributeType::where('break_down_attribute_id', $break_down_attribute->break_down_attribute_id)
+            ->where('break_down_type_id', $break_down_type_id)->first();
+
+            if($breakdownType)
+            {
+                $breakdownType->update([
+                    'break_down_type_id' => $break_down_type_id
+                ]);
+            }
+            else{
+                BreakDownAttributeType::create([
+                    'break_down_attribute_id' => $break_down_attribute->break_down_attribute_id,
+                    'break_down_type_id' => $break_down_type_id
+                ]);
+            }
         }
         return new BreakDownAttributeResource($break_down_attribute);
     }

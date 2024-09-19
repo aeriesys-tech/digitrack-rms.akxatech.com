@@ -13,7 +13,10 @@ class Campaign extends Model
     protected $fillable = [
         'asset_id',
         'datasource',
-        'file'
+        'file',
+        'job_date_time',
+        'job_no',
+        'script'
     ];
 
     protected $primaryKey = 'campaign_id';

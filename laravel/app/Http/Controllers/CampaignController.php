@@ -55,7 +55,11 @@ class CampaignController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'datasource' => 'required',
             'file' => 'required|file|mimes:pdf',
+            'job_date_time' => 'required',
+            'script' => 'required'
         ]);
+
+        $data['job_no'] = $this->generateCampaignNo();
 
         if ($request->hasFile('file')) 
         {
@@ -126,5 +130,26 @@ class CampaignController extends Controller
         return response()->json([
             'message' => 'HealthCheck Deleted Successfully'
         ]);
+    }
+
+    public function generateCampaignNo()
+    {
+        $campaign = Campaign::latest()->first();
+        $nextActivityNumber = 1; 
+        
+        if ($campaign) {
+            $lastActivityNumber = (int) substr($campaign->job_no, 9); 
+            $nextActivityNumber = $lastActivityNumber + 1;
+        }
+        
+        $formattedNextActivityNumber = str_pad($nextActivityNumber, 4, '0', STR_PAD_LEFT);
+        $job_no = 'Campaign_' . $formattedNextActivityNumber;
+        
+        while (Campaign::where('job_no', $job_no)->exists()) {
+            $nextActivityNumber++;
+            $formattedNextActivityNumber = str_pad($nextActivityNumber, 4, '0', STR_PAD_LEFT);
+            $job_no = 'Campaign_' . $formattedNextActivityNumber;
+        }
+        return $job_no;
     }
 }

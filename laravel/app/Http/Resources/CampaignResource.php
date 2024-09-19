@@ -16,7 +16,10 @@ class CampaignResource extends JsonResource
             'asset' => new AssetResource($this->Asset),
             'datasource' => $this->datasource,
             'file' => $this->file ? config('app.asset_url').'campaigns/'.$this->file : null,
-            'status' => $this->deleted_at?false:true
+            'status' => $this->deleted_at?false:true,
+            'script' => $this->script,
+            'job_no' => $this->job_no,
+            'job_date_time' => $this->job_date_time
         ];
     }
 }

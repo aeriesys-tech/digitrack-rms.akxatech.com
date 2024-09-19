@@ -106,7 +106,8 @@ class AssetDataSourceController extends Controller
                 $assetHasZones ? 'required' : 'nullable', 
                 'array',
             ],
-            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
+            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id',
+            'script' => 'required'
         ]);
 
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
@@ -184,6 +185,7 @@ class AssetDataSourceController extends Controller
             'asset_zone_id' => [
                 $assetHasZones ? 'required' : 'nullable',
             ],
+            'script' => 'required'
         ]);
 
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
@@ -226,5 +228,15 @@ class AssetDataSourceController extends Controller
             $que->where('asset_type_id', $request->asset_type_id);
         })->get();
         return DataSourceResource::collection($data_source);
+    }
+
+    public function assetDataSourceScripts(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id'
+        ]);
+
+        $scripts = AssetDataSource::where('asset_id', $request->asset_id)->pluck('script');
+        return $scripts;
     }
 }

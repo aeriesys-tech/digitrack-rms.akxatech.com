@@ -116,13 +116,28 @@ class VariableAttributeController extends Controller
         $variable_attribute = VariableAttribute::where('variable_attribute_id', $request->variable_attribute_id)->first();
         $variable_attribute->update($data);
 
-        VariableAttributeType::where('variable_attribute_id', $variable_attribute->variable_attribute_id)->delete();
+        if(isset($request->deleted_variable_attribute_types) > 0)
+        {
+            VariableAttributeType::whereIn('variable_attribute_type_id', $request->deleted_variable_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['variable_types'] as $variable_type_id) {
-            VariableAttributeType::create([
-                'variable_attribute_id' => $variable_attribute->variable_attribute_id,
-                'variable_type_id' => $variable_type_id
-            ]);
+        foreach ($data['variable_types'] as $variable_type_id) 
+        {
+            $variableType = VariableAttributeType::where('variable_attribute_id', $variable_attribute->variable_attribute_id)
+            ->where('variable_type_id', $variable_type_id)->first();
+
+            if($variableType)
+            {
+                $variableType->update([
+                    'variable_type_id' => $variable_type_id
+                ]);
+            }
+            else {
+                VariableAttributeType::create([
+                    'variable_attribute_id' => $variable_attribute->variable_attribute_id,
+                    'variable_type_id' => $variable_type_id
+                ]);
+            }
         }
         return new VariableAttributeResource($variable_attribute);
     }

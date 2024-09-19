@@ -115,13 +115,28 @@ class ServiceAttributeController extends Controller
         $service_attribute = ServiceAttribute::where('service_attribute_id', $request->service_attribute_id)->first();
         $service_attribute->update($data);
 
-        ServiceAttributeType::where('service_attribute_id', $service_attribute->service_attribute_id)->delete();
+        if(isset($request->deleted_service_attribute_types) > 0)
+        {
+            ServiceAttributeType::whereIn('service_attribute_type_id', $request->deleted_service_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['service_types'] as $service_type_id) {
-            ServiceAttributeType::create([
-                'service_attribute_id' => $service_attribute->service_attribute_id,
-                'service_type_id' => $service_type_id
-            ]);
+        foreach ($data['service_types'] as $service_type_id) 
+        {
+            $serviceType = ServiceAttributeType::where('service_attribute_id', $service_attribute->service_attribute_id)
+                ->where('service_type_id', $service_type_id)->first();
+
+            if($serviceType)
+            {
+                $serviceType->update([
+                    'service_type_id' => $service_type_id
+                ]);
+            }
+            else{
+                ServiceAttributeType::create([
+                    'service_attribute_id' => $service_attribute->service_attribute_id,
+                    'service_type_id' => $service_type_id
+                ]);
+            }
         }
         return new ServiceAttributeResource($service_attribute);
     }

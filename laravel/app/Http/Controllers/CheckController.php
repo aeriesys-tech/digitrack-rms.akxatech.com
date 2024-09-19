@@ -137,15 +137,27 @@ class CheckController extends Controller
         $check = Check::where('check_id', $request->check_id)->first();
         $check->update($data);
 
-        CheckAssetType::where('check_id', $check->check_id)->delete();
-
-        foreach ($data['asset_types'] as $asset_type_id) {
-            CheckAssetType::create([
-                'check_id' => $check->check_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+        if(isset($request->deleted_check_asset_types) > 0)
+        {
+            CheckAssetType::whereIn('check_asset_type_id', $request->deleted_check_asset_types)->forceDelete();
         }
 
+        foreach ($data['asset_types'] as $asset_type_id) 
+        {
+            $checkType = CheckAssetType::where('check_id', $check->check_id)->where('asset_type_id', $asset_type_id)->first();
+            if($checkType)
+            {
+                $checkType->update([
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
+            else {
+                CheckAssetType::create([
+                    'check_id' => $check->check_id,
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
+        }
         return response()->json(["message" => "Check Updated Successfully"]);  
     }
     
