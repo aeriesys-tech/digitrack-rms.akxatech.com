@@ -25,7 +25,8 @@
                             placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
                         <div class="table-responsive table-responsive-sm">
                             <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                <tr style="background-color:#9b9b9b;color:white;">
+                                <thead>
+                                    <tr style="background-color:#9b9b9b;color:white;">
                                         <th class="text-center">#</th>
                                         <th @click="sort('name')">
                                             Name
@@ -70,6 +71,7 @@
                                         <th class="text-center" v-can="'users.delete'">Status</th>
                                         <th class="text-center" v-can="'users.update'">Actions</th>
                                     </tr>
+                                </thead>
                                 <tbody>
                                     <tr v-for="user, key in users" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
