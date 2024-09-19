@@ -32,15 +32,15 @@
                                         <label class="form-label">Service Type</label><span class="text-danger"> *</span>
                                         <div class="dropdown" @click="toggleServiceTypeStatus()">
                                             <div class="overselect"></div>
-                                            <select class="form-control form-control" :class="{'is-invalid':errors.service_types}">
+                                            <select class="form-control form-control" :class="{'is-invalid':errors?.service_types}">
                                                 <option value="">Select Service Type</option>
                                             </select>
-                                            <span v-if="errors.service_types" class="invalid-feedback">{{ errors.service_types[0] }}</span>
+                                            <span v-if="errors?.service_types" class="invalid-feedback">{{ errors?.service_types[0] }}</span>
                                         </div>
                                         <div class="multiselect" v-if="service_type_status">
                                             <ul>
                                                 <li class="" v-for="(service_type, index) in service_types" :key="index">
-                                                    <input type="checkbox" :value="service_type.service_type_id" v-model="service_attribute.service_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="service_type.service_type_id" v-model="service_attribute.service_types" style="padding: 2px;" @click="updateActivityType($event, service_attribute)" />
                                                     <label style="margin-left: 5px;">{{ service_type.service_type_name }}</label>
                                                 </li>
                                             </ul>
@@ -50,18 +50,18 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Field Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Name " class="form-control" :class="{'is-invalid':errors.field_name}" v-model="service_attribute.field_name" />
-                                    <span v-if="errors.field_name" class="invalid-feedback">{{ errors.field_name[0] }}</span>
+                                    <input type="text" placeholder="Field Name " class="form-control" :class="{'is-invalid':errors?.field_name}" v-model="service_attribute.field_name" />
+                                    <span v-if="errors?.field_name" class="invalid-feedback">{{ errors?.field_name[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Display Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Display Name " class="form-control" :class="{'is-invalid':errors.display_name}" v-model="service_attribute.display_name"/>
-                                    <span v-if="errors.display_name" class="invalid-feedback">{{ errors.display_name[0] }}</span>
+                                    <input type="text" placeholder="Display Name " class="form-control" :class="{'is-invalid':errors?.display_name}" v-model="service_attribute.display_name"/>
+                                    <span v-if="errors?.display_name" class="invalid-feedback">{{ errors?.display_name[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Field Type</label><span class="text-danger"> *</span>
                                     <!-- <input type="text" placeholder="Field Type" class="form-control" :class="{'is-invalid':errors.field_type}" v-model="service_parameter.field_type" /> -->
-                                    <select class="form-control" v-model="service_attribute.field_type" :class="{ 'is-invalid': errors.field_type }">
+                                    <select class="form-control" v-model="service_attribute.field_type" :class="{ 'is-invalid': errors?.field_type }">
                                         <option value="">Select Field Type</option>
                                         <option value="Text">Text </option>
                                         <option value="Dropdown">Dropdown </option>
@@ -71,34 +71,34 @@
                                         <option value="Color">Color</option>
                                         <option value="List">List</option>
                                     </select>
-                                    <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
+                                    <span v-if="errors?.field_type" class="invalid-feedback">{{ errors?.field_type[0] }}</span>
                                 </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
-                                    <select class="form-control" v-model="service_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
+                                    <select class="form-control" v-model="service_attribute.list_parameter_id" :class="{ 'is-invalid': errors?.list_parameter_id }">
                                         <option value="">Select List</option>
                                         <option v-for="list_parameter, key in list_parameters" :key="key" :value="list_parameter.list_parameter_id">{{list_parameter.list_parameter_name}}</option>
                                     </select>
-                                    <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
+                                    <span v-if="errors?.list_parameter_id" class="invalid-feedback">{{ errors?.list_parameter_id[0] }}</span>
                                 </div>
                                 <div class="col-md-4" v-if="service_attribute.field_type==='Dropdown'">
                                     <label class="form-label">Field Value</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="service_attribute.field_values" />
-                                    <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
+                                    <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors?.field_values}" v-model="service_attribute.field_values" />
+                                    <span v-if="errors?.field_values" class="invalid-feedback">{{ errors?.field_values[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Length" class="form-control" v-model="service_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
-                                    <span v-if="errors.field_length" class="invalid-feedback">{{ errors.field_length[0] }}</span>
+                                    <input type="text" placeholder="Field Length" class="form-control" v-model="service_attribute.field_length" :class="{'is-invalid':errors?.field_length}" />
+                                    <span v-if="errors?.field_length" class="invalid-feedback">{{ errors?.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Is Required</label><span class="text-danger"> *</span>
-                                    <select class="form-control" v-model="service_attribute.is_required" :class="{ 'is-invalid': errors.is_required }">
+                                    <select class="form-control" v-model="service_attribute.is_required" :class="{ 'is-invalid': errors?.is_required }">
                                         <option value="">Select Is Required</option>
                                         <option value="1">Yes </option>
                                         <option value="0">No </option>
                                     </select>
-                                    <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
+                                    <span v-if="errors?.is_required" class="invalid-feedback">{{ errors?.is_required[0] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -132,8 +132,10 @@
                     is_required: "",
                     service_type_id: '',
                     service_types:[],
-                    list_parameter_id:'',
+                    list_parameter_id: '',
+                    deleted_service_attribute_types:[],
                 },
+                deleted_service_attribute_types:[],
                 service_types: [],
                 service_attributes:[],
                 list_parameters:[],
@@ -165,6 +167,7 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.service_attribute = response.data.data;
+                                vm.service_attribute.deleted_service_attribute_types = []
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -184,6 +187,28 @@
             }
         },
         methods: {
+             updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let service_attribute_type = activity_type?.service_attribute_types?.filter(function (element) {
+                    return element.service_type_id == event.target.value
+                })
+                if (service_attribute_type?.length) {
+                    let service_attribute_type_id = service_attribute_type[0].service_attribute_type_id
+                    if (isChecked) {
+                        if (vm.service_attribute.deleted_service_attribute_types.includes(service_attribute_type_id)) {
+                            let deleted_service_attribute_types = this.service_attribute.deleted_service_attribute_types.filter(function (element) {
+                                return element != service_attribute_type_id
+                            })
+                            vm.service_attribute.deleted_service_attribute_types = deleted_service_attribute_types
+                        }
+                    } else {
+                        if (!vm.service_attribute.deleted_service_attribute_types.includes(service_attribute_type_id)) {
+                            vm.service_attribute.deleted_service_attribute_types.push(service_attribute_type_id)
+                        }
+                    }
+                }
+            },
             toggleServiceTypeStatus(){
                 this.service_type_status = !this.service_type_status
             },

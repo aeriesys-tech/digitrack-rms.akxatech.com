@@ -54,7 +54,7 @@
                                     <input type="text" placeholder="Service Name" class="form-control" :class="{ 'is-invalid': errors.service_name }" v-model="service.service_name" />
                                     <span v-if="errors.service_name" class="invalid-feedback">{{ errors.service_name[0] }}</span>
                                 </div>
-                                 <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" />
@@ -129,7 +129,7 @@
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                 </div>
-                                 <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">Assign To</label><span class="text-danger"> *</span>
                                         <div class="dropdown" @click="toggleAssetTypeStatus()">
@@ -142,7 +142,7 @@
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
                                                 <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="service.asset_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="service.asset_types" style="padding: 2px;" @click="updateActivityType($event, service)" />
                                                     <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
                                                 </li>
                                             </ul>
@@ -184,7 +184,9 @@
                     asset_types: [],
                     frequency_id: "",
                     deleted_service_attribute_values: [],
+                    deleted_service_asset_types: [],
                 },
+                deleted_service_asset_types: [],
                 status: true,
                 errors: [],
                 deleted_service_attribute_values: [],
@@ -212,6 +214,7 @@
                                 vm.deleted_service_attribute_values.push(element.service_attribute_value.service_attribute_value_id);
                             });
                             vm.service.deleted_service_attribute_values = [];
+                            vm.service.deleted_service_asset_types = [];
                         })
                         .catch(function (error) {
                             vm.errors = error.response.data.errors;
@@ -222,6 +225,28 @@
         },
 
         methods: {
+            updateActivityType(event, activity_type) {
+                let vm = this;
+                const isChecked = event.target.checked;
+                let service_asset_type = activity_type?.service_asset_types?.filter(function (element) {
+                    return element.asset_type_id == event.target.value;
+                });
+                if (service_asset_type?.length) {
+                    let service_asset_type_id = service_asset_type[0].service_asset_type_id;
+                    if (isChecked) {
+                        if (vm.service.deleted_service_asset_types.includes(service_asset_type_id)) {
+                            let deleted_service_asset_types = this.service.deleted_service_asset_types.filter(function (element) {
+                                return element != service_asset_type_id;
+                            });
+                            vm.service.deleted_service_asset_types = deleted_service_asset_types;
+                        }
+                    } else {
+                        if (!vm.service.deleted_service_asset_types.includes(service_asset_type_id)) {
+                            vm.service.deleted_service_asset_types.push(service_asset_type_id);
+                        }
+                    }
+                }
+            },
             toggleAssetTypeStatus() {
                 this.asset_type_status = !this.asset_type_status;
             },
@@ -359,7 +384,6 @@
                     .dispatch("post", { uri: "getServicesDropdown", data: { service_type_id: service_type_id } })
                     .then((response) => {
                         loader.hide();
-                        console.log("dropdown--",response.data.data)
                         vm.service.service_attributes = response.data.data;
                     })
                     .catch(function (error) {

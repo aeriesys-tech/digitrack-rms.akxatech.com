@@ -40,7 +40,7 @@
                                         <div class="multiselect" v-if="break_down_type_status">
                                             <ul>
                                                 <li class="" v-for="(break_down_type, index) in break_down_types" :key="index">
-                                                    <input type="checkbox" :value="break_down_type.break_down_type_id" v-model="break_down_attribute.break_down_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="break_down_type.break_down_type_id" v-model="break_down_attribute.break_down_types" style="padding: 2px;" @click="updateActivityType($event, break_down_attribute)"/>
                                                     <label style="margin-left: 5px;">{{ break_down_type.break_down_type_name }}</label>
                                                 </li>
                                             </ul>
@@ -142,8 +142,10 @@
                     is_required: "",
                     break_down_type_id: '',
                     break_down_types:[],
-                    list_parameter_id:'',
+                    list_parameter_id: '',
+                    deleted_break_down_attribute_types:[],
                 },
+                deleted_break_down_attribute_types:[],
                 break_down_types: [],
                 break_down_attributes:[],
                 list_parameters:[],
@@ -175,6 +177,7 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.break_down_attribute = response.data.data;
+                                vm.break_down_attribute.deleted_break_down_attribute_types = []
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -194,6 +197,28 @@
             }
         },
         methods: {
+              updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let break_down_attribute_type = activity_type?.break_down_attribute_types?.filter(function (element) {
+                    return element.break_down_type_id == event.target.value
+                })
+                if (break_down_attribute_type?.length) {
+                    let break_down_attribute_type_id = break_down_attribute_type[0].break_down_attribute_type_id
+                    if (isChecked) {
+                        if (vm.break_down_attribute.deleted_break_down_attribute_types.includes(break_down_attribute_type_id)) {
+                            let deleted_break_down_attribute_types = this.break_down_attribute.deleted_break_down_attribute_types.filter(function (element) {
+                                return element != break_down_attribute_type_id
+                            })
+                            vm.break_down_attribute.deleted_break_down_attribute_types = deleted_break_down_attribute_types
+                        }
+                    } else {
+                        if (!vm.break_down_attribute.deleted_break_down_attribute_types.includes(break_down_attribute_type_id)) {
+                            vm.break_down_attribute.deleted_break_down_attribute_types.push(break_down_attribute_type_id)
+                        }
+                    }
+                }
+            },
             toggleBreakDownTypeStatus(){
                 this.break_down_type_status = !this.break_down_type_status
             },

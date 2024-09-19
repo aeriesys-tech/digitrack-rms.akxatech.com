@@ -40,7 +40,7 @@
                                         <div class="multiselect" v-if="variable_type_status">
                                             <ul>
                                                 <li class="" v-for="(variable_type, index) in variable_types" :key="index">
-                                                    <input type="checkbox" :value="variable_type.variable_type_id" v-model="variable_attribute.variable_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="variable_type.variable_type_id" v-model="variable_attribute.variable_types" style="padding: 2px;" @click="updateActivityType($event, variable_attribute)"/>
                                                     <label style="margin-left: 5px;">{{ variable_type.variable_type_name }}</label>
                                                 </li>
                                             </ul>
@@ -134,8 +134,10 @@
                     is_required: "",
                     variable_type_id: '',
                     variable_types:[],
-                    list_parameter_id:'',
+                    list_parameter_id: '',
+                    deleted_variable_attribute_types:[],
                 },
+                deleted_variable_attribute_types:[],
                 variable_types: [],
                 variable_attributes:[],
                 list_parameters:[],
@@ -167,6 +169,7 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.variable_attribute = response.data.data;
+                                vm.variable_attribute.deleted_variable_attribute_types = []
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -186,6 +189,29 @@
             }
         },
         methods: {
+             updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let variable_attribute_type = activity_type?.variable_attribute_types?.filter(function (element) {
+                    return element.variable_type_id == event.target.value
+                })
+                if (variable_attribute_type?.length) {
+                    let variable_attribute_type_id = variable_attribute_type[0].variable_attribute_type_id
+                    if (isChecked) {
+                        if (vm.variable_attribute.deleted_variable_attribute_types.includes(variable_attribute_type_id)) {
+                            let deleted_variable_attribute_types = this.variable_attribute.deleted_variable_attribute_types.filter(function (element) {
+                                return element != variable_attribute_type_id
+                            })
+                            vm.variable_attribute.deleted_variable_attribute_types = deleted_variable_attribute_types
+                        }
+                    } else {
+                        if (!vm.variable_attribute.deleted_variable_attribute_types.includes(variable_attribute_type_id)) {
+                            vm.variable_attribute.deleted_variable_attribute_types.push(variable_attribute_type_id)
+                        }
+                    }
+                }
+            },
+
             toggleVariableTypeStatus(){
                 this.variable_type_status = !this.variable_type_status
             },
@@ -204,7 +230,6 @@
                     .then(response => {
                         loader.hide();
                         vm.variable_types = response.data.data;
-                        console.log(vm.variable_types)
                     })
                     .catch(function (error) {
                         loader.hide();

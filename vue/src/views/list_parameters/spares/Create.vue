@@ -30,8 +30,8 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Spare Types</label><span class="text-danger"> *</span>
                                     <search
-                                        :class="{ 'is-invalid': errors.spare_type_id }"
-                                        :customClass="{ 'is-invalid': errors.spare_type_id }"
+                                        :class="{ 'is-invalid': errors?.spare_type_id }"
+                                        :customClass="{ 'is-invalid': errors?.spare_type_id }"
                                         :initialize="spare.spare_type_id"
                                         id="spare_type_id"
                                         label="spare_type_name"
@@ -41,29 +41,23 @@
                                         @selectsearch="getSpareTypeFields(spare)"
                                     >
                                     </search>
-                                    <span v-if="errors.spare_type_id"><small class="text-danger">{{ errors.spare_type_id[0] }}</small></span>
+                                    <span v-if="errors?.spare_type_id"><small class="text-danger">{{ errors?.spare_type_id[0] }}</small></span>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Spare Code</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Spare Code" class="form-control" :class="{ 'is-invalid': errors.spare_code }" v-model="spare.spare_code" />
-                                    <span v-if="errors.spare_code" class="invalid-feedback">{{ errors.spare_code[0] }}</span>
+                                    <input type="text" placeholder="Spare Code" class="form-control" :class="{ 'is-invalid': errors?.spare_code }" v-model="spare.spare_code" />
+                                    <span v-if="errors?.spare_code" class="invalid-feedback">{{ errors?.spare_code[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Spare Name</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Spare Name" class="form-control" :class="{ 'is-invalid': errors.spare_name }" v-model="spare.spare_name" />
-                                    <span v-if="errors.spare_name" class="invalid-feedback">{{ errors.spare_name[0] }}</span>
+                                    <input type="text" placeholder="Spare Name" class="form-control" :class="{ 'is-invalid': errors?.spare_name }" v-model="spare.spare_name" />
+                                    <span v-if="errors?.spare_name" class="invalid-feedback">{{ errors?.spare_name[0] }}</span>
                                 </div>
-                                 <div class="col-md-4" v-for="field, key in spare.spare_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in spare.spare_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            :placeholder="'Enter '+ field.display_name"
-                                            :class="{'is-invalid': errors[field.display_name]}"
-                                            v-model="field.spare_attribute_value.field_value"
-                                        />
+                                        <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.spare_attribute_value.field_value" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
@@ -86,13 +80,7 @@
                                             {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input
-                                            type="date"
-                                            class="form-control"
-                                            :placeholder="'Enter ' + field.display_name"
-                                            :class="{'is-invalid': errors[field.display_name]}"
-                                            v-model="field.spare_attribute_value.field_value"
-                                        />
+                                        <input type="date" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.spare_attribute_value.field_value" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
                                         </span>
@@ -142,20 +130,20 @@
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                 </div>
-                                 <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">Assign To</label><span class="text-danger"> *</span>
                                         <div class="dropdown" @click="toggleAssetTypeStatus()">
                                             <div class="overselect"></div>
-                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
+                                            <select class="form-control" :class="{ 'is-invalid': errors?.asset_types }" :customClass="{ 'is-invalid': errors?.asset_types }">
                                                 <option value="">Select Assign To</option>
                                             </select>
-                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
+                                            <span v-if="errors?.asset_types"><small class="text-danger">{{ errors?.asset_types[0] }}</small></span>
                                         </div>
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
                                                 <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="spare.asset_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="spare.asset_types" style="padding: 2px;" @click="updateActivityType($event, spare)" />
                                                     <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
                                                 </li>
                                             </ul>
@@ -197,7 +185,9 @@
                     asset_types: [],
                     frequency_id: "",
                     deleted_spare_attribute_values: [],
+                    deleted_spare_asset_types: [],
                 },
+                deleted_spare_asset_types: [],
                 deleted_spare_attribute_values: [],
                 status: true,
                 errors: [],
@@ -222,20 +212,43 @@
                         .then(function (response) {
                             vm.spare = response.data.data;
                             vm.spare.spare_attributes.map(function (element) {
-                                console.log(element);
                                 vm.deleted_spare_attribute_values.push(element.spare_attribute_value.spare_attribute_value_id);
                             });
                             vm.spare.deleted_spare_attribute_values = [];
+                            vm.spare.deleted_spare_asset_types = [];
                         })
                         .catch(function (error) {
-                            vm.errors = error.response.data.errors;
-                            vm.$store.dispatch("error", error.response.data.message);
+                            console.log("error", error);
+                            vm.errors = error.response?.data?.errors;
+                            vm.$store.dispatch("error", error.response?.data?.message);
                         });
                 }
             });
         },
 
         methods: {
+            updateActivityType(event, activity_type) {
+                let vm = this;
+                const isChecked = event.target.checked;
+                let spare_asset_type = activity_type?.spare_asset_types?.filter(function (element) {
+                    return element.asset_type_id == event.target.value;
+                });
+                if (spare_asset_type?.length) {
+                    let spare_asset_type_id = spare_asset_type[0].spare_asset_type_id;
+                    if (isChecked) {
+                        if (vm.spare.deleted_spare_asset_types.includes(spare_asset_type_id)) {
+                            let deleted_spare_asset_types = this.spare.deleted_spare_asset_types.filter(function (element) {
+                                return element != spare_asset_type_id;
+                            });
+                            vm.spare.deleted_spare_asset_types = deleted_spare_asset_types;
+                        }
+                    } else {
+                        if (!vm.spare.deleted_spare_asset_types.includes(spare_asset_type_id)) {
+                            vm.spare.deleted_spare_asset_types.push(spare_asset_type_id);
+                        }
+                    }
+                }
+            },
             toggleAssetTypeStatus() {
                 this.asset_type_status = !this.asset_type_status;
             },
