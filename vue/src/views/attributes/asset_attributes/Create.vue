@@ -201,10 +201,10 @@
               updateActivityType(event, activity_type) {
                 let vm = this
                 const isChecked = event.target.checked;
-                let asset_attribute_type = activity_type.asset_attribute_types.filter(function (element) {
+                let asset_attribute_type = activity_type?.asset_attribute_types?.filter(function (element) {
                     return element.asset_type_id == event.target.value
                 })
-                if (asset_attribute_type.length) {
+                if (asset_attribute_type?.length) {
                     let asset_attribute_type_id = asset_attribute_type[0].asset_attribute_type_id
                     if (isChecked) {
                         if (vm.asset_attribute.deleted_asset_attribute_types.includes(asset_attribute_type_id)) {
@@ -215,7 +215,6 @@
                         }
                     } else {
                         if (!vm.asset_attribute.deleted_asset_attribute_types.includes(asset_attribute_type_id)) {
-                            console.log(asset_attribute_type_id)
                             vm.asset_attribute.deleted_asset_attribute_types.push(asset_attribute_type_id)
                         }
                     }
@@ -240,7 +239,6 @@
                     .then(response => {
                         loader.hide();
                         vm.asset_types = response.data.data;
-                        console.log(vm.asset_types)
                     })
                     .catch(function (error) {
                         loader.hide();
