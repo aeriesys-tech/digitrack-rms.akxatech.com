@@ -92,6 +92,7 @@
                                                 <th>Service <span class="text-danger"> *</span></th>
                                                 <th>Service Cost <span class="text-danger"> *</span></th>
                                                 <th>Spare <span class="text-danger"> *</span></th>
+                                                <th>Quantity <span class="text-danger"> *</span></th>
                                                 <th>Spare Cost <span class="text-danger"> *</span></th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
@@ -133,28 +134,35 @@
                                                 <input type="number" placeholder="Enter Service Cost" min="0" oninput="validity.valid||(value='');" class="form-control" :class="{'is-invalid':errors.service_cost}" v-model="user_spare.service_cost" />
                                                 <span v-if="errors.service_cost" class="invalid-feedback">{{ errors.service_cost[0] }}</span>
                                             </td>
-                                                <td>
-                                                    <search
-                                                        :class="{ 'is-invalid': errors.spare_id }"
-                                                        :customClass="{ 'is-invalid': errors.spare_id }"
-                                                        aria-describedby="basic-addon2"
-                                                        aria-label="Select Spare"
-                                                        :initialize="user_spare.spare_id"
-                                                        id="spare_id"
-                                                        label="spare_name"
-                                                        label2="spare_code"
-                                                        placeholder="Select Spare"
-                                                        :data="spares"
-                                                        @input=" spare1 => user_spare.spare_id = spare1"
-                                                        @selectsearch="getValue(user_spare.spare_id)"
-                                                    >
-                                                    </search>
-                                                    <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
-                                                </td>
-                                                <td>
-                                                    <input type="number" class="form-control" placeholder="Enter Spare Cost" min="0" :class="{ 'is-invalid': errors.spare_cost }" v-model="user_spare.spare_cost" />
-                                                    <span v-if="errors.spare_cost" class="invalid-feedback">{{ errors.spare_cost[0] }}</span>
-                                                </td>
+                                            <td>
+                                                <search
+                                                    :class="{ 'is-invalid': errors.spare_id }"
+                                                    :customClass="{ 'is-invalid': errors.spare_id }"
+                                                    aria-describedby="basic-addon2"
+                                                    aria-label="Select Spare"
+                                                    :initialize="user_spare.spare_id"
+                                                    id="spare_id"
+                                                    label="spare_name"
+                                                    label2="spare_code"
+                                                    placeholder="Select Spare"
+                                                    :data="spares"
+                                                    @input=" spare1 => user_spare.spare_id = spare1"
+                                                    @selectsearch="getValue(user_spare)"
+                                                >
+                                                </search>
+                                                <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
+                                            </td>
+                                            <td>
+                                                <!-- oninput="validity.valid||(value='');" -->
+                                                <input type="number" placeholder="Enter Quantity" min="0" class="form-control" 
+                                                    :class="{'is-invalid':errors.quantity}" v-model="user_spare.quantity" 
+                                                    :max="user_spare.max_quantity" @input="enforceMinMax($event, user_spare)"/>
+                                                <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" placeholder="Enter Spare Cost" min="0" :class="{ 'is-invalid': errors.spare_cost }" v-model="user_spare.spare_cost" />
+                                                <span v-if="errors.spare_cost" class="invalid-feedback">{{ errors.spare_cost[0] }}</span>
+                                            </td>
                                                 <td class="text-center">
                                                     <button v-if="user_spare.status" class="btn btn-outline-success mx-1" @click.prevent="addRow()"><i class="ri-add-line fs-18 lh-1"></i></button>
                                                     <button v-else class="btn btn-outline-success mx-1" @click.prevent="updateRow(user_spare)"><i class="ri-save-line fs-18 lh-1"></i></button>
@@ -167,10 +175,11 @@
                                         </tbody>
                                         <tbody>
                                             <tr v-for="spare, index in user_service.user_spares" :key="index">
-                                            <td>{{ spare?.asset_zone?.zone_name}}</td>
-                                            <td>{{ spare?.service?.service_name }}</td>
-                                            <td>{{ spare?.service_cost }}</td>
+                                                <td>{{ spare?.asset_zone?.zone_name}}</td>
+                                                <td>{{ spare?.service?.service_name }}</td>
+                                                <td>{{ spare?.service_cost }}</td>
                                                 <td>{{ spare?.spare?.spare_name }}</td>
+                                                <td>{{ spare?.quantity }}</td>
                                                 <td>{{ spare?.spare_cost }}</td>
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-outline-primary mx-2" @click.prevent="editSpare(spare,index)"><i class="ri-pencil-line fs-18 lh-1"></i></button>
@@ -233,8 +242,8 @@
                         service_name:"",
                     },
                     service_cost: "",
-
-
+                    quantity:'',
+                    max_quantity:'',
                     spare_cost: "",
                     status: true,
                 },
@@ -298,6 +307,19 @@
                     vm.updateUserService();
                 }
             },
+            enforceMinMax(event, user_spare) {
+                const input = event.target;
+                let value = parseInt(input.value, 10);
+
+                // Enforce the min and max manually
+                if (value < parseInt(input.min, 10)) {
+                    input.value = input.min;
+                }
+                if (value > input.max) {
+                    input.value = input.max;  // Use dynamic max
+                }
+                user_spare.quantity = input.value
+            },
              getAssetZoneValue(value) {
                 let vm = this;
                 let asset_zone = vm.asset_zones?.filter(function (ele) {
@@ -312,11 +334,14 @@
             getValue(value) {
                 let vm = this;
                 let spare = vm.spares?.filter(function (ele) {
-                    return ele.spare_id == value;
+                    return ele.spare_id == value.spare_id;
                 });
                 if (spare.length) {
                     vm.user_spare.spare.spare_name = spare[0].spare_name;
                 }
+                // console.log('value:-----', spare)
+                value.quantity = spare[0].asset_spare[0].quantity;
+                value.max_quantity = spare[0].asset_spare[0].quantity;
             },
             getServiceValue(value) {
                 let vm = this;
@@ -461,6 +486,9 @@
                     if (vm.user_spare.spare_cost == "") {
                         vm.errors.spare_cost = ["Spare Cost cannot be empty"];
                     }
+                    if (vm.user_spare.quantity == "") {
+                        vm.errors.quantity = ["Quantity cannot be empty"];
+                    }
                 } else {
                     vm.user_service.user_spares.push({
                         user_spare_id: "",
@@ -478,6 +506,7 @@
                             spare_name: vm.user_spare.spare.spare_name,
                         },
                         spare_cost: vm.user_spare.spare_cost,
+                        quantity: vm.user_spare.quantity,
                     });
                     vm.discardNewRow();
                 }
@@ -492,6 +521,7 @@
                 vm.user_spare.spare_cost = "";
                 vm.user_spare.spare.spare_name = "";
                 vm.user_spare.status = true;
+                vm.user_spare.quantity="";
                 vm.errors = [];
             },
             editSpare(spare, key) {
@@ -505,6 +535,7 @@
                 vm.user_spare.spare_id = spare.spare_id;
                 vm.user_spare.spare.spare_name = spare.spare.spare_name;
                 vm.user_spare.spare_cost = spare.spare_cost;
+                vm.user_spare.quantity = spare.quantity;
                 vm.user_spare.status = false;
                 vm.user_spare.key = key;
                 vm.errors = [];
@@ -524,6 +555,9 @@
                     }
                     if (vm.user_spare.spare_cost == "") {
                         vm.errors.spare_cost = ["Spare Cost cannot be empty"];
+                    }
+                    if (vm.user_spare.quantity == "") {
+                        vm.errors.quantity = ["Quantity cannot be empty"];
                     }
                 } else {
                     let spare_data = vm.user_service.user_spares.filter(function (element) {
@@ -548,6 +582,7 @@
                             spare_name: vm.user_spare.spare.spare_name,
                         },
                         spare_cost: vm.user_spare.spare_cost,
+                        quantity: vm.user_spare.quantity,
                     });
                     vm.discardNewRow();
                 }
