@@ -371,6 +371,12 @@
             "asset.no_of_zones": function (newVal) {
                 let vm = this;
                 vm.asset.zone_name = [];
+                if (vm.asset.no_of_zones <= 0) {
+                    vm.asset.no_of_zones = 1;
+                    vm.asset.zone_name.push({
+                        zone_name: 'Overall',
+                    });
+                }
                 if (this.status) {
                     for (let i = 0; i < vm.asset.no_of_zones; i++) {
                         vm.asset.zone_name.push({
@@ -430,19 +436,21 @@
             checkZoneValue(event, asset) {
                 if (this.asset.no_of_zones <= 0) {
                     this.asset.no_of_zones = 1; // Reset to minimum allowed value
+                    this.asset.zone_name.push({
+                        zone_name: 'Overall',
+                    });
                 }
 
-                let value = event?.data?.replace(/[^0-9]/g, '');
-                // console.log(value)
+                let value = event?.target?.value?.replace(/[^0-9]/g, '');
+                // console.log('value:----',value ? Number(value) : null)
+                
                 if (value >= 1 ) {
                     let popped_data = asset.no_of_zones - value
-                    console.log('asset.no_of_zones:----', asset.no_of_zones, this.status, this.prev_zone_names)
                     for(let i=0; i<popped_data; i++){
                         let del_asset_zone = asset.zone_name.pop()
                         this.asset.deleted_asset_zones.push(del_asset_zone.asset_zone_id)
                         this.prev_zone_names.pop()
                     }
-                    // console.log('popped:------', popped, asset.no_of_zones)
                 }
                 asset.no_of_zones = asset.zone_name.length
             },
