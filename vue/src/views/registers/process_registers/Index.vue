@@ -71,6 +71,12 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
+                                        <th>
+                                            Variable                                            
+                                        </th>
+                                        <th>
+                                            Value                                            
+                                        </th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -81,6 +87,8 @@
                                         <td>{{ user_variable.job_no }}</td>
                                         <td>{{ user_variable.job_date }}</td>
                                         <td>{{ user_variable?.asset_zone?.zone_name }}</td>
+                                        <td>{{ user_variable?.asset_variables?.variable?.variable_name }}</td>
+                                        <td>{{ user_variable?.value }}</td>
                                         <td class="text-center">
                                             <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)"
                                                 class="text-success me-2" @click="editUserVariable(user_variable)">
@@ -96,7 +104,7 @@
                                         </td>
                                     </tr>
                                     <tr v-if="user_variables.length == 0">
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="8" class="text-center">No records found</td>
                                     </tr>
                                 </tbody>
                             </table>

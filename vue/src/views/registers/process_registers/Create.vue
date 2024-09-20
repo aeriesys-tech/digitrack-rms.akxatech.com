@@ -17,8 +17,9 @@
                 </ol>
                 <h4 class="main-title mb-0">Process Register</h4>
             </div>
-            <router-link to="/process_registers" type="submit" class="btn btn-primary" style="float: right;"><i
-                    class="ri-list-check"></i> PROCESS REGISTERS</router-link>
+            <router-link to="/process_registers" type="submit" class="btn btn-primary" style="float: right;">
+                <i class="ri-list-check"></i> PROCESS REGISTERS
+            </router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -30,43 +31,24 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2 mb-5">
-                                <!-- <div class="col-md-4">
-                                        <label class="form-label">Service Number</label><span class="text-danger"> *</span>
-                                        <input type="text" placeholder="Enter Service Number" class="form-control" :class="{'is-invalid':errors.service_no}" v-model="user_service.service_no" ref="service_no"/>
-                                        <span v-if="errors.service_no" class="invalid-feedback">{{ errors.service_no[0] }}</span>
-                                    </div> -->
                                 <div class="col-md-6">
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <search :class="{ 'is-invalid': errors.asset_id }"
                                         :customClass="{ 'is-invalid': errors.asset_id }"
                                         :initialize="user_variable.asset_id" id="asset_id" label="asset_name"
                                         label2="asset_code" placeholder="Select Asset" :data="assets"
-                                        @input="asset => user_variable.asset_id = asset">
+                                        @input="asset => user_variable.asset_id = asset"
+                                        :disabled="!status">
                                     </search>
-                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0]
-                                        }}</span>
+                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0]}}</span>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Job Date Time</label><span class="text-danger"> *</span>
                                     <input type="datetime-local" class="form-control" placeholder="Enter Job Date"
                                         :class="{ 'is-invalid': errors.job_date }"
-                                        :value="convertDateFormat(user_variable.job_date)"
-                                        v-model="user_variable.job_date" ref="job_date" />
-                                    <span v-if="errors.job_date" class="invalid-feedback">{{ errors.job_date[0]
-                                        }}</span>
+                                        v-model="user_variable.job_date" ref="job_date" :disabled="!status"/>
+                                    <span v-if="errors.job_date" class="invalid-feedback">{{ errors.job_date[0]}}</span>
                                 </div>
-
-                                <!-- <div class="col-md-4">
-                                    <label class="form-label">Asset Zone</label>
-                                    <search :class="{ 'is-invalid': errors.asset_zone_id }"
-                                        :customClass="{ 'is-invalid': errors.asset_zone_id }"
-                                        :initialize="user_variable.asset_zone_id" id="asset_zone_id" label="zone_name"
-                                        placeholder="Select Asset Zone" :data="asset_zones"
-                                        @input="zone => user_variable.asset_zone_id = zone">
-                                    </search>
-                                    <span v-if="errors.asset_zone_id" class="invalid-feedback">{{
-                                        errors.asset_zone_id[0] }}</span>
-                                </div> -->
                                 <div class="col-md-12">
                                     <label class="form-label">Note</label>
                                     <textarea type="text" placeholder="Enter Note" class="form-control"
@@ -75,53 +57,78 @@
                                 </div>
                             </div>
 
-                            <!-- try start -->
-                              <div class="row g-2 mb-3">
-
+                            <div class="row g-2 mb-3" v-if="status">
                                 <div class="col-md-4" v-for="asset_zone,key in asset_zones" :key="key">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 class="mb-0">{{ asset_zone.zone_name }}</h6>
                                         </div>
                                         <div class="card-body">
-                                            <table
-                                        class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>Variable</th>
-                                                <th>Value</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="user_variable_data, key in user_variable.asset_variables" :key="key">
-                                               <td>{{ user_variable_data.variable_name}}</td>
-                                               <!-- <td>{{ user_variable.variable_name }}</td> -->
-                                                <td>
-                                                    <input type="number" class="form-control" placeholder="Enter Value"
-                                                        min="0" :class="{ 'is-invalid': errors.value }"
-                                                        v-model="user_variable_data.value" />
-                                                    <span v-if="errors.value" class="invalid-feedback">{{
-                                                        errors.value[0] }}</span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Variable</th>
+                                                        <th>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="user_variable_data, key1 in user_variable.asset_variables[key]" :key="key1">
+                                                    <td>{{ user_variable_data.variable_name}}</td>
+                                                        <td>
+                                                            <input type="number" step="any" class="form-control" placeholder="Enter Value"
+                                                                min="0" :class="{ 'is-invalid': errors[`asset_variables.${key1}.value`] }"
+                                                                v-model="user_variable_data.value" />
+                                                            <span v-if="errors[`asset_variables.${key1}.value`]" class="invalid-feedback">{{
+                                                                errors[`asset_variables.${key1}.value`][0] }}</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
-                              </div>
-
-
-                            <!-- try ends -->
+                            </div>
+                            <!-- Update User Variables -->
+                            <div class="row g-2 mb-3" v-else>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">{{ user_variable?.asset_zone?.zone_name }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Variable</th>
+                                                        <th>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                    <td>{{ user_variable?.asset_variables?.variable?.variable_name}}</td>
+                                                        <td>
+                                                            <input type="number" step="any" class="form-control" placeholder="Enter Value"
+                                                                min="0" :class="{ 'is-invalid': errors.value }"
+                                                                v-model="user_variable.value" />
+                                                            <span v-if="errors.value" class="invalid-feedback">{{
+                                                                errors.value[0] }}</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-footer text-end">
-                            <router-link type="button" to="/process_registers" class="btn btn-danger me-2"><i
-                                    class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
-                            <button type="submit" class="btn btn-primary">
-                                <span v-if="status"><i class="ri-save-line fs-18 lh-1"></i> Submit</span>
-                                <span v-else><i class="ri-save-line fs-18 lh-1"></i> Update</span>
-                            </button>
-                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <router-link type="button" to="/process_registers" class="btn btn-danger me-2"><i
+                                class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
+                        <button type="submit" class="btn btn-primary">
+                            <span v-if="status"><i class="ri-save-line fs-18 lh-1"></i> Submit</span>
+                            <span v-else><i class="ri-save-line fs-18 lh-1"></i> Update</span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -168,8 +175,10 @@ export default {
 
     watch: {
         'user_variable.asset_id': function () {
-            this.getAssetZones();
-            this.getVariables();
+            if(this.status){                
+                this.getAssetZones();
+                this.getVariables();
+            }
         },
 
         // 'user_variable.asset_zone_id': function () {
@@ -186,7 +195,7 @@ export default {
                 }
                 vm.$refs.job_date.focus();
             } else {
-                vm.status = false;
+                vm.status = false;                
                 let uri = { uri: "getUserVariable", data: { user_variable_id: to.params.user_variable_id } };
                 vm.$store
                     .dispatch("post", uri)
@@ -202,12 +211,26 @@ export default {
         });
     },
     mounted() {
-        this.user_variable.job_date = moment().format("yyyy-MM-DD");
+        // this.user_variable.job_date = moment().format("yyyy-MM-DD");
+        // const now = new Date();    
+        // this.user_variable.job_date = now.toISOString().slice(0, 16);
+
+        const now = new Date();
+      
+        // Pad single digit months, days, hours, and minutes with leading zeroes
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        // Format to YYYY-MM-DDTHH:MM
+        this.user_variable.job_date = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     },
     methods: {
         convertDateFormat(date) {
             let vm = this;
-            return moment(date).format("yyyy-MM-DD");
+            return moment(date).format("yyyy-MM-DD HH:MM:SS");
         },
         submitForm() {
             let vm = this;
@@ -279,8 +302,18 @@ export default {
                 });
         },
         addUserVariable() {
-            let vm = this;
-            let loader = vm.$loading.show();
+            let vm = this;                
+            let loader = vm.$loading.show();            
+            for (let i = 0; i < vm.asset_zones.length; i++) {
+                if (vm.user_variable?.asset_variables?.[i]) {
+                    for (let j = 0; j < vm.user_variable.asset_variables[i].length; j++) {
+                        if (vm.user_variable.asset_variables[i]?.[j]) {
+                            vm.user_variable.asset_variables[i][j].asset_zone_id = vm.asset_zones[i].asset_zone_id;
+                        }
+                    }
+                }
+            }
+            vm.user_variable.job_date =  vm.convertDateFormat(vm.user_variable.job_date)
             vm.$store
                 .dispatch("post", { uri: "addUserVariable", data: vm.user_variable })
                 .then((response) => {
@@ -297,7 +330,6 @@ export default {
 
         updateUserVariable() {
             let vm = this;
-            vm.user_variable.deleted_user_spares = vm.deleted_spares;
             let loader = vm.$loading.show();
             vm.$store
                 .dispatch("post", { uri: "updateUserVariable", data: vm.user_variable })
