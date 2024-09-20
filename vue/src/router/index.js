@@ -182,7 +182,7 @@ const routes = [
 
   // lists
   {
-    path: "/lists",
+    path: "/list_parameters",
     name: "Lists",
     component: Lists,
   },

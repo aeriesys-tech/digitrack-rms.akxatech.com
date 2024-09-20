@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Job Date</label><span class="text-danger"> *</span>
-                                    <input type="date" placeholder="Break Down List Code" class="form-control" :class="{ 'is-invalid': errors.job_date }" v-model="break_down.job_date"/>
+                                    <input type="datetime-local" placeholder="Break Down List Code" class="form-control" :class="{ 'is-invalid': errors.job_date }" v-model="break_down.job_date" />
                                     <span v-if="errors.job_date" class="invalid-feedback">{{ errors.job_date[0] }}</span>
                                 </div>
 
@@ -175,6 +175,7 @@
 <script>
 import Pagination from "@/components/Pagination.vue";
 import Search from "@/components/Search.vue";
+import moment from "moment";
 export default {
     components: {
         Pagination, Search
@@ -228,7 +229,10 @@ export default {
                         });
                 }
             });
-        },
+    },
+        mounted() {
+        this.break_down.job_date = moment().format("yyyy-MM-DDTHH:MM");
+    },
 
     methods: {
         toggleAssetTypeStatus(){

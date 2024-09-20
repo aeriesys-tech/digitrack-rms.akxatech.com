@@ -88,7 +88,7 @@
                                 <div class="col-md-3">
                                     <label class="form-label">Reference Date</label><span class="text-danger"> *</span>
                                     <input
-                                        type="date"
+                                        type="datetime-local"
                                         class="form-control"
                                         placeholder="Enter Reference Date"
                                         :class="{'is-invalid': errors.reference_date}"
@@ -241,7 +241,7 @@ export default {
             }
         },
     mounted() {
-        this.user_check.reference_date = moment().format("yyyy-MM-DD");
+        this.user_check.reference_date = moment().format("yyyy-MM-DDTHH:MM");
     },
     methods: {
         checkAssets() {
@@ -370,7 +370,7 @@ export default {
         },
         convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format('yyyy-MM-DD')
+                return moment(date).format('yyyy-MM-DDTHH:MM')
 
             },
 

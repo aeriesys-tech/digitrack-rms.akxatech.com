@@ -177,7 +177,7 @@
         methods: {
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD");
+                return moment(date).format("yyyy-MM-DD HH:MM");
             },
             index() {
                 let vm = this;

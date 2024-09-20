@@ -55,7 +55,7 @@
              <div class="nav-group show">
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
-                        <router-link to="/lists" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>Lists</span></router-link>
+                        <router-link to="/list_parameters" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>List Parameters</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -452,7 +452,7 @@
                     this.PredictionColor = "white !important";
                     this.showPredictions = !this.showPredictions;
                 }
-                else if (tab == "/lists") {
+                else if (tab == "/list_parameters") {
                     this.listActive = "white !important";
                 }
 

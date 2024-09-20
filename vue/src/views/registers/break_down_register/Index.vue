@@ -89,7 +89,7 @@
                                         <td>{{ break_down_list.asset?.asset_name }}</td>
                                         <td>{{break_down_list.break_down_type?.break_down_type_name}}</td>
                                         <td>{{break_down_list.job_no}}</td>
-                                        <td>{{break_down_list.job_date}}</td>
+                                        <td>{{convertDateFormat(break_down_list.job_date)}}</td>
                                         <!-- <td class="text-center">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'break_down_list' + break_down_list.break_down_list_id" :checked="break_down_list.status" :value="break_down_list.status" @change="deleteBreakDownList(break_down_list)" />
@@ -125,7 +125,8 @@
 </template>
 
 <script>
-    import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
     export default {
         components: {
             Pagination,
@@ -164,7 +165,11 @@
             this.index();
         },
 
-        methods: {
+    methods: {
+             convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD HH:MM");
+            },
             index() {
                 let vm = this;
                 let loader = this.$loading.show();

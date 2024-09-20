@@ -51,22 +51,14 @@
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Service Date</label><span class="text-danger"> *</span>
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        placeholder="Enter Service Date"
-                                        :class="{'is-invalid': errors.service_date}"
-                                        :value="convertDateFormat(user_service.service_date)"
-                                        v-model="user_service.service_date"
-                                        ref="service_date"
-                                    />
+                                    <label class="form-label">Service Date Time</label><span class="text-danger"> *</span>
+                                    <input type="datetime-local" class="form-control" :class="{'is-invalid': errors.service_date}" :value="convertDateFormat(user_service.service_date)" v-model="user_service.service_date" ref="service_date"/>
                                     <span v-if="errors.service_date" class="invalid-feedback">{{ errors.service_date[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Next Service Date</label><span class="text-danger"> *</span>
                                     <input
-                                        type="date"
+                                        type="datetime-local"
                                         class="form-control"
                                         placeholder="Enter Next Service Date"
                                         :class="{'is-invalid': errors.next_service_date}"
@@ -154,8 +146,8 @@
                                             </td>
                                             <td>
                                                 <!-- oninput="validity.valid||(value='');" -->
-                                                <input type="number" placeholder="Enter Quantity" min="0" class="form-control" 
-                                                    :class="{'is-invalid':errors.quantity}" v-model="user_spare.quantity" 
+                                                <input type="number" placeholder="Enter Quantity" min="0" class="form-control"
+                                                    :class="{'is-invalid':errors.quantity}" v-model="user_spare.quantity"
                                                     :max="user_spare.max_quantity" @input="enforceMinMax($event, user_spare)"/>
                                                 <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
                                             </td>
@@ -291,13 +283,13 @@
             });
         },
         mounted() {
-            this.user_service.service_date = moment().format("yyyy-MM-DD");
-            this.user_service.next_service_date = moment().format("yyyy-MM-DD");
+            this.user_service.service_date = moment().format("yyyy-MM-DDTHH:MM");
+            this.user_service.next_service_date = moment().add(1, 'days').format("yyyy-MM-DDTHH:MM");
         },
         methods: {
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD");
+                return moment(date).format("yyyy-MM-DDTHH:MM");
             },
             submitForm() {
                 let vm = this;
