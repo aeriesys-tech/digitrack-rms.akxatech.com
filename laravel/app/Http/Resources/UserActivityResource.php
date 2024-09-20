@@ -4,11 +4,16 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\ActivityAttribute;
 
 class UserActivityResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $activity_attributes = ActivityAttribute::whereHas('ActivityAttributeTypes', function($que){
+            $que->where('reason_id', $this->reason_id);
+        })->get();
+
         return [
             'user_activity_id' => $this->user_activity_id,
             'activity_no' => $this->activity_no,
@@ -24,7 +29,10 @@ class UserActivityResource extends JsonResource
             'reason_id' => $this->reason_id,
             'reason' => new ReasonResource($this->Reason),
             'cost' => $this->cost,
-            'note' => $this->note
+            'note' => $this->note,
+            'activity_attributes' => ActivityValueResource::collection($activity_attributes->map(function ($activityAttribute) {
+                return ['resource' => $activityAttribute, 'user_activity_id' => $this->user_activity_id];
+            })),
         ];
     }
 }

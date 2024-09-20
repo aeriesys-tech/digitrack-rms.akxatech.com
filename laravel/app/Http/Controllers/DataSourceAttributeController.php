@@ -117,13 +117,28 @@ class DataSourceAttributeController extends Controller
         $data_source_attribute = DataSourceAttribute::where('data_source_attribute_id', $request->data_source_attribute_id)->first();
         $data_source_attribute->update($data);
 
-        DataSourceAttributeType::where('data_source_attribute_id', $data_source_attribute->data_source_attribute_id)->delete();
+        if(isset($request->deleted_data_source_attribute_types) > 0)
+        {
+            DataSourceAttributeType::whereIn('data_source_attribute_type_id', $request->deleted_data_source_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['data_source_types'] as $data_source_type_id) {
-            DataSourceAttributeType::create([
-                'data_source_attribute_id' => $data_source_attribute->data_source_attribute_id,
-                'data_source_type_id' => $data_source_type_id
-            ]);
+        foreach ($data['data_source_types'] as $data_source_type_id) 
+        {
+            $datasourceType = DataSourceAttributeType::where('data_source_attribute_id', $data_source_attribute->data_source_attribute_id)
+                ->where('data_source_type_id', $data_source_type_id)->first();
+
+            if($datasourceType)
+            {
+                $datasourceType->update([
+                    'data_source_type_id' => $data_source_type_id
+                ]);
+            }
+            else {
+                DataSourceAttributeType::create([
+                    'data_source_attribute_id' => $data_source_attribute->data_source_attribute_id,
+                    'data_source_type_id' => $data_source_type_id
+                ]);
+            }
         }
         return new DataSourceAttributeResource($data_source_attribute);
     }

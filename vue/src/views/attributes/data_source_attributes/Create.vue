@@ -40,7 +40,7 @@
                                         <div class="multiselect" v-if="data_source_type_status">
                                             <ul>
                                                 <li class="" v-for="(data_source_type, index) in data_source_types" :key="index">
-                                                    <input type="checkbox" :value="data_source_type.data_source_type_id" v-model="data_source_attribute.data_source_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="data_source_type.data_source_type_id" v-model="data_source_attribute.data_source_types" style="padding: 2px;" @click="updateActivityType($event, data_source_attribute)" />
                                                     <label style="margin-left: 5px;">{{ data_source_type.data_source_type_name }}</label>
                                                 </li>
                                             </ul>
@@ -135,9 +135,9 @@
                     data_source_type_id: '',
                     data_source_types:[],
                     list_parameter_id: '',
-                    // deleted_data_source_attribute_types:[],
+                    deleted_data_source_attribute_types:[],
                 },
-                // deleted_data_source_attribute_types:[],
+                deleted_data_source_attribute_types:[],
                 data_source_types: [],
                 data_source_attributes:[],
                 list_parameters:[],
@@ -169,7 +169,7 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.data_source_attribute = response.data.data;
-                                // vm.data_source_attribute.deleted_data_source_attribute_types = []
+                                vm.data_source_attribute.deleted_data_source_attribute_types = []
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -189,33 +189,31 @@
             }
         },
         methods: {
-            //   updateActivityType(event, activity_type) {
-            //     let vm = this
-            //     const isChecked = event.target.checked;
-            //     console.log("activity_type",activity_type)
-            //     let data_source_attribute_type = activity_type.data_source_types.filter(function (element) {
-            //         console.log("eell---", element)
-            //         return element.data_source_type_id == event.target.value
-            //     })
-            //     if (data_source_attribute_type.length) {
-            //         let data_source_attribute_type_id = data_source_attribute_type[0].data_source_attribute_type_id
-            //         if (isChecked) {
-            //             if (vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
-            //                 let deleted_data_source_attribute_types = this.data_source_attribute.deleted_data_source_attribute_types.filter(function (element) {
-            //                     return element != data_source_attribute_type_id
-            //                 })
-            //                 vm.data_source_attribute.deleted_data_source_attribute_types = deleted_data_source_attribute_types
-            //             }
-            //         } else {
-            //             if (!vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
-            //                 vm.data_source_attribute.deleted_data_source_attribute_types.push(data_source_attribute_type_id)
-            //             }
-            //         }
-            //     }
-            //      console.log('Checked IDs:', this.data_source_attribute.data_source_types);
-            //     console.log('Unchecked IDs:', vm.data_source_attribute.deleted_data_source_attribute_types);
-            // },
-            toggleDataSourceTypeStatus(){
+              updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let data_source_attribute_type = activity_type?.data_source_attribute_types.filter(function (element) {
+                    console.log("ele--",element)
+                    return element.data_source_type_id == event.target.value
+                })
+                if (data_source_attribute_type?.length) {
+                    let data_source_attribute_type_id = data_source_attribute_type[0].data_source_attribute_type_id
+                    if (isChecked) {
+                        if (vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
+                            let deleted_data_source_attribute_types = this.data_source_attribute.deleted_data_source_attribute_types.filter(function (element) {
+                                return element != data_source_attribute_type_id
+                            })
+                            vm.data_source_attribute.deleted_data_source_attribute_types = deleted_data_source_attribute_types
+                        }
+                    } else {
+                        if (!vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
+                            vm.data_source_attribute.deleted_data_source_attribute_types.push(data_source_attribute_type_id)
+                        }
+                    }
+                }
+            },
+
+            toggleDataSourceTypeStatus() {
                 this.data_source_type_status = !this.data_source_type_status
             },
                 submitForm() {
@@ -233,7 +231,6 @@
                     .then(response => {
                         loader.hide();
                         vm.data_source_types = response.data.data;
-                        console.log(vm.data_source_types)
                     })
                     .catch(function (error) {
                         loader.hide();

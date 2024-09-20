@@ -145,13 +145,26 @@ class DataSourceController extends Controller
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
         $data_source->update($data);
 
-        DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->delete();
+        if(isset($request->deleted_data_source_asset_types) > 0)
+        {
+            DataSourceAssetType::whereIn('data_source_asset_type_id', $request->deleted_data_source_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type_id) {
-            DataSourceAssetType::create([
-                'data_source_id' => $data_source->data_source_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+        foreach ($data['asset_types'] as $asset_type_id) 
+        {
+            $dataSourceType = DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->where('asset_type_id', $asset_type_id)->first();
+            if($dataSourceType)
+            {
+                $dataSourceType->update([
+                    'asset_type_id' => $asset_type_id,
+                ]);
+            }
+            else {
+                DataSourceAssetType::create([
+                    'data_source_id' => $data_source->data_source_id,
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
         }
 
         if($request->deleted_data_source_attribute_values > 0)

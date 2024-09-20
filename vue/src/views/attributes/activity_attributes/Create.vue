@@ -205,14 +205,12 @@
         },
         methods: {
             updateActivityType(event, activity_type) {
-                console.log(event.target.value)
-                console.log(activity_type)
                 let vm = this
                 const isChecked = event.target.checked;
-                let activity_attribute_type = activity_type.activity_attribute_types.filter(function (element) {
+                let activity_attribute_type = activity_type?.activity_attribute_types?.filter(function (element) {
                     return element.reason_id == event.target.value
                 })
-                if (activity_attribute_type.length) {
+                if (activity_attribute_type?.length) {
                     let activity_attribute_type_id = activity_attribute_type[0].activity_attribute_type_id
                     if (isChecked) {
                         if (vm.activity_attribute.deleted_activity_types.includes(activity_attribute_type_id)) {
@@ -249,9 +247,7 @@
                 vm.$store.dispatch('post', { uri: 'getReasons' })
                     .then(response => {
                         loader.hide();
-                        console.log("ress--",response.data.data)
                         vm.activity_types = response.data.data;
-                        console.log(vm.activity_types)
                     })
                     .catch(function (error) {
                         loader.hide();

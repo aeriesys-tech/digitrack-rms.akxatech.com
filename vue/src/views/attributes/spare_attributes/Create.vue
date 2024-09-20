@@ -192,10 +192,10 @@
                updateActivityType(event, activity_type) {
                 let vm = this
                 const isChecked = event.target.checked;
-                let spare_attribute_type = activity_type.spare_attribute_types.filter(function (element) {
+                let spare_attribute_type = activity_type?.spare_attribute_types?.filter(function (element) {
                     return element.spare_type_id == event.target.value
                 })
-                if (spare_attribute_type.length) {
+                if (spare_attribute_type?.length) {
                     let spare_attribute_type_id = spare_attribute_type[0].spare_attribute_type_id
                     if (isChecked) {
                         if (vm.spare_attribute.deleted_spare_attribute_types.includes(spare_attribute_type_id)) {
@@ -210,8 +210,6 @@
                         }
                     }
                 }
-                 console.log('Checked IDs:', this.spare_attribute.spare_types);
-                console.log('Unchecked IDs:', vm.spare_attribute.deleted_spare_attribute_types);
             },
             toggleSpareTypeStatus(){
                 this.spare_type_status = !this.spare_type_status
@@ -231,7 +229,6 @@
                     .then(response => {
                         loader.hide();
                         vm.spare_types = response.data.data;
-                        console.log(vm.spare_types)
                     })
                     .catch(function (error) {
                         loader.hide();

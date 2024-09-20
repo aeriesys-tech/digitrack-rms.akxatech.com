@@ -28,6 +28,14 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
+                                        <th @click="sort('job_no')">
+                                            Job No
+                                            <span>
+                                                <i v-if="meta.keyword == 'job_no' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'job_no' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
                                         <th @click="sort('asset_id')">
                                             Asset
                                             <span>
@@ -43,18 +51,37 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
+                                        <th @click="sort('job_date_time')">
+                                            Job DateTime
+                                            <span>
+                                                <i v-if="meta.keyword == 'job_date_time' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'job_date_time' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
+                                        <th @click="sort('script')">
+                                            Script
+                                            <span>
+                                                <i v-if="meta.keyword == 'script' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'script' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
                                         <th class="text-center"> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="campaign, key in campaigns" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
+                                        <td>{{ campaign?.job_no }}</td>
                                         <td>{{campaign?.asset?.asset_name}}</td>
                                         <td>{{ campaign.datasource }}</td>
+                                        <td>{{ campaign?.job_date_time }}</td>
+                                        <td>{{ campaign?.script }}</td>
                                         <td class="text-center align-middle"><a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a></td>
                                     </tr>
                                     <tr v-if="campaigns.length==0">
-                                        <td colspan="3" class="text-center">No records found</td>
+                                        <td colspan="7" class="text-center">No records found</td>
                                     </tr>
                                 </tbody>
                             </table>

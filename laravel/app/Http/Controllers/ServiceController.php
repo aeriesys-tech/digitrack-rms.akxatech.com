@@ -135,13 +135,26 @@ class ServiceController extends Controller
         $service = Service::where('service_id', $request->service_id)->first();
         $service->update($data);
 
-        ServiceAssetType::where('service_id', $service->service_id)->delete();
+        if(isset($request->deleted_service_asset_types) > 0)
+        {
+            ServiceAssetType::whereIn('service_asset_type_id', $request->deleted_service_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type) {
-            ServiceAssetType::create([
-                'service_id' => $service->service_id,
-                'asset_type_id' => $asset_type,
-            ]);
+        foreach ($data['asset_types'] as $asset_type) 
+        {
+            $serviceType = ServiceAssetType::where('service_id', $service->service_id)->where('asset_type_id', $asset_type)->first();
+            if($serviceType)
+            {
+                $serviceType->update([
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
+            else {
+                ServiceAssetType::create([
+                    'service_id' => $service->service_id,
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
         }
 
         if($request->deleted_service_attribute_values > 0)

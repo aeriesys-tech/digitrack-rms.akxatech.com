@@ -21,6 +21,7 @@ use App\Http\Resources\AssetAttributeValueResource;
 use App\Models\CampaignResult;
 use App\Models\AssetZone;
 use App\Http\Resources\AssetZoneResource;
+use App\Models\AssetDepartment;
 
 class AssetController extends Controller
 {
@@ -80,18 +81,29 @@ class AssetController extends Controller
             'longitude' => 'nullable|sometimes|numeric',
             'latitude' => 'nullable|sometimes|numeric',
             'functional_id' => 'nullable|exists:functionals,functional_id',
-            'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes|numeric',
             'zone_name' => 'nullable|array', 
             'zone_name.*' => 'nullable',
             'plant_id' => 'required|exists:plants,plant_id' ,
-            'area_id' => 'nullable|exists:areas,area_id'
+            'area_id' => 'nullable|exists:areas,area_id',
+            'geometry_type' => 'nullable'
         ]);
         // $data['plant_id'] = $userPlantId;
         // $data['area_id'] = $areaId;
         
         $asset = Asset::create($data);
+
+        if(isset($request->asset_departments))
+        {
+            foreach ($request->asset_departments as $department) 
+            {
+                AssetDepartment::create([
+                    'asset_id' => $asset->asset_id,
+                    'department_id' => $department,
+                ]);
+            }
+        }
 
         foreach ($request->asset_attributes as $attribute) 
         {
@@ -187,13 +199,13 @@ class AssetController extends Controller
             'longitude' => 'nullable|sometimes|numeric',
             'latitude' => 'nullable|sometimes|numeric',
             'functional_id' => 'nullable|exists:functionals,functional_id',
-            'department_id' => 'nullable|exists:departments,department_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes|numeric',
             'zone_name' => 'nullable|array',
             'deleted_asset_attribute_values' => 'nullable',
             'plant_id' => 'required|exists:plants,plant_id' ,
-            'area_id' => 'nullable|exists:areas,area_id'
+            'area_id' => 'nullable|exists:areas,area_id',
+            'geometry_type' => 'nullable'
         ]);
     
         // $data['plant_id'] = $userPlantId;
@@ -202,6 +214,30 @@ class AssetController extends Controller
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
 
+        if(isset($request->asset_departments))
+        {
+            if(isset($request->deleted_asset_departments) > 0)
+            {
+                AssetDepartment::whereIn('asset_department_id', $request->deleted_asset_departments)->forceDelete();
+            }
+
+            foreach ($request->asset_departments as $department) 
+            {
+                $assetdepartment = AssetDepartment::where('asset_id', $asset->asset_id)->where('department_id', $department)->first();
+                if($assetdepartment)
+                {
+                    $assetdepartment->update([
+                        'department_id' => $department,
+                    ]);
+                }
+                else {
+                    AssetDepartment::create([
+                        'asset_id' => $asset->asset_id,
+                        'department_id' => $department,
+                    ]);
+                }
+            }
+        }
         if($request->deleted_asset_attribute_values > 0)
         {
             AssetAttributeValue::whereIn('asset_attribute_value_id', $request->deleted_asset_attribute_values)->forceDelete();
@@ -226,6 +262,11 @@ class AssetController extends Controller
     
         $existingZones = AssetZone::where('asset_id', $asset->asset_id)->get();
         $zoneNames = $request->zone_name;
+
+        if(isset($request->deleted_asset_zones) > 0)
+        {
+            AssetZone::whereIn('asset_zone_id', $request->deleted_asset_zones)->forceDelete();
+        }
     
         if (count($zoneNames) !== $data['no_of_zones']) {
             return response()->json(["error" => "The number of zone names must match the number of zones."], 400);

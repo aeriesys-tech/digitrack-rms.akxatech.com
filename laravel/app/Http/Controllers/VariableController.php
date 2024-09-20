@@ -136,13 +136,26 @@ class VariableController extends Controller
         $variable = Variable::where('variable_id', $request->variable_id)->first();
         $variable->update($data);
 
-        VariableAssetType::where('variable_id', $variable->variable_id)->delete();
+        if(isset($request->deleted_variable_asset_types) > 0)
+        {
+            VariableAssetType::whereIn('variable_asset_type_id', $request->deleted_variable_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type) {
-            VariableAssetType::create([
-                'variable_id' => $variable->variable_id,
-                'asset_type_id' => $asset_type,
-            ]);
+        foreach ($data['asset_types'] as $asset_type) 
+        {
+            $variableType = VariableAssetType::where('variable_id', $variable->variable_id)->where('asset_type_id', $asset_type)->first();
+            if($variableType)
+            {
+                $variableType->update([
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
+            else {
+                VariableAssetType::create([
+                    'variable_id' => $variable->variable_id,
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
         }
 
         if($request->deleted_variable_attribute_values > 0)

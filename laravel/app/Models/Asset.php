@@ -20,9 +20,9 @@ class Asset extends Model
         'longitude',
         'latitude',
         'functional_id',
-        'department_id',
         'section_id',
-        'radius'
+        'radius',
+        'geometry_type'
     ];
 
     protected $primaryKey = 'asset_id';
@@ -42,9 +42,9 @@ class Asset extends Model
         return $this->hasMany(AssetParameter::class, 'asset_type_id', 'asset_type_id');
     }
 
-    public function Department()
+    public function AssetDepartment()
     {
-        return $this->belongsTo(Department::class, 'department_id');
+        return $this->hasMany(AssetDepartment::class, 'asset_id', 'asset_id');
     }
 
     public function Section()

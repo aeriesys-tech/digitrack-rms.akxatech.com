@@ -137,7 +137,10 @@ import BreakDownRegisters from "@/views/registers/break_down_register/Index.vue"
 
 
 import Test from "@/views/Test.vue";
+
+//Reviews
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
+import AssetDetails from "@/views/Reviews/AssetDetails.vue"
 
 const routes = [
   {
@@ -780,7 +783,7 @@ const routes = [
   {
     path: "/asset_details",
     name: "AssetDetails",
-    component: Test,
+    component: AssetDetails,
   },
 
   // spare campaign

@@ -16,7 +16,8 @@ class AssetSpare extends Model
         'asset_id',
         'plant_id',
         'asset_zone_id',
-        'spare_type_id'
+        'spare_type_id',
+        'quantity'
     ];
 
     protected $primaryKey = 'asset_spare_id';

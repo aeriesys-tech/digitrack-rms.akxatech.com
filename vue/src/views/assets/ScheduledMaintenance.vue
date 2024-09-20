@@ -68,7 +68,8 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tr>
+                                <tbody>
+                                    <tr>
                                         <td class="text-center">1</td>
                                         <td class="text-nowrap">23-Mar-2023</td>
                                         <td>Replace oil</td>
@@ -104,6 +105,7 @@
                                                     class="ri-delete-bin-line icon_hgt"></i></a>
                                         </td>
                                     </tr>
+                                </tbody>
                             </table>
                         </div>
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->foreignId('asset_id');
             $table->string('status');
-            $table->foreignId('reason_id')->nullable();
+            $table->foreignId('reason_id');
             $table->foreignId('equipment_id')->nullable();
             $table->string('cost')->nullable();
             $table->Text('note')->nullable();

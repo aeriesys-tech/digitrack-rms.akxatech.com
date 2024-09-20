@@ -134,13 +134,26 @@ class SpareController extends Controller
         $spare = Spare::where('spare_id', $request->spare_id)->first();
         $spare->update($data);
 
-        SpareAssetType::where('spare_id', $spare->spare_id)->delete();
+        if(isset($request->deleted_spare_asset_types) > 0)
+        {
+            SpareAssetType::whereIn('spare_asset_type_id', $request->deleted_spare_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type) {
-            SpareAssetType::create([
-                'spare_id' => $spare->spare_id,
-                'asset_type_id' => $asset_type,
-            ]);
+        foreach ($data['asset_types'] as $asset_type) 
+        {
+            $spareType = SpareAssetType::where('spare_id', $spare->spare_id)->where('asset_type_id', $asset_type)->first();
+            if($spareType)
+            {
+                $spareType->update([
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
+            else {
+                SpareAssetType::create([
+                    'spare_id' => $spare->spare_id,
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
         }
 
         if($request->deleted_spare_attribute_values > 0)

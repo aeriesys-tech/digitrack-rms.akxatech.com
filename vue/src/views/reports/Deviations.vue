@@ -43,7 +43,8 @@
                             
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                    <tr style="background-color:#9b9b9b;color:white;">
+                                    <thead>
+                                        <tr style="background-color:#9b9b9b;color:white;">
                                             <th class="text-center">#</th>
                                             <th>
                                                 Department
@@ -129,6 +130,7 @@
                                             <!-- <th class="text-center" v-can="'users.delete'">Status</th>
                                             <th class="text-center" v-can="'users.update'">Actions</th> -->
                                         </tr>
+                                    </thead>
                                     <tbody>
                                         <tr v-for="deviation, key in user_assets" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>

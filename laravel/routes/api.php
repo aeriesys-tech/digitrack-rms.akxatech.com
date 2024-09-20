@@ -248,6 +248,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateAssetDataSource',[AssetDataSourceController::class, 'updateAssetDataSource']);
     Route::post('deleteAssetDataSource',[AssetDataSourceController::class, 'deleteAssetDataSource']);
     Route::post('getAssetTypeDataSources',[AssetDataSourceController::class, 'getAssetTypeDataSources']);
+    Route::post('assetDataSourceScripts',[AssetDataSourceController::class, 'assetDataSourceScripts']);
 
     Route::post('paginateAssetAccessories',[AssetAccessoryController::class, 'paginateAssetAccessories']);
     Route::post('getAssetAccessories',[AssetAccessoryController::class, 'getAssetAccessories']);
@@ -268,6 +269,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateUserActivity',[UserActivityController::class, 'updateUserActivity']);
     Route::post('deleteUserActivity',[UserActivityController::class, 'deleteUserActivity']);
     Route::post('getUserActivity',[UserActivityController::class, 'getUserActivity']);
+    Route::post('getActivitiesDropdown',[UserActivityController::class, 'getActivitiesDropdown']);
 
     //Dashboard
     Route::post('getDashboardContent',[DashboardController::class, 'getDashboardContent']);

@@ -15,7 +15,8 @@ class AssetDataSource extends Model
         'plant_id',
         'area_id',
         'asset_zone_id',
-        'data_source_type_id'
+        'data_source_type_id',
+        'script'
     ];
 
     protected $primaryKey = 'asset_data_source_id';

@@ -14,6 +14,7 @@ use App\Http\Resources\SectionResource;
 use App\Http\Resources\MakeResource;
 use App\Http\Resources\SpeedResource;
 use App\Models\AssetAttribute;
+use App\Models\AssetDepartment;
 
 class AssetResource extends JsonResource
 {
@@ -22,6 +23,8 @@ class AssetResource extends JsonResource
         $asset_attributes = AssetAttribute::whereHas('AssetAttributeTypes', function($que){
             $que->where('asset_type_id', $this->asset_type_id);
         })->get();
+        
+        $asset_department_id = AssetDepartment::where('asset_id', $this->asset_id)->pluck('department_id');
         return [
             'asset_id' => $this->asset_id,
             'area_id' => $this->area_id,
@@ -43,12 +46,13 @@ class AssetResource extends JsonResource
             'latitude' => $this->latitude,
             'functional_id' => $this->functional_id,
             'functional' => new FunctionalResource($this->Functional),
-            'department_id' => $this->department_id,
-            'department' => new DepartmentResource($this->Department),
             'section_id' => $this->section_id,
             'section' => new SectionResource($this->Section),
             'radius' => $this->radius,
-            'zone_name' => AssetZoneResource::collection($this->Zones)
+            'zone_name' => AssetZoneResource::collection($this->Zones),
+            'asset_department_ids' => AssetDepartmentResource::collection($this->AssetDepartment),
+            'asset_departments' => $asset_department_id,
+            'geometry_type' => $this->geometry_type
         ];
     }
 }

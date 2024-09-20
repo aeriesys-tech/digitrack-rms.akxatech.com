@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $authPlantId = Auth::User()->plant_id;
 
         $user = User::where('plant_id', $authPlantId)->count();
-        $asset = Asset::where('plant_id', $authPlantId)->count();
+        $asset = Asset::count();
         $equipment = Equipment::where('plant_id', $authPlantId)->count();
         $service_type = ServiceType::count();
         $deviations = UserAssetCheck::where('field_type', 'Number')->whereRaw('value < lcl OR value > ucl')
