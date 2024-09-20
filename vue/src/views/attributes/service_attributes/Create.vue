@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Length" class="form-control" v-model="service_attribute.field_length" :class="{'is-invalid':errors?.field_length}" />
+                                    <input type="text" placeholder="Maximum Characters" class="form-control" v-model="service_attribute.field_length" :class="{'is-invalid':errors?.field_length}" />
                                     <span v-if="errors?.field_length" class="invalid-feedback">{{ errors?.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">

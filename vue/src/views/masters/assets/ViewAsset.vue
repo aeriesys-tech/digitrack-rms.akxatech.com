@@ -135,7 +135,7 @@
                                         <input
                                             type="number"
                                             class="form-control"
-                                            placeholder='Enter Quantity'
+                                            placeholder='Enter Max Quantity'
                                             :class="{ 'is-invalid': errors.quantity }"
                                             v-model="spare.quantity"
                                         />

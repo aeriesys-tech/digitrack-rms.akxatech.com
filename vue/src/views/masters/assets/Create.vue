@@ -171,7 +171,15 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Geometry Type</label>
-                                            <input type="text" placeholder="Enter Geometry Type" class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type" />
+                                            <!-- <input type="text" placeholder="Enter Geometry Type" class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type" /> -->
+                                              <select class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type">
+                                                <option value="">Select Geometry Type</option>
+                                                <option value="Cylindrical">Cylindrical </option>
+                                                <option value="Cubical">Cubical</option>
+                                                <option value="Conical">Conical</option>
+                                                <option value="Trapezoidal">Trapezoidal</option>
+                                                <option value="Others">Others</option>
+                                            </select>
                                             <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
                                         </div>
                                     </div>
@@ -295,7 +303,7 @@
                     radius: "",
                     zone_name: [],
                     deleted_asset_attribute_values: [],
-                    area_name: "",                    
+                    area_name: "",
                     deleted_asset_departments:[],
                     deleted_asset_zones:[],
                     geometry_type:'',
@@ -350,7 +358,7 @@
                             vm.show_assets = response.data.data?.asset_attributes;
                             vm.asset.area_id = vm.asset.area.area_id
                             vm.asset.area_name=vm.asset.area.area_name
-                            // vm.asset_departments = 
+                            // vm.asset_departments =
                             vm.asset.deleted_asset_departments = [];
                             vm.asset.deleted_asset_zones = []
                             vm.asset.asset_attributes.map(function (element) {
@@ -443,7 +451,7 @@
 
                 let value = event?.target?.value?.replace(/[^0-9]/g, '');
                 // console.log('value:----',value ? Number(value) : null)
-                
+
                 if (value >= 1 ) {
                     let popped_data = asset.no_of_zones - value
                     for(let i=0; i<popped_data; i++){

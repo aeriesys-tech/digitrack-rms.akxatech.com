@@ -23,7 +23,7 @@
                             <h6 class="card-title">Health Check</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
+                            <div class="row g-2 mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <!-- <select class="form-control" :class="{ 'is-invalid': errors.asset_id }" v-model="campaign.asset_id">
@@ -54,9 +54,10 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Job DateTime</label><span class="text-danger"> *</span>
-                                    <input type="datetime-local" class="form-control" id="job_date_time" name="job_date_time" v-model="campaign.job_date_time" :class="{ 'is-invalid': errors.job_date_time }" @change="convertDateFormat(campaign.job_date_time)"/>
+                                    <!-- <input type="datetime-local" class="form-control" id="job_date_time" name="job_date_time" v-model="campaign.job_date_time" :class="{ 'is-invalid': errors.job_date_time }" @change="convertDateFormat(campaign.job_date_time)"/> -->
+                                    <input type="datetime-local" class="form-control" id="job_date_time" name="job_date_time" v-model="campaign.job_date_time" :class="{ 'is-invalid': errors.job_date_time }" @change="getCurrentDateTime(campaign.job_date_time)"/>
                                     <span v-if="errors.job_date_time" class="invalid-feedback">{{ errors.job_date_time[0] }}</span>
-                                </div>                                
+                                </div>
                                 <div class="col-md-6">
                                     <label class="form-label">File</label><span class="text-danger"> *</span>
                                     <input type="file" class="form-control" id="file" ref="file" name="file" :class="{ 'is-invalid': errors.file }" />
@@ -147,6 +148,7 @@
         },
 
         mounted() {
+            this.campaign.job_date_time = moment().format("yyyy-MM-DD HH:MM");
             this.getAssets();
     },
           computed: {
@@ -200,6 +202,9 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            },
+             getCurrentDateTime() {
+                return moment(date).format('YYYY-MM-DDTHH:mm'); // Format the current date and time
             },
             convertDateFormat(date) {
                 let vm = this;
