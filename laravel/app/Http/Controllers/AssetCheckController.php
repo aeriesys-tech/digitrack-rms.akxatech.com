@@ -55,21 +55,21 @@ class AssetCheckController extends Controller
         $asset_check = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
 
         //DropDown AssetCheck
-        if(isset($request->department_id))
-        {
-            $asset = Asset::where('department_id', $request->department_id)->where('asset_type_id', $request->asset_type_id)->first();
-            if ($asset) 
-            {
-                $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
-                    $que->where('asset_type_id', $request->asset_type_id);
-                })->where('department_id', $request->department_id)->get();
-            } 
-        }
-        else {
+        // if(isset($request->department_id))
+        // {
+        //     $asset = Asset::where('department_id', $request->department_id)->where('asset_type_id', $request->asset_type_id)->first();
+        //     if ($asset) 
+        //     {
+        //         $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
+        //             $que->where('asset_type_id', $request->asset_type_id);
+        //         })->where('department_id', $request->department_id)->get();
+        //     } 
+        // }
+        // else {
             $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
                 $que->where('asset_type_id', $request->asset_type_id);
             })->get();
-        }
+        // }
 
         return response()->json([
             'paginate_checks' => AssetCheckResource::collection($asset_check),

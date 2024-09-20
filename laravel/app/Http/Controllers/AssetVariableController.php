@@ -231,22 +231,52 @@ class AssetVariableController extends Controller
     }
 
 
+    // public function getAssetRegisterVariables(Request $request)
+    // {
+    //     $request->validate([
+    //         'asset_id' => 'required|exists:assets,asset_id',
+    //         // 'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id'
+    //     ]);
+
+    //     $asset = Asset::where('asset_id', $request->asset_id)->with('Zones')->first();
+
+    //     $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
+    //     $query = AssetVariable::where('asset_id', $request->asset_id)->whereIn('asset_zone_id', $asset_zone_ids);
+
+    //     $asset_variable_ids =  $query->pluck('variable_id')->toArray();
+    //     $asset_variable = Variable::whereIn('variable_id', $asset_variable_ids)->get();
+
+    //     return $asset_variable;
+    // }
+
     public function getAssetRegisterVariables(Request $request)
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
-
-        $query = AssetVariable::where('asset_id', $request->asset_id);
-        if (isset($request->asset_zone_id)) 
-        {
-            $query->where('asset_zone_id', $request->asset_zone_id);
+    
+        // Fetch the asset and its associated zones
+        $asset = Asset::where('asset_id', $request->asset_id)->with('Zones')->first();
+        
+        if (!$asset || $asset->Zones->isEmpty()) {
+            return response()->json(['message' => 'No asset zones found for this asset.'], 200);
         }
+    
+        $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
+       
+        $variable_ids = collect();
+        foreach ($asset_zone_ids as $zone_id) 
+        {            
+            $variable_collection = collect();
+            $asset_variables = AssetVariable::where('asset_zone_id', $zone_id)->pluck('variable_id')->toArray();
 
-        $asset_variable_ids =  $query->pluck('variable_id')->toArray();
-        $asset_variable = Variable::whereIn('variable_id', $asset_variable_ids)->get();
-
-        return $asset_variable;
-    }
+            foreach($asset_variables as $variable_id)
+            {
+                $variables = Variable::where('variable_id', $variable_id)->get();
+                $variable_collection = $variable_collection->merge($variables);
+            }
+            $variable_ids = $variable_ids->push($variable_collection);
+        }
+        return response()->json($variable_ids);
+    }    
 }

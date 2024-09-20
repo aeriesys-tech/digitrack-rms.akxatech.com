@@ -16,7 +16,9 @@ class UserVariable extends Model
         'job_no',
         'job_date',
         'note',
-        'asset_zone_id'
+        'asset_zone_id',
+        'variable_id',
+        'value'
     ];
 
     protected $primaryKey = 'user_variable_id';
@@ -36,8 +38,8 @@ class UserVariable extends Model
         return $this->belongsTo(AssetZone::class, 'asset_zone_id');
     }
 
-    public function UserAssetVariable()
+    public function AssetVariable()
     {
-        return $this->hasMany(UserAssetVariable::class, 'user_variable_id','user_variable_id');
+        return $this->hasMany(AssetVariable::class, 'variable_id','variable_id');
     }
 }

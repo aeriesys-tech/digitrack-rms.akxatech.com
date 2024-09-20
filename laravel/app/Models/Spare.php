@@ -28,4 +28,9 @@ class Spare extends Model
     {
         return $this->hasMany(SpareAssetType::class, 'spare_id', 'spare_id');
     }
+
+    public function AssetSpare()
+    {
+        return $this->hasMany(AssetSpare::class, 'spare_id', 'spare_id');
+    }
 }

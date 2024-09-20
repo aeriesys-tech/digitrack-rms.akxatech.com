@@ -10,6 +10,7 @@ use App\Http\Resources\UserServicePendingResource;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\AssetZone;
+use App\Models\AssetSpare;
 
 class UserServiceController extends Controller
 {
@@ -103,14 +104,32 @@ class UserServiceController extends Controller
 
         if ($request->has('user_spares')) 
         {
-            foreach($request->user_spares as $spare) {
+            foreach($request->user_spares as $spare) 
+            {
+                //quantity from the AssetSpare
+                $assetSpare = AssetSpare::where('asset_id', $request->asset_id)->where('spare_id', $spare['spare_id'])->first();
+
+                    if (!$assetSpare) {
+                        return response()->json([
+                        'errors' => "No AssetSpare found for asset ID {$request->asset_id} and spare ID {$spare['spare_id']}."
+                        ], 404);
+                    }
+
+                    // Check if the user-entered quantity exceeds the available quantity
+                    if ($spare['quantity'] > $assetSpare->quantity) {
+                        return response()->json([
+                        'errors' => "The quantity for spare ID {$spare['spare_id']} exceeds the available stock of {$assetSpare->quantity}."
+                        ], 422);
+                    }
+
                 UserSpare::create([
                     'user_service_id' => $service->user_service_id,
                     'service_id' => $spare['service_id'],
                     'service_cost' => $spare['service_cost'],
                     'asset_zone_id' => $spare['asset_zone_id'],
                     'spare_id' => $spare['spare_id'],
-                    'spare_cost' => $spare['spare_cost']
+                    'spare_cost' => $spare['spare_cost'],
+                    'quantity' => $spare['quantity']
                 ]);
             }
         }
@@ -166,6 +185,23 @@ class UserServiceController extends Controller
 
         foreach ($request->user_spares as $spare) 
         {
+            // Fetch available quantity from AssetSpares for the given asset_id and spare_id
+            $assetSpare = AssetSpare::where('asset_id', $request->asset_id)->where('spare_id', $spare['spare_id'])->first();
+
+            if (!$assetSpare) {
+                return response()->json([
+                'error' => "No AssetSpare found for asset ID {$request->asset_id} and spare ID {$spare['spare_id']}."
+                ], 404);
+            }
+
+            // Check if the user-entered quantity exceeds the available quantity
+            if ($spare['quantity'] > $assetSpare->quantity) {
+                return response()->json([
+                'error' => "The quantity for spare ID {$spare['spare_id']} exceeds the available stock of {$assetSpare->quantity}."
+                ], 422);
+            }
+
+            // Update or Create
             $userSpare = UserSpare::where('user_spare_id', $spare['user_spare_id'])->first();
             if ($userSpare) {
                 $userSpare->update([
@@ -175,6 +211,7 @@ class UserServiceController extends Controller
                     'service_id' => $spare['service_id'],
                     'service_cost' => $spare['service_cost'],
                     'asset_zone_id' => $spare['asset_zone_id'],
+                    'quantity' => $spare['quantity'],
                 ]);
             }
             else {
@@ -185,11 +222,12 @@ class UserServiceController extends Controller
                     'service_id' => $spare['service_id'],
                     'service_cost' => $spare['service_cost'],
                     'asset_zone_id' => $spare['asset_zone_id'],
+                    'quantity' => $spare['quantity'],
                 ]);
             }
         }
 
-        UserSpare::whereIn('user_spare_id',$request->deleted_user_spares)->delete();
+        UserSpare::whereIn('user_spare_id',$request->deleted_user_spares)->forceDelete();
         return response()->json(['message' => 'Service Register updated successfully'], 201);
     }
 

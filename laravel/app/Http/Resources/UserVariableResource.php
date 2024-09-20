@@ -9,6 +9,7 @@ class UserVariableResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $variable = $this->AssetVariable->where('asset_zone_id', $this->asset_zone_id)->first();
         return [
             'user_variable_id' => $this->user_variable_id,
             'plant_id' => $this->plant_id,
@@ -21,7 +22,8 @@ class UserVariableResource extends JsonResource
             'note' => $this->note,
             'asset_zone_id' => $this->asset_zone_id,
             'asset_zone' => new AssetZoneResource($this->AssetZone),
-            'asset_variables' => UserAssetVariableResource::collection($this->UserAssetVariable),
+            'asset_variables' => $variable ? new AssetVariableResource($variable) : null,
+            'value' => $this->value
         ];
     }
 }
