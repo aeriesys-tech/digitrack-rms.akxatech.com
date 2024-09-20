@@ -1658,7 +1658,7 @@
                         vm.spare.spare_asset_zones= [];
                         vm.spare.quantity = '';
                         vm.asset_zone_status_spares = false;
-                         vm.errors = [];
+                        vm.errors = [];
                         vm.getAssetSpares();
                     })
                     .catch(function (error) {
@@ -1682,6 +1682,7 @@
                         vm.spare.spare_asset_zones = [];
                         vm.spare.quantity = '';
                         vm.asset_zone_status_spares = false;
+                        vm.errors = [];
                         vm.getAssetSpares();
                     })
                     .catch(function (error) {
