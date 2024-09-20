@@ -35,16 +35,7 @@
                                         <input type="text" placeholder="Enter Service Number" class="form-control" :class="{'is-invalid':errors.service_no}" v-model="user_service.service_no" ref="service_no"/>
                                         <span v-if="errors.service_no" class="invalid-feedback">{{ errors.service_no[0] }}</span>
                                     </div> -->
-                                <div class="col-md-4">
-                                    <label class="form-label">Job Date</label><span class="text-danger"> *</span>
-                                    <input type="date" class="form-control" placeholder="Enter Job Date"
-                                        :class="{ 'is-invalid': errors.job_date }"
-                                        :value="convertDateFormat(user_variable.job_date)"
-                                        v-model="user_variable.job_date" ref="job_date" />
-                                    <span v-if="errors.job_date" class="invalid-feedback">{{ errors.job_date[0]
-                                        }}</span>
-                                </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <search :class="{ 'is-invalid': errors.asset_id }"
                                         :customClass="{ 'is-invalid': errors.asset_id }"
@@ -55,7 +46,17 @@
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0]
                                         }}</span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Job Date Time</label><span class="text-danger"> *</span>
+                                    <input type="datetime-local" class="form-control" placeholder="Enter Job Date"
+                                        :class="{ 'is-invalid': errors.job_date }"
+                                        :value="convertDateFormat(user_variable.job_date)"
+                                        v-model="user_variable.job_date" ref="job_date" />
+                                    <span v-if="errors.job_date" class="invalid-feedback">{{ errors.job_date[0]
+                                        }}</span>
+                                </div>
+
+                                <!-- <div class="col-md-4">
                                     <label class="form-label">Asset Zone</label>
                                     <search :class="{ 'is-invalid': errors.asset_zone_id }"
                                         :customClass="{ 'is-invalid': errors.asset_zone_id }"
@@ -65,7 +66,7 @@
                                     </search>
                                     <span v-if="errors.asset_zone_id" class="invalid-feedback">{{
                                         errors.asset_zone_id[0] }}</span>
-                                </div>
+                                </div> -->
                                 <div class="col-md-12">
                                     <label class="form-label">Note</label>
                                     <textarea type="text" placeholder="Enter Note" class="form-control"
@@ -74,41 +75,27 @@
                                 </div>
                             </div>
 
-                            <div class="row g-2">
-                                <div class="">
-                                    <table
+                            <!-- try start -->
+                              <div class="row g-2 mb-3">
+
+                                <div class="col-md-4" v-for="asset_zone,key in asset_zones" :key="key">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">{{ asset_zone.zone_name }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table
                                         class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Variable <span class="text-danger"> *</span></th>
-                                                <th>Date Time <span class="text-danger"> *</span></th>
-                                                <th>Value <span class="text-danger"> *</span></th>
-                                                <th class="text-center">Actions</th>
+                                                <th>Variable</th>
+                                                <th>Value</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <search :class="{ 'is-invalid': errors.variable_id }"
-                                                        :customClass="{ 'is-invalid': errors.variable_id }"
-                                                        aria-describedby="basic-addon2" aria-label="Select Variable"
-                                                        :initialize="user_variable_data.variable_id" id="variable_id"
-                                                        label="variable_name" label2="variable_code"
-                                                        placeholder="Select Variable" :data="variables"
-                                                        @input="variable1 => user_variable_data.variable_id = variable1"
-                                                        @selectsearch="getValue(user_variable_data.variable_id)">
-                                                    </search>
-                                                    <span v-if="errors.variable_id" class="invalid-feedback">{{
-                                                        errors.variable_id[0] }}</span>
-                                                </td>
-                                                <td>
-                                                    <input type="datetime-local" class="form-control"
-                                                        placeholder="Enter Date Time"
-                                                        :class="{ 'is-invalid': errors.date_time }"
-                                                        v-model="user_variable_data.date_time" />
-                                                    <span v-if="errors.date_time" class="invalid-feedback">{{
-                                                        errors.date_time[0] }}</span>
-                                                </td>
+                                            <tr v-for="user_variable_data, key in user_variable.asset_variables" :key="key">
+                                               <td>{{ user_variable_data.variable_name}}</td>
+                                               <!-- <td>{{ user_variable.variable_name }}</td> -->
                                                 <td>
                                                     <input type="number" class="form-control" placeholder="Enter Value"
                                                         min="0" :class="{ 'is-invalid': errors.value }"
@@ -116,42 +103,16 @@
                                                     <span v-if="errors.value" class="invalid-feedback">{{
                                                         errors.value[0] }}</span>
                                                 </td>
-                                                <td class="text-center">
-                                                    <button v-if="user_variable_data.status"
-                                                        class="btn btn-outline-success mx-1"
-                                                        @click.prevent="addRow()"><i
-                                                            class="ri-add-line fs-18 lh-1"></i></button>
-                                                    <button v-else class="btn btn-outline-success mx-1"
-                                                        @click.prevent="updateRow(user_variable_data)"><i
-                                                            class="ri-save-line fs-18 lh-1"></i></button>
-                                                    <button class="btn btn-outline-danger mx-1"
-                                                        @click.prevent="discardNewRow()"><i
-                                                            class="ri-close-line fs-18 lh-1"></i></button>
-                                                </td>
-                                            </tr>
-                                             <tr>
-                                                <td colspan="6" class="text-danger text-center">{{ errors.asset_variables }}</td>
-                                            </tr>
-                                        </tbody>
-                                        <tbody>
-                                            <tr v-for="user_variable_data1, index in user_variable.asset_variables"
-                                                :key="index">
-                                                <td>{{ user_variable_data1?.variable?.variable_name }}</td>
-                                                <td>{{ user_variable_data1?.date_time }}</td>
-                                                <td>{{ user_variable_data1?.value }}</td>
-                                                <td class="text-center">
-                                                    <button type="button" class="btn btn-outline-primary mx-2"
-                                                        @click.prevent="editUserVariableData(user_variable_data1, index)"><i
-                                                            class="ri-pencil-line fs-18 lh-1"></i></button>
-                                                    <button type="button" class="btn btn-outline-danger"
-                                                        @click.prevent="deleteUserVariableData(user_variable_data1, index)"><i
-                                                            class="ri-delete-bin-line fs-18 lh-1"></i></button>
-                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                              </div>
+
+
+                            <!-- try ends -->
                         </div>
                         <div class="card-footer text-end">
                             <router-link type="button" to="/process_registers" class="btn btn-danger me-2"><i
@@ -185,7 +146,6 @@ export default {
                 note: "",
                 status: true,
                 asset_variables: [],
-                deleted_data_variables: [],
             },
             user_variable_data: {
                 user_variable_data_id: "",
@@ -209,12 +169,13 @@ export default {
     watch: {
         'user_variable.asset_id': function () {
             this.getAssetZones();
+            this.getVariables();
         },
 
-        'user_variable.asset_zone_id': function () {
-            this.getServices();
-            this.getVariables();
-        }
+        // 'user_variable.asset_zone_id': function () {
+        //     this.getServices();
+        //     this.getVariables();
+        // }
     },
     beforeRouteEnter(to, from, next) {
         next((vm) => {
@@ -280,22 +241,7 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
-        getServices() {
-            let vm = this;
-            let loader = vm.$loading.show();
-            vm.$store
-                .dispatch("post", { uri: "getAssetsServices", data: vm.user_variable })
-                .then((response) => {
-                    loader.hide();
-                    vm.services = response.data;
 
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
-                });
-        },
         getVariables() {
             let vm = this;
             let loader = vm.$loading.show();
@@ -303,7 +249,8 @@ export default {
                 .dispatch("post", { uri: "getAssetRegisterVariables", data: vm.user_variable })
                 .then((response) => {
                     loader.hide();
-                    vm.variables = response.data
+                    // vm.variables = response.data
+                     vm.user_variable.asset_variables=response.data
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -319,9 +266,11 @@ export default {
                 .then((response) => {
                     loader.hide();
                     vm.asset_zones = response.data.data;
-                    if (!vm.asset_zones.length) {
-                        vm.getVariables()
-                    }
+
+
+                    // if (!vm.asset_zones.length) {
+                    //     vm.getVariables()
+                    // }
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -332,16 +281,6 @@ export default {
         addUserVariable() {
             let vm = this;
             let loader = vm.$loading.show();
-             // Check if user_spares is empty
-                if (vm.user_variable.asset_variables.length === 0) {
-                    loader.hide();
-                    // Set an error indicating that at least one entry is required
-                    vm.errors.asset_variables = "At least one entry is required";
-
-                    // Display the error message to the user
-                    vm.$store.dispatch("error", "At least one entry is required.");
-                    return; // Prevent further execution
-                }
             vm.$store
                 .dispatch("post", { uri: "addUserVariable", data: vm.user_variable })
                 .then((response) => {
@@ -360,16 +299,6 @@ export default {
             let vm = this;
             vm.user_variable.deleted_user_spares = vm.deleted_spares;
             let loader = vm.$loading.show();
-             // Check if user_spares is empty
-                if (vm.user_variable.asset_variables.length === 0) {
-                    loader.hide();
-                    // Set an error indicating that at least one entry is required
-                    vm.errors.asset_variables = "At least one entry is required";
-
-                    // Display the error message to the user
-                    vm.$store.dispatch("error", "At least one entry is required.");
-                    return; // Prevent further execution
-                }
             vm.$store
                 .dispatch("post", { uri: "updateUserVariable", data: vm.user_variable })
                 .then((response) => {
@@ -383,127 +312,7 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
-        addRow() {
-            let vm = this;
-            vm.errors = [];
-            if (vm.user_variable_data.variable_id == "" || vm.user_variable_data.date_time == "" || vm.user_variable_data.value == "") {
-                if (vm.user_variable_data.variable_id == "") {
-                    vm.errors.spare_id = ["Variable field cannot be empty"];
-                }
-                if (vm.user_variable_data.date_time == "") {
-                    vm.errors.spare_cost = ["Date time cannot be empty"];
-                }
-                if (vm.user_variable_data.value == "") {
-                    vm.errors.value = ["Value cannot be empty"];
-                }
-            } else {
-                vm.user_variable.asset_variables.push({
-                    user_variable_data_id: "",
-                    variable_id: vm.user_variable_data.variable_id,
-                    variable: {
-                        variable_name: vm.user_variable_data.variable.variable_name,
-                    },
-                    date_time: vm.user_variable_data.date_time,
-                    value: vm.user_variable_data.value,
-                });
-                vm.discardNewRow();
-            }
-        },
-        discardNewRow() {
-            let vm = this;
-            vm.user_variable_data.user_variable_data_id = "";
-            vm.user_variable_data.variable_id = "";
-            vm.user_variable_data.date_time = "";
-            vm.user_variable_data.value = "";
-            vm.user_variable_data.variable.variable_name = "";
-            vm.user_variable_data.status = true;
-            vm.errors = [];
-        },
-        editUserVariableData(user_variable_data1, key) {
-            let vm = this;
-            vm.user_variable_data.user_variable_data_id = user_variable_data1.user_variable_data_id;
-            vm.user_variable_data.variable_id = user_variable_data1.variable_id;
-            vm.user_variable_data.variable.variable_name = user_variable_data1.variable.variable_name;
-            vm.user_variable_data.date_time = user_variable_data1.date_time;
-            vm.user_variable_data.value = user_variable_data1.value;
-            vm.user_variable_data.status = false;
-            vm.user_variable_data.key = key;
-            vm.user_variable_data.user_asset_variable_id = user_variable_data1.user_asset_variable_id;
-            vm.user_variable_data.user_variable_id=user_variable_data1.user_variable_id
-            vm.errors = [];
-        },
-        updateRow(user_variable_data) {
-            let vm = this;
-            vm.errors = [];
-            if (vm.user_variable_data.variable_id == "" || vm.user_variable_data.date_time == "" || vm.user_variable_data.value == "") {
-                if (vm.user_variable_data.variable_id == "") {
-                    vm.errors._id = variable["Variable field cannot be empty"];
-                }
-                if (vm.user_variable_data.date_time == "") {
-                    vm.errors.date_time = ["Date Time cannot be empty"];
-                }
-                if (vm.user_variable_data.value == "") {
-                    vm.errors.value = ["Value cannot be empty"];
-                }
-            } else {
 
-                // let spare_data = vm.user_service.user_spares.filter(function (element) {
-                //     return element.key == spare.key;
-                // });
-                // vm.user_service.user_spares[spare_data.key] = spare_data;
-                // vm.user_service.user_spares.splice(vm.user_spare.key, 1);
-
-
-
-
-
-                let user_variable_data1_data = vm.user_variable.asset_variables.filter(function (element) {
-                    return element.key == user_variable_data.key;
-                });
-                vm.user_variable.asset_variables[user_variable_data1_data.key] = user_variable_data1_data;
-                vm.user_variable.asset_variables.splice(vm.user_variable_data.key, 1);
-                vm.user_variable.asset_variables.push({
-                    user_variable_data_id: vm.user_variable_data.user_variable_data_id,
-                    variable_id: vm.user_variable_data.variable_id,
-                    variable: {
-                        variable_name: vm.user_variable_data.variable.variable_name,
-                    },
-                    date_time: vm.user_variable_data.date_time,
-                    value: vm.user_variable_data.value,
-                    user_asset_variable_id: vm.user_variable_data.user_asset_variable_id,
-                    user_variable_id:vm.user_variable_data.user_variable_id
-
-                });
-                vm.discardNewRow();
-
-                // let spare_data = vm.user_variable.asset_variables.filter(function (element) {
-                //     return element.key == user_variable_data.key;
-                // });
-                // vm.user_variable.asset_variables[spare_data.key] = spare_data;
-                // vm.user_variable.asset_variables.splice(vm.user_spare.key, 1);
-                // vm.user_variable.asset_variables.push({
-                //     user_variable_data_id: vm.user_variable_data.user_variable_data_id,
-                //     variable_id: vm.user_variable_data.variable_id,
-                //     variable: {
-                //         variable_name: vm.user_variable_data.variable.variable_name,
-                //     },
-                //     date_time: vm.user_variable_data.date_time,
-                //     value: vm.user_variable_data.value,
-                // });
-                // vm.discardNewRow();
-            }
-        },
-        deleteUserVariableData(user_variable_data1, key) {
-            let vm = this;
-            // let sp = vm.user_variable.user_spares.filter(function (element) {
-            //     return element.spare_id == spare.user_spare_id;
-            // });
-            if (confirm("Are you sure you want to delete")) {
-                vm.deleted_data_variables?.push(user_variable_data1?.user_variable_data_id);
-                vm.user_variable.asset_variables.splice(key, 1);
-                vm.discardNewRow();
-            }
-        },
     },
 };
 </script>
