@@ -6,15 +6,20 @@
                     <li class="breadcrumb-item" aria-current="page">
                         <router-link to="/dashboard">Dashboard</router-link>
                     </li>
-                    <li class="breadcrumb-item">
+                    <li class="breadcrumb-item" v-if="asset_from">
                         <a href="javascript:void(0)">Masters</a>
                     </li>
-                    <li class="breadcrumb-item"><router-link to="/assets">Assets</router-link></li>
+                    <li class="breadcrumb-item" v-else>
+                        <a href="javascript:void(0)">Reviews</a>
+                    </li>
+                    <li class="breadcrumb-item" v-if="asset_from"><router-link to="/assets">Assets</router-link></li>
+                    <li class="breadcrumb-item" v-else><router-link to="/asset_details">Asset Details</router-link></li>                    
                     <li class="breadcrumb-item active" aria-current="page">Accessories</li>
                 </ol>
                 <h4 class="main-title mb-0">Assets</h4>
             </div>
-            <router-link to="/assets" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ASSETS</router-link>
+            <router-link to="/assets" type="submit" class="btn btn-primary" style="float: right;" v-if="asset_from"><i class="ri-list-check"></i> ASSETS</router-link>
+            <router-link to="/asset_details" type="submit" class="btn btn-primary" style="float: right;" v-else><i class="ri-list-check"></i> ASSETS DETAILS</router-link>
         </div>
         <div class="row g-2">
             <div class="col-12 mb-2">
@@ -129,12 +134,23 @@ import Pagination from "@/components/Pagination.vue";
                 asset_id: "",
                 asset_type_id:'',
             },
+            asset_from:true
 
         }
     },
     mounted(){
         this.index()
     },
+    beforeRouteEnter(to, from, next) {
+        console.log('from.name:----', from.name)
+            next((vm) => {
+                if(from.name == 'Assets'){
+                    vm.asset_from = true;
+                }else{
+                    vm.asset_from = false;
+                }
+            });
+        },
     methods:{
         index() {
             let vm = this;
