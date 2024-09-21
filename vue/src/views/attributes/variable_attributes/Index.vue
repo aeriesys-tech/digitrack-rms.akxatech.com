@@ -157,7 +157,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "variable_attribute_id",
                     per_page: 10,
                     totalRows: 0,

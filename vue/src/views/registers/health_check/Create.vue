@@ -148,8 +148,20 @@
         },
 
         mounted() {
-            this.campaign.job_date_time = moment().format("yyyy-MM-DD HH:MM");
+            // this.campaign.job_date_time = moment().format("yyyy-MM-DD HH:MM");
             this.getAssets();
+
+            const now = new Date();
+      
+            // Pad single digit months, days, hours, and minutes with leading zeroes
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            // Format to YYYY-MM-DDTHH:MM
+            this.campaign.job_date_time = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     },
           computed: {
             groupedResults() {
@@ -203,20 +215,10 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-             getCurrentDateTime() {
-                return moment(date).format('YYYY-MM-DDTHH:mm'); // Format the current date and time
+             getCurrentDateTime(date) {
+                return moment(date).format('YYYY-MM-DDTHH:mm:ss'); // Format the current date and time
             },
-            convertDateFormat(date) {
-                let vm = this;
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                document.getElementById('job_date_time').value = `${year}-${month}-${day}T${hours}:${minutes}:00`;
-                // return moment(date).format("yyyy-MM-DD HH:MM");
-            },
+
             addHealthCheck() {
                 let vm = this;
                 let loader = this.$loading.show();

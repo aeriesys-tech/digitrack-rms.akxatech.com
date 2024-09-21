@@ -94,9 +94,9 @@
                                                 class="text-success me-2" @click="editUserVariable(user_variable)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
-                                            <a title="View" href="javascript:void(0)"
+                                            <!-- <a title="View" href="javascript:void(0)"
                                                 @click="viewUserVariable(user_variable)" class="text-primary me-2"><i
-                                                    class="ri-eye-fill fs-18 lh-1"></i></a>
+                                                    class="ri-eye-fill fs-18 lh-1"></i></a> -->
                                             <a title="View" v-can="'userChecks.delete'" href="javascript:void(0)"
                                                 class="text-danger me-2"
                                                 @click.prevent="deleteUserVariable(user_variable)"><i
@@ -142,7 +142,7 @@ export default {
             status: true,
             meta: {
                 search: "",
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "user_variable_id",
                 per_page: 10,
                 totalRows: 0,

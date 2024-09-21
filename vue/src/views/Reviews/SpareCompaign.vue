@@ -31,7 +31,7 @@
                                 </select>
                                 <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label">Analysis</label><span class="text-danger"> *</span>
                                 <select class="form-control" :class="{ 'is-invalid': errors.location }" v-model="spare.location">
                                     <option value="">Select Analysis</option>
@@ -39,6 +39,15 @@
                                 </select>
                                 <span v-if="errors.location" class="invalid-feedback">{{ errors.location[0] }}</span>
                             </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Data Source</label><span class="text-danger"> *</span>
+                                <select class="form-control" :class="{ 'is-invalid': errors.datasource }" v-model="spare.datasource">
+                                    <option value="">Select Data Source</option>
+                                    <option value="File">File</option>
+                                </select>
+                                <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0] }}</span>
+                            </div>
+
                             <div class="col-md-2">
                                 <label class="form-label">From Date</label><span class="text-danger"> *</span>
                                 <input type="date" class="form-control" :class="{ 'is-invalid': errors.from_date }" v-model="spare.from_date" />
@@ -49,7 +58,7 @@
                                 <input type="date" class="form-control" :class="{ 'is-invalid': errors.to_date }" v-model="spare.to_date" />
                                 <span v-if="errors.to_date" class="invalid-feedback">{{ errors.to_date[0] }}</span>
                             </div>
-                            <div class="col-md-2 mt-auto">
+                            <div class="col-md-1 mt-auto">
                                 <button class="btn btn-primary" @click="search">Search</button>
                             </div>
                         </div>
@@ -58,12 +67,13 @@
                             <table class="table table-bordered mb-0">
                                 <tbody>
                                     <tr v-for="(item, index) in groupedResults" :key="index">
+                                        
                                         <td class="text-center" v-if="item[0]">
-                                            <h6>{{ dateFormat(item[0]?.date) || '' }}</h6>
+                                            <h6>{{ dateFormat(item[0]?.campaign?.job_date_time)  || '' }}</h6>
                                             <img :src="item[0]?.file" height="180" />
                                         </td>
                                         <td class="text-center" v-if="item[1]">
-                                            <h6>{{ dateFormat(item[1]?.date) || '' }}</h6>
+                                            <h6>{{ dateFormat(item[1]?.campaign?.job_date_time) || '' }}</h6>
                                             <img :src="item[1]?.file" height="180" />
                                         </td>
                                     </tr>
@@ -91,6 +101,7 @@
                     location: "",
                     from_date: "",
                     to_date: "",
+                    datasource:"",
                 },
 
                 assets: [],
@@ -172,7 +183,7 @@
             },
 
             dateFormat(value) {
-                return moment(value).format("DD-MM-yyyy");
+                return moment(value).format("DD-MM-yyyy HH:mm:ss");
             },
         },
     };

@@ -131,7 +131,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "break_down_list_id",
                     per_page: 10,
                     totalRows: 0,
