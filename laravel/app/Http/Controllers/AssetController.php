@@ -331,20 +331,19 @@ class AssetController extends Controller
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
 
+        AssetSpareValue::where('asset_id', $request->asset_id)->forceDelete();
         AssetSpare::where('asset_id', $request->asset_id)->forceDelete();
         AssetCheck::where('asset_id', $request->asset_id)->forceDelete();
+        AssetServiceValue::where('asset_id', $request->asset_id)->forceDelete();
         AssetService::where('asset_id', $request->asset_id)->forceDelete();
+        AssetVariableValue::where('asset_id', $request->asset_id)->forceDelete();
         AssetVariable::where('asset_id', $request->asset_id)->forceDelete();
+        AssetDataSourceValue::where('asset_id', $request->asset_id)->forceDelete();
         AssetDataSource::where('asset_id', $request->asset_id)->forceDelete();
         AssetAccessory::where('asset_id', $request->asset_id)->forceDelete();
         AssetZone::where('asset_id', $request->asset_id)->forceDelete();
         AssetDepartment::where('asset_id', $request->asset_id)->forceDelete();
         AssetAttributeValue::where('asset_id', $request->asset_id)->forceDelete();
-
-        AssetSpareValue::where('asset_id', $request->asset_id)->forceDelete();
-        AssetServiceValue::where('asset_id', $request->asset_id)->forceDelete();
-        AssetVariableValue::where('asset_id', $request->asset_id)->forceDelete();
-        AssetDataSourceValue::where('asset_id', $request->asset_id)->forceDelete();
 
         Asset::where('asset_id', $request->asset_id)->forceDelete();
 
