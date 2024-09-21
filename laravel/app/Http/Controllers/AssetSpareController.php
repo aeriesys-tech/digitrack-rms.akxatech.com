@@ -11,6 +11,9 @@ use App\Models\Asset;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SpareResource;
 use App\Http\Resources\AssetZoneResource;
+use App\Models\SpareAttributeValue;
+use App\Http\Resources\SpareAttributeValueResource;
+use App\Models\AssetSpareValue;
 
 class AssetSpareController extends Controller
 {
@@ -81,7 +84,6 @@ class AssetSpareController extends Controller
                             if ($assetHasZones && $request->filled('spare_asset_zones')) {
                                 $query->whereIn('asset_zone_id', $request->spare_asset_zones);
                             } else {
-                                // If the asset has no zones, check uniqueness based on asset_id only
                                 $query->whereNull('asset_zone_id');
                             }
                         })->exists();
@@ -127,6 +129,18 @@ class AssetSpareController extends Controller
 
                 $assetSpare = AssetSpare::create($spareData);
                 $createdSpares[] = new AssetSpareResource($assetSpare);
+
+                foreach($request->asset_spare_attributes as $attribute)
+                {
+                    AssetSpareValue::create([
+                        'asset_spare_id' => $assetSpare->asset_spare_id,
+                        'asset_id' => $assetSpare->asset_id,
+                        'spare_id' => $assetSpare->spare_id,
+                        'asset_zone_id' => $assetSpare->asset_zone_id,
+                        'spare_attribute_id' => $attribute['spare_attribute_id'],
+                        'field_value' => $attribute['field_value']
+                    ]);
+                }
             }
         } 
         else 
@@ -136,6 +150,18 @@ class AssetSpareController extends Controller
 
             $assetSpare = AssetSpare::create($spareData);
             $createdSpares[] = new AssetSpareResource($assetSpare);
+
+            foreach($request->asset_spare_attributes as $attribute)
+            {
+                AssetSpareValue::create([
+                    'asset_spare_id' => $assetSpare->asset_spare_id,
+                    'asset_id' => $assetSpare->asset_id,
+                    'spare_id' => $assetSpare->spare_id,
+                    'asset_zone_id' => $assetSpare->asset_zone_id,
+                    'spare_attribute_id' => $attribute['spare_attribute_id'],
+                    'field_value' => $attribute['field_value']
+                ]);
+            }
         }
         return response()->json([$createdSpares, 201,  "message" => "AssetSpare Created Successfully"]);
     }
@@ -225,6 +251,27 @@ class AssetSpareController extends Controller
 
         $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->first();
         $asset_spare->update($data);
+
+        foreach ($request->asset_spare_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'];
+
+            if ($fieldValue !== null) {
+                AssetSpareValue::updateOrCreate(
+                    [
+                        'asset_spare_id' => $asset_spare->asset_spare_id,
+                        'asset_zone_id' => $asset_spare->asset_zone_id,
+                        'spare_id' => $spare->spare_id,
+                        'asset_id' =>  $asset_spare->asset_id,
+                        'spare_attribute_id' => $attribute['spare_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
+        }
+
         return response()->json([
             "message" => "AssetSpare Updated Successfully",
             new AssetSpareResource($asset_spare)
@@ -260,10 +307,21 @@ class AssetSpareController extends Controller
             'asset_spare_id' => 'required|exists:asset_spares,asset_spare_id'
         ]);
     
+        AssetSpareValue::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
         $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
 
         return response()->json([
             "message" => "AssetSpare deleted successfully"
         ], 200);
     } 
+
+    public function assetSpareAttributeValues(Request $request)
+    {
+        $request->validate([
+            'spare_id' => 'required|exists:spares,spare_id'
+        ]);
+
+        $spare_attribute_values = SpareAttributeValue::where('spare_id', $request->spare_id)->get();
+        return SpareAttributeValueResource::collection($spare_attribute_values);
+    }
 }

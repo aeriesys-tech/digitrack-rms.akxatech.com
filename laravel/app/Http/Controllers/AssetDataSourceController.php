@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\DataSourceResource;
 use App\Models\Asset;
 use App\Models\AssetZone;
+use App\Models\DataSourceAttributeValue;
+use App\Http\Resources\DataSourceAttributeValueResource;
+use App\Models\AssetDataSourceValue;
 
 class AssetDataSourceController extends Controller
 {
@@ -131,6 +134,18 @@ class AssetDataSourceController extends Controller
 
                 $assetDataSource = AssetDataSource::create($data_source_data);
                 $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
+
+                foreach($request->asset_datasource_attributes as $attribute)
+                {
+                    AssetDataSourceValue::create([
+                        'asset_data_source_id' => $assetDataSource->asset_data_source_id,
+                        'asset_id' => $assetDataSource->asset_id,
+                        'data_source_id' => $data_source->data_source_id,
+                        'asset_zone_id' => $assetDataSource->asset_zone_id,
+                        'data_source_attribute_id' => $attribute['data_source_attribute_id'],
+                        'field_value' => $attribute['field_value']
+                    ]);
+                }
             }
         } else {
             $data_source_data = $data;
@@ -138,6 +153,18 @@ class AssetDataSourceController extends Controller
 
             $assetDataSource = AssetDataSource::create($data_source_data);
             $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
+
+            foreach($request->asset_datasource_attributes as $attribute)
+            {
+                AssetDataSourceValue::create([
+                    'asset_data_source_id' => $assetDataSource->asset_data_source_id,
+                    'asset_id' => $assetDataSource->asset_id,
+                    'data_source_id' => $data_source->data_source_id,
+                    'asset_zone_id' => $assetDataSource->asset_zone_id,
+                    'data_source_attribute_id' => $attribute['data_source_attribute_id'],
+                    'field_value' => $attribute['field_value']
+                ]);
+            }
         }
 
         return response()->json([$createdDataSources,  "message" => "AssetDataSource Created Successfully"]);
@@ -199,6 +226,27 @@ class AssetDataSourceController extends Controller
 
         $asset_data_source = AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->first();
         $asset_data_source->update($data);
+
+        foreach ($request->asset_datasource_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'];
+
+            if ($fieldValue !== null) 
+            {
+                AssetDataSourceValue::updateOrCreate(
+                    [
+                        'asset_data_source_id' => $asset_data_source->asset_data_source_id,
+                        'asset_zone_id' => $asset_data_source->asset_zone_id,
+                        'data_source_id' => $data_source->data_source_id,
+                        'asset_id' =>  $asset_data_source->asset_id,
+                        'data_source_attribute_id' => $attribute['data_source_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
+        }
         return response()->json([
             "message" => "AssetDataSource Updated Successfully",
             new AssetDataSourceResource($asset_data_source)
@@ -238,5 +286,15 @@ class AssetDataSourceController extends Controller
 
         $scripts = AssetDataSource::where('asset_id', $request->asset_id)->pluck('script');
         return $scripts;
+    }
+
+    public function assetDataSourceAttributeValues(Request $request)
+    {
+        $request->validate([
+            'data_source_id' => 'required|exists:data_sources,data_source_id'
+        ]);
+
+        $datasource_attribute_values = DataSourceAttributeValue::where('data_source_id', $request->data_source_id)->get();
+        return DataSourceAttributeValueResource::collection($datasource_attribute_values);
     }
 }

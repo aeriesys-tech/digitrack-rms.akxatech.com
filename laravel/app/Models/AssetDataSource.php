@@ -50,4 +50,9 @@ class AssetDataSource extends Model
     {
         return $this->belongsTo(DataSourceType::class, 'data_source_type_id');
     }
+
+    public function AssetDataSourceValue()
+    {
+        return $this->hasMany(AssetDataSourceValue::class, 'asset_data_source_id', 'asset_data_source_id');
+    }
 }

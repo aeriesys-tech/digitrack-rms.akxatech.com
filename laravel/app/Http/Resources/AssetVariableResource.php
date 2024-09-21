@@ -22,7 +22,8 @@ class AssetVariableResource extends JsonResource
             'plant_id' => $this->plant_id,
             'plant' => new PlantResource($this->Plant),
             'variable_type_id' => $this->variable_type_id,
-            'variable_type' => new VariableTypeResource($this->VariableType)
+            'variable_type' => new VariableTypeResource($this->VariableType),
+            'asset_variable_attributes' => AssetVariableValueResource::collection($this->AssetVariableValue)
         ];
     }
 }

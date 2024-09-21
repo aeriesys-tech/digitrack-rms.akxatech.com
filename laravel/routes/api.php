@@ -203,6 +203,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetCode',[AssetController::class, 'getAssetCode']);
     Route::post('getAssetdata',[AssetController::class, 'getAssetdata']);
     Route::post('getAssetZones',[AssetController::class, 'getAssetZones']);
+    Route::post('forceDeleteAsset',[AssetController::class, 'forceDeleteAsset']);
 
     Route::post('paginateAssetSpares',[AssetSpareController::class, 'paginateAssetSpares']);
     Route::post('addAssetSpare',[AssetSpareController::class, 'addAssetSpare']);
@@ -212,6 +213,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetSpare',[AssetSpareController::class, 'deleteAssetSpare']);
     Route::post('forceDeleteAssetSpare',[AssetSpareController::class, 'forceDeleteAssetSpare']);
     Route::post('getAssetServiceSpares',[AssetSpareController::class, 'getAssetServiceSpares']);
+    Route::post('assetSpareAttributeValues',[AssetSpareController::class, 'assetSpareAttributeValues']);
 
     Route::post('paginateAssetServices',[AssetServiceController::class, 'paginateAssetServices']);
     Route::post('addAssetService',[AssetServiceController::class, 'addAssetService']);
@@ -221,6 +223,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetService',[AssetServiceController::class, 'deleteAssetService']);
     Route::post('forceDeleteAssetService',[AssetServiceController::class, 'forceDeleteAssetService']);
     Route::post('getAssetsServices',[AssetServiceController::class, 'getAssetsServices']);
+    Route::post('assetServiceAttributeValues',[AssetServiceController::class, 'assetServiceAttributeValues']);
     
     Route::post('paginateAssetChecks',[AssetCheckController::class, 'paginateAssetChecks']);
     Route::post('addAssetCheck',[AssetCheckController::class, 'addAssetCheck']);
@@ -240,6 +243,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetVariable',[AssetVariableController::class, 'deleteAssetVariable']);
     Route::post('getAssetTypeVariables',[AssetVariableController::class, 'getAssetTypeVariables']);
     Route::post('getAssetRegisterVariables',[AssetVariableController::class, 'getAssetRegisterVariables']);
+    Route::post('assetVariableAttributeValues',[AssetVariableController::class, 'assetVariableAttributeValues']);
 
     Route::post('paginateAssetDataSources',[AssetDataSourceController::class, 'paginateAssetDataSources']);
     Route::post('getAssetDataSources',[AssetDataSourceController::class, 'getAssetDataSources']);
@@ -249,6 +253,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetDataSource',[AssetDataSourceController::class, 'deleteAssetDataSource']);
     Route::post('getAssetTypeDataSources',[AssetDataSourceController::class, 'getAssetTypeDataSources']);
     Route::post('assetDataSourceScripts',[AssetDataSourceController::class, 'assetDataSourceScripts']);
+    Route::post('assetDataSourceAttributeValues',[AssetDataSourceController::class, 'assetDataSourceAttributeValues']);
 
     Route::post('paginateAssetAccessories',[AssetAccessoryController::class, 'paginateAssetAccessories']);
     Route::post('getAssetAccessories',[AssetAccessoryController::class, 'getAssetAccessories']);

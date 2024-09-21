@@ -195,7 +195,7 @@ class BreakDownListController extends Controller
         while (BreakDownList::where('job_no', $job_no)->exists()) {
             $nextServiceNumber++;
             $formattedNextServiceNumber = str_pad($nextServiceNumber, 4, '0', STR_PAD_LEFT);
-            $job_no = 'Service_' . $formattedNextServiceNumber;
+            $job_no = 'BreakDown_' . $formattedNextServiceNumber;
         }
         return $job_no;
     }

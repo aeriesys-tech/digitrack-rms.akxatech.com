@@ -10,6 +10,9 @@ use App\Http\Resources\VariableResource;
 use App\Models\Variable;
 use App\Models\AssetZone;
 use App\Models\Asset;
+use App\Models\VariableAttributeValue;
+use App\Http\Resources\VariableAttributeValueResource;
+use App\Models\AssetVariableValue;
 
 class AssetVariableController extends Controller
 {
@@ -131,6 +134,18 @@ class AssetVariableController extends Controller
 
                 $assetVariable = AssetVariable::create($variableData);
                 $createdVariables[] = new AssetVariableResource($assetVariable);
+
+                foreach($request->asset_variable_attributes as $attribute)
+                {
+                    AssetVariableValue::create([
+                        'asset_variable_id' => $assetVariable->asset_variable_id,
+                        'asset_id' => $assetVariable->asset_id,
+                        'variable_id' => $variable->variable_id,
+                        'asset_zone_id' => $assetVariable->asset_zone_id,
+                        'variable_attribute_id' => $attribute['variable_attribute_id'],
+                        'field_value' => $attribute['field_value']
+                    ]);
+                }
             }
         } 
         else 
@@ -140,6 +155,17 @@ class AssetVariableController extends Controller
 
             $assetVariable = AssetVariable::create($variableData);
             $createdVariables[] = new AssetVariableResource($assetVariable);
+            foreach($request->asset_variable_attributes as $attribute)
+            {
+                AssetVariableValue::create([
+                    'asset_variable_id' => $assetVariable->asset_variable_id,
+                    'asset_id' => $assetVariable->asset_id,
+                    'variable_id' => $variable->variable_id,
+                    'asset_zone_id' => $assetVariable->asset_zone_id,
+                    'variable_attribute_id' => $attribute['variable_attribute_id'],
+                    'field_value' => $attribute['field_value']
+                ]);
+            }
         }
 
         return response()->json([$createdVariables, "message" => "AssetVariable Created Successfully"]);
@@ -199,6 +225,26 @@ class AssetVariableController extends Controller
 
         $asset_variable = AssetVariable::where('asset_variable_id', $request->asset_variable_id)->first();
         $asset_variable->update($data);
+
+        foreach ($request->asset_variable_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'];
+
+            if ($fieldValue !== null) {
+                AssetVariableValue::updateOrCreate(
+                    [
+                        'asset_variable_id' => $asset_variable->asset_variable_id,
+                        'asset_zone_id' => $asset_variable->asset_zone_id,
+                        'variable_id' => $variable->variable_id,
+                        'asset_id' =>  $asset_variable->asset_id,
+                        'variable_attribute_id' => $attribute['variable_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
+        }
         return response()->json([
             "message" => "AssetVariable Updated Successfully",
             new AssetVariableResource($asset_variable)
@@ -279,4 +325,14 @@ class AssetVariableController extends Controller
         }
         return response()->json($variable_ids);
     }    
+
+    public function assetVariableAttributeValues(Request $request)
+    {
+        $request->validate([
+            'variable_id' => 'required|exists:variables,variable_id'
+        ]);
+
+        $variable_attribute_values = VariableAttributeValue::where('variable_id', $request->variable_id)->get();
+        return VariableAttributeValueResource::collection($variable_attribute_values);
+    }
 }

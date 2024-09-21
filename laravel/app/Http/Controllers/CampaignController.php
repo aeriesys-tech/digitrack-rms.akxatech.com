@@ -109,12 +109,20 @@ class CampaignController extends Controller
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'location' => 'required',
-            'from_date' => 'required|date',
-            'to_date' => 'required|date'
+            'from_date' => 'nullable|date',
+            'to_date' => 'required|date',
+            'datasource' => 'required'
         ]);
 
-        $compaign_result = CampaignResult::where('asset_id', $request->asset_id)->where('location', $request->location)
-                ->whereBetween('date', [$request->from_date, $request->to_date])->get();
+        $compaign_result_query = CampaignResult::whereHas('Campaign', function($que) use($request) 
+        {
+            $fromDate = $request->from_date . ' 00:00:00';
+            $toDate = $request->to_date . ' 23:59:59';
+
+            $que->whereBetween('job_date_time', [$fromDate, $toDate])->where('datasource', $request->datasource);
+        });
+        $compaign_result = $compaign_result_query->where('asset_id', $request->asset_id)->where('location', $request->location)->get();
+
         return CampaignResultResource::collection($compaign_result);
     }
 

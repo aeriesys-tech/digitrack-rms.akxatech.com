@@ -50,4 +50,9 @@ class AssetService extends Model
     {
         return $this->belongsTo(ServiceType::class, 'service_type_id');
     }
+
+    public function AssetServiceValue()
+    {
+        return $this->hasMany(AssetServiceValue::class, 'asset_service_id', 'asset_service_id');
+    }
 }

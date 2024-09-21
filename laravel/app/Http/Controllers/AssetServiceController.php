@@ -11,6 +11,9 @@ use App\Models\Asset;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\AssetZoneResource;
 use Illuminate\Support\Facades\Auth;
+use App\Models\AssetServiceValue;
+use App\Models\ServiceAttributeValue;
+use App\Http\Resources\ServiceAttributeValueResource;
 
 class AssetServiceController extends Controller
 {
@@ -127,6 +130,18 @@ class AssetServiceController extends Controller
 
                 $assetService = AssetService::create($serviceData);
                 $createdServices[] = new AssetServiceResource($assetService);
+
+                foreach($request->asset_service_attributes as $attribute)
+                {
+                    AssetServiceValue::create([
+                        'asset_service_id' => $assetService->asset_service_id,
+                        'asset_id' => $assetService->asset_id,
+                        'service_id' => $assetService->service_id,
+                        'asset_zone_id' => $assetService->asset_zone_id,
+                        'service_attribute_id' => $attribute['service_attribute_id'],
+                        'field_value' => $attribute['field_value']
+                    ]);
+                }
             }
         } 
         else 
@@ -136,6 +151,18 @@ class AssetServiceController extends Controller
 
             $assetService = AssetService::create($serviceData);
             $createdServices[] = new AssetServiceResource($assetService);
+
+            foreach($request->asset_service_attributes as $attribute)
+            {
+                AssetServiceValue::create([
+                    'asset_service_id' => $assetService->asset_service_id,
+                    'asset_id' => $assetService->asset_id,
+                    'service_id' => $assetService->service_id,
+                    'asset_zone_id' => $assetService->asset_zone_id,
+                    'service_attribute_id' => $attribute['service_attribute_id'],
+                    'field_value' => $attribute['field_value']
+                ]);
+            }
         }
         return response()->json([$createdServices, "message" => "AssetService Created Successfully"]);
     }
@@ -220,6 +247,26 @@ class AssetServiceController extends Controller
 
         $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
         $asset_service->update($data);
+
+        foreach ($request->asset_service_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'];
+
+            if ($fieldValue !== null) {
+                AssetServiceValue::updateOrCreate(
+                    [
+                        'asset_service_id' => $asset_service->asset_service_id,
+                        'asset_zone_id' => $asset_service->asset_zone_id,
+                        'service_id' => $service->service_id,
+                        'asset_id' =>  $asset_service->asset_id,
+                        'service_attribute_id' => $attribute['service_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
+        }
         return response()->json([
             "message" => "AssetService Updated Successfully",
             new AssetServiceResource($asset_service)
@@ -270,4 +317,14 @@ class AssetServiceController extends Controller
             ], 500);
         }
     }    
+
+    public function assetServiceAttributeValues(Request $request)
+    {
+        $request->validate([
+            'service_id' => 'required|exists:services,service_id'
+        ]);
+
+        $service_attribute_values = ServiceAttributeValue::where('service_id', $request->service_id)->get();
+        return ServiceAttributeValueResource::collection($service_attribute_values);
+    }
 }

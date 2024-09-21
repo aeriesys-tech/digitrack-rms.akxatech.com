@@ -22,6 +22,17 @@ use App\Models\CampaignResult;
 use App\Models\AssetZone;
 use App\Http\Resources\AssetZoneResource;
 use App\Models\AssetDepartment;
+use App\Models\AssetSpare;
+use App\Models\AssetCheck;
+use App\Models\AssetService;
+use App\Models\AssetVariable;
+use App\Models\AssetDataSource;
+use App\Models\AssetAccessory;
+use App\Models\AssetSpareValue;
+
+use App\Models\AssetServiceValue;
+use App\Models\AssetVariableValue;
+use App\Models\AssetDataSourceValue;
 
 class AssetController extends Controller
 {
@@ -312,6 +323,34 @@ class AssetController extends Controller
                 "message" =>"Asset Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function forceDeleteAsset(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id'
+        ]);
+
+        AssetSpare::where('asset_id', $request->asset_id)->forceDelete();
+        AssetCheck::where('asset_id', $request->asset_id)->forceDelete();
+        AssetService::where('asset_id', $request->asset_id)->forceDelete();
+        AssetVariable::where('asset_id', $request->asset_id)->forceDelete();
+        AssetDataSource::where('asset_id', $request->asset_id)->forceDelete();
+        AssetAccessory::where('asset_id', $request->asset_id)->forceDelete();
+        AssetZone::where('asset_id', $request->asset_id)->forceDelete();
+        AssetDepartment::where('asset_id', $request->asset_id)->forceDelete();
+        AssetAttributeValue::where('asset_id', $request->asset_id)->forceDelete();
+
+        AssetSpareValue::where('asset_id', $request->asset_id)->forceDelete();
+        AssetServiceValue::where('asset_id', $request->asset_id)->forceDelete();
+        AssetVariableValue::where('asset_id', $request->asset_id)->forceDelete();
+        AssetDataSourceValue::where('asset_id', $request->asset_id)->forceDelete();
+
+        Asset::where('asset_id', $request->asset_id)->forceDelete();
+
+        return response()->json([
+            "message" => 'Asset Deleted Successfully'
+        ]);
     }
 
     public function getAssetsDropdown(Request $request)

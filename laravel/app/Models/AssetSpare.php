@@ -51,4 +51,9 @@ class AssetSpare extends Model
     {
         return $this->belongsTo(SpareType::class, 'spare_type_id');
     }
+
+    public function AssetSpareValue()
+    {
+        return $this->hasMany(AssetSpareValue::class, 'asset_spare_id', 'asset_spare_id');
+    }
 }

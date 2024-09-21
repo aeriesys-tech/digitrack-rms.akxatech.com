@@ -27,7 +27,8 @@ class AssetSpareResource extends JsonResource
             'spare_type_id' => $this->spare_type_id,
             'spare_type' => new SpareTypeResource($this->SpareType),
             'status' => $this->deleted_at?false:true,
-            'quantity' => $this->quantity
+            'quantity' => $this->quantity,
+            'asset_spare_attributes' => AssetSpareValueResource::collection($this->AssetSpareValue)
         ];
     }
 }
