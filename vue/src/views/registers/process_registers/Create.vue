@@ -211,26 +211,13 @@ export default {
         });
     },
     mounted() {
-        // this.user_variable.job_date = moment().format("yyyy-MM-DD");
-        // const now = new Date();
-        // this.user_variable.job_date = now.toISOString().slice(0, 16);
+        this.user_variable.job_date = moment().format("yyyy-MM-DD HH:mm");
 
-        const now = new Date();
-
-        // Pad single digit months, days, hours, and minutes with leading zeroes
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-
-        // Format to YYYY-MM-DDTHH:MM
-        this.user_variable.job_date = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     },
     methods: {
         convertDateFormat(date) {
             let vm = this;
-            return moment(date).format("yyyy-MM-DD HH:MM:SS");
+            return moment(date).format("yyyy-MM-DD HH:mm");
         },
         submitForm() {
             let vm = this;

@@ -121,7 +121,7 @@
                                                 </div>
                                             </td>
                                             <td class="text-center" >
-                                                <a href="javascript:void(0)" class="text-success" v-if="spareattribute.status" 
+                                                <a href="javascript:void(0)" class="text-success" v-if="spareattribute.status"
                                                     @click="editSpareAttribute(spareattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>
                                         </tr>
@@ -173,19 +173,16 @@
                 status: true,
             }
         },
-        beforeRouteEnter(to, from, next) {
-            next((vm) => {
-                if(from.name != 'SpareAttributes.Edit'){
-                    vm.$store.commit("setCurrentPage", vm.meta.page)
-                }else{
-                    vm.meta.page = vm.$store.getters.current_page
-                }
-            });
-        },
         mounted() {
+            if (this.$store.getters.current_page) {
+                this.meta.page = this.$store.getters.current_page
+            }
+            else {
+                this.meta.page = 1;
+            }
             this.index();
         },
-    
+
         methods: {
             index() {
                 let vm = this;
@@ -209,7 +206,7 @@
                 // this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/spare_attributes/" + spareattribute.spare_attribute_id + "/edit");
             },
-         
+
             deleteSpareAttribute(spareattribute) {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -234,7 +231,7 @@
                 vm.meta.page = 1;
                 vm.index();
             },
-            
+
             onPageChange(page) {
                 this.meta.page = page;
                 this.index();
@@ -244,8 +241,7 @@
                 this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
                 this.index();
             },
-            
+
         }
     }
     </script>
-    

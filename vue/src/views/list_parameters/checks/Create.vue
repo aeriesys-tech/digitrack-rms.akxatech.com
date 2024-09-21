@@ -72,7 +72,7 @@
                                         <option value="Date">Date</option>
                                         <option value="Date & Time">Date & Time</option>
                                         <option value="Select">Dropdown</option>
-                                        <option value="Color">Color</option>
+                                        <!-- <option value="Color">Color</option> -->
                                         <!-- <option value="File">File</option> -->
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
@@ -91,12 +91,12 @@
                                     </select>
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label class="form-label">LCL</label><span v-if="check.field_type=='Number'" class="text-danger"> *</span>
                                     <input type="text" placeholder="LCL" class="form-control" :class="{ 'is-invalid': errors.lcl }" v-model="check.lcl" />
                                     <span v-if="errors.lcl" class="invalid-feedback">{{ errors.lcl[0] }}</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label class="form-label">UCL</label><span v-if="check.field_type=='Number'" class="text-danger"> *</span>
                                     <input type="text" placeholder="UCL" class="form-control" :class="{ 'is-invalid': errors.ucl }" v-model="check.ucl" />
                                     <span v-if="errors.ucl" class="invalid-feedback">{{ errors.ucl[0] }}</span>
@@ -106,7 +106,7 @@
                                     <input type="text" placeholder="Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values}" v-model="check.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <label class="form-label">Order</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Order" class="form-control" :class="{ 'is-invalid': errors.order}" v-model="check.order" />
                                     <span v-if="errors.order" class="invalid-feedback">{{ errors.order[0] }}</span>
@@ -170,6 +170,7 @@
             next((vm) => {
                 vm.getAssetTypes();
                 if (to.name == "Checks.Create") {
+                    vm.$store.commit("setCurrentPage", 1)
                     // vm.$refs.field_name.focus();
                 } else {
                     vm.status = false;

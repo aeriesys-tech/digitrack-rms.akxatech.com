@@ -161,6 +161,7 @@
                 next((vm) => {
                     vm.getDataSourceTypes();
                     if (to.name == "DataSourceAttributes.Create") {
+                        vm.$store.commit("setCurrentPage", 1)
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;

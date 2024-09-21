@@ -82,7 +82,7 @@
                                         placeholder="Enter Activity Date"
                                         :class="{'is-invalid': errors.activity_date}"
                                         ref="activity_date"
-                                        :value="convertDateFormat(activity.activity_date)"
+
                                         v-model="activity.activity_date"
                                     />
                                     <span v-if="errors.activity_date" class="invalid-feedback">{{ errors.activity_date[0] }}</span>
@@ -125,7 +125,6 @@
                                             {{ field.display_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-
                                         <input
                                             type="datetime-local"
                                             class="form-control"
@@ -250,7 +249,7 @@
             });
         },
         mounted() {
-            this.activity.activity_date = moment().format("yyyy-MM-DD HH:MM");
+            this.activity.activity_date = moment().format("yyyy-MM-DD HH:mm");
         },
         methods: {
             submitForm() {
@@ -263,7 +262,7 @@
             },
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD HH:MM");
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             getAssets() {
                 let vm = this;

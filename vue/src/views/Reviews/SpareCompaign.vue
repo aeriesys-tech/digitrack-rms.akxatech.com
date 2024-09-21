@@ -67,7 +67,7 @@
                             <table class="table table-bordered mb-0">
                                 <tbody>
                                     <tr v-for="(item, index) in groupedResults" :key="index">
-                                        
+
                                         <td class="text-center" v-if="item[0]">
                                             <h6>{{ dateFormat(item[0]?.campaign?.job_date_time)  || '' }}</h6>
                                             <img :src="item[0]?.file" height="180" />
@@ -183,7 +183,7 @@
             },
 
             dateFormat(value) {
-                return moment(value).format("DD-MM-yyyy HH:mm:ss");
+                return moment(value).format("DD-MM-yyyy HH:mm");
             },
         },
     };

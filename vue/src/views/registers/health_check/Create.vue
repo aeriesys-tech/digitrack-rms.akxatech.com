@@ -53,7 +53,7 @@
                                     <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Job DateTime</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Job Date & Time</label><span class="text-danger"> *</span>
                                     <!-- <input type="datetime-local" class="form-control" id="job_date_time" name="job_date_time" v-model="campaign.job_date_time" :class="{ 'is-invalid': errors.job_date_time }" @change="convertDateFormat(campaign.job_date_time)"/> -->
                                     <input type="datetime-local" class="form-control" id="job_date_time" name="job_date_time" v-model="campaign.job_date_time" :class="{ 'is-invalid': errors.job_date_time }" @change="getCurrentDateTime(campaign.job_date_time)"/>
                                     <span v-if="errors.job_date_time" class="invalid-feedback">{{ errors.job_date_time[0] }}</span>
@@ -148,20 +148,19 @@
         },
 
         mounted() {
-            // this.campaign.job_date_time = moment().format("yyyy-MM-DD HH:MM");
+            this.campaign.job_date_time = moment().format("yyyy-MM-DD HH:mm");
             this.getAssets();
 
-            const now = new Date();
-      
-            // Pad single digit months, days, hours, and minutes with leading zeroes
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            
-            // Format to YYYY-MM-DDTHH:MM
-            this.campaign.job_date_time = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+            // const now = new Date();
+
+            // const year = now.getFullYear();
+            // const month = String(now.getMonth() + 1).padStart(2, '0');
+            // const day = String(now.getDate()).padStart(2, '0');
+            // const hours = String(now.getHours()).padStart(2, '0');
+            // const minutes = String(now.getMinutes()).padStart(2, '0');
+
+
+            // this.campaign.job_date_time = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     },
           computed: {
             groupedResults() {
@@ -216,7 +215,7 @@
                     });
             },
              getCurrentDateTime(date) {
-                return moment(date).format('YYYY-MM-DDTHH:mm:ss'); // Format the current date and time
+                return moment(date).format('YYYY-MM-DDTHH:mm'); // Format the current date and time
             },
 
             addHealthCheck() {

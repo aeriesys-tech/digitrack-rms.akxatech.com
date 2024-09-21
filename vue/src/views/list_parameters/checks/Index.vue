@@ -151,6 +151,7 @@
                                         <a href="javascript:void(0)" v-if="check.status" class="text-success me-2" @click="editCheck(check)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                     </td>
                                 </tr>
+                                {{ meta.per_page }}
                             </tbody>
                         </table>
                     </div>
@@ -165,7 +166,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
             </div>
@@ -191,6 +192,7 @@ export default {
                 page: 1,
                 lastPage: 1,
                 from: 1,
+                to: 1,
                 maxPage: 1,
             },
             check: {
@@ -203,33 +205,38 @@ export default {
     },
     beforeRouteEnter(to, from, next) {
         next((vm) => {
-            if(from.name != 'Checks.Edit'){
-                vm.$store.commit("setCurrentPage", vm.meta.page)
-            }else{
-                vm.meta.page = vm.$store.getters.current_page
-            }
+            // if(from.name != 'Checks.Edit'){
+            //     vm.$store.commit("setCurrentPage", vm.meta.page)
+            // }else{
+            //     vm.meta.page = vm.$store.getters.current_page
+            // }
         });
     },
     mounted() {
+        if (this.$store.getters.current_page) {
+             this.meta.page = this.$store.getters.current_page
+        }
+        else {
+            this.meta.page = 1;
+        }
         this.index();
-
-        //this.demo();
     },
 
     methods: {
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', {
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', {
                     uri: 'paginateChecks',data:vm.meta
                 })
                 .then(response => {
                     loader.hide();
-                    this.checks = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.checks = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.to = response.data.meta.to;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -237,8 +244,9 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
-        
+
         editCheck(check) {
+            console.log("setCurrentPage", this.meta.page)
             this.$store.commit("setCurrentPage", this.meta.page)
             this.$router.push("/checks/"+check.check_id+"/edit");
         },
@@ -268,12 +276,17 @@ export default {
             this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
             this.index();
         },
-       
+
         search() {
             let vm = this;
             vm.meta.page = 1;
             vm.index();
         },
+         onPerPageChange() {
+            this.meta.page = 1;
+            this.index();
+        },
+
     }
 }
 </script>

@@ -45,11 +45,15 @@ export default {
         if (sessionStorage.getItem("permissions")) {
 			this.$store.dispatch('setPermissions', JSON.parse(sessionStorage.getItem("permissions")))
 			sessionStorage.removeItem('permissions')
-		}
+        }
+         if (sessionStorage.getItem("current_page")) {
+            this.$store.dispatch('setCurrentPage', sessionStorage.getItem("current_page"))
+        }
         //Save the information in vuex to sessionStorage when the page is refreshed
         window.addEventListener("beforeunload", () => {
             sessionStorage.setItem("user", JSON.stringify(this.$store?.getters?.user));
             sessionStorage.setItem("token", this.$store?.getters?.token);
+            sessionStorage.setItem("current_page", this.$store?.getters?.current_page);
             sessionStorage.setItem("permissions", JSON.stringify(this.$store?.getters?.permissions))
         })
     }

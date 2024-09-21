@@ -36,7 +36,7 @@
                                 <label class="form-label">Email</label><span class="text-danger"> *</span>
                                 <input type="email" placeholder="Email" class="form-control" :class="{'is-invalid':errors.email}" v-model="user.email" />
                                 <span v-if="errors.email" class="invalid-feedback">{{ errors.email[0] }}</span>
-                            </div> 
+                            </div>
                             <div class="col-md-4">
                                 <label class="form-label">Password</label><span class="text-danger"> *</span>
                                 <input type="password" :disabled="!status" placeholder="Password" class="form-control" :class="{'is-invalid':errors.password}" v-model="user.password" />
@@ -84,7 +84,7 @@ export default {
     name: "User.Create",
     data() {
         return {
-          
+
             user: {
                 user_id: '',
                 name: '',
@@ -116,6 +116,7 @@ export default {
             next((vm) => {
                 vm.getRoles();
                 if (to.name == "Users.Create") {
+                    vm.$store.commit("setCurrentPage", 1)
                     vm.$refs.name.focus();
                 } else {
                     vm.status = false;

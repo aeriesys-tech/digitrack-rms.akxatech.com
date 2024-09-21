@@ -169,6 +169,7 @@
                 next((vm) => {
                     vm.getBreakDownTypes();
                     if (to.name == "BreakDownAttributes.Create") {
+                         vm.$store.commit("setCurrentPage", 1)
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;

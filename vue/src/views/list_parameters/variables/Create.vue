@@ -65,6 +65,7 @@
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input
                                             type="number"
+                                            step="any"
                                             class="form-control"
                                             min="0"
                                             oninput="validity.valid||(value='');"
