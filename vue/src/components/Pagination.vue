@@ -44,6 +44,9 @@ export default {
 			type: Number,
 			required: true
 		},
+		from:{
+			type: String
+		}
 	},
 
 	computed: {
@@ -78,19 +81,19 @@ export default {
 	},
 	methods: {
 		onClickFirstPage() {
-			this.$emit('pagechanged', 1);
+			this.$emit('pagechanged', 1, this.from);
 		},
 		onClickPreviousPage() {
-			this.$emit('pagechanged', this.currentPage - 1);
+			this.$emit('pagechanged', this.currentPage - 1, this.from);
 		},
 		onClickPage(page) {
-			this.$emit('pagechanged', page);
+			this.$emit('pagechanged', page, this.from);
 		},
 		onClickNextPage() {
-			this.$emit('pagechanged', this.currentPage + 1);
+			this.$emit('pagechanged', this.currentPage + 1, this.from);
 		},
 		onClickLastPage() {
-			this.$emit('pagechanged', this.totalPages);
+			this.$emit('pagechanged', this.totalPages, this.from);
 		},
 		isPageActive(page) {
 			return this.currentPage === page;

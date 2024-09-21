@@ -230,7 +230,7 @@ export default {
     methods: {
         convertDateFormat(date) {
             let vm = this;
-            return moment(date).format("yyyy-MM-DD HH:MM:SS");
+            return moment(date).format("yyyy-MM-DD HH:mm:ss");
         },
         submitForm() {
             let vm = this;
