@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Role</li>
             </ol>
             <h4 class="main-title mb-2">Role</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" v-can="'roles.create'">
                 <form @submit.prevent="submitForm()">
@@ -252,7 +252,7 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
-       
+
 
         onPageChange(page) {
             this.meta.page = page;

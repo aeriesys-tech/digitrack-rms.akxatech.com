@@ -180,6 +180,7 @@
                 next((vm) => {
                     vm.getAssetTypes();
                     if (to.name == "AssetAttributes.Create") {
+                         vm.$store.commit("setCurrentPage", 1)
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;

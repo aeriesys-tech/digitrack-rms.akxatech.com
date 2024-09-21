@@ -121,14 +121,14 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer text-end">
-                        <router-link type="button" to="/process_registers" class="btn btn-danger me-2"><i
-                                class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
-                        <button type="submit" class="btn btn-primary">
-                            <span v-if="status"><i class="ri-save-line fs-18 lh-1"></i> Submit</span>
-                            <span v-else><i class="ri-save-line fs-18 lh-1"></i> Update</span>
-                        </button>
+                        <div class="card-footer text-end">
+                            <router-link type="button" to="/process_registers" class="btn btn-danger me-2"><i
+                                    class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
+                            <button type="submit" class="btn btn-primary">
+                                <span v-if="status"><i class="ri-save-line fs-18 lh-1"></i> Submit</span>
+                                <span v-else><i class="ri-save-line fs-18 lh-1"></i> Update</span>
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -175,7 +175,7 @@ export default {
 
     watch: {
         'user_variable.asset_id': function () {
-            if(this.status){                
+            if(this.status){
                 this.getAssetZones();
                 this.getVariables();
             }
@@ -195,7 +195,7 @@ export default {
                 }
                 vm.$refs.job_date.focus();
             } else {
-                vm.status = false;                
+                vm.status = false;
                 let uri = { uri: "getUserVariable", data: { user_variable_id: to.params.user_variable_id } };
                 vm.$store
                     .dispatch("post", uri)
@@ -211,26 +211,13 @@ export default {
         });
     },
     mounted() {
-        // this.user_variable.job_date = moment().format("yyyy-MM-DD");
-        // const now = new Date();    
-        // this.user_variable.job_date = now.toISOString().slice(0, 16);
+        this.user_variable.job_date = moment().format("yyyy-MM-DD HH:mm");
 
-        const now = new Date();
-      
-        // Pad single digit months, days, hours, and minutes with leading zeroes
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        
-        // Format to YYYY-MM-DDTHH:MM
-        this.user_variable.job_date = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     },
     methods: {
         convertDateFormat(date) {
             let vm = this;
-            return moment(date).format("yyyy-MM-DD HH:MM:SS");
+            return moment(date).format("yyyy-MM-DD HH:mm");
         },
         submitForm() {
             let vm = this;
@@ -302,8 +289,8 @@ export default {
                 });
         },
         addUserVariable() {
-            let vm = this;                
-            let loader = vm.$loading.show();            
+            let vm = this;
+            let loader = vm.$loading.show();
             for (let i = 0; i < vm.asset_zones.length; i++) {
                 if (vm.user_variable?.asset_variables?.[i]) {
                     for (let j = 0; j < vm.user_variable.asset_variables[i].length; j++) {

@@ -16,6 +16,7 @@ import EditAsset from "@/views/masters/assets/Edit.vue";
 import Assets from "@/views/masters/assets/Index.vue";
 import AssetView from "@/views/masters/assets/ViewAsset.vue";
 import GenerateQR from "@/views/masters/assets/GenerateQRCode.vue"
+import AssetAccessories from "@/views/masters/assets/AssetAccessories.vue";
 
 //Registers
 import Activities from "@/views/registers/activity/Index.vue";
@@ -83,6 +84,7 @@ import ComponentCreate from "@/views/assets/Create.vue";
 import AssetActivityVue from "@/views/assets/AssetActivity.vue";
 import ServiceVue from "@/views/assets/Service.vue";
 import InhouseServiceVue from "@/views/assets/InhouseService.vue";
+
 
 // Type parameters
 import EquipmentTypeVue from "@/views/type_parameters/EquipmentType.vue";
@@ -285,11 +287,11 @@ const routes = [
     name: "Assets.Create",
     component: CreateAsset,
   },
-  // {
-  //   path: "/asset/:asset_id/edit",
-  //   name: "Assets.Edit",
-  //   component: EditAsset,
-  // },
+  {
+    path: "/asset/accessories",
+    name: "Assets.accessories",
+    component: AssetAccessories,
+  },
   {
     path: "/asset/:asset_id/edit",
     name: "Assets.Edit",

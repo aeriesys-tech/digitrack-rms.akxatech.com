@@ -139,16 +139,22 @@ export default {
             status: true,
         }
     },
-    beforeRouteEnter(to, from, next) {
-        next((vm) => {
-            if(from.name != 'Users.Edit'){
-                vm.$store.commit("setCurrentPage", vm.meta.page)
-            }else{
-                vm.meta.page = vm.$store.getters.current_page
-            }
-        });
-    },
+    // beforeRouteEnter(to, from, next) {
+    //     next((vm) => {
+    //         if(from.name != 'Users.Edit'){
+    //             vm.$store.commit("setCurrentPage", vm.meta.page)
+    //         }else{
+    //             vm.meta.page = vm.$store.getters.current_page
+    //         }
+    //     });
+    // },
     mounted() {
+         if (this.$store.getters.current_page) {
+             this.meta.page = this.$store.getters.current_page
+        }
+        else {
+            this.meta.page = 1;
+        }
         this.index();
     },
 
@@ -156,14 +162,15 @@ export default {
         index() {
             let vm = this;
             let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateUsers', data: vm.meta })
+            vm.$store.dispatch('post', { uri: 'paginateUsers', data: vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.users = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.users = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.to = response.data.meta.to;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -199,7 +206,7 @@ export default {
             vm.meta.page = 1;
             vm.index();
         },
-        
+
         onPageChange(page) {
             this.meta.page = page;
             this.index();
@@ -209,7 +216,7 @@ export default {
             this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
             this.index();
         },
-        
+
     }
 }
 </script>

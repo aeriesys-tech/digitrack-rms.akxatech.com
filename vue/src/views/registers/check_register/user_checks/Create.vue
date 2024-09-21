@@ -86,7 +86,7 @@
                                     <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Reference Date</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Reference Date & Time</label><span class="text-danger"> *</span>
                                     <input
                                         type="datetime-local"
                                         class="form-control"
@@ -241,7 +241,7 @@ export default {
             }
         },
     mounted() {
-        this.user_check.reference_date = moment().format("yyyy-MM-DDTHH:MM");
+        this.user_check.reference_date = moment().format("yyyy-MM-DDTHH:mm");
     },
     methods: {
         checkAssets() {
@@ -370,7 +370,7 @@ export default {
         },
         convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format('yyyy-MM-DDTHH:MM')
+                return moment(date).format('yyyy-MM-DDTHH:mm')
 
             },
 

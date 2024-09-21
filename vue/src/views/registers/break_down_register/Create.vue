@@ -211,11 +211,13 @@ export default {
                     // vm.$refs.asset_id.focus();
                 } else {
                     vm.status = false;
+
                     let uri = { uri: "getBreakDownData", data: { break_down_list_id: to.params.break_down_list_id } };
                     vm.$store
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.break_down = response.data.data;
+                            vm.break_down.job_date = moment(vm.break_down.job_date).format("yyyy-MM-DDTHH:mm");
                             vm.break_down.break_down_attributes.map(function (element) {
                                 vm.deleted_break_down_attribute_values.push(element.break_down_attribute_value.break_down_attribute_value_id);
                             });
@@ -231,7 +233,7 @@ export default {
             });
     },
         mounted() {
-        this.break_down.job_date = moment().format("yyyy-MM-DDTHH:MM");
+        this.break_down.job_date = moment().format("yyyy-MM-DDTHH:mm");
     },
 
     methods: {

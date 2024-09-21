@@ -128,7 +128,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "service_id",
                     per_page: 10,
                     totalRows: 0,

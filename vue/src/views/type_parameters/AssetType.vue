@@ -124,7 +124,7 @@ export default {
         return {
             meta: {
                 search: "",
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "asset_type_id",
                 per_page: 10,
                 totalRows: 0,

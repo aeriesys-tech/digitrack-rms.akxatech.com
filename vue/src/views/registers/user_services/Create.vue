@@ -51,12 +51,12 @@
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Service Date Time</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Service Date & Time</label><span class="text-danger"> *</span>
                                     <input type="datetime-local" class="form-control" :class="{'is-invalid': errors.service_date}" :value="convertDateFormat(user_service.service_date)" v-model="user_service.service_date" ref="service_date"/>
                                     <span v-if="errors.service_date" class="invalid-feedback">{{ errors.service_date[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Next Service Date</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Next Service Date & Time</label><span class="text-danger"> *</span>
                                     <input
                                         type="datetime-local"
                                         class="form-control"
@@ -283,13 +283,13 @@
             });
         },
         mounted() {
-            this.user_service.service_date = moment().format("yyyy-MM-DDTHH:MM");
-            this.user_service.next_service_date = moment().add(1, 'days').format("yyyy-MM-DDTHH:MM");
+            this.user_service.service_date = moment().format("yyyy-MM-DDTHH:mm");
+            this.user_service.next_service_date = moment().add(1, 'days').format("yyyy-MM-DDTHH:mm");
         },
         methods: {
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DDTHH:MM");
+                return moment(date).format("yyyy-MM-DDTHH:mm");
             },
             submitForm() {
                 let vm = this;

@@ -109,14 +109,17 @@
                                             </div>
                                         </td>
                                         <td class="text-center" v-if="get_assetviews.length || get_asset.length">
-                                            <a v-can="'assets.update'" title="Edit" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a v-can="'assetviews.view'" title="View" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
+                                            <a v-can="'assets.update'" title="Edit Asset Attributes" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a v-can="'assetviews.view'" title="View Register Attributes" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                             <!-- <a href="javascript:void(0)" title="QR code" class="text-dark me-2" @click.prevent="getQRCode(asset)"><i class="ri-qr-code-line fs-18 lh-1"></i></a> -->
+                                            <a title="Asset Delete" v-can="'assets.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="forceDeleteAsset(asset)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                         <td class="text-center">
                                             <a title="Activity Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/activity/create')"><i class="ri-stack-fill fs-18 lh-1"></i></a>
                                             <a title="Service Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
                                             <a title="Check Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a>
+                                            <a title="Asset Accessories" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-brush-3-fill fs-18 lh-1"></i></a>
+                                            
                                         </td>
                                     </tr>
                                     <tr v-if="assets.length==0">
@@ -155,7 +158,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "asset_id",
                     per_page: 10,
                     totalRows: 0,
@@ -225,6 +228,26 @@
 
                 this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/asset/" + asset.asset_id + "/view");
+            },
+            forceDeleteAsset(asset) {
+                let vm = this;
+                alert('are you sure you want delete it!')
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", {
+                        uri: "forceDeleteAsset",
+                        data: asset,
+                    })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.index();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
             },
             viewRegister(asset, path){
                 this.$store.commit("setCurrentPage", this.meta.page)

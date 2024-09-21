@@ -67,6 +67,7 @@
                                             type="number"
                                             class="form-control"
                                             min="0"
+                                            step="any"
                                             oninput="validity.valid||(value='');"
                                             :placeholder="'Enter '+ field.display_name"
                                             :class="{'is-invalid': errors[field.display_name]}"

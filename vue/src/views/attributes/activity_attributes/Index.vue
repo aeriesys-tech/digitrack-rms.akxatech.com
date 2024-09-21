@@ -157,7 +157,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "activity_attribute_id",
                     per_page: 10,
                     totalRows: 0,
@@ -173,16 +173,14 @@
                 status: true,
             }
         },
-        beforeRouteEnter(to, from, next) {
-            next((vm) => {
-                if(from.name != 'ActivityAttributes.Edit'){
-                    vm.$store.commit("setCurrentPage", vm.meta.page)
-                }else{
-                    vm.meta.page = vm.$store.getters.current_page
-                }
-            });
-        },
+
         mounted() {
+             if (this.$store.getters.current_page) {
+                this.meta.page = this.$store.getters.current_page
+            }
+            else {
+                this.meta.page = 1;
+            }
             this.index();
         },
 

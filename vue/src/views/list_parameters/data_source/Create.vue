@@ -65,6 +65,7 @@
                                         <input
                                             type="number"
                                             class="form-control"
+                                            step="any"
                                             min="0"
                                             oninput="validity.valid||(value='');"
                                             :placeholder="'Enter '+ field.display_name"
