@@ -7,6 +7,10 @@ use App\Models\DataSourceAttribute;
 use App\Models\DataSourceAttributeType;
 use App\Http\Resources\DataSourceAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DataSourceAttributeExport;
+use App\Exports\DataSourceAttributeHeadingsExport;
+use App\Imports\DataSourceAttributesImport;
 
 class DataSourceAttributeController extends Controller
 {
@@ -165,5 +169,33 @@ class DataSourceAttributeController extends Controller
                 "message" => "DataSourceAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadDataSourceAttributes(Request $request)
+    {
+        $filename = "DataSource Attributes.xlsx";
+
+        $excel = new DataSourceAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadDataSourceAttributeHeadings()
+    {
+        $filename = "DataSource Attribute Headings.xlsx";
+        $excel = new DataSourceAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importDataSourceAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new DataSourceAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

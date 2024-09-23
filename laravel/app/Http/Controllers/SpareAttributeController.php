@@ -7,6 +7,10 @@ use App\Models\SpareAttribute;
 use App\Models\SpareAttributeType;
 use App\Http\Resources\SpareAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SpareAttributeExport;
+use App\Exports\SpareAttributeHeadingsExport;
+use App\Imports\SpareAttributesImport;
 
 class SpareAttributeController extends Controller
 {
@@ -176,5 +180,33 @@ class SpareAttributeController extends Controller
                 "message" => "SpareAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadSpareAttributes(Request $request)
+    {
+        $filename = "Spare Attributes.xlsx";
+
+        $excel = new SpareAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadSpareAttributeHeadings()
+    {
+        $filename = "Spare Attribute Headings.xlsx";
+        $excel = new SpareAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importSpareAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new SpareAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

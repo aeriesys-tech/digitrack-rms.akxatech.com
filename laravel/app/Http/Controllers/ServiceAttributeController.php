@@ -7,6 +7,10 @@ use App\Models\ServiceAttribute;
 use App\Models\ServiceAttributeType;
 use App\Http\Resources\ServiceAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ServiceAttributeExport;
+use App\Exports\ServiceAttributeHeadingsExport;
+use App\Imports\ServiceAttributesImport;
 
 class ServiceAttributeController extends Controller
 {
@@ -163,5 +167,33 @@ class ServiceAttributeController extends Controller
                 "message" => "ServiceAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadServiceAttributes(Request $request)
+    {
+        $filename = "Service Attributes.xlsx";
+
+        $excel = new ServiceAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadServiceAttributeHeadings()
+    {
+        $filename = "Service Attribute Headings.xlsx";
+        $excel = new ServiceAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importServiceAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new ServiceAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }
