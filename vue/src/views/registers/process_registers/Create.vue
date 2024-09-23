@@ -43,7 +43,7 @@
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0]}}</span>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Job Date Time</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Job Date & Time</label><span class="text-danger"> *</span>
                                     <input type="datetime-local" class="form-control" placeholder="Enter Job Date"
                                         :class="{ 'is-invalid': errors.job_date }"
                                         v-model="user_variable.job_date" ref="job_date" :disabled="!status"/>

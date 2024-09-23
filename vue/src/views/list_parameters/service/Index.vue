@@ -17,7 +17,7 @@
                         class="ri-list-check"></i> ADD SERVICE</router-link>
             </div>
         <div class="row">
-    
+
             <div class="col-12">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
@@ -43,7 +43,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('service_name')">Service Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='service_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='service_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -51,7 +51,7 @@
                                             </span>
                                         </th>
                                         <th >
-                                            Asset Type.
+                                            Asset Type
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -66,8 +66,8 @@
                                             <i v-else class="fas fa-sort"></i>
                                         </span>
                                     </th> -->
-                                       
-                                       
+
+
                                         <th class="text-center">Status</th>
                                         <th class="text-center" >Actions</th>
                                     </tr>
@@ -117,7 +117,7 @@
         </div>
     </div>
     </template>
-    
+
     <script>
     import Pagination from "@/components/Pagination.vue";
     export default {
@@ -157,7 +157,7 @@
         mounted() {
             this.index();
         },
-    
+
         methods: {
             index() {
                 let vm = this;
@@ -179,12 +179,12 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            
+
             editService(service) {
                 this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/services/"+service.service_id+"/edit");
             },
-    
+
             deleteService(service) {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -210,7 +210,7 @@
                 this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
                 this.index();
             },
-           
+
             search() {
                 let vm = this;
                 vm.meta.page = 1;
@@ -219,4 +219,3 @@
         }
     }
     </script>
-    

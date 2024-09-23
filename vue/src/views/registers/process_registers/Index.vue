@@ -52,7 +52,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('reference_date')">
-                                            Job Date Time
+                                            Job Date & Time
                                             <span>
                                                 <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'"
                                                     class="ri-arrow-up-line"></i>

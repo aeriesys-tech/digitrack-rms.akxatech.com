@@ -152,7 +152,7 @@ export default {
          convertDateFormat(date) {
                 let vm = this;
             // return moment(date).format("yyyy-MM-DD");
-                return moment(date).format("DD-MM-YYYY HH:MM");
+                return moment(date).format("DD-MM-YYYY HH:mm");
             },
         index() {
             let vm = this;

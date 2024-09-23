@@ -54,7 +54,7 @@
                                             </span>
                                         </th>
                                         <th >
-                                            Asset Type.
+                                            Asset Type
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
