@@ -173,13 +173,16 @@
                 status: true,
             }
         },
+        beforeRouteEnter(to, from, next) {
+            next((vm) => {
+                if(from.name == 'BreakDownAttributes.Edit'){
+                    vm.meta.page = vm.$store.getters.current_page
+                }else{
+                    vm.meta.page = 1
+                }
+            });
+        },
         mounted() {
-             if (this.$store.getters.current_page) {
-                this.meta.page = this.$store.getters.current_page
-            }
-            else {
-                this.meta.page = 1;
-            }
             this.index();
         },
 
@@ -203,7 +206,7 @@
                     });
             },
             editBreakDownAttribute(break_down_attribute) {
-                // this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/break_down_attributes/" + break_down_attribute.break_down_attribute_id + "/edit");
             },
 

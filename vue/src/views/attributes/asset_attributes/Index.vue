@@ -174,13 +174,17 @@
             }
         },
 
+           beforeRouteEnter(to, from, next) {
+               next((vm) => {
+                    console.log("ass--", from.name)
+                    if(from.name == 'AssetAttributes.Edit'){
+                        vm.meta.page = vm.$store.getters.current_page
+                    }else{
+                        vm.meta.page = 1
+                    }
+                });
+            },
         mounted() {
-             if (this.$store.getters.current_page) {
-                this.meta.page = this.$store.getters.current_page
-            }
-            else {
-                this.meta.page = 1;
-            }
             this.index();
         },
 
@@ -188,14 +192,15 @@
             index() {
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'paginateAssetAttributes', data: vm.meta })
+                vm.$store.dispatch('post', { uri: 'paginateAssetAttributes', data: vm.meta })
                     .then(response => {
                         loader.hide();
-                        this.assetattributes = response.data.data;
-                        this.meta.totalRows = response.data.meta.total;
-                        this.meta.from = response.data.meta.from;
-                        this.meta.lastPage = response.data.meta.last_page;
-                        this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                        vm.assetattributes = response.data.data;
+                        vm.meta.totalRows = response.data.meta.total;
+                        vm.meta.from = response.data.meta.from;
+                        vm.meta.to = response.data.meta.to;
+                        vm.meta.lastPage = response.data.meta.last_page;
+                        vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -204,7 +209,7 @@
                     });
             },
             editAssetAttribute(assetattribute) {
-                // this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/asset_attributes/" + assetattribute.asset_attribute_id + "/edit");
             },
 

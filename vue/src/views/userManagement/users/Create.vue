@@ -116,7 +116,6 @@ export default {
             next((vm) => {
                 vm.getRoles();
                 if (to.name == "Users.Create") {
-                    vm.$store.commit("setCurrentPage", 1)
                     vm.$refs.name.focus();
                 } else {
                     vm.status = false;

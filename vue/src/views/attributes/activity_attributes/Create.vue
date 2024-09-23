@@ -168,7 +168,6 @@
                 next((vm) => {
                     vm.getActivityTypes();
                     if (to.name == "ActivityAttributes.Create") {
-                         vm.$store.commit("setCurrentPage", 1)
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;

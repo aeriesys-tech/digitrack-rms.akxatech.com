@@ -161,7 +161,7 @@
                 next((vm) => {
                     vm.getSpareTypes();
                     if (to.name == "SpareAttributes.Create") {
-                         vm.$store.commit("setCurrentPage", 1)
+                        //  vm.$store.commit("setCurrentPage", 1)
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;

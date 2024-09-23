@@ -175,15 +175,17 @@
         },
 
         mounted() {
-             if (this.$store.getters.current_page) {
-                this.meta.page = this.$store.getters.current_page
-            }
-            else {
-                this.meta.page = 1;
-            }
             this.index();
         },
-
+         beforeRouteEnter(to, from, next) {
+             next((vm) => {
+                if(from.name == 'ActivityAttributes.Edit'){
+                    vm.meta.page = vm.$store.getters.current_page
+                }else{
+                    vm.meta.page = 1
+                }
+            });
+        },
         methods: {
             index() {
                 let vm = this;
@@ -204,7 +206,7 @@
                     });
             },
             editActivityAttribute(activity_attribute) {
-                // this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/activity_attributes/" + activity_attribute.activity_attribute_id + "/edit");
             },
 

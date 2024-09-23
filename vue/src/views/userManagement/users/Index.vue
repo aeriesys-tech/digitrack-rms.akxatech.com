@@ -125,7 +125,7 @@ export default {
                 search: '',
                 order_by: "asc",
                 keyword: "user_id",
-                per_page: 10,
+                per_page: 2,
                 totalRows: 0,
                 page: 1,
                 lastPage: 1,
@@ -139,22 +139,23 @@ export default {
             status: true,
         }
     },
-    // beforeRouteEnter(to, from, next) {
-    //     next((vm) => {
-    //         if(from.name != 'Users.Edit'){
-    //             vm.$store.commit("setCurrentPage", vm.meta.page)
-    //         }else{
-    //             vm.meta.page = vm.$store.getters.current_page
-    //         }
-    //     });
-    // },
+    beforeRouteEnter(to, from, next) {
+        next((vm) => {
+                console.log("from spare----",from.name)
+            if(from.name == 'Users.Edit'){
+                vm.meta.page = vm.$store.getters.current_page
+            }else{
+                vm.meta.page = 1
+            }
+        });
+    },
     mounted() {
-         if (this.$store.getters.current_page) {
-             this.meta.page = this.$store.getters.current_page
-        }
-        else {
-            this.meta.page = 1;
-        }
+        //  if (this.$store.getters.current_page) {
+        //      this.meta.page = this.$store.getters.current_page
+        // }
+        // else {
+        //     this.meta.page = 1;
+        // }
         this.index();
     },
 

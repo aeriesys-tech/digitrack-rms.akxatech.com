@@ -151,7 +151,6 @@
                                         <a href="javascript:void(0)" v-if="check.status" class="text-success me-2" @click="editCheck(check)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                     </td>
                                 </tr>
-                                {{ meta.per_page }}
                             </tbody>
                         </table>
                     </div>

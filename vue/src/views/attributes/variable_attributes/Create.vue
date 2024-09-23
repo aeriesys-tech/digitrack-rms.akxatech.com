@@ -161,7 +161,6 @@
                 next((vm) => {
                     vm.getVariableTypes();
                     if (to.name == "VariableAttributes.Create") {
-                        vm.$store.commit("setCurrentPage", 1)
                         // vm.$refs.field_name.focus();
                     } else {
                         vm.status = false;

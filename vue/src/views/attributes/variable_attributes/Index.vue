@@ -173,14 +173,17 @@
                 status: true,
             }
         },
+        beforeRouteEnter(to, from, next) {
+            next((vm) => {
+                if(from.name == 'VariableAttributes.Edit'){
+                    vm.meta.page = vm.$store.getters.current_page
+                }else{
+                    vm.meta.page = 1
+                }
+            });
+        },
 
         mounted() {
-            if (this.$store.getters.current_page) {
-                this.meta.page = this.$store.getters.current_page
-            }
-            else {
-                this.meta.page = 1;
-            }
             this.index();
         },
 
@@ -204,7 +207,7 @@
                     });
             },
             editVariableAttribute(variableattribute) {
-                // this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/variable_attributes/" + variableattribute.variable_attribute_id + "/edit");
             },
 
