@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Job Date</label><span class="text-danger"> *</span>
-                                    <input type="datetime-local" placeholder="Break Down List Code" class="form-control" :class="{ 'is-invalid': errors.job_date }" v-model="break_down.job_date" />
+                                    <input type="datetime-local" step="any" placeholder="Break Down List Code" class="form-control" :class="{ 'is-invalid': errors.job_date }" v-model="break_down.job_date" />
                                     <span v-if="errors.job_date" class="invalid-feedback">{{ errors.job_date[0] }}</span>
                                 </div>
 
@@ -121,7 +121,7 @@
                                             :placeholder="'Enter ' + field.display_name"
                                             :class="{'is-invalid': errors[field.display_name]}"
                                             v-model="field.break_down_attribute_value.field_value"
-                                            step="1"
+                                            step="any"
                                         />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
@@ -217,7 +217,7 @@ export default {
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.break_down = response.data.data;
-                            vm.break_down.job_date = moment(vm.break_down.job_date).format("yyyy-MM-DDTHH:mm");
+                            vm.break_down.job_date = moment(vm.break_down.job_date).format("yyyy-MM-DDTHH:mm:ss");
                             vm.break_down.break_down_attributes.map(function (element) {
                                 vm.deleted_break_down_attribute_values.push(element.break_down_attribute_value.break_down_attribute_value_id);
                             });
@@ -233,7 +233,7 @@ export default {
             });
     },
         mounted() {
-        this.break_down.job_date = moment().format("yyyy-MM-DDTHH:mm");
+        this.break_down.job_date = moment().format("yyyy-MM-DDTHH:mm:ss");
     },
 
     methods: {
