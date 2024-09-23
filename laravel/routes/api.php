@@ -296,6 +296,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetAttribute',[AssetAttributeController::class, 'getAssetAttribute']);
     Route::post('getAssetAttributes',[AssetAttributeController::class, 'getAssetAttributes']);
     Route::post('deleteAssetAttribute',[AssetAttributeController::class, 'deleteAssetAttribute']);
+    Route::post('importAssetAttribute',[AssetAttributeController::class, 'importAssetAttribute']);
+    Route::post('downloadAssetAttributes',[AssetAttributeController::class, 'downloadAssetAttributes']);
+    Route::post('downloadAssetAttributeHeadings',[AssetAttributeController::class, 'downloadAssetAttributeHeadings']);
 
     Route::post('paginateFrequencies',[FrequencyController::class, 'paginateFrequencies']);
     Route::post('addFrequency',[FrequencyController::class, 'addFrequency']);
@@ -352,6 +355,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getSpareAttribute',[SpareAttributeController::class, 'getSpareAttribute']);
     Route::post('getSpareAttributes',[SpareAttributeController::class, 'getSpareAttributes']);
     Route::post('deleteSpareAttribute',[SpareAttributeController::class, 'deleteSpareAttribute']);
+    Route::post('importSpareAttribute',[SpareAttributeController::class, 'importSpareAttribute']);
+    Route::post('downloadSpareAttributes',[SpareAttributeController::class, 'downloadSpareAttributes']);
+    Route::post('downloadSpareAttributeHeadings',[SpareAttributeController::class, 'downloadSpareAttributeHeadings']);
 
     Route::post('getSparesDropdown',[SpareAttributeValueController::class, 'getSparesDropdown']);
 
@@ -361,6 +367,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getDataSourceAttribute',[DataSourceAttributeController::class, 'getDataSourceAttribute']);
     Route::post('getDataSourceAttributes',[DataSourceAttributeController::class, 'getDataSourceAttributes']);
     Route::post('deleteDataSourceAttribute',[DataSourceAttributeController::class, 'deleteDataSourceAttribute']);
+    Route::post('importDataSourceAttribute',[DataSourceAttributeController::class, 'importDataSourceAttribute']);
+    Route::post('downloadDataSourceAttributes',[DataSourceAttributeController::class, 'downloadDataSourceAttributes']);
+    Route::post('downloadDataSourceAttributeHeadings',[DataSourceAttributeController::class, 'downloadDataSourceAttributeHeadings']);
 
     Route::post('paginateVariableAttributes',[VariableAttributeController::class, 'paginateVariableAttributes']);
     Route::post('addVariableAttribute',[VariableAttributeController::class, 'addVariableAttribute']);
@@ -368,6 +377,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getVariableAttribute',[VariableAttributeController::class, 'getVariableAttribute']);
     Route::post('getVariableAttributes',[VariableAttributeController::class, 'getVariableAttributes']);
     Route::post('deleteVariableAttribute',[VariableAttributeController::class, 'deleteVariableAttribute']);
+    Route::post('importVariableAttribute',[VariableAttributeController::class, 'importVariableAttribute']);
+    Route::post('downloadVariableAttributes',[VariableAttributeController::class, 'downloadVariableAttributes']);
+    Route::post('downloadVariableAttributeHeadings',[VariableAttributeController::class, 'downloadVariableAttributeHeadings']);
 
     Route::post('paginateServiceAttributes',[ServiceAttributeController::class, 'paginateServiceAttributes']);
     Route::post('addServiceAttribute',[ServiceAttributeController::class, 'addServiceAttribute']);
@@ -375,7 +387,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getServiceAttribute',[ServiceAttributeController::class, 'getServiceAttribute']);
     Route::post('getServiceAttributes',[ServiceAttributeController::class, 'getServiceAttributes']);
     Route::post('deleteServiceAttribute',[ServiceAttributeController::class, 'deleteServiceAttribute']);
-    
+    Route::post('importServiceAttribute',[ServiceAttributeController::class, 'importServiceAttribute']);
+    Route::post('downloadServiceAttributes',[ServiceAttributeController::class, 'downloadServiceAttributes']);
+    Route::post('downloadServiceAttributeHeadings',[ServiceAttributeController::class, 'downloadServiceAttributeHeadings']);
 
     Route::post('getServicesDropdown',[ServiceAttributeValueController::class, 'getServicesDropdown']);
 
@@ -385,6 +399,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getBreakDownAttribute',[BreakDownAttributeController::class, 'getBreakDownAttribute']);
     Route::post('getBreakDownAttributes',[BreakDownAttributeController::class, 'getBreakDownAttributes']);
     Route::post('deleteBreakDownAttribute',[BreakDownAttributeController::class, 'deleteBreakDownAttribute']);
+    Route::post('importBreakDownAttribute',[BreakDownAttributeController::class, 'importBreakDownAttribute']);
+    Route::post('downloadBreakDownAttributes',[BreakDownAttributeController::class, 'downloadBreakDownAttributes']);
+    Route::post('downloadBreakDownAttributeHeadings',[BreakDownAttributeController::class, 'downloadBreakDownAttributeHeadings']);
 
     Route::post('paginateVariables',[VariableController::class, 'paginateVariables']);
     Route::post('getVariables',[VariableController::class, 'getVariables']);
@@ -441,4 +458,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getActivityAttribute',[ActivityAttributeController::class, 'getActivityAttribute']);
     Route::post('updateActivityAttribute',[ActivityAttributeController::class, 'updateActivityAttribute']);
     Route::post('deleteActivityAttribute',[ActivityAttributeController::class, 'deleteActivityAttribute']);
+    Route::post('importActivityAttribute',[ActivityAttributeController::class, 'importActivityAttribute']);
+    Route::post('downloadActivityAttributes',[ActivityAttributeController::class, 'downloadActivityAttributes']);
+    Route::post('downloadActivityAttributeHeadings',[ActivityAttributeController::class, 'downloadActivityAttributeHeadings']);
 });

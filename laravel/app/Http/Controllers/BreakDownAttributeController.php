@@ -7,6 +7,10 @@ use App\Models\BreakDownAttribute;
 use App\Models\BreakDownAttributeType;
 use App\Http\Resources\BreakDownAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BreakDownAttributeExport;
+use App\Exports\BreakDownAttributeHeadingsExport;
+use App\Imports\BreakDownAttributesImport;
 
 class BreakDownAttributeController extends Controller
 {
@@ -163,5 +167,33 @@ class BreakDownAttributeController extends Controller
                 "message" => "BreakDownAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadBreakDownAttributes(Request $request)
+    {
+        $filename = "BreakDown Attributes.xlsx";
+
+        $excel = new BreakDownAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadBreakDownAttributeHeadings()
+    {
+        $filename = "BreakDown Attribute Headings.xlsx";
+        $excel = new BreakDownAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importBreakDownAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new BreakDownAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

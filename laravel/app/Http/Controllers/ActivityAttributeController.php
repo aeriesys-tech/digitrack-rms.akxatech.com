@@ -7,6 +7,10 @@ use App\Http\Resources\ActivityAttributeResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActivityAttributeType;
 use App\Models\ActivityAttribute;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ActivityAttributeExport;
+use App\Exports\ActivityAttributeHeadingsExport;
+use App\Imports\ActivityAttributesImport;
 
 class ActivityAttributeController extends Controller
 {
@@ -161,5 +165,33 @@ class ActivityAttributeController extends Controller
                 "message" => "ActivityAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadActivityAttributes(Request $request)
+    {
+        $filename = "Activity Attributes.xlsx";
+
+        $excel = new ActivityAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadActivityAttributeHeadings()
+    {
+        $filename = "Activity Attribute Headings.xlsx";
+        $excel = new ActivityAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importActivityAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new ActivityAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

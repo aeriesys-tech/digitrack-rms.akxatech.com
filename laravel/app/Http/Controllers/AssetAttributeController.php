@@ -7,6 +7,10 @@ use App\Models\AssetAttribute;
 use App\Models\AssetAttributeType;
 use App\Http\Resources\AssetAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AssetAttributeExport;
+use App\Exports\AssetAttributeHeadingsExport;
+use App\Imports\AssetAttributesImport;
 
 class AssetAttributeController extends Controller
 {
@@ -165,5 +169,33 @@ class AssetAttributeController extends Controller
                 "message" =>"AssetAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadAssetAttributes(Request $request)
+    {
+        $filename = "Asset Attributes.xlsx";
+
+        $excel = new AssetAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadAssetAttributeHeadings()
+    {
+        $filename = "Asset Attribute Headings.xlsx";
+        $excel = new AssetAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importAssetAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new AssetAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

@@ -7,6 +7,10 @@ use App\Models\VariableAttribute;
 use App\Models\VariableAttributeType;
 use App\Http\Resources\VariableAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\VariableAttributeExport;
+use App\Exports\VariableAttributeHeadingsExport;
+use App\Imports\VariableAttributesImport;
 
 class VariableAttributeController extends Controller
 {
@@ -164,5 +168,33 @@ class VariableAttributeController extends Controller
                 "message" => "VariableAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadVariableAttributes(Request $request)
+    {
+        $filename = "Variable Attributes.xlsx";
+
+        $excel = new VariableAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadVariableAttributeHeadings()
+    {
+        $filename = "Variable Attribute Headings.xlsx";
+        $excel = new VariableAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importVariableAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new VariableAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }
