@@ -34,7 +34,14 @@ class ServiceController extends Controller
         if($request->search!='')
         {
             $query->where('service_code', 'like', "%$request->search%")
-                ->orWhere('service_name', 'like', "$request->search%");
+                ->orWhere('service_name', 'like', "%$request->search%")
+                ->orwhereHas('ServiceType', function($qu) use($request){
+                    $qu->where('service_type_name','like', "%$request->search%");
+                })->orwhereHas('ServiceAssetTypes', function($qu) use($request){
+                    $qu->whereHas('AssetType', function($que) use($request){
+                        $que->where('asset_type_name','like', "%$request->search%");
+                    });
+                });
         }
         $service = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return ServiceResource::collection($service);

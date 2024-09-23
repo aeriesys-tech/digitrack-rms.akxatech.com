@@ -41,8 +41,11 @@ class CheckController extends Controller
         if($request->search!='')
         {
             $query->where('field_name', 'like', "%$request->search%")
-                 ->orWhere('field_type', 'like', "$request->search%")
-                 ->orWhere('default_value', 'like', "$request->search%");
+                ->orWhere('field_type', 'like', "$request->search%")
+                ->orWhere('default_value', 'like', "$request->search%")
+                ->orwhereHas('Department', function($que) use($request){
+                    $que->where('department_name', 'like', "$request->search%");
+                });
         }
         $check = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return CheckResource::collection($check);

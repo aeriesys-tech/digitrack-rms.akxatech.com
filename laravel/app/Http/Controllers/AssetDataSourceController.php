@@ -227,6 +227,11 @@ class AssetDataSourceController extends Controller
         $asset_data_source = AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->first();
         $asset_data_source->update($data);
 
+        if(isset($request->deleted_asset_datasource_values)>0)
+        {
+            AssetDataSourceValue::whereIn('asset_data_source_value_id', $request->deleted_asset_datasource_values)->forceDelete();
+        }
+
         foreach ($request->asset_datasource_attributes as $attribute) 
         {
             $fieldValue = $attribute['field_value'];

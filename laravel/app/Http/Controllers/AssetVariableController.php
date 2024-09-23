@@ -226,6 +226,11 @@ class AssetVariableController extends Controller
         $asset_variable = AssetVariable::where('asset_variable_id', $request->asset_variable_id)->first();
         $asset_variable->update($data);
 
+        if(isset($request->deleted_asset_variable_values)>0)
+        {
+            AssetVariableValue::whereIn('asset_variable_value_id', $request->deleted_asset_variable_values)->forceDelete();
+        }
+
         foreach ($request->asset_variable_attributes as $attribute) 
         {
             $fieldValue = $attribute['field_value'];

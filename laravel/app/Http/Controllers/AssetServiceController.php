@@ -248,6 +248,11 @@ class AssetServiceController extends Controller
         $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
         $asset_service->update($data);
 
+        if(isset($request->deleted_asset_service_values)>0)
+        {
+            AssetServiceValue::whereIn('asset_service_value_id', $request->deleted_asset_service_values)->forceDelete();
+        }
+
         foreach ($request->asset_service_attributes as $attribute) 
         {
             $fieldValue = $attribute['field_value'];

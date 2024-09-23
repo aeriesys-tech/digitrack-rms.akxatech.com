@@ -252,6 +252,11 @@ class AssetSpareController extends Controller
         $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->first();
         $asset_spare->update($data);
 
+        if(isset($request->deleted_asset_spare_values)>0)
+        {
+            AssetSpareValue::whereIn('asset_spare_value_id', $request->deleted_asset_spare_values)->forceDelete();
+        }
+
         foreach ($request->asset_spare_attributes as $attribute) 
         {
             $fieldValue = $attribute['field_value'];

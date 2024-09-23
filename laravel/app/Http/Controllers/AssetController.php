@@ -33,6 +33,7 @@ use App\Models\AssetSpareValue;
 use App\Models\AssetServiceValue;
 use App\Models\AssetVariableValue;
 use App\Models\AssetDataSourceValue;
+use App\Models\BreakDownList;
 
 class AssetController extends Controller
 {
@@ -330,6 +331,14 @@ class AssetController extends Controller
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
+
+        $isReferenced = BreakDownList::where('asset_id', $request->asset_id)->exists();
+    
+        if ($isReferenced) {
+            return response()->json([
+                "message" => 'Asset cannot be deleted as it is used in other records.'
+            ], 400);
+        }
 
         AssetSpareValue::where('asset_id', $request->asset_id)->forceDelete();
         AssetSpare::where('asset_id', $request->asset_id)->forceDelete();

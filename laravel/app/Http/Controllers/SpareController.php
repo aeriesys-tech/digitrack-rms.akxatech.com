@@ -34,7 +34,14 @@ class SpareController extends Controller
         if($request->search!='')
         {
             $query->where('spare_code', 'like', "%$request->search%")
-                ->orWhere('spare_name', 'like', "$request->search%");
+                ->orWhere('spare_name', 'like', "%$request->search%")
+                ->orwhereHas('SpareType', function($que) use($request){
+                    $que->where('spare_type_name', 'like', "%$request->search%" );
+                })->orwhereHas('SpareAssetTypes', function($qu) use($request){
+                    $qu->whereHas('AssetType', function($que) use($request){
+                        $que->where('asset_type_name', 'like', "%$request->search%");
+                    });
+                });
         }
         $spare = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return SpareResource::collection($spare);

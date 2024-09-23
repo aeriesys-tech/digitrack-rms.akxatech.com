@@ -35,7 +35,14 @@ class VariableController extends Controller
         if($request->search!='')
         {
             $query->where('variable_code', 'like', "%$request->search%")
-                ->orWhere('variable_name', 'like', "$request->search%");
+                ->orWhere('variable_name', 'like', "%$request->search%")
+                ->orwhereHas('VariableType', function($qu) use($request) {
+                    $qu->where('variable_type_name','like', "%$request->search%");
+                })->orwhereHas('VariableAssetTypes', function($qu) use($request){
+                    $qu->whereHas('AssetType', function($que) use($request) {
+                        $que->where('asset_type_name','like', "%$request->search%");
+                    });
+                });
         }
         $variable = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return VariableResource::collection($variable);
