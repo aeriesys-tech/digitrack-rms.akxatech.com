@@ -309,6 +309,9 @@ export default {
                 });
         },
         updateBreakDown() {
+              if (!this.validateFields()) {
+                    return;
+                }
             let vm = this;
             let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'updateBreakDownList', data: vm.break_down })

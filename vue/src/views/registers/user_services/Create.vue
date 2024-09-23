@@ -37,6 +37,7 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <search
+                                    :disabled="!status"
                                         :class="{ 'is-invalid': errors.asset_id }"
                                         :customClass="{ 'is-invalid': errors.asset_id }"
                                         :initialize="user_service.asset_id"
