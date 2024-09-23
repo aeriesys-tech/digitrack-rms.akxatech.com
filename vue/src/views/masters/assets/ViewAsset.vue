@@ -1465,6 +1465,8 @@
                     spare_asset_zones:[],
                     quantity:'',
                     asset_spare_attributes:[],
+                    initial_spare_id:'',
+                    initial_asset_spare_attributes:[],
                     deleted_asset_spare_values:[],
                 },
                 check: {
@@ -1488,6 +1490,8 @@
                     asset_service_id:"",
                     service_asset_zones:[],
                     asset_service_attributes:[],
+                    initial_service_id:'',
+                    initial_asset_service_attributes:[],
                     deleted_asset_service_values:[],
                 },
                 datasource: {
@@ -1500,6 +1504,8 @@
                     asset_data_source_id:"",
                     script:'',
                     asset_datasource_attributes:[],
+                    initial_data_source_id:'',
+                    initial_asset_datasource_attributes:[],
                     deleted_asset_datasource_values:[],
                 },
                 variable: {
@@ -1511,6 +1517,8 @@
                     variable_asset_zones:[],
                     asset_variable_id:"",
                     asset_variable_attributes:[],
+                    initial_variable_id:'',
+                    initial_asset_variable_attributes:[],
                     deleted_asset_variable_values:[],
                 },
                 accessory: {
@@ -1692,6 +1700,8 @@
                 this.spare.asset_zone_id = spare.asset_zone_id
                 this.spare.quantity = spare.quantity
                 this.spare.asset_spare_attributes = spare.asset_spare_attributes
+                this.spare.initial_spare_id = spare.spare_id
+                this.spare.initial_asset_spare_attributes = spare.asset_spare_attributes
                 // console.log('spare.asset_spare_attributes:----', spare?.asset_spare_attributes)
             },
             editCheck(check){
@@ -1715,6 +1725,8 @@
                 this.service.service_asset_zones.push(service.asset_zone_id)
                 this.service.asset_zone_id = service.asset_zone_id
                 this.service.asset_service_attributes = service.asset_service_attributes
+                this.service.initial_service_id = service.service_id
+                this.service.initial_asset_service_attributes = service.asset_service_attributes
             },
             editVariable(variable){
                 this.variable.variable_id = variable.variable_id
@@ -1726,6 +1738,9 @@
                 this.variable.variable_asset_zones.push(variable.asset_zone_id)
                 this.variable.asset_zone_id = variable.asset_zone_id
                 this.variable.asset_variable_attributes = variable.asset_variable_attributes
+
+                this.variable.initial_variable_id = variable.variable_id
+                this.variable.initial_asset_variable_attributes = variable.asset_variable_attributes
             },
             editDataSource(datasource){
                 this.datasource.data_source_id = datasource.data_source_id
@@ -1738,6 +1753,8 @@
                 this.datasource.asset_zone_id = datasource.asset_zone_id
                 this.datasource.script = datasource.script
                 this.datasource.asset_datasource_attributes = datasource.asset_datasource_attributes
+                this.datasource.initial_data_source_id = datasource.data_source_id
+                this.datasource.initial_asset_datasource_attributes = datasource.asset_datasource_attributes
             },
 
             // getChecks() {
@@ -2045,6 +2062,9 @@
                         vm.spare.spare_asset_zones= [];
                         vm.spare.quantity = '';
                         vm.spare.asset_spare_attributes = [];
+                        vm.spare.initial_spare_id = '';
+                        vm.spare.initial_asset_spare_attributes = [];
+                        vm.spare.deleted_asset_spare_values = [];
                         vm.asset_zone_status_spares = false;
                         vm.errors = [];
                         vm.getAssetSpares();
@@ -2059,7 +2079,14 @@
             },
             updateSpare(){
                 let vm = this
-                let loader = vm.$loading.show();
+                let loader = vm.$loading.show();            
+
+                if(vm.spare.spare_id != vm.spare.initial_spare_id){
+                    vm.spare.initial_asset_spare_attributes.map(function(ele){
+                        vm.spare.deleted_asset_spare_values.push(ele.asset_spare_value_id)
+                    })
+                    
+                }
                 let uri = { uri: "updateAssetSpare", data: vm.spare };
                 vm.$store
                     .dispatch("post", uri)
@@ -2072,6 +2099,9 @@
                         vm.spare.spare_asset_zones = [];
                         vm.spare.quantity = '';
                         vm.spare.asset_spare_attributes = [];
+                        vm.spare.initial_spare_id = '';
+                        vm.spare.initial_asset_spare_attributes = [];
+                        vm.spare.deleted_asset_spare_values = [];
                         vm.asset_zone_status_spares = false;
                         vm.errors = [];
                         vm.getAssetSpares();
@@ -2121,6 +2151,11 @@
                         vm.service.asset_zone_id='';
                         vm.service.service_asset_zones = [];
                         vm.service.asset_service_attributes = [];
+
+                        vm.service.initial_service_id = '';
+                        vm.service.initial_asset_service_attributes = [];
+                        vm.service.deleted_asset_service_values = [];
+
                         vm.asset_zone_status_services = false;
                         vm.errors = [];
                         vm.getAssetServices();
@@ -2134,6 +2169,13 @@
             updateService(){
                 let vm = this
                 let loader = vm.$loading.show();
+                if(vm.service.service_id != vm.service.initial_service_id){
+                    vm.service.initial_asset_service_attributes.map(function(ele){
+                        vm.service.deleted_asset_service_values.push(ele.asset_service_value_id)
+                    })
+                    
+                }
+
                 let uri = { uri: "updateAssetService", data: vm.service };
                 vm.$store
                     .dispatch("post", uri)
@@ -2145,6 +2187,11 @@
                         vm.service.asset_service_id = "";
                         vm.service.service_asset_zones = [];
                         vm.service.asset_service_attributes = [];
+
+                        vm.service.initial_service_id = '';
+                        vm.service.initial_asset_service_attributes = [];
+                        vm.service.deleted_asset_service_values = [];
+
                         vm.asset_zone_status_services = false;
                         vm.errors = [];
                         vm.getAssetServices();
@@ -2169,6 +2216,11 @@
                         vm.variable.asset_zone_id='';
                         vm.variable.variable_asset_zones = [];
                         vm.variable.asset_variable_attributes = [];
+
+                        vm.variable.initial_variable_id = "";
+                        vm.variable.initial_asset_variable_attributes = [];
+                        vm.variable.deleted_asset_variable_values = [];                        
+
                         vm.asset_zone_status_variables = false;
                         vm.errors = [];
                         vm.getAssetVariables();
@@ -2183,6 +2235,14 @@
             updateVariable(){
                 let vm = this
                 let loader = vm.$loading.show();
+
+                if(vm.variable.variable_id != vm.variable.initial_variable_id){
+                    vm.variable.initial_asset_variable_attributes.map(function(ele){
+                        vm.variable.deleted_asset_variable_values.push(ele.asset_variable_value_id)
+                    })
+                    
+                }
+
                 let uri = { uri: "updateAssetVariable", data: vm.variable };
                 vm.$store
                     .dispatch("post", uri)
@@ -2194,6 +2254,9 @@
                         vm.variable.asset_variable_id="";
                         vm.variable.variable_asset_zones = [];
                         vm.variable.asset_variable_attributes = [];
+                        vm.variable.initial_variable_id = "";
+                        vm.variable.initial_asset_variable_attributes = [];
+                        vm.variable.deleted_asset_variable_values = [];
                         vm.asset_zone_status_variables = false;
                         vm.errors = [];
                         vm.getAssetVariables();
@@ -2219,6 +2282,9 @@
                         vm.datasource.data_source_asset_zones = [];
                         vm.datasource.script = '';
                         vm.datasource.asset_datasource_attributes = [];
+                        vm.datasource.initial_data_source_id = "";
+                        vm.datasource.initial_asset_datasource_attributes = [];
+                        vm.datasource.deleted_asset_datasource_values = [];
                         vm.asset_zone_status_datasources = false;
                         vm.getAssetDataSources();
                     })
@@ -2231,6 +2297,14 @@
             updateDataSource(){
                 let vm = this
                 let loader = vm.$loading.show();
+
+                if(vm.datasource.data_source_id != vm.datasource.initial_data_source_id){
+                    vm.datasource.initial_asset_datasource_attributes.map(function(ele){
+                        vm.datasource.deleted_asset_datasource_values.push(ele.asset_data_source_value_id)
+                    })
+                    
+                }
+
                 let uri = { uri: "updateAssetDataSource", data: vm.datasource };
                 vm.$store
                     .dispatch("post", uri)
@@ -2243,6 +2317,9 @@
                         vm.datasource.data_source_asset_zones = [];
                         vm.datasource.script = '';
                         vm.datasource.asset_datasource_attributes = [];
+                        vm.datasource.initial_data_source_id = "";
+                        vm.datasource.initial_asset_datasource_attributes = [];
+                        vm.datasource.deleted_asset_datasource_values = [];
                         vm.asset_zone_status_datasources = false;
                         vm.getAssetDataSources();
                     })
@@ -2553,7 +2630,7 @@
             getSpareAttribute(spare_id){
                 let vm = this;
                 let loader = vm.$loading.show();
-                vm.spare.asset_spare_attributes = [];
+                vm.spare.asset_spare_attributes = [];                
                 vm.$store
                     .dispatch("post", { uri: "assetSpareAttributeValues", data: {spare_id: spare_id} })
                     .then((response) => {
