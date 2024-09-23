@@ -45,6 +45,10 @@ class CheckController extends Controller
                 ->orWhere('default_value', 'like', "$request->search%")
                 ->orwhereHas('Department', function($que) use($request){
                     $que->where('department_name', 'like', "$request->search%");
+                })->orwhereHas('CheckAssetTypes', function($que) use($request){
+                    $que->whereHas('AssetType', function($qu) use($request){
+                        $qu->where('asset_type_name', 'like', "$request->search%");
+                    });
                 });
         }
         $check = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 

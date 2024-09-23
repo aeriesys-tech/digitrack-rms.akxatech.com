@@ -69,7 +69,7 @@ class UserCheckController extends Controller
 
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'reference_date' => 'required|date',
+            'reference_date' => 'required',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes',
@@ -133,7 +133,7 @@ class UserCheckController extends Controller
     {
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'reference_date' => 'required|date',
+            'reference_date' => 'required',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes'
