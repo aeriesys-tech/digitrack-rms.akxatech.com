@@ -52,7 +52,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('reference_date')">
-                                            Job Date.
+                                            Job Date Time
                                             <span>
                                                 <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'"
                                                     class="ri-arrow-up-line"></i>
@@ -62,7 +62,7 @@
                                             </span>
                                         </th>
                                         <th>
-                                            Asset Zone.
+                                            Asset Zone
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'"
                                                     class="ri-arrow-up-line"></i>
@@ -72,10 +72,10 @@
                                             </span>
                                         </th>
                                         <th>
-                                            Variable                                            
+                                            Variable
                                         </th>
                                         <th>
-                                            Value                                            
+                                            Value
                                         </th>
                                         <th class="text-center">Actions</th>
                                     </tr>

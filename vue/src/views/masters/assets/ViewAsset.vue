@@ -6,9 +6,6 @@
                     <li class="breadcrumb-item" aria-current="page">
                         <router-link to="/dashboard">Dashboard</router-link>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Masters</a>
-                    </li>
                     <li class="breadcrumb-item"><router-link to="/assets">Assets</router-link></li>
                     <li class="breadcrumb-item active" aria-current="page">View</li>
                 </ol>
@@ -226,7 +223,7 @@
                                             <i class="ri-add-circle-line icon-hgt"></i> Discard
                                         </button>
                                     </div> -->
-                                    <div class="col-md-2 pt-4" v-can="'assetSpares.create'">                                        
+                                    <div class="col-md-2 pt-4" v-can="'assetSpares.create'">
                                         <button v-if="spare.asset_spare_id" class="btn btn-outline-success me-2" @click="updateSpare()">
                                             <i class="ri-add-circle-line icon-hgt"></i> Update
                                         </button>
@@ -636,7 +633,7 @@
                                     <div class="col-md-2 pt-4">
                                         <!-- <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addService()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
-                                        </div> -->                                        
+                                        </div> -->
                                         <button v-if="service.asset_service_id" class="btn btn-outline-success me-2" @click="updateService()">
                                             <i class="ri-add-circle-line icon-hgt"></i> Update
                                         </button>
@@ -1553,7 +1550,7 @@
                 asset_zone_status_accessories: false,
 
                 // on add other api should not call
-                initial_status: true, 
+                initial_status: true,
                 isValid: true,
             };
         },
@@ -1841,15 +1838,16 @@
             //         });
             // },
 
+
+
+
             getAssetSpares() {
                 let vm = this;
                 vm.meta.asset_id = vm.asset.asset_id;
                 vm.meta.asset_type_id = vm.asset.asset_type_id;
-                let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetSpares", data: vm.meta })
                     .then((response) => {
-                        loader.hide();
                         vm.asset_spares = response.data.paginate_spares;
                         vm.spares = response?.data?.spares;
                         vm.meta.totalRows = response.data.meta.total;
@@ -1863,7 +1861,6 @@
 
                     })
                     .catch(function (error) {
-                        loader.hide();
                         console.log("errors",error)
                         // vm.errors = error.response.data.errors;
                         // vm.$store.dispatch("error", error.response.data.message);
@@ -1874,11 +1871,9 @@
                 vm.check_meta.asset_id = vm.asset.asset_id;
                 vm.check_meta.asset_type_id = vm.asset.asset_type_id;
                 vm.check_meta.department_id = vm.asset.department_id;
-                let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetChecks", data: vm.check_meta })
                     .then((response) => {
-                        loader.hide();
                         console.log("checks response", response)
                         vm.checks = response.data.checks;
                         vm.asset_checks = response.data.paginate_checks;
@@ -1892,7 +1887,6 @@
                         }
                     })
                     .catch(function (error) {
-                        loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -1901,11 +1895,9 @@
                 let vm = this;
                 vm.check_meta_service.asset_id = vm.asset.asset_id;
                 vm.check_meta_service.asset_type_id = vm.asset.asset_type_id;
-                let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetServices", data: vm.check_meta_service })
                     .then((response) => {
-                        loader.hide();
                         console.log("service paginate",response.data)
                         vm.services = response.data.services;
                         vm.asset_services = response.data.paginate_services;
@@ -1919,7 +1911,6 @@
                         }
                     })
                     .catch(function (error) {
-                        loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -1928,11 +1919,9 @@
                 let vm = this;
                 vm.variable_meta_service.asset_id = vm.asset.asset_id;
                 vm.variable_meta_service.asset_type_id = vm.asset.asset_type_id;
-                let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetVariables", data: vm.variable_meta_service })
                     .then((response) => {
-                        loader.hide();
                         console.log("pagevariable", response.data)
                         vm.variables=response.data.variables
                         vm.asset_variables = response.data.paginate_variables;
@@ -1946,7 +1935,6 @@
                         }
                     })
                     .catch(function (error) {
-                        loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -1955,12 +1943,9 @@
                 let vm = this;
                 vm.datasource_meta_service.asset_id = vm.asset.asset_id;
                 vm.datasource_meta_service.asset_type_id = vm.asset.asset_type_id;
-                let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetDataSources", data: vm.datasource_meta_service })
                     .then((response) => {
-                        loader.hide();
-                        console.log(" pageintae data source",response.data)
                          vm.data_sources = response.data.data_sources;
                         vm.asset_data_sources = response.data.paginate_data_sources;
                         vm.datasource_meta_service.totalRows = response.data.meta.total;
@@ -1972,7 +1957,6 @@
                         }
                     })
                     .catch(function (error) {
-                        loader.hide();
                         console.log("error",error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
@@ -1987,7 +1971,7 @@
             validateFields(validation_type) {
                 this.isValid = true;
                 this.errors = {};
-                
+
 
 
 
@@ -2044,7 +2028,7 @@
                     }
                 }
 
-                
+
             },
 
             addSpare() {
@@ -2075,17 +2059,17 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
                 }
-                
+
             },
             updateSpare(){
                 let vm = this
-                let loader = vm.$loading.show();            
+                let loader = vm.$loading.show();
 
                 if(vm.spare.spare_id != vm.spare.initial_spare_id){
                     vm.spare.initial_asset_spare_attributes.map(function(ele){
                         vm.spare.deleted_asset_spare_values.push(ele.asset_spare_value_id)
                     })
-                    
+
                 }
                 let uri = { uri: "updateAssetSpare", data: vm.spare };
                 vm.$store
@@ -2173,7 +2157,7 @@
                     vm.service.initial_asset_service_attributes.map(function(ele){
                         vm.service.deleted_asset_service_values.push(ele.asset_service_value_id)
                     })
-                    
+
                 }
 
                 let uri = { uri: "updateAssetService", data: vm.service };
@@ -2219,7 +2203,7 @@
 
                         vm.variable.initial_variable_id = "";
                         vm.variable.initial_asset_variable_attributes = [];
-                        vm.variable.deleted_asset_variable_values = [];                        
+                        vm.variable.deleted_asset_variable_values = [];
 
                         vm.asset_zone_status_variables = false;
                         vm.errors = [];
@@ -2240,7 +2224,7 @@
                     vm.variable.initial_asset_variable_attributes.map(function(ele){
                         vm.variable.deleted_asset_variable_values.push(ele.asset_variable_value_id)
                     })
-                    
+
                 }
 
                 let uri = { uri: "updateAssetVariable", data: vm.variable };
@@ -2302,7 +2286,7 @@
                     vm.datasource.initial_asset_datasource_attributes.map(function(ele){
                         vm.datasource.deleted_asset_datasource_values.push(ele.asset_data_source_value_id)
                     })
-                    
+
                 }
 
                 let uri = { uri: "updateAssetDataSource", data: vm.datasource };
@@ -2471,11 +2455,11 @@
                 let vm = this;
                 vm.accessory_meta_service.asset_id = vm.asset.asset_id;
                 vm.accessory_meta_service.asset_type_id = vm.asset.asset_type_id;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateAssetAccessories", data: vm.accessory_meta_service })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         console.log("access reposne", response.data)
                         vm.initial_status = false;
                         vm.accessory_types = response.data.accessory_types;
@@ -2486,7 +2470,7 @@
                         vm.accessory_meta_service.maxPage = vm.accessory_meta_service.lastPage >= 3 ? 3 : vm.accessory_meta_service.lastPage;
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         console.log("errors accessories--",error)
                         // vm.errors = error.response.data.errors;
                         // vm.$store.dispatch("error", error.response.data.message);
@@ -2561,13 +2545,13 @@
                 if(from=='Data Sources'){
                     this.datasource_meta_service.page  = page;
                     this.getAssetDataSources();
-                }   
+                }
                 if(from=='Accessories'){
                     this.accessory_meta_service.page  = page;
                     this.getAssetAccessories();
-                }                            
+                }
             },
-            sort(field, from) {                
+            sort(field, from) {
                 if(from=='Spares'){
                     this.meta.keyword = field;
                     this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
@@ -2592,12 +2576,12 @@
                     this.datasource_meta_service.keyword = field;
                     this.datasource_meta_service.order_by = this.datasource_meta_service.order_by == "asc" ? "desc" : "asc";
                     this.getAssetDataSources();
-                }   
+                }
                 if(from=='Accessories'){
                     this.accessory_meta_service.keyword = field;
                     this.accessory_meta_service.order_by = this.accessory_meta_service.order_by == "asc" ? "desc" : "asc";
                     this.getAssetAccessories();
-                }   
+                }
             },
 
             onPerPageChange(from) {
@@ -2620,17 +2604,17 @@
                 if(from=='Data Sources'){
                     this.datasource_meta_service.page  = 1;
                     this.getAssetDataSources();
-                }   
+                }
                 if(from=='Accessories'){
                     this.accessory_meta_service.page  = 1;
                     this.getAssetAccessories();
-                }   
+                }
             },
 
             getSpareAttribute(spare_id){
                 let vm = this;
                 let loader = vm.$loading.show();
-                vm.spare.asset_spare_attributes = [];                
+                vm.spare.asset_spare_attributes = [];
                 vm.$store
                     .dispatch("post", { uri: "assetSpareAttributeValues", data: {spare_id: spare_id} })
                     .then((response) => {

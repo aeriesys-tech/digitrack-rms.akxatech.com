@@ -125,7 +125,7 @@ export default {
                 search: '',
                 order_by: "asc",
                 keyword: "user_id",
-                per_page: 2,
+                per_page: 10,
                 totalRows: 0,
                 page: 1,
                 lastPage: 1,

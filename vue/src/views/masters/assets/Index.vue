@@ -6,9 +6,6 @@
                     <li class="breadcrumb-item" aria-current="page">
                         <router-link to="/dashboard">Dashboard</router-link>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Masters</a>
-                    </li>
                     <li class="breadcrumb-item active" aria-current="page">Assets</li>
                 </ol>
                 <h4 class="main-title mb-0">Assets</h4>
@@ -119,7 +116,7 @@
                                             <a title="Service Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
                                             <a title="Check Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a>
                                             <a title="Asset Accessories" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-brush-3-fill fs-18 lh-1"></i></a>
-                                            
+
                                         </td>
                                     </tr>
                                     <tr v-if="assets.length==0">
@@ -176,15 +173,24 @@
                 status: true,
             };
         },
-        beforeRouteEnter(to, from, next) {
-            next((vm) => {
-                if(from.name != 'Assets.Edit' && from.name != 'Assets.View'){
-                    vm.$store.commit("setCurrentPage", vm.meta.page)
-                }else{
-                    vm.meta.page = vm.$store.getters.current_page
-                }
-            });
-        },
+    //     beforeRouteEnter(to, from, next) {
+    //         next((vm) => {
+    //             if(from.name != 'Assets.Edit' && from.name != 'Assets.View'){
+    //                 vm.$store.commit("setCurrentPage", vm.meta.page)
+    //             }else{
+    //                 vm.meta.page = vm.$store.getters.current_page
+    //             }
+    //         });
+    // },
+         beforeRouteEnter(to, from, next) {
+        next((vm) => {
+            if(from.name == 'Assets.Edit' && from.name == 'Assets.View'){
+                vm.meta.page = vm.$store.getters.current_page
+            }else{
+                vm.meta.page = 1
+            }
+        });
+    },
         mounted() {
             this.assetviews = this.$store.getters.permissions.filter(function (element) {
                 return element.ability.ability.includes("assetviews.view");

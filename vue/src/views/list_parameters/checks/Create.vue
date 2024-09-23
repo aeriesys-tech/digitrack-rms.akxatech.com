@@ -339,6 +339,7 @@
                 vm.check.field_values = "";
                 vm.check.order = "";
                 vm.check.frequency_id = "";
+                 vm.check.department_id = "";
                 (vm.check.asset_types = []),
                     // vm.$refs.field_name.focus();
                     (vm.errors = []);

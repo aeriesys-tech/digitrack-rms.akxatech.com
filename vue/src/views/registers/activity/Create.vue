@@ -82,7 +82,7 @@
                                         placeholder="Enter Activity Date"
                                         :class="{'is-invalid': errors.activity_date}"
                                         ref="activity_date"
-
+                                        step="any"
                                         v-model="activity.activity_date"
                                     />
                                     <span v-if="errors.activity_date" class="invalid-feedback">{{ errors.activity_date[0] }}</span>
@@ -249,7 +249,7 @@
             });
         },
         mounted() {
-            this.activity.activity_date = moment().format("yyyy-MM-DD HH:mm");
+            this.activity.activity_date = moment().format("yyyy-MM-DD HH:mm:ss");
         },
         methods: {
             submitForm() {
@@ -262,7 +262,7 @@
             },
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD HH:mm");
+                return moment(date).format("yyyy-MM-DD HH:mm:ss");
             },
             getAssets() {
                 let vm = this;
@@ -311,6 +311,7 @@
                     })
                     .catch(function (error) {
                         loader.hide();
+                        console.log("error--",error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -331,6 +332,7 @@
                     })
                     .catch(function (error) {
                         loader.hide();
+                        console.log("error--",error)
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -389,8 +391,9 @@
                         isValid = false;
                     }
                 }
-
+                console.log("Validate error--",this.error)
                 return isValid;
+
             },
         },
     };
