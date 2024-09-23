@@ -197,15 +197,15 @@
                         </router-link>
                     </li>
                     <li class="nav-item" v-can="'userChecks.view'">
-                        <router-link v-bind:class="{ active: $route.path === '/user_checks' || $route.name === 'UserChecks.Create' || $route.path === 'UserChecks.Edit'}" to="/user_checks" class="nav-link">
+                        <router-link v-bind:class="{ active: $route.path === '/user_checks' || $route.name === 'UserChecks.Create' || $route.name === 'UserChecks.Edit'}" to="/user_checks" class="nav-link">
                             <i class="ri-survey-line"></i><span>Check Register</span>
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/process_registers" v-bind:class="{ active: $route.path === '/process_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Process Register</span></router-link>
+                        <router-link to="/process_registers" v-bind:class="{ active: $route.path === '/process_registers' || $route.name === 'CreateProcessRegister.Create' || $route.name === 'CreateProcessRegister.Edit' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Process Register</span></router-link>
                     </li>
                      <li class="nav-item">
-                        <router-link to="/break_down_registers" v-bind:class="{ active: $route.path === '/break_down_registers' }" class="nav-link"><i class="ri-bubble-chart-line"></i><span>Break Down Register</span></router-link>
+                        <router-link to="/break_down_registers" v-bind:class="{ active: $route.path === '/break_down_registers' || $route.name === 'BreakDownRegister.Create' || $route.name === 'BreakDownRegister.Edit' }" class="nav-link"><i class="ri-bubble-chart-line"></i><span>Break Down Register</span></router-link>
                     </li>
                     <!-- <li class="nav-item">
                         <router-link to="/spare_registers" v-bind:class="{ active: $route.path === '/spare_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Spare Register</span></router-link>
@@ -419,17 +419,27 @@
                     tab == "/health_checks" ||
                     name == "HealthChecks.Create" ||
                     name == "HealthChecks.Edit" ||
+
                     tab == "/activities" ||
                     name == "Activity.Create" ||
                     name == "Activity.Edit" ||
+
                     tab == "/user_services" ||
                     name == "UserServices.Create" ||
                     name == "UserServices.Edit" ||
+
                     tab == "/user_checks" ||
                     name == "UserChecks.Create" ||
                     name == "UserChecks.Edit" ||
+
                     tab == "/process_registers" ||
-                     tab == "/break_down_registers" ||
+                    name == "/CreateProcessRegister.Create" ||
+                    name == "/CreateProcessRegister.Edit" ||
+
+                    tab == "/break_down_registers" ||
+                    name == "/BreakDownRegister.Create" ||
+                    name == "/BreakDownRegister.Edit" ||
+
                     tab == "/spare_registers" ||
                     tab == "/qc_registers"
                 ) {

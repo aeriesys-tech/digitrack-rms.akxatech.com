@@ -6,9 +6,6 @@
                     <li class="breadcrumb-item" aria-current="page">
                         <router-link to="/dashboard">Dashboard</router-link>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Masters</a>
-                    </li>
                     <li class="breadcrumb-item" aria-current="page">
                         <router-link to="/assets">Assets</router-link>
                     </li>
@@ -496,16 +493,16 @@
             },
             getAssetsDropdown() {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "getAssetTypes" })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.asset_attributes = response.data.data;
                         vm.getDepartments();
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -515,16 +512,16 @@
             },
             getDepartments() {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "getDepartments" })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.departments = response.data.data;
                         vm.getSections();
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -563,63 +560,63 @@
 
             getSections() {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "getSections" })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.sections = response.data.data;
                         vm.getFunctionals();
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
             getFunctionals() {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "getFunctionals" })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.functionals = response.data.data;
                         vm.getShops();
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
             getShops() {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "getPlants" })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.plants = response.data.data;
                         vm.getAreas();
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
             getAreas() {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "getAreas" })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.areas = response.data.data;
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -716,15 +713,15 @@
 
             getAsset() {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "getAsset", data: vm.asset })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.asset = response.data.data;
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
@@ -762,19 +759,19 @@
 
             getAssetType(asset_type_id) {
                 let vm = this;
-                let loader = vm.$loading.show();
+                // let loader = vm.$loading.show();
                 if (vm.deleted_asset_attribute_values.length) {
                     vm.asset.deleted_asset_attribute_values = vm.deleted_asset_attribute_values;
                 }
                 vm.$store
                     .dispatch("post", { uri: "getAssetsDropdown", data: { asset_type_id: asset_type_id } })
                     .then((response) => {
-                        loader.hide();
+                        // loader.hide();
                         vm.show_assets = response.data.data;
                         vm.asset.asset_attributes = response.data.data;
                     })
                     .catch(function (error) {
-                        loader.hide();
+                        // loader.hide();
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
