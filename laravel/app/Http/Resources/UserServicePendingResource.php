@@ -26,7 +26,7 @@ class UserServicePendingResource extends JsonResource
             'service_cost' => $this->service_cost,
             'user_spares' => UserSpareResource::collection($this->UserSpare),
             'asset_id' => $this->asset_id,
-            'asset' => new AssetResource($this->Asset),
+            'asset' => new AssetResource($this->Asset), 
             'service_date' => $this->service_date,
             'next_service_date' => $this->next_service_date,
             'delay_days' => round($daysCount),

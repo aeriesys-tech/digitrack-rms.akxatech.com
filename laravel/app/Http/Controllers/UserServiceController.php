@@ -287,22 +287,25 @@ class UserServiceController extends Controller
         ]);
     
         $authPlantId = Auth::User()->plant_id;
-
         $query = UserService::query();
+
         $query->where('plant_id', $authPlantId)
         ->where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->get();
 
-        if (isset($request->department_id)) {
-            $query->whereHas('Asset', function($quer) use ($request) {
-                $quer->where('department_id', $request->department_id);
+        if (isset($request->department_id)) 
+        {
+            $query->whereHas('Asset', function($assetQuery) use ($request) {
+                $assetQuery->whereHas('AssetDepartment', function($deptQuery) use($request){
+                    $deptQuery->where('department_id', $request->department_id);
+                });
             });
         }
-
+    
         if($request->search!='')
         {
             $query->where(function($query) use ($request) {
                 $query->where('service_date', 'like', "{$request->search}%")
-                    ->orWhere('service_no', 'like', "{$request->search}%")->orWhere('service_cost', 'like', "{$request->search}%")  
+                    ->orWhere('service_no', 'like', "{$request->search}%")  
                     ->orWhere('next_service_date', 'like', "{$request->search}%") 
                     ->orwhereHas('Asset', function($que) use ($request) {
                         $que->where('asset_code', 'like', "{$request->search}%");
@@ -310,12 +313,12 @@ class UserServiceController extends Controller
                         $que->whereHas('AssetType', function($qu) use($request){
                             $qu->where('asset_type_name', 'like', "{$request->search}%");
                     });
-                })->orwhereHas('Service', function($que) use($request){
-                    $que->where('service_name', 'like', "{$request->search}%");
-                })->orwhereHas('Asset', function($quer) use($request){
-                    $quer->whereHas('Department', function($que) use($request){
-                        $que->where('department_name', 'like', "{$request->search}%");
+                })->orwhereHas('UserSpare', function($que) use($request){
+                    $que->whereHas('Service',function($qu) use($request){
+                        $qu->where('service_name', 'like', "{$request->search}%");
                     });
+                })->orwhereHas('Asset.AssetDepartment.Department', function ($qu) use ($request) {
+                    $qu->where('department_name', 'like', "{$request->search}%");
                 });
             });
         }
@@ -348,9 +351,12 @@ class UserServiceController extends Controller
         $query->where('plant_id', $authPlantId)
           ->where('next_service_date', '>=', Carbon::now())->where('is_latest', true)->get();
 
-        if (isset($request->department_id)) {
-            $query->whereHas('Asset', function($quer) use ($request) {
-                $quer->where('department_id', $request->department_id);
+        if (isset($request->department_id)) 
+        {
+            $query->whereHas('Asset', function($assetQuery) use ($request) {
+                $assetQuery->whereHas('AssetDepartment', function($deptQuery) use($request){
+                    $deptQuery->where('department_id', $request->department_id);
+                });
             });
         }
 
@@ -358,7 +364,7 @@ class UserServiceController extends Controller
         {
             $query->where(function($query) use ($request) {
                 $query->where('service_date', 'like', "{$request->search}%")
-                    ->orWhere('service_no', 'like', "{$request->search}%")->orWhere('service_cost', 'like', "{$request->search}%")  
+                    ->orWhere('service_no', 'like', "{$request->search}%")  
                     ->orWhere('next_service_date', 'like', "{$request->search}%") 
                     ->orwhereHas('Asset', function($que) use ($request) {
                         $que->where('asset_code', 'like', "{$request->search}%");
@@ -366,12 +372,12 @@ class UserServiceController extends Controller
                         $que->whereHas('AssetType', function($qu) use($request){
                             $qu->where('asset_type_name', 'like', "{$request->search}%");
                     });
-                })->orwhereHas('Service', function($que) use($request){
-                    $que->where('service_name', 'like', "{$request->search}%");
-                })->orwhereHas('Asset', function($quer) use($request){
-                    $quer->whereHas('Department', function($que) use($request){
-                        $que->where('department_name', 'like', "{$request->search}%");
+                })->orwhereHas('UserSpare', function($que) use($request){
+                    $que->whereHas('Service',function($qu) use($request){
+                        $qu->where('service_name', 'like', "{$request->search}%");
                     });
+                })->orwhereHas('Asset.AssetDepartment.Department', function ($qu) use ($request) {
+                    $qu->where('department_name', 'like', "{$request->search}%");
                 });
             });
         }

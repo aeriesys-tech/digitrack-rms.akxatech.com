@@ -108,7 +108,7 @@
                                     <tbody>
                                         <tr v-for="service, key in user_services" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
-                                            <td>{{ service.asset?.department?.department_name }}</td>
+                                            <td>{{ service.asset?.asset_department_ids[0]?.department?.department_name }}</td>
                                             <td>{{service?.service_no}}</td>
                                             <td>{{service?.service_date}}</td>
                                             <!-- <td>{{ service?.service_cost}}</td> -->
