@@ -61,7 +61,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th>
+                                        <!-- <th>
                                             Asset Zone
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'"
@@ -76,7 +76,7 @@
                                         </th>
                                         <th>
                                             Value
-                                        </th>
+                                        </th> -->
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -86,17 +86,17 @@
                                         <td>{{ user_variable.asset?.asset_code }}</td>
                                         <td>{{ user_variable.job_no }}</td>
                                         <td>{{ user_variable.job_date }}</td>
-                                        <td>{{ user_variable?.asset_zone?.zone_name }}</td>
-                                        <td>{{ user_variable?.asset_variables?.variable?.variable_name }}</td>
-                                        <td>{{ user_variable?.value }}</td>
+                                        <!-- <td>{{ user_variable?.asset_zone?.zone_name }}</td> -->
+                                        <!-- <td>{{ user_variable?.asset_variables?.variable?.variable_name }}</td> -->
+                                        <!-- <td>{{ user_variable?.value }}</td> -->
                                         <td class="text-center">
                                             <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)"
                                                 class="text-success me-2" @click="editUserVariable(user_variable)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
-                                            <!-- <a title="View" href="javascript:void(0)"
+                                            <a title="View" href="javascript:void(0)"
                                                 @click="viewUserVariable(user_variable)" class="text-primary me-2"><i
-                                                    class="ri-eye-fill fs-18 lh-1"></i></a> -->
+                                                    class="ri-eye-fill fs-18 lh-1"></i></a>
                                             <a title="View" v-can="'userChecks.delete'" href="javascript:void(0)"
                                                 class="text-danger me-2"
                                                 @click.prevent="deleteUserVariable(user_variable)"><i
@@ -104,7 +104,7 @@
                                         </td>
                                     </tr>
                                     <tr v-if="user_variables.length == 0">
-                                        <td colspan="8" class="text-center">No records found</td>
+                                        <td colspan="5" class="text-center">No records found</td>
                                     </tr>
                                 </tbody>
                             </table>

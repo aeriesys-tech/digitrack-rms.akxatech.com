@@ -38,10 +38,10 @@
                                     <h6>Asset Code</h6>
                                     <p class="font">{{ user_variable?.asset?.asset_code }}</p>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <h6>Asset Zone</h6>
                                     <p class="font">{{ user_variable?.asset_zone?.zone_name }}</p>
-                                </div>
+                                </div> -->
                                 <div class="col-md-4 mb-3">
                                     <h6>Job Date</h6>
                                     <p class="font">{{ convertDateFormat(user_variable.reference_date) }}</p>
@@ -56,17 +56,16 @@
                                                 <tr>
                                                     <th class="text-center">#</th>
                                                     <th class="text-left">Variable</th>
-                                                    <th>Date time</th>
+                                                    <th class="text-left">Asset Zone</th>
                                                     <th>Value</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="asset_variable, key in user_variable.asset_variables"
+                                                <tr v-for="asset_variable, key in user_variable.user_asset_variables"
                                                     :key="key">
                                                     <td class="text-center">{{ key + 1 }}</td>
-                                                    <td>{{ asset_variable?.variable?.variable_name }}
-                                                    </td>
-                                                    <td>{{ asset_variable?.date_time }}</td>
+                                                    <td>{{ asset_variable?.variable?.variable_name }}</td>
+                                                    <td>{{ asset_variable?.asset_zone?.zone_name }}</td>
                                                     <td>{{ asset_variable?.value }}</td>
 
                                                 </tr>
