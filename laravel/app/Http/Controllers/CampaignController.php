@@ -114,15 +114,15 @@ class CampaignController extends Controller
             'datasource' => 'required'
         ]);
 
-        $compaign_result_query = CampaignResult::whereHas('Campaign', function($que) use($request) 
-        {
-            $fromDate = $request->from_date . ' 00:00:00';
-            $toDate = $request->to_date . ' 23:59:59';
+        $fromDate = $request->from_date ? $request->from_date . ' 00:00:00' : '1970-01-01 00:00:00';
+        $toDate = $request->to_date . ' 23:59:59';
 
-            $que->whereBetween('job_date_time', [$fromDate, $toDate])->where('datasource', $request->datasource);
-        });
-        $compaign_result = $compaign_result_query->where('asset_id', $request->asset_id)->where('location', $request->location)->get();
+        $compaign_result_query = CampaignResult::join('campaigns', 'campaigns.campaign_id', '=', 'campaign_results.campaign_id')
+            ->whereBetween('campaigns.job_date_time', [$fromDate, $toDate])->where('campaigns.datasource', $request->datasource)
+            ->where('campaign_results.asset_id', $request->asset_id)->where('campaign_results.location', $request->location)->orderBy('campaigns.job_date_time')
+            ->select('campaign_results.*');
 
+        $compaign_result = $compaign_result_query->get();
         return CampaignResultResource::collection($compaign_result);
     }
 

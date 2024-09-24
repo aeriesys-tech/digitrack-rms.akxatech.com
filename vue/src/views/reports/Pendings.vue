@@ -22,13 +22,19 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-3">
+                                    <select class="form-control form-control-sm mb-2" v-model="meta.asset_id" @change="search()">
+                                        <option value="">Select Asset</option>
+                                        <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">{{ asset.asset_code }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
                                     <select class="form-control form-control-sm mb-2" v-model="meta.department_id" @change="search()">
                                         <option value="">Select Department</option>
                                         <option v-for="department, key in departments" :key="key" :value="department.department_id">{{ department.department_name }}</option>
                                     </select>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-6">
                                     <input class="form-control form-control-sm mb-2" type="text"
                                     placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
                                 </div>
@@ -166,10 +172,12 @@
                     maxPage: 1,
                     trashed: false,
                     department_id:'',
+                    asset_id:'',
                 },
                 user_services: [],
                 errors: [],
                 departments:[],
+                assets:[],
                 status: true,
             }
         },
@@ -185,6 +193,7 @@
         mounted() {
             this.index();
             this.getDepartments();
+            this.getAssets();
         },
 
         methods: {
@@ -208,19 +217,33 @@
             },
 
             getDepartments() {
-            let vm = this;
-            let loader = vm.$loading.show();
-            vm.$store.dispatch('post', { uri: 'getDepartments' })
-                .then(response => {
-                    loader.hide();
-                    vm.departments = response.data.data;
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
-                });
-        },
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store.dispatch('post', { uri: 'getDepartments' })
+                    .then(response => {
+                        loader.hide();
+                        vm.departments = response.data.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getAssets() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store.dispatch('post', { uri: 'getAssets' })
+                    .then(response => {
+                        loader.hide();
+                        vm.assets = response.data.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
             search() {
                 let vm = this;
                 vm.meta.page = 1;

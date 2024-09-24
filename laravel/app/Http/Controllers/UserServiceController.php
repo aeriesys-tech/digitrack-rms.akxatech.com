@@ -300,6 +300,11 @@ class UserServiceController extends Controller
                 });
             });
         }
+
+        if (isset($request->asset_id)) 
+        {
+            $query->where('asset_id', $request->asset_id);
+        }
     
         if($request->search!='')
         {
@@ -358,6 +363,11 @@ class UserServiceController extends Controller
                     $deptQuery->where('department_id', $request->department_id);
                 });
             });
+        }
+
+        if (isset($request->asset_id)) 
+        {
+            $query->where('asset_id', $request->asset_id);
         }
 
         if($request->search!='')
