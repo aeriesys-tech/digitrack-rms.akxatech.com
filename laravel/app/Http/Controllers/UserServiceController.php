@@ -106,15 +106,6 @@ class UserServiceController extends Controller
         {
             foreach($request->user_spares as $spare) 
             {
-                //quantity from the AssetSpare
-                $assetSpare = AssetSpare::where('asset_id', $request->asset_id)->where('spare_id', $spare['spare_id'])->first();
-
-                    if ($spare['quantity'] > $assetSpare->quantity) {
-                        return response()->json([
-                        'errors' => "The quantity for spare ID {$spare['spare_id']} exceeds the available stock of {$assetSpare->quantity}."
-                        ], 422);
-                    }
-
                 UserSpare::create([
                     'user_service_id' => $service->user_service_id,
                     'service_id' => $spare['service_id'],
@@ -122,7 +113,7 @@ class UserServiceController extends Controller
                     'asset_zone_id' => $spare['asset_zone_id'],
                     'spare_id' => $spare['spare_id'],
                     'spare_cost' => $spare['spare_cost'],
-                    'quantity' => $spare['quantity']
+                    'quantity' => $spare['quantity'] ?? null
                 ]);
             }
         }
@@ -178,20 +169,6 @@ class UserServiceController extends Controller
 
         foreach ($request->user_spares as $spare) 
         {
-            $assetSpare = AssetSpare::where('asset_id', $request->asset_id)->where('spare_id', $spare['spare_id'])->first();
-
-            if (!$assetSpare) {
-                return response()->json([
-                'error' => "No AssetSpare found for asset ID {$request->asset_id} and spare ID {$spare['spare_id']}."
-                ], 404);
-            }
-
-            if ($spare['quantity'] > $assetSpare->quantity) {
-                return response()->json([
-                'error' => "The quantity for spare ID {$spare['spare_id']} exceeds the available stock of {$assetSpare->quantity}."
-                ], 422);
-            }
-
             // Update or Create
             $userSpare = UserSpare::where('user_spare_id', $spare['user_spare_id'])->first();
             if ($userSpare) {

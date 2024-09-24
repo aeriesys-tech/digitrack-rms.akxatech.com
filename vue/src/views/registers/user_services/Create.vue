@@ -487,7 +487,7 @@
                         service_cost: vm.user_spare.service_cost,
                         spare_id: vm.user_spare.spare_id,
                         spare: {
-                            spare_name: vm.user_spare.spare.spare_name,
+                            spare_name: vm.user_spare?.spare?.spare_name,
                         },
                         spare_cost: vm.user_spare.spare_cost,
                         quantity: vm.user_spare.quantity,
@@ -517,9 +517,9 @@
                 vm.user_spare.service_cost = spare.service_cost;
                 vm.user_spare.user_spare_id = spare.user_spare_id;
                 vm.user_spare.spare_id = spare.spare_id;
-                vm.user_spare.spare.spare_name = spare.spare.spare_name;
-                vm.user_spare.spare_cost = spare.spare_cost;
-                vm.user_spare.quantity = spare.quantity;
+                vm.user_spare.spare.spare_name = spare?.spare?.spare_name;
+                vm.user_spare.spare_cost = spare?.spare_cost;
+                vm.user_spare.quantity = spare?.quantity;
                 vm.user_spare.status = false;
                 vm.user_spare.key = key;
                 vm.errors = [];
@@ -554,7 +554,7 @@
                         user_spare_id: vm.user_spare.user_spare_id,
                         spare_id: vm.user_spare.spare_id,
                         spare: {
-                            spare_name: vm.user_spare.spare.spare_name,
+                            spare_name: vm.user_spare?.spare?.spare_name,
                         },
                         spare_cost: vm.user_spare.spare_cost,
                         quantity: vm.user_spare.quantity,
