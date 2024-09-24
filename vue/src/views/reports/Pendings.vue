@@ -33,7 +33,7 @@
                                     placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
                                 </div>
                             </div>
-                            
+
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
                                     <thead>
@@ -186,7 +186,7 @@
             this.index();
             this.getDepartments();
         },
-    
+
         methods: {
             index() {
                 let vm = this;
@@ -226,7 +226,7 @@
                 vm.meta.page = 1;
                 vm.index();
             },
-            
+
             onPageChange(page) {
                 this.meta.page = page;
                 this.index();
@@ -236,8 +236,12 @@
                 this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
                 this.index();
             },
-            
+            onPerPageChange() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
+
         }
     }
     </script>
-    

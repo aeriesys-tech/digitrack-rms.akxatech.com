@@ -13,7 +13,7 @@
                         <a href="javascript:void(0)">Reviews</a>
                     </li>
                     <li class="breadcrumb-item" v-if="asset_from"><router-link to="/assets">Assets</router-link></li>
-                    <li class="breadcrumb-item" v-else><router-link to="/asset_details">Asset Details</router-link></li>                    
+                    <li class="breadcrumb-item" v-else><router-link to="/asset_details">Asset Details</router-link></li>
                     <li class="breadcrumb-item active" aria-current="page">Accessories</li>
                 </ol>
                 <h4 class="main-title mb-0">Assets</h4>
@@ -180,10 +180,15 @@ import Pagination from "@/components/Pagination.vue";
         },
         getAttachmentName(attachment) {
             return attachment.split('/').pop();
-        }
+        },
+        onPerPageChange() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
     }
  }
 
-    
+
 
 </script>

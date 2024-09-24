@@ -217,6 +217,11 @@ export default {
             this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
             this.index();
         },
+        onPerPageChange() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
 
     }
 }
