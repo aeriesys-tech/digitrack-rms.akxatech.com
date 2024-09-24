@@ -15,6 +15,7 @@ import CreateAsset from "@/views/masters/assets/Create.vue";
 import EditAsset from "@/views/masters/assets/Edit.vue";
 import Assets from "@/views/masters/assets/Index.vue";
 import AssetView from "@/views/masters/assets/ViewAsset.vue";
+import DynamicAssets from "@/views/masters/assets/ViewDynamicAssets.vue";
 import GenerateQR from "@/views/masters/assets/GenerateQRCode.vue"
 import AssetAccessories from "@/views/masters/assets/AssetAccessories.vue";
 
@@ -301,6 +302,11 @@ const routes = [
     path: "/asset/:asset_id/view",
     name: "Assets.View",
     component: AssetView,
+  },
+  {
+    path: "/asset/:assets",
+    name: "Assets.DynamicAssets",
+    component: DynamicAssets,
   },
   {
     path: "/QR_code/:asset_id/get",

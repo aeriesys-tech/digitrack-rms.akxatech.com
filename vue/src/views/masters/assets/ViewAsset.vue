@@ -296,6 +296,7 @@
                                                         <td>{{ spare.quantity }}</td>
                                                         <td class="text-center" v-can="'assetSpares.delete'">
                                                             <a href="javascript:void(0)" class="text-success me-2" @click="editSpare(spare)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                            <a href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(spare, 'Spares')"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteSpare(spare)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -696,6 +697,7 @@
                                                         <td>{{ service?.service?.service_code }}</td>
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                            <a href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(service, 'Services')"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -909,6 +911,7 @@
                                                         <td>{{variable.variable?.variable_name}}</td>
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)" class="text-success me-2" @click="editVariable(variable)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                            <a href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(variable, 'Variables')"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteVariable(variable)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -1154,6 +1157,7 @@
                                                         <td>{{ data_source?.script }}</td>
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)" class="text-success me-2" @click="editDataSource(data_source)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                            <a href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(data_source, 'Data Sources')"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteDataSource(data_source)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -1562,6 +1566,7 @@
         // },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
+                document.body.classList.add('sidebar-hide');
                 vm.asset.asset_id = to.params.asset_id;
                 let uri = { uri: "getAsset", data: { asset_id: to.params.asset_id } };
                 vm.$store
@@ -2679,6 +2684,11 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            },
+            viewAsset(asset, from) {
+                // console.log('asset:-----', asset)
+                this.$store.commit("setAssets", asset)
+                this.$router.push({ name: 'Assets.DynamicAssets', params: { assets: from } });
             },
             discard() {
                 let vm = this;
