@@ -288,7 +288,7 @@
                         isValid = false;
                     }
                 }
-
+                console.log("Error",this.errors)
                 return isValid;
             },
             addSpare() {

@@ -2319,23 +2319,27 @@
                     });
             },
             deleteSpare(spare) {
-                let vm = this;
-                // spare.asset_id = vm.asset.asset_id;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "forceDeleteAssetSpare", data: spare })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.spare.spare_id = "";
-                        vm.errors = [];
-                        vm.getAssetSpares();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                 const confirmDelete = confirm("Are you sure you want to delete it ?");
+
+                if (confirmDelete) {
+                    let vm = this;
+                    // spare.asset_id = vm.asset.asset_id;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", { uri: "forceDeleteAssetSpare", data: spare })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.spare.spare_id = "";
+                            vm.errors = [];
+                            vm.getAssetSpares();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             updateCheck(){
                 let vm = this
@@ -2362,98 +2366,113 @@
                     });
             },
             deleteCheck(check) {
-                let vm = this;
-                // check.asset_id = vm.asset.asset_id;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "forceDeleteAssetCheck", data: check })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.check.check_id = "";
-                        vm.errors = [];
-                        vm.getAssetChecks();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.$store.dispatch("warning", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    // check.asset_id = vm.asset.asset_id;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", { uri: "forceDeleteAssetCheck", data: check })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.check.check_id = "";
+                            vm.errors = [];
+                            vm.getAssetChecks();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.$store.dispatch("warning", error.response.data.message);
+                        });
+                }
             },
             deleteService(service) {
-                let vm = this;
-                // check.asset_id = vm.asset.asset_id;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "forceDeleteAssetService", data: service })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.service.service_id = "";
-                        vm.errors = [];
-                        vm.getAssetServices();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    // check.asset_id = vm.asset.asset_id;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", { uri: "forceDeleteAssetService", data: service })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.service.service_id = "";
+                            vm.errors = [];
+                            vm.getAssetServices();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
 
             deleteVariable(variable) {
-                let vm = this;
-                // spare.asset_id = vm.asset.asset_id;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "deleteAssetVariable", data: variable })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.variable.variable_id = "";
-                        vm.errors = [];
-                        vm.getAssetVariables();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    // spare.asset_id = vm.asset.asset_id;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", { uri: "deleteAssetVariable", data: variable })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.variable.variable_id = "";
+                            vm.errors = [];
+                            vm.getAssetVariables();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             deleteDataSource(datasource) {
-                let vm = this;
-                // spare.asset_id = vm.asset.asset_id;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "deleteAssetDataSource", data: datasource })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.datasource.data_source_id = "";
-                        vm.errors = [];
-                        vm.getAssetDataSources();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    // spare.asset_id = vm.asset.asset_id;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", { uri: "deleteAssetDataSource", data: datasource })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.datasource.data_source_id = "";
+                            vm.errors = [];
+                            vm.getAssetDataSources();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             deleteAccessory(accessory) {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "deleteAssetAccessory", data: accessory })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.accessory.accessory_id = "";
-                        vm.errors = [];
-                        vm.getAssetAccessories();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", { uri: "deleteAssetAccessory", data: accessory })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.accessory.accessory_id = "";
+                            vm.errors = [];
+                            vm.getAssetAccessories();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
 
             getAssetAccessories() {
