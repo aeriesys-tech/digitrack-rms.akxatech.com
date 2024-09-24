@@ -49,12 +49,16 @@ export default {
          if (sessionStorage.getItem("current_page")) {
             this.$store.dispatch('setCurrentPage', sessionStorage.getItem("current_page"))
         }
+        if (sessionStorage.getItem("assets")) {
+            this.$store.dispatch('setAssets', JSON.parse(sessionStorage.getItem("assets")))
+        }
         //Save the information in vuex to sessionStorage when the page is refreshed
         window.addEventListener("beforeunload", () => {
             sessionStorage.setItem("user", JSON.stringify(this.$store?.getters?.user));
             sessionStorage.setItem("token", this.$store?.getters?.token);
             sessionStorage.setItem("current_page", this.$store?.getters?.current_page);
             sessionStorage.setItem("permissions", JSON.stringify(this.$store?.getters?.permissions))
+            sessionStorage.setItem("assets", JSON.stringify(this.$store?.getters?.assets));
         })
     }
 };
