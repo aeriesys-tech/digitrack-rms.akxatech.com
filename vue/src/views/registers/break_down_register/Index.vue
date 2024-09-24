@@ -197,9 +197,10 @@ import moment from "moment";
                 this.$router.push("/break_down_registers/" + break_down_list.break_down_list_id + "/edit");
             },
 
-            deleteBreakDownList(break_down_list) {
+        deleteBreakDownList(break_down_list) {
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+            if (confirmDelete) {
                 let vm = this;
-                alert('are you sure you want delete it!')
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "deleteBreakDownList", data: break_down_list })
@@ -213,6 +214,7 @@ import moment from "moment";
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            }
             },
             onPageChange(page) {
                 this.meta.page = page;

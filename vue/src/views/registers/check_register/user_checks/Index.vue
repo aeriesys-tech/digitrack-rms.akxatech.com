@@ -182,21 +182,23 @@ export default {
             this.$router.push("/user_check/" + user_check.user_check_id + "/view");
         },
         deleteUserCheck(user_check) {
-            let vm = this;
-            alert('are you sure you want delete it!')
-            let loader = vm.$loading.show();
-            vm.$store
-                .dispatch("post", {uri: "deleteUserCheck",data: user_check,})
-                .then((response) => {
-                    loader.hide();
-                    vm.$store.dispatch("success", response.data.message);
-                    vm.index();
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
-                });
+            const confirmDelete = confirm("Are you sure you want to delete it ?");
+            if (confirmDelete) {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "deleteUserCheck", data: user_check, })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.index();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            }
         },
         search() {
             let vm = this;

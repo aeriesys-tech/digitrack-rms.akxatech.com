@@ -203,21 +203,23 @@ export default {
             this.$router.push("/process_registers/" + user_variable.user_variable_id + "/view");
         },
         deleteUserVariable(user_variable) {
-            let vm = this;
-            alert('are you sure you want delete it!')
-            let loader = vm.$loading.show();
-            vm.$store
-                .dispatch("post", { uri: "deleteUserVariable", data: user_variable, })
-                .then((response) => {
-                    loader.hide();
-                    vm.$store.dispatch("success", response.data.message);
-                    vm.index();
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
-                });
+            const confirmDelete = confirm("Are you sure you want to delete it ?");
+            if (confirmDelete) {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "deleteUserVariable", data: user_variable, })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.index();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            }
         },
         search() {
             let vm = this;
