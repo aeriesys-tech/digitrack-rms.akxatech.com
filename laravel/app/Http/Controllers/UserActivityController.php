@@ -150,7 +150,8 @@ class UserActivityController extends Controller
             'user_activity_id' => 'required|exists:user_activities,user_activity_id',
         ]);
 
-        $activity = UserActivity::where('user_activity_id', $request->user_activity_id)->delete();
+        ActivityAttributeValue::where('user_activity_id', $request->user_activity_id)->forceDelete();
+        $activity = UserActivity::where('user_activity_id', $request->user_activity_id)->forceDelete();
         return response()->json([
             "message" => "UserActivity Deleted Successfully"
         ]);
