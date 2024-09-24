@@ -109,13 +109,6 @@ class UserServiceController extends Controller
                 //quantity from the AssetSpare
                 $assetSpare = AssetSpare::where('asset_id', $request->asset_id)->where('spare_id', $spare['spare_id'])->first();
 
-                    if (!$assetSpare) {
-                        return response()->json([
-                        'errors' => "No AssetSpare found for asset ID {$request->asset_id} and spare ID {$spare['spare_id']}."
-                        ], 404);
-                    }
-
-                    // Check if the user-entered quantity exceeds the available quantity
                     if ($spare['quantity'] > $assetSpare->quantity) {
                         return response()->json([
                         'errors' => "The quantity for spare ID {$spare['spare_id']} exceeds the available stock of {$assetSpare->quantity}."
@@ -185,7 +178,6 @@ class UserServiceController extends Controller
 
         foreach ($request->user_spares as $spare) 
         {
-            // Fetch available quantity from AssetSpares for the given asset_id and spare_id
             $assetSpare = AssetSpare::where('asset_id', $request->asset_id)->where('spare_id', $spare['spare_id'])->first();
 
             if (!$assetSpare) {
@@ -194,7 +186,6 @@ class UserServiceController extends Controller
                 ], 404);
             }
 
-            // Check if the user-entered quantity exceeds the available quantity
             if ($spare['quantity'] > $assetSpare->quantity) {
                 return response()->json([
                 'error' => "The quantity for spare ID {$spare['spare_id']} exceeds the available stock of {$assetSpare->quantity}."
