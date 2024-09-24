@@ -176,24 +176,26 @@
                 this.$router.push("/activity/" + activity.user_activity_id + "/edit");
             },
             deleteActivity(activity) {
-                let vm = this;
-                alert('are you sure you want delete it!')
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", {
-                        uri: "deleteUserActivity",
-                        data: activity,
-                    })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.index();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", {
+                            uri: "deleteUserActivity",
+                            data: activity,
+                        })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.index();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             search() {
                 let vm = this;

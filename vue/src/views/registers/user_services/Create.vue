@@ -84,9 +84,9 @@
                                                 <th>Asset Zone</th>
                                                 <th>Service <span class="text-danger"> *</span></th>
                                                 <th>Service Cost <span class="text-danger"> *</span></th>
-                                                <th>Spare <span class="text-danger"> *</span></th>
-                                                <th>Quantity <span class="text-danger"> *</span></th>
-                                                <th>Spare Cost <span class="text-danger"> *</span></th>
+                                                <th>Spare</th>
+                                                <th>Quantity</th>
+                                                <th>Spare Cost</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
@@ -466,21 +466,12 @@
             addRow() {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                if ( vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
                     if (vm.user_spare.service_cost == "") {
                         vm.errors.service_cost = ["Service Cost cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_id == "") {
-                        vm.errors.spare_id = ["Spare field cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_cost == "") {
-                        vm.errors.spare_cost = ["Spare Cost cannot be empty"];
-                    }
-                    if (vm.user_spare.quantity == "") {
-                        vm.errors.quantity = ["Quantity cannot be empty"];
                     }
                 } else {
                     vm.user_service.user_spares.push({
@@ -536,21 +527,12 @@
             updateRow(spare) {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                if ( vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
                     if (vm.user_spare.service_cost == "") {
                         vm.errors.service_cost = ["Service Cost cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_id == "") {
-                        vm.errors.spare_id = ["Spare field cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_cost == "") {
-                        vm.errors.spare_cost = ["Spare Cost cannot be empty"];
-                    }
-                    if (vm.user_spare.quantity == "") {
-                        vm.errors.quantity = ["Quantity cannot be empty"];
                     }
                 } else {
                     let spare_data = vm.user_service.user_spares.filter(function (element) {

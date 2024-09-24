@@ -29,8 +29,11 @@
                                     <span class="nav-link text-dark"><span>Latitude</span> <span class="badge text-dark">{{asset.latitude}}</span></span>
                                     <span class="nav-link text-dark"><span>Longitude</span> <span class="badge text-dark">{{asset.longitude}}</span></span>
                                     <span class="nav-link text-dark"><span>Radius</span> <span class="badge text-dark">{{asset.radius}}</span></span>
-                                    <span class="nav-link text-dark"><span>Department</span> <span class="badge text-dark">{{asset.department?.department_name}}</span></span>
-                                    <span class="nav-link text-dark"><span>Section</span> <span class="badge text-dark">{{asset.section?.section_name}}</span></span>
+                                    <span class="nav-link text-dark"><span>Department</span>
+                                      <span class="badge text-dark department-badge">
+                                        {{ asset?.asset_department_ids?.map(department => department.department?.department_name).join(', ') || 'No departments' }}
+                                    </span>
+                                    </span>
                                     <span class="nav-link text-dark"><span>Functional</span> <span class="badge text-dark">{{asset.functional?.functional_name}}</span></span>
                                     <span class="nav-link text-dark" v-for="(zone, index) in asset.zone_name" :key="zone.asset_zone_id">
                                         <span>Zone {{ index + 1 }}</span>
@@ -2721,6 +2724,12 @@
     };
 </script>
 <style scoped>
+.department-badge {
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    white-space: wrap;
+}
     .badge {
         /* color: #6e7985; */
         font-size: 14px;
