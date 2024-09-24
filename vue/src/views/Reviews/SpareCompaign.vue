@@ -119,6 +119,7 @@
             this.getAssets();
             // this.spare.from_date = moment().format("yyyy-MM-DD");
             // this.spare.to_date = moment().add(1, "day").format("yyyy-MM-DD");
+            this.spare.from_date = moment().subtract(1, 'day').format("YYYY-MM-DD");
             this.spare.to_date = moment().format("yyyy-MM-DD");
         },
         computed: {
