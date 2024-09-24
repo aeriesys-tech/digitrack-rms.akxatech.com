@@ -72,14 +72,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-for="user_variable_data, key1 in user_variable.asset_variables[key]" :key="key1">
+                                                    <tr v-for="user_variable_data, key1 in user_variable.user_asset_variables[key]" :key="key1">
                                                     <td>{{ user_variable_data.variable_name}}</td>
                                                         <td>
                                                             <input type="number" step="any" class="form-control" placeholder="Enter Value"
-                                                                min="0" :class="{ 'is-invalid': errors[`asset_variables.${key1}.value`] }"
+                                                                min="0" :class="{ 'is-invalid': errors[`user_asset_variables.${key1}.value`] }"
                                                                 v-model="user_variable_data.value" />
-                                                            <span v-if="errors[`asset_variables.${key1}.value`]" class="invalid-feedback">{{
-                                                                errors[`asset_variables.${key1}.value`][0] }}</span>
+                                                            <span v-if="errors[`user_asset_variables.${key1}.value`]" class="invalid-feedback">{{
+                                                                errors[`user_asset_variables.${key1}.value`][0] }}</span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -90,7 +90,7 @@
                             </div>
                             <!-- Update User Variables -->
                             <div class="row g-2 mb-3" v-else>
-                                <div class="col-md-4">
+                                <!-- <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 class="mb-0">{{ user_variable?.asset_zone?.zone_name }}</h6>
@@ -112,6 +112,36 @@
                                                                 v-model="user_variable.value" />
                                                             <span v-if="errors.value" class="invalid-feedback">{{
                                                                 errors.value[0] }}</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-4" v-for="asset_zone,key in user_variable.user_asset_variables" :key="key">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">{{ asset_zone?.asset_zone?.zone_name }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- {{ user_variable.user_asset_variables[key].value }} -->
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Variable</th>
+                                                        <th>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                    <td>{{ asset_zone?.variable?.variable_name}}</td>
+                                                        <td>
+                                                            <input type="number" step="any" class="form-control" placeholder="Enter Value"
+                                                                min="0" :class="{ 'is-invalid': errors[`asset_zone.${key1}.value`] }"
+                                                                v-model="asset_zone.value" />
+                                                            <span v-if="errors[`asset_zone.${key1}.value`]" class="invalid-feedback">{{
+                                                                errors[`asset_zone.${key1}.value`][0] }}</span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -152,7 +182,7 @@ export default {
                 asset_zone_id: "",
                 note: "",
                 status: true,
-                asset_variables: [],
+                user_asset_variables: [],
             },
             user_variable_data: {
                 user_variable_data_id: "",
@@ -175,8 +205,8 @@ export default {
 
     watch: {
         'user_variable.asset_id': function () {
-            if(this.status){
-                this.getAssetZones();
+            this.getAssetZones();
+            if(this.status){                
                 this.getVariables();
             }
         },
@@ -260,7 +290,7 @@ export default {
                 .then((response) => {
                     loader.hide();
                     // vm.variables = response.data
-                     vm.user_variable.asset_variables=response.data
+                     vm.user_variable.user_asset_variables=response.data
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -292,10 +322,10 @@ export default {
             let vm = this;
             let loader = vm.$loading.show();
             for (let i = 0; i < vm.asset_zones.length; i++) {
-                if (vm.user_variable?.asset_variables?.[i]) {
-                    for (let j = 0; j < vm.user_variable.asset_variables[i].length; j++) {
-                        if (vm.user_variable.asset_variables[i]?.[j]) {
-                            vm.user_variable.asset_variables[i][j].asset_zone_id = vm.asset_zones[i].asset_zone_id;
+                if (vm.user_variable?.user_asset_variables?.[i]) {
+                    for (let j = 0; j < vm.user_variable.user_asset_variables[i].length; j++) {
+                        if (vm.user_variable.user_asset_variables[i]?.[j]) {
+                            vm.user_variable.user_asset_variables[i][j].asset_zone_id = vm.asset_zones[i].asset_zone_id;
                         }
                     }
                 }
