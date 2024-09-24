@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Spare Types</li>
             </ol>
             <h4 class="main-title mb-2">Spare Types</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" v-can="'spare_types.create'">
                 <form @submit.prevent="submitForm()">
@@ -248,7 +248,7 @@ export default {
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
-       
+
 
         onPageChange(page) {
             this.meta.page = page;
@@ -269,6 +269,11 @@ export default {
             vm.index();
         },
         search() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
+        onPerPageChange() {
             let vm = this;
             vm.meta.page = 1;
             vm.index();

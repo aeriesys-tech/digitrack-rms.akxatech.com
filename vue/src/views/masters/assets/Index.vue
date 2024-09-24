@@ -28,8 +28,8 @@
                                         <th @click="sort('asset_type_id')">
                                             Asset Type
                                             <span>
-                                                <i v-if="meta.keyword == 'asset_type_name' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'asset_type_name' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
