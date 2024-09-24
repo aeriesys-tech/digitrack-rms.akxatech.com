@@ -20,10 +20,9 @@ class UserVariableResource extends JsonResource
             'job_date' => $this->job_date,
             'job_no' => $this->job_no,
             'note' => $this->note,
-            'asset_zone_id' => $this->asset_zone_id,
-            'asset_zone' => new AssetZoneResource($this->AssetZone),
             'asset_variables' => $variable ? new AssetVariableResource($variable) : null,
-            'value' => $this->value
+            'value' => $this->value,
+            'user_asset_variables' => UserAssetVariableResource::collection($this->UserAssetVariable)
         ];
     }
 }

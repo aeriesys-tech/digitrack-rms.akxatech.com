@@ -49,137 +49,135 @@ class UserVariableController extends Controller
 
     // public function addUserVariable(Request $request)
     // {
-    //     $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
-    //     $data = $request->validate([
+    //     $request->validate([
     //         'asset_id' => 'required|exists:assets,asset_id',
     //         'job_date' => 'required',
-    //         // 'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
     //         'note' => 'nullable|sometimes',
     //         'asset_variables' => 'required|array',
-    //         'value' => 'required'
+    //         'asset_variables.*.*.variable_id' => 'required',
+    //         'asset_variables.*.*.value' => 'required',
+    //     ],[
+            
+    //         'asset_variables.*.*.value.required' => 'value is required'
     //     ]);
-        
-    //     $data['asset_zone_id'] = $assetZone->asset_zone_id;
-    //     $data['plant_id'] = Auth::User()->plant_id;
-    //     $data['user_id'] = Auth::User()->user_id;
-    //     $data['job_no'] = $this->generateJobNo();
-
-    //     foreach($request->asset_variables as $variable)
+    //     $user_variables = [];
+    //     $assetZones = AssetZone::where('asset_id', $request->asset_id)->get();
+    //     foreach ($request->asset_variables as $variables) 
     //     {
-    //         $user_variable = UserVariable::create([
-    //             'variable_id' => $variable['variable_id'],
-    //             'value' => $variable['value']
-    //         ]);
+    //         foreach($variables as $variable)
+    //         {
+    //             $data = [
+    //                 'asset_zone_id' => $variable['asset_zone_id'],
+    //                 'plant_id' => Auth::user()->plant_id,
+    //                 'user_id' => Auth::user()->user_id,
+    //                 'job_no' => $this->generateJobNo(),
+    //                 'job_date' => $request->job_date,
+    //                 'note' => $request->note,
+    //                 'asset_id' => $request->asset_id
+    //             ];
+    //             $user_variable = UserVariable::create(array_merge($data, [
+    //                 'variable_id' => $variable['variable_id'],
+    //                 'value' => $variable['value']
+    //             ]));
+    //             $user_variables[] = $user_variable; 
+    //         }
     //     }
-        
     //     return response()->json([
-    //         'user_variable' => new UserVariableResource($user_variable),
-    //         "message" => "Process Register Created Successfully"
+    //         'user_variables' => UserVariableResource::collection($user_variables),
+    //         'message' => 'Process Register Created Successfully'
     //     ]);
     // }
 
     public function addUserVariable(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required',
             'note' => 'nullable|sometimes',
-            'asset_variables' => 'required|array',
-            'asset_variables.*.*.variable_id' => 'required',
-            'asset_variables.*.*.value' => 'required',
-        ],[
-            
-            'asset_variables.*.*.value.required' => 'value is required'
         ]);
+        $data['job_no'] = $this->generateJobNo();
+        $data['plant_id'] = Auth::User()->plant_id;
+        $data['user_id'] = Auth::id();
 
-        $user_variables = [];
+        $user_variable = UserVariable::create($data);
+
         $assetZones = AssetZone::where('asset_id', $request->asset_id)->get();
-        foreach ($request->asset_variables as $variables) 
+
+        foreach ($request->user_asset_variables as $variables) 
         {
             foreach($variables as $variable)
             {
-                $data = [
+                UserAssetVariable::create([
+                    'user_variable_id' => $user_variable->user_variable_id,
+                    'variable_id' =>  $variable['variable_id'],
                     'asset_zone_id' => $variable['asset_zone_id'],
-                    'plant_id' => Auth::user()->plant_id,
-                    'user_id' => Auth::user()->user_id,
-                    'job_no' => $this->generateJobNo(),
-                    'job_date' => $request->job_date,
-                    'note' => $request->note,
-                    'asset_id' => $request->asset_id
-                ];
-
-                $user_variable = UserVariable::create(array_merge($data, [
-                    'variable_id' => $variable['variable_id'],
-                    'value' => $variable['value']
-                ]));
-                $user_variables[] = $user_variable; 
+                    'value' => $variable['value'] ?? null
+                ]); 
             }
         }
 
         return response()->json([
-            'user_variables' => UserVariableResource::collection($user_variables),
+            'user_variables' => new UserVariableResource($user_variable),
             'message' => 'Process Register Created Successfully'
         ]);
+    }
+
+    public function updateUserVariable(Request $request)
+    {
+        $data = $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id',
+            'job_date' => 'required|date',
+            'note' => 'nullable|sometimes'
+        ]);
+        
+        $data['plant_id'] = Auth::User()->plant_id;
+        $data['user_id'] = Auth::User()->user_id;
+
+        $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->first();
+        $user_variable->update($data);
+        
+        //UserAssetCheck
+        foreach($request->user_asset_variables as $asset_variable)
+        {
+            $UserAssetVariable = UserAssetVariable::where('user_asset_variable_id', $asset_variable['user_asset_variable_id'])->first();
+            
+            if ($UserAssetVariable) {
+                $UserAssetVariable->update([
+                    'value' => $asset_variable['value']
+                ]);
+            }
+            else {
+                UserAssetVariable::create([
+                    'user_variable_id' => $user_variable->user_variable_id,
+                    'variable_id' => $asset_variable['variable_id'],
+                    'asset_zone_id' => $asset_variable['asset_zone_id'],
+                    'value' => $asset_variable['value']
+                ]);
+            }
+                
+        }
+        return response()->json(["message" => "UserVariable Updated Successfully"]);
     }
 
     // public function updateUserVariable(Request $request)
     // {
     //     $data = $request->validate([
+    //         'user_variable_id' => 'required|exists:user_variables,user_variable_id',
     //         'asset_id' => 'required|exists:assets,asset_id',
-    //         'job_date' => 'required|date',
+    //         'job_date' => 'required',
     //         'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
-    //         'note' => 'nullable|sometimes'
+    //         'note' => 'nullable|sometimes',
+    //         'value' => 'required'
     //     ]);
-        
+
     //     $data['plant_id'] = Auth::User()->plant_id;
     //     $data['user_id'] = Auth::User()->user_id;
 
-    //     $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->first();
+    //     $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->firstOrFail();
     //     $user_variable->update($data);
-        
-    //     //UserAssetCheck
-    //     foreach($request->asset_variables as $asset_variable)
-    //     {
-    //         // return $asset_variable['user_asset_variable_id'];
-    //         $UserAssetVariable = UserAssetVariable::where('user_asset_variable_id', $asset_variable['user_asset_variable_id'])->first();
-            
-    //         if ($UserAssetVariable) {
-    //             $UserAssetVariable->update([
-    //                 'value' => $asset_variable['value']
-    //             ]);
-    //         }
-    //         else {
-    //             UserAssetVariable::create([
-    //                 'user_variable_id' => $user_variable->user_variable_id,
-    //                 'variable_id' => $asset_variable['variable_id'],
-    //                 'date_time' => $asset_variable['date_time'],
-    //                 'value' => $asset_variable['value']
-    //             ]);
-    //         }
-            
-    //     }
-    //     return response()->json(["message" => "UserVariable Updated Successfully"]);
+
+    //     return response()->json(["message" => "Process Register Updated Successfully"]);
     // }
-
-    public function updateUserVariable(Request $request)
-    {
-        $data = $request->validate([
-            'user_variable_id' => 'required|exists:user_variables,user_variable_id',
-            'asset_id' => 'required|exists:assets,asset_id',
-            'job_date' => 'required',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
-            'note' => 'nullable|sometimes',
-            'value' => 'required'
-        ]);
-
-        $data['plant_id'] = Auth::User()->plant_id;
-        $data['user_id'] = Auth::User()->user_id;
-
-        $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->firstOrFail();
-        $user_variable->update($data);
-
-        return response()->json(["message" => "Process Register Updated Successfully"]);
-    }
 
     public function getUserVariable(Request $request)
     {
@@ -197,8 +195,8 @@ class UserVariableController extends Controller
             'user_variable_id' => 'required|exists:user_variables,user_variable_id'
         ]);
 
-        UserAssetVariable::where('user_variable_id', $request->user_variable_id)->delete();
-        UserVariable::where('user_variable_id', $request->user_variable_id)->delete();
+        UserAssetVariable::where('user_variable_id', $request->user_variable_id)->forceDelete();
+        UserVariable::where('user_variable_id', $request->user_variable_id)->forceDelete();
 
         return response()->json([
             'message' => "UserVariable Deleted Successfully"
