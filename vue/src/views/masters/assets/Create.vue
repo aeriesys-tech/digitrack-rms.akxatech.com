@@ -694,6 +694,9 @@
             },
 
             updateAsset() {
+                 if (!this.validateFields()) {
+                    return;
+                }
                 let vm = this;
                 // vm.asset.asset_code = vm.device_code.join("");
                 let loader = vm.$loading.show();
