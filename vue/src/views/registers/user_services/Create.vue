@@ -329,12 +329,22 @@
                 let spare = vm.spares?.filter(function (ele) {
                     return ele.spare_id == value.spare_id;
                 });
-                if (spare.length) {
-                    vm.user_spare.spare.spare_name = spare[0].spare_name;
-                }
-                // console.log('value:-----', spare)
-                value.quantity = spare[0].asset_spare[0].quantity;
-                value.max_quantity = spare[0].asset_spare[0].quantity;
+                // if (spare.length) {
+                //     vm.user_spare.spare.spare_name = spare[0].spare_name;
+                //     let spr = spare[0]?.asset_spare?.filter(function (ele) {
+                //         return ele.asset_zone_id == value.asset_zone_id;
+                //     });
+                // }                
+                // value.quantity = spare[0].asset_spare[0].quantity;
+                // value.max_quantity = spare[0].asset_spare[0].quantity;
+                
+                vm.user_spare.spare.spare_name = spare[0].spare_name;
+                let spr = spare[0]?.asset_spare?.filter(function (ele) {
+                    return ele.asset_zone_id == value.asset_zone_id;
+                });
+                value.quantity = spr[0].quantity;
+                value.max_quantity = spr[0].quantity;
+                
             },
             getServiceValue(value) {
                 let vm = this;
