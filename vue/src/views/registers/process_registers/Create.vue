@@ -119,13 +119,12 @@
                                         </div>
                                     </div>
                                 </div> -->
-                                <div class="col-md-4" v-for="asset_zone,key in user_variable.user_asset_variables" :key="key">
+                                <!-- <div class="col-md-4" v-for="asset_zone,key in user_variable.user_asset_variables" :key="key">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 class="mb-0">{{ asset_zone?.asset_zone?.zone_name }}</h6>
                                         </div>
                                         <div class="card-body">
-                                            <!-- {{ user_variable.user_asset_variables[key].value }} -->
                                             <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                                 <thead>
                                                     <tr>
@@ -142,6 +141,35 @@
                                                                 v-model="asset_zone.value" />
                                                             <span v-if="errors[`asset_zone.${key1}.value`]" class="invalid-feedback">{{
                                                                 errors[`asset_zone.${key1}.value`][0] }}</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-4" v-for="asset_zone,key in asset_zones" :key="key">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">{{ asset_zone.zone_name }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Variable</th>
+                                                        <th>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="user_variable_data, key1 in user_variable.user_asset_variables[key]" :key="key1">
+                                                    <td>{{ user_variable_data?.variable?.variable_name}}</td>
+                                                        <td>
+                                                            <input type="number" step="any" class="form-control" placeholder="Enter Value"
+                                                                min="0" :class="{ 'is-invalid': errors[`user_asset_variables.${key1}.value`] }"
+                                                                v-model="user_variable_data.value" />
+                                                            <span v-if="errors[`user_asset_variables.${key1}.value`]" class="invalid-feedback">{{
+                                                                errors[`user_asset_variables.${key1}.value`][0] }}</span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
