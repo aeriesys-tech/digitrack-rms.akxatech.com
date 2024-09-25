@@ -284,8 +284,13 @@
                 }
                 for (const field of Object.values(this.spare.spare_attributes)) {
                     if (field.is_required && !field.spare_attribute_value.field_value) {
-                        this.errors[field.display_name] = [`${field.display_name} is required`];
-                        isValid = false;
+                        if (field.field_type === "Color") {
+                            // Set default color if not provided
+                            field.spare_attribute_value.field_value = "#000000"; // Default to black
+                        } else {
+                            this.errors[field.display_name] = [`${field.display_name} is required`];
+                            isValid = false;
+                        }
                     }
                 }
                 console.log("Error",this.errors)
