@@ -138,7 +138,7 @@ class AssetSpareController extends Controller
                         'spare_id' => $assetSpare->spare_id,
                         'asset_zone_id' => $assetSpare->asset_zone_id,
                         'spare_attribute_id' => $attribute['spare_attribute_id'],
-                        'field_value' => $attribute['field_value']
+                        'field_value' => $attribute['field_value'] ?? ''
                     ]);
                 }
             }
@@ -159,7 +159,7 @@ class AssetSpareController extends Controller
                     'spare_id' => $assetSpare->spare_id,
                     'asset_zone_id' => $assetSpare->asset_zone_id,
                     'spare_attribute_id' => $attribute['spare_attribute_id'],
-                    'field_value' => $attribute['field_value']
+                    'field_value' => $attribute['field_value'] ?? ''
                 ]);
             }
         }
@@ -259,7 +259,7 @@ class AssetSpareController extends Controller
 
         foreach ($request->asset_spare_attributes as $attribute) 
         {
-            $fieldValue = $attribute['field_value'];
+            $fieldValue = $attribute['field_value'] ?? '';
 
             if ($fieldValue !== null) {
                 AssetSpareValue::updateOrCreate(

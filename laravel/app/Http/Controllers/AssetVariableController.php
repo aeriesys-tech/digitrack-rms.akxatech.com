@@ -143,7 +143,7 @@ class AssetVariableController extends Controller
                         'variable_id' => $variable->variable_id,
                         'asset_zone_id' => $assetVariable->asset_zone_id,
                         'variable_attribute_id' => $attribute['variable_attribute_id'],
-                        'field_value' => $attribute['field_value']
+                        'field_value' => $attribute['field_value'] ?? ''
                     ]);
                 }
             }
@@ -163,7 +163,7 @@ class AssetVariableController extends Controller
                     'variable_id' => $variable->variable_id,
                     'asset_zone_id' => $assetVariable->asset_zone_id,
                     'variable_attribute_id' => $attribute['variable_attribute_id'],
-                    'field_value' => $attribute['field_value']
+                    'field_value' => $attribute['field_value'] ?? ''
                 ]);
             }
         }
@@ -233,7 +233,7 @@ class AssetVariableController extends Controller
 
         foreach ($request->asset_variable_attributes as $attribute) 
         {
-            $fieldValue = $attribute['field_value'];
+            $fieldValue = $attribute['field_value'] ?? '';
 
             if ($fieldValue !== null) {
                 AssetVariableValue::updateOrCreate(

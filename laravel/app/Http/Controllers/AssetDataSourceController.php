@@ -143,7 +143,7 @@ class AssetDataSourceController extends Controller
                         'data_source_id' => $data_source->data_source_id,
                         'asset_zone_id' => $assetDataSource->asset_zone_id,
                         'data_source_attribute_id' => $attribute['data_source_attribute_id'],
-                        'field_value' => $attribute['field_value']
+                        'field_value' => $attribute['field_value'] ?? ''
                     ]);
                 }
             }
@@ -162,7 +162,7 @@ class AssetDataSourceController extends Controller
                     'data_source_id' => $data_source->data_source_id,
                     'asset_zone_id' => $assetDataSource->asset_zone_id,
                     'data_source_attribute_id' => $attribute['data_source_attribute_id'],
-                    'field_value' => $attribute['field_value']
+                    'field_value' => $attribute['field_value'] ?? ''
                 ]);
             }
         }
@@ -234,7 +234,7 @@ class AssetDataSourceController extends Controller
 
         foreach ($request->asset_datasource_attributes as $attribute) 
         {
-            $fieldValue = $attribute['field_value'];
+            $fieldValue = $attribute['field_value'] ?? '';
 
             if ($fieldValue !== null) 
             {
