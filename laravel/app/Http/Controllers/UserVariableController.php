@@ -137,24 +137,26 @@ class UserVariableController extends Controller
         $user_variable->update($data);
         
         //UserAssetCheck
-        foreach($request->user_asset_variables as $asset_variable)
+        foreach($request->user_asset_variables as $asset_variables)
         {
-            $UserAssetVariable = UserAssetVariable::where('user_asset_variable_id', $asset_variable['user_asset_variable_id'])->first();
+            foreach($asset_variables as $asset_variable)
+            {
+                $UserAssetVariable = UserAssetVariable::where('user_asset_variable_id', $asset_variable['user_asset_variable_id'])->first();
             
-            if ($UserAssetVariable) {
-                $UserAssetVariable->update([
-                    'value' => $asset_variable['value']
-                ]);
+                if ($UserAssetVariable) {
+                    $UserAssetVariable->update([
+                        'value' => $asset_variable['value']
+                    ]);
+                }
+                else {
+                    UserAssetVariable::create([
+                        'user_variable_id' => $user_variable->user_variable_id,
+                        'variable_id' => $asset_variable['variable_id'],
+                        'asset_zone_id' => $asset_variable['asset_zone_id'],
+                        'value' => $asset_variable['value']
+                    ]);
+                }
             }
-            else {
-                UserAssetVariable::create([
-                    'user_variable_id' => $user_variable->user_variable_id,
-                    'variable_id' => $asset_variable['variable_id'],
-                    'asset_zone_id' => $asset_variable['asset_zone_id'],
-                    'value' => $asset_variable['value']
-                ]);
-            }
-                
         }
         return response()->json(["message" => "UserVariable Updated Successfully"]);
     }

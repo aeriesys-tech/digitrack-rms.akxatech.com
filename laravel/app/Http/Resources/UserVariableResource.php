@@ -9,7 +9,21 @@ class UserVariableResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $variable = $this->AssetVariable->where('asset_zone_id', $this->asset_zone_id)->first();
+        // Group user_asset_variables by asset_zone_id and reset the index
+        $groupedUserAssetVariables = $this->UserAssetVariable->groupBy('asset_zone_id')->map(function ($group) {
+            return $group->map(function ($variable) {
+                return [
+                    'user_asset_variable_id' => $variable->user_asset_variable_id,
+                    'user_variable_id' => $variable->user_variable_id,
+                    'variable_id' => $variable->variable_id,
+                    'variable' => new VariableResource($variable->Variable),
+                    'asset_zone_id' => $variable->asset_zone_id,
+                    'asset_zone' => new AssetZoneResource($variable->AssetZone),
+                    'value' => $variable->value,
+                ];
+            });
+        })->values(); // Reset the index
+
         return [
             'user_variable_id' => $this->user_variable_id,
             'plant_id' => $this->plant_id,
@@ -20,9 +34,8 @@ class UserVariableResource extends JsonResource
             'job_date' => $this->job_date,
             'job_no' => $this->job_no,
             'note' => $this->note,
-            'asset_variables' => $variable ? new AssetVariableResource($variable) : null,
-            'value' => $this->value,
-            'user_asset_variables' => UserAssetVariableResource::collection($this->UserAssetVariable)
+            'user_asset_variables' => $groupedUserAssetVariables 
         ];
     }
 }
+
