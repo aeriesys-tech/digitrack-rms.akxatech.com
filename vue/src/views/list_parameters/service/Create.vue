@@ -28,7 +28,10 @@
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-4">
-                                    <label class="form-label">Service Types</label><span class="text-danger"> *</span>
+                                    <div class="d-flex justify-content-between">
+                                        <div><label class="form-label">Service Types</label><span class="text-danger"> *</span></div>
+                                        <a type="button" class="text-danger me-2" @click="reset()"><i class="ri-close-line fs-20 lh-1"></i></a>
+                                    </div>
                                     <search
                                         :class="{ 'is-invalid': errors.service_type_id }"
                                         :customClass="{ 'is-invalid': errors.service_type_id }"
@@ -413,6 +416,15 @@
                 vm.service.service_attributes = [];
                 vm.errors = [];
                 vm.status = true;
+            },
+            reset() {
+                let vm = this;
+                vm.service.service_type_id = "";
+                vm.service.asset_types = [];
+                vm.service.frequency_id = "";
+                vm.show_services = [];
+                vm.service.service_attributes = [];
+                vm.errors = [];
             },
         },
     };

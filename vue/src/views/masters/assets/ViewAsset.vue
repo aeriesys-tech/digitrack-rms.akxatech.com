@@ -31,22 +31,14 @@
                                     <span class="nav-link text-dark"><span>Radius</span> <span class="badge text-dark">{{asset.radius}}</span></span>
                                     <span class="nav-link text-dark">
                                         <span>Department</span>
-                                        <!-- <span class="badge text-dark department-badge">
-                                            {{ asset?.asset_department_ids?.map(department => department.department?.department_name).join(', ') || 'No departments' }}
-                                        </span> -->
-
-                                        <!-- try -->
                                         <span class="" style="margin-left: auto">
-                                            <ul class="list_style_none">
-        <li v-if="asset?.asset_department_ids?.length === 0">No departments</li>
-        <li v-for="department in asset.asset_department_ids" :key="department.id">
-            {{ department.department?.department_name }}
-        </li>
-    </ul>
-
-
+                                            <ul class="list_style_none mb-0 text-end">
+                                                <li v-if="asset?.asset_department_ids?.length === 0">No departments</li>
+                                                <li v-for="department in asset.asset_department_ids" :key="department.id">
+                                                    {{ department.department?.department_name }}
+                                                </li>
+                                            </ul>
                                         </span>
-                                        <!-- ends -->
                                     </span>
                                     <span class="nav-link text-dark"><span>Functional</span> <span class="badge text-dark">{{asset.functional?.functional_name}}</span></span>
                                     <span class="nav-link text-dark" v-for="(zone, index) in asset.zone_name" :key="zone.asset_zone_id">
@@ -146,7 +138,7 @@
                                         <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
-                                        <label class="form-label">Quantity</label>
+                                        <label class="form-label">Max Quantity</label>
                                         <input type="number" class="form-control" placeholder="Enter Max Quantity" :class="{ 'is-invalid': errors.quantity }" v-model="spare.quantity" />
                                         <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
                                     </div>
