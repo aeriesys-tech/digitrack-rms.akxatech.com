@@ -121,7 +121,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page"
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)"
                                 @pagechanged="onPageChange" />
                         </div>
                     </div>
@@ -195,7 +195,7 @@ export default {
                 });
         },
         editUserVariable(user_variable) {
-            this.$store.commit("setCurrentPage", this.meta.page)
+            this.$store.commit("setCurrentPage", parseInt(this.meta.page))
             this.$router.push("/process_registers/" + user_variable.user_variable_id + "/edit");
         },
         viewUserVariable(user_variable) {

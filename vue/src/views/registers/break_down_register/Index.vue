@@ -115,7 +115,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -192,8 +192,7 @@ import moment from "moment";
             },
 
             editBreakDownList(break_down_list) {
-            console.log("ddd---",break_down_list)
-                this.$store.commit("setCurrentPage", this.meta.page);
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page));
                 this.$router.push("/break_down_registers/" + break_down_list.break_down_list_id + "/edit");
             },
 
