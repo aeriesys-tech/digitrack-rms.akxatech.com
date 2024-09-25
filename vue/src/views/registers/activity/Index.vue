@@ -78,7 +78,7 @@
                                             <a title="Edit" v-can="'userActivities.update'" href="javascript:void(0)" class="text-success me-2" v-if="activity.status" @click="editActivity(activity)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
-                                            <a title="View" v-can="'userActivities.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userActivities.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="activities.length==0">

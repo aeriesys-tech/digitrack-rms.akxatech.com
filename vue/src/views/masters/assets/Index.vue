@@ -112,10 +112,10 @@
                                             <a title="Asset Delete" v-can="'assets.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="forceDeleteAsset(asset)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                         <td class="text-center">
-                                            <a title="Activity Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/activity/create')"><i class="ri-stack-fill fs-18 lh-1"></i></a>
-                                            <a title="Service Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
-                                            <a title="Check Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a>
-                                            <a title="Asset Accessories" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-brush-3-fill fs-18 lh-1"></i></a>
+                                            <a title="Activity Register" href="javascript:void(0)" class="text-info me-2" @click.prevent="viewRegister(asset, '/activity/create')"><i class="ri-stack-fill fs-18 lh-1"></i></a>
+                                            <a title="Service Register" href="javascript:void(0)" class="text-warning me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
+                                            <a title="Check Register" href="javascript:void(0)" class="text-teal me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a>
+                                            <a title="Asset Accessories" href="javascript:void(0)" class="text-secondary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-survey-line fs-18 lh-1"></i></a>
 
                                         </td>
                                     </tr>

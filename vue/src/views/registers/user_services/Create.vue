@@ -81,7 +81,7 @@
                                     <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Asset Zone</th>
+                                                <th>Asset Zone <span class="text-danger"> *</span></th>
                                                 <th>Service <span class="text-danger"> *</span></th>
                                                 <th>Service Cost <span class="text-danger"> *</span></th>
                                                 <th>Spare</th>
@@ -466,7 +466,10 @@
             addRow() {
                 let vm = this;
                 vm.errors = [];
-                if ( vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                if (vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                    if (vm.user_spare.asset_zone_id == "") {
+                        vm.errors.asset_zone_id = ["Asset zone cannot be empty"];
+                    }
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
@@ -527,7 +530,10 @@
             updateRow(spare) {
                 let vm = this;
                 vm.errors = [];
-                if ( vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                if (vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                    if (vm.user_spare.asset_zone_id == "") {
+                        vm.errors.asset_zone_id = ["Asset zone cannot be empty"];
+                    }
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
