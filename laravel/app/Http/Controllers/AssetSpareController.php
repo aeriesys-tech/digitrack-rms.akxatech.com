@@ -197,7 +197,7 @@ class AssetSpareController extends Controller
         $spare_ids = $query->pluck('spare_id')->toArray();
         $asset_spare = Spare::whereIn('spare_id', $spare_ids)
             ->with(['AssetSpare' => function ($query) use ($request) {
-                $query->where('asset_id', $request->asset_id)->select('spare_id', 'quantity');
+                $query->where('asset_id', $request->asset_id)->select('spare_id', 'quantity', 'asset_zone_id');
             }])
         ->get();
 
