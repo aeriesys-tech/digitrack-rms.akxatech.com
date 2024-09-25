@@ -98,7 +98,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                     });
             },
             editActivity(activity) {
-                this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page))
                 this.$router.push("/activity/" + activity.user_activity_id + "/edit");
             },
             deleteActivity(activity) {

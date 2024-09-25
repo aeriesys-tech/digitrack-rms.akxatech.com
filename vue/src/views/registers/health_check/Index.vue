@@ -97,7 +97,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>

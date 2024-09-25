@@ -70,7 +70,9 @@ export default {
 					isDisabled: i === this.currentPage
 				});
 			}
+			console.log("this.currentPage",this.currentPage)
 			return range;
+
 		},
 		isInFirstPage() {
 			return this.currentPage === 1;
