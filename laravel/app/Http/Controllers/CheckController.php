@@ -37,6 +37,12 @@ class CheckController extends Controller
         {
             $query->where('default_value',$request->default_value);
         }
+
+        // if(isset($request->department_id))
+        // {
+        //     $query->whereHas('Department',function($que) {
+        // });
+        // }
         
         if($request->search!='')
         {

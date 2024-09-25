@@ -12,7 +12,7 @@ class VariableAttributeValueResource extends JsonResource
         return [
             'variable_attribute_value_id' => $this->variable_attribute_value_id,
             'variable_attribute_id' => $this->variable_attribute_id,
-            'variable_attributes' => $this->VariableAttribute,
+            'variable_attributes' => VariableAttributeResource::collection($this->VariableAttribute),
             'variable_id' => $this->variable_id,
             'field_value' => $this->field_value,
             'status' => $this->deleted_at?false:true
