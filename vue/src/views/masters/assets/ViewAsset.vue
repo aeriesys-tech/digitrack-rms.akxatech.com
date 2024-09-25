@@ -212,7 +212,6 @@
 
                                         <div v-if="field.spare_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
-                                            {{field.field_value}}
                                             <select class="form-control" :class="{'is-invalid': errors[field.spare_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.spare_attributes[0].spare_attribute_value?.field_value" v-if="field.spare_attributes[0].spare_attribute_value?.field_value">{{field.spare_attributes[0].spare_attribute_value?.field_value}}</option>
                                                 <option :value="field.spare_attributes[0].spare_attribute_value?.field_value" v-else>Select {{field.spare_attributes[0].display_name}}</option>

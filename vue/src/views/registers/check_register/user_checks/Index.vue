@@ -75,7 +75,7 @@
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
                                             <a title="View" href="javascript:void(0)" @click="viewUserCheck(user_check)" class="text-primary me-2" ><i class="ri-eye-fill fs-18 lh-1"></i></a>
-                                            <a title="View" v-can="'userChecks.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userChecks.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="user_checks.length==0">

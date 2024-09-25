@@ -100,7 +100,7 @@
                                         <!-- <td>{{service.asset_zone?.zone_name}}</td> -->
                                         <td class="text-center" v-if="get_service.length">
                                             <a title="Edit" v-can="'userServices.update'" href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a title="View" v-can="'userServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="user_services.length==0">

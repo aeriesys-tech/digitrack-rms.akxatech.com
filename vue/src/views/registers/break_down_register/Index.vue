@@ -97,8 +97,8 @@
                                             </div>
                                         </td> -->
                                         <td class="text-center">
-                                            <a href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Edit" href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>

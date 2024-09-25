@@ -78,7 +78,7 @@
                                         <td>{{ campaign.datasource }}</td>
                                         <td>{{ campaign?.job_date_time }}</td>
                                         <td>{{ campaign?.script }}</td>
-                                        <td class="text-center align-middle"><a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a></td>
+                                        <td class="text-center align-middle"><a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a></td>
                                     </tr>
                                     <tr v-if="campaigns.length==0">
                                         <td colspan="7" class="text-center">No records found</td>
