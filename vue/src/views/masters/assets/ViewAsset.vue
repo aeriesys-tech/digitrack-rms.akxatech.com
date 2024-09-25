@@ -212,10 +212,11 @@
 
                                         <div v-if="field.spare_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
+                                            {{field.field_value}}
                                             <select class="form-control" :class="{'is-invalid': errors[field.spare_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.spare_attributes[0].spare_attribute_value?.field_value" v-if="field.spare_attributes[0].spare_attribute_value?.field_value">{{field.spare_attributes[0].spare_attribute_value?.field_value}}</option>
                                                 <option :value="field.spare_attributes[0].spare_attribute_value?.field_value" v-else>Select {{field.spare_attributes[0].display_name}}</option>
-                                                <option v-for="value, key in field.spare_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                                <option v-for="value, key in field.spare_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
                                             </select>
                                             <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                         </div>
@@ -626,9 +627,9 @@
                                         <div v-if="field.service_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" v-model="field.field_value">
-                                                <option :value="field.service_attributes[0].spare_attribute_value?.field_value" v-if="field.service_attributes[0].spare_attribute_value?.field_value">{{field.service_attributes[0].spare_attribute_value?.field_value}}</option>
-                                                <option :value="field.service_attributes[0].spare_attribute_value?.field_value" v-else>Select {{field.service_attributes[0].display_name}}</option>
-                                                <option v-for="value, key in field.service_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                                <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-if="field.service_attributes[0]?.service_attribute_value?.field_value">{{field.service_attributes[0].service_attribute_value?.field_value}}</option>
+                                                <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-else>Select {{field.service_attributes[0].display_name}}</option>
+                                                <option v-for="value, key in field.service_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
                                             </select>
                                             <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
                                         </div>
@@ -843,9 +844,9 @@
                                         <div v-if="field.variable_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.variable_attributes[0].display_name]}" v-model="field.field_value">
-                                                <option :value="field.variable_attributes[0].spare_attribute_value?.field_value" v-if="field.variable_attributes[0].spare_attribute_value?.field_value">{{field.variable_attributes[0].spare_attribute_value?.field_value}}</option>
-                                                <option :value="field.variable_attributes[0].spare_attribute_value?.field_value" v-else>Select {{field.variable_attributes[0].display_name}}</option>
-                                                <option v-for="value, key in field.variable_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                                <option :value="field.variable_attributes[0].variable_attribute_value?.field_value" v-if="field.variable_attributes[0].variable_attribute_value?.field_value">{{field.variable_attributes[0].variable_attribute_value?.field_value}}</option>
+                                                <option :value="field.variable_attributes[0].variable_attribute_value?.field_value" v-else>Select {{field.variable_attributes[0].display_name}}</option>
+                                                <option v-for="value, key in field.variable_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
                                             </select>
                                             <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                         </div>
@@ -1081,9 +1082,9 @@
                                         <div v-if="field.data_source_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.data_source_attributes[0].display_name]}" v-model="field.field_value">
-                                                <option :value="field.data_source_attributes[0].spare_attribute_value?.field_value" v-if="field.data_source_attributes[0].spare_attribute_value?.field_value">{{field.data_source_attributes[0].spare_attribute_value?.field_value}}</option>
-                                                <option :value="field.data_source_attributes[0].spare_attribute_value?.field_value" v-else>Select {{field.data_source_attributes[0].display_name}}</option>
-                                                <option v-for="value, key in field.data_source_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                                <option :value="field.data_source_attributes[0].data_source_attribute_value?.field_value" v-if="field.data_source_attributes[0].data_source_attribute_value?.field_value">{{field.data_source_attributes[0].data_source_attribute_value?.field_value}}</option>
+                                                <option :value="field.data_source_attributes[0].data_source_attribute_value?.field_value" v-else>Select {{field.data_source_attributes[0].display_name}}</option>
+                                                <option v-for="value, key in field.data_source_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
                                             </select>
                                             <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                         </div>
