@@ -281,8 +281,15 @@
                 }
                 for (const field of Object.values(this.variable.variable_attributes)) {
                     if (field.is_required && !field.variable_attribute_value.field_value) {
-                        this.errors[field.display_name] = [`${field.display_name} is required`];
-                        isValid = false;
+                        // this.errors[field.display_name] = [`${field.display_name} is required`];
+                        // isValid = false;
+                        if (field.field_type === "Color") {
+                            // Set default color if not provided
+                            field.variable_attribute_value.field_value = "#000000"; // Default to black
+                        } else {
+                            this.errors[field.display_name] = [`${field.display_name} is required`];
+                            isValid = false;
+                        }
                     }
                 }
 

@@ -192,7 +192,7 @@
               updateActivityType(event, activity_type) {
                 let vm = this
                 const isChecked = event.target.checked;
-                let data_source_attribute_type = activity_type?.data_source_attribute_types.filter(function (element) {
+                let data_source_attribute_type = activity_type?.data_source_attribute_types?.filter(function (element) {
                     console.log("ele--",element)
                     return element.data_source_type_id == event.target.value
                 })
