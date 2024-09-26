@@ -49,7 +49,7 @@
                                         @input=" asset => user_service.asset_id = asset"
                                     >
                                     </search>
-                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Service Date & Time</label><span class="text-danger"> *</span>
@@ -423,6 +423,14 @@
             addUserService() {
                 let vm = this;
                 let loader = vm.$loading.show();
+                 vm.errors = {};
+
+                if (!vm.user_service.asset_id) {
+                    loader.hide();
+                    vm.errors.asset_id = "Asset is required";
+                    vm.$store.dispatch("error", "Asset is required.");
+                    return;
+                }
                 // Check if user_spares is empty
                 if (vm.user_service.user_spares.length === 0) {
                     loader.hide();

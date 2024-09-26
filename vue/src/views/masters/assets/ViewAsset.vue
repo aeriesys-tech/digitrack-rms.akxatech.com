@@ -1397,7 +1397,7 @@
                         <div class="col-12 mb-2">
                             <!-- Spare -->
                             <div class="row g-2" v-if="asset_type=='Spares'">
-                                <div class="col-md-4" v-for="field, key in assets1.asset_spare_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in assets1?.asset_spare_attributes" :key="key">
                                     <div v-if="field.spare_attributes[0].field_type=='Text'">
                                         <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                         <input
@@ -1494,7 +1494,7 @@
 
                             <!-- Service -->
                             <div class="row g-2" v-if="asset_type=='Services'">
-                                <div class="col-md-4" v-for="field, key in assets1.asset_service_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in assets1?.asset_service_attributes" :key="key">
                                     <div v-if="field.service_attributes[0].field_type=='Text'">
                                         <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
                                         <input
@@ -1589,7 +1589,7 @@
                                 </div>
                             </div>
                             <div class="row g-2" v-if="asset_type=='Variables'">
-                                <div class="col-md-4" v-for="field, key in assets1.asset_variable_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in assets1?.asset_variable_attributes" :key="key">
                                     <div v-if="field.variable_attributes[0].field_type=='Text'">
                                         <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                         <input
@@ -1684,7 +1684,7 @@
                                 </div>
                             </div>
                             <div class="row g-2" v-if="asset_type=='Data Sources'">
-                                <div class="col-md-4" v-for="field, key in assets1.asset_datasource_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in assets1?.asset_datasource_attributes" :key="key">
                                     <div v-if="field.data_source_attributes[0].field_type=='Text'">
                                         <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                         <input
@@ -3129,7 +3129,8 @@
                     });
             },
             viewAsset(asset, from) {
-                // console.log('asset:-----', asset)
+                console.log('asset:-----', asset)
+                  console.log('from:-----', from)
                 // this.$store.commit("setAssets", asset)
                 // this.$router.push({ name: 'Assets.DynamicAssets', params: { assets: from } });
                 this.asset_type = from;

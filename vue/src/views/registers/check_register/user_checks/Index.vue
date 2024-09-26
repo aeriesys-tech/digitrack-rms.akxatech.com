@@ -45,7 +45,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('reference_date')">
-                                            Reference Date.
+                                            Reference Date & Time
                                             <span>
                                                 <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'reference_date' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -53,7 +53,7 @@
                                             </span>
                                         </th>
                                         <th>
-                                            Asset Zone.
+                                            Asset Zone
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
