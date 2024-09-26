@@ -9,7 +9,6 @@ class UserVariableResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        // Group user_asset_variables by asset_zone_id and reset the index
         $groupedUserAssetVariables = $this->UserAssetVariable->groupBy('asset_zone_id')->map(function ($group) {
             return $group->map(function ($variable) {
                 return [
@@ -22,7 +21,7 @@ class UserVariableResource extends JsonResource
                     'value' => $variable->value,
                 ];
             });
-        })->values(); // Reset the index
+        })->values();
 
         return [
             'user_variable_id' => $this->user_variable_id,
