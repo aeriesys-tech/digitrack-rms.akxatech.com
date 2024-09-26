@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserVariableResource;
 use App\Models\UserAssetVariable;
+use App\Models\AssetVariable;
 
 class UserVariableController extends Controller
 {
@@ -94,6 +95,9 @@ class UserVariableController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required',
             'note' => 'nullable|sometimes',
+            'user_asset_variables.*.*.value' => 'required'
+        ],[
+            'user_asset_variables.*.*.value.required' => "value field is required"
         ]);
         $data['job_no'] = $this->generateJobNo();
         $data['plant_id'] = Auth::User()->plant_id;
@@ -127,7 +131,10 @@ class UserVariableController extends Controller
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required|date',
-            'note' => 'nullable|sometimes'
+            'note' => 'nullable|sometimes',
+            'user_asset_variables.*.*.value' => 'required'
+        ],[
+            'user_asset_variables.*.*.value.required' => "value field is required"
         ]);
         
         $data['plant_id'] = Auth::User()->plant_id;
