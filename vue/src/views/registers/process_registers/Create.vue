@@ -76,10 +76,10 @@
                                                     <td>{{ user_variable_data.variable_name}}</td>
                                                         <td>
                                                             <input type="number" step="any" class="form-control" placeholder="Enter Value"
-                                                                min="0" :class="{ 'is-invalid': errors[`user_asset_variables.${key1}.value`] }"
+                                                                min="0" :class="{ 'is-invalid': errors[`user_asset_variables.${key}.${key1}.value`] }"
                                                                 v-model="user_variable_data.value" />
-                                                            <span v-if="errors[`user_asset_variables.${key1}.value`]" class="invalid-feedback">{{
-                                                                errors[`user_asset_variables.${key1}.value`][0] }}</span>
+                                                            <span v-if="errors[`user_asset_variables.${key}.${key1}.value`]" class="invalid-feedback">{{
+                                                                errors[`user_asset_variables.${key}.${key1}.value`][0] }}</span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -166,10 +166,10 @@
                                                     <td>{{ user_variable_data?.variable?.variable_name}}</td>
                                                         <td>
                                                             <input type="number" step="any" class="form-control" placeholder="Enter Value"
-                                                                min="0" :class="{ 'is-invalid': errors[`user_asset_variables.${key1}.value`] }"
+                                                                min="0" :class="{ 'is-invalid': errors[`user_asset_variables.${key}.${key1}.value`] }"
                                                                 v-model="user_variable_data.value" />
-                                                            <span v-if="errors[`user_asset_variables.${key1}.value`]" class="invalid-feedback">{{
-                                                                errors[`user_asset_variables.${key1}.value`][0] }}</span>
+                                                            <span v-if="errors[`user_asset_variables.${key}.${key1}.value`]" class="invalid-feedback">{{
+                                                                errors[`user_asset_variables.${key}.${key1}.value`][0] }}</span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -369,6 +369,7 @@ export default {
                 .catch(function (error) {
                     loader.hide();
                     vm.errors = error.response.data.errors;
+                    console.log('vm.errors:-----', vm.errors)
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
@@ -386,6 +387,7 @@ export default {
                 .catch(function (error) {
                     loader.hide();
                     vm.errors = error.response.data.errors;
+                    console.log('vm.errors:-----', vm.errors)
                     vm.$store.dispatch("error", error.response.data.message);
                 });
         },
