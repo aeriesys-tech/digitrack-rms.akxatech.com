@@ -284,13 +284,13 @@
             });
         },
         mounted() {
-            this.user_service.service_date = moment().format("yyyy-MM-DDTHH:mm");
-            this.user_service.next_service_date = moment().add(1, 'days').format("yyyy-MM-DDTHH:mm");
+            this.user_service.service_date = moment().format("yyyy-MM-DD HH:mm");
+            this.user_service.next_service_date = moment().add(1, 'days').format("yyyy-MM-DD HH:mm");
         },
         methods: {
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DDTHH:mm");
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             submitForm() {
                 let vm = this;
@@ -334,17 +334,17 @@
                 //     let spr = spare[0]?.asset_spare?.filter(function (ele) {
                 //         return ele.asset_zone_id == value.asset_zone_id;
                 //     });
-                // }                
+                // }
                 // value.quantity = spare[0].asset_spare[0].quantity;
                 // value.max_quantity = spare[0].asset_spare[0].quantity;
-                
+
                 vm.user_spare.spare.spare_name = spare[0].spare_name;
                 let spr = spare[0]?.asset_spare?.filter(function (ele) {
                     return ele.asset_zone_id == value.asset_zone_id;
                 });
                 value.quantity = spr[0].quantity;
                 value.max_quantity = spr[0].quantity;
-                
+
             },
             getServiceValue(value) {
                 let vm = this;

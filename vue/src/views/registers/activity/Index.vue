@@ -69,7 +69,7 @@
                                     <tr v-for="activity, key in activities" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{activity.activity_no}}</td>
-                                        <td>{{activity.activity_date}}</td>
+                                        <td>{{convertDateFormat( activity.activity_date)}}</td>
                                         <td>{{activity.asset?.asset_code}}</td>
                                         <td>{{activity.reason?.reason_code}}</td>
                                         <td>{{activity.cost}}</td>
@@ -107,7 +107,8 @@
     </div>
 </template>
 <script>
-    import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
     export default {
         components: {
             Pagination,
@@ -170,6 +171,10 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            },
+            convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             editActivity(activity) {
                 this.$store.commit("setCurrentPage", parseInt(this.meta.page))

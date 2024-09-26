@@ -234,7 +234,7 @@ export default {
     watch: {
         'user_variable.asset_id': function () {
             this.getAssetZones();
-            if(this.status){                
+            if(this.status){
                 this.getVariables();
             }
         },

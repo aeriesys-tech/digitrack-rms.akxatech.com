@@ -249,7 +249,7 @@
             });
         },
         mounted() {
-            this.activity.activity_date = moment().format("yyyy-MM-DD HH:mm:ss");
+            this.activity.activity_date = moment().format("yyyy-MM-DD HH:mm");
         },
         methods: {
             submitForm() {
@@ -262,7 +262,7 @@
             },
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD HH:mm:ss");
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             getAssets() {
                 let vm = this;
