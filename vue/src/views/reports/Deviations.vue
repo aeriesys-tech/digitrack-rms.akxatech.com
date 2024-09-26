@@ -146,6 +146,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr v-if="user_assets.length==0">
+                                              <td colspan="12" class="text-center">No records found</td>
+                                        </tr>
                                         <tr v-for="deviation, key in user_assets" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
                                             <td>{{ deviation.department?.department_name }}</td>

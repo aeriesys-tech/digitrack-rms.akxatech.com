@@ -298,7 +298,7 @@
                                                         <td colspan="7" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="spare, key in asset_spares" :key="key">
-                                                        <td class="text-center">{{ meta.from + key }}</td>
+                                                        <td class="text-center">{{ (meta.page-1)*meta.per_page + key+1 }}</td>
                                                         <td>{{ spare.asset_zone?.zone_name }}</td>
                                                         <td>{{spare.spare?.spare_type?.spare_type_name}}</td>
                                                         <td>{{spare.spare?.spare_code}}</td>
@@ -484,7 +484,7 @@
                                                         <td colspan="8" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="check, key in asset_checks" :key="key">
-                                                        <td class="text-center">{{ check_meta.from + key }}</td>
+                                                        <td class="text-center">{{(check_meta.page-1)*check_meta.per_page + key+1 }}</td>
                                                         <td>{{ check?.asset_zone?.zone_name }}</td>
                                                         <td style="white-space: normal;">{{check?.check?.field_name}}</td>
                                                         <td>{{ check?.check?.field_type }}</td>
@@ -708,7 +708,7 @@
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="service, key in asset_services" :key="key">
-                                                        <td class="text-center">{{ check_meta_service.from + key }}</td>
+                                                        <td class="text-center">{{(check_meta_service.page-1)*check_meta_service.per_page + key+1 }}</td>
                                                         <td>{{ service?.asset_zone?.zone_name }}</td>
                                                         <td>{{ service?.service?.service_type?.service_type_name }}</td>
                                                         <td>{{ service?.service?.service_name }}</td>
@@ -931,7 +931,7 @@
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="variable, key in asset_variables" :key="key">
-                                                        <td class="text-center">{{ variable_meta_service.from + key }}</td>
+                                                        <td class="text-center">{{(variable_meta_service.page-1)*variable_meta_service.per_page + key+1 }}</td>
                                                         <td>{{ variable.asset_zone?.zone_name }}</td>
                                                         <td>{{variable.variable?.variable_type?.variable_type_name}}</td>
                                                         <td>{{variable.variable?.variable_code}}</td>
@@ -1186,7 +1186,7 @@
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="data_source, key in asset_data_sources" :key="key">
-                                                        <td class="text-center">{{ datasource_meta_service.from + key }}</td>
+                                                        <td class="text-center">{{(datasource_meta_service.page-1)*datasource_meta_service.per_page + key+1 }}</td>
                                                         <td>{{ data_source.asset_zone?.zone_name }}</td>
                                                         <td>{{ data_source.data_source?.data_source_type?.data_source_type_name }}</td>
                                                         <td>{{ data_source?.data_source?.data_source_code }}</td>
@@ -1342,7 +1342,7 @@
                                                         <td colspan="6" class="text-center">No records found</td>
                                                     </tr>
                                                     <tr v-for="accessory, key in asset_accessories" :key="key">
-                                                        <td class="text-center">{{ accessory_meta_service.from + key }}</td>
+                                                        <td class="text-center">{{(accessory_meta_service.page-1)*accessory_meta_service.per_page + key+1 }}</td>
                                                         <td>{{ accessory.asset_zone?.zone_name }}</td>
                                                         <td>{{ accessory.accessory_type.accessory_type_name }}</td>
                                                         <td>{{ accessory.accessory_name }}</td>

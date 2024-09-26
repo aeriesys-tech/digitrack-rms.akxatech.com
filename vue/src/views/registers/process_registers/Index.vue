@@ -85,7 +85,7 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{ user_variable.asset?.asset_code }}</td>
                                         <td>{{ user_variable.job_no }}</td>
-                                        <td>{{ user_variable.job_date }}</td>
+                                        <td>{{convertDateFormat( user_variable.job_date) }}</td>
                                         <!-- <td>{{ user_variable?.asset_zone?.zone_name }}</td> -->
                                         <!-- <td>{{ user_variable?.asset_variables?.variable?.variable_name }}</td> -->
                                         <!-- <td>{{ user_variable?.value }}</td> -->
@@ -132,6 +132,7 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
 export default {
     name: "ProcessRegisters.Index",
     components: {
@@ -220,6 +221,10 @@ export default {
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             }
+        },
+        convertDateFormat(date) {
+            let vm = this;
+            return moment(date).format("yyyy-MM-DD HH:mm");
         },
         search() {
             let vm = this;

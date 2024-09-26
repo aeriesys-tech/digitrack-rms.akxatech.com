@@ -53,7 +53,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('job_date')">
-                                            Job Date
+                                            Job Date & Time
                                             <span>
                                                 <i v-if="meta.keyword=='job_date' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='job_date' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -168,7 +168,7 @@ import moment from "moment";
     methods: {
              convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD HH:MM");
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             index() {
                 let vm = this;

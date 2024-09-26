@@ -116,6 +116,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr v-if="user_services.length==0">
+                                              <td colspan="7" class="text-center">No records found</td>
+                                        </tr>
                                         <tr v-for="service, key in user_services" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
                                             <td>
