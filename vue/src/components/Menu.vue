@@ -226,7 +226,7 @@
             </div>  -->
 
             <div class="nav-group" :class="{show:showReview}" @click="showTab('Review')">
-                <a href="javascript:void(0)" class="nav-label" :style="{color:ReviewColor}"><i class="ri-stack-fill icn"></i> Review</a>
+                <a href="javascript:void(0)" class="nav-label" :style="{color:ReviewColor}"><i class="ri-file-search-line icn"></i> Review</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
                         <router-link to="/asset_details" v-bind:class="{ active: $route.path === '/asset_details' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Details</span></router-link>
@@ -261,7 +261,7 @@
                 </ul>
             </div>
             <div class="nav-group" :class="{show:showPredictions}" @click="showTab('Predictions')">
-                <a href="javascript:void(0)" class="nav-label" :style="{color:PredictionColor}"><i class="ri-stack-fill icn"></i> Predictions</a>
+                <a href="javascript:void(0)" class="nav-label" :style="{color:PredictionColor}"><i class="ri-copper-coin-line icn"></i> Predictions</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
                         <router-link to="/asset_life" v-bind:class="{ active: $route.path === '/asset_life' }" class="nav-link"><i class="ri-expand-width-fill"></i> <span>Asset Life</span></router-link>
