@@ -235,6 +235,14 @@
                             });
                             vm.spare.deleted_spare_attribute_values = [];
                             vm.spare.deleted_spare_asset_types = [];
+
+                            vm.spare.asset_types_obj = []
+
+                            vm.spare.spare_asset_types.map(function(ele){
+                                vm.spare.asset_types_obj.push({asset_type_code: ele.asset_types.asset_type_code, 
+                                    asset_type_id: ele.asset_types.asset_type_id, status: ele.asset_types.status,
+                                    asset_type_name: ele.asset_types.asset_type_name})
+                            })
                         })
                         .catch(function (error) {
                             console.log("error", error);
@@ -321,12 +329,8 @@
                 })
                 if (!vm.validateFields()) {
                     return;
-                }
-                
+                }                
                 let loader = vm.$loading.show();
-
-                
-
                 vm.$store.dispatch("post", { uri: "addSpare", data: vm.spare })
                 .then((response) => {
                     loader.hide();
@@ -373,10 +377,16 @@
             },
 
             updateSpare() {
+                let vm = this;
+                vm.spare.deleted_spare_asset_types = vm.spare?.spare_asset_types.filter(
+                    item1 => !vm.spare.asset_types_obj.some(item2 => item1.asset_type_id === item2.asset_type_id));
+                vm.spare.asset_types = vm.spare.asset_types_obj.map(item => item.asset_type_id);
+                vm.spare.deleted_spare_asset_types = vm.spare.deleted_spare_asset_types.map(item => item.spare_asset_type_id);
+
                 if (!this.validateFields()) {
                     return; // Stop the submit if validation fails
                 }
-                let vm = this;
+               
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "updateSpare", data: vm.spare })
