@@ -84,6 +84,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr v-if="roles.length==0">
+                                        <td colspan="5" class="text-center">No records found</td>
+                                    </tr>
                                     <tr v-for="role, key in roles" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{ role.role }}</td>
