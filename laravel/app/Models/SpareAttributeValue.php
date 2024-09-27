@@ -22,4 +22,14 @@ class SpareAttributeValue extends Model
     {
         return $this->hasMany(SpareAttribute::class, 'spare_attribute_id', 'spare_attribute_id');
     }
+
+    public function SpareAttributeData()
+    {
+        return $this->belongsTo(SpareAttribute::class, 'spare_attribute_id', 'spare_attribute_id');
+    }
+
+    public function Spare()
+    {
+        return $this->belongsTo(Spare::class, 'spare_id');
+    }
 }

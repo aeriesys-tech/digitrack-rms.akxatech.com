@@ -19,6 +19,11 @@ class DataSource extends Model
 
     protected $primaryKey = 'data_source_id';
 
+    public function AssetDataSource()
+    {
+        return $this->hasMany(AssetDataSource::class, 'data_source_id', 'data_source_id');
+    }
+
     public function DataSourceType()
     {
         return $this->belongsTo(DataSourceType::class, 'data_source_type_id');
@@ -27,5 +32,16 @@ class DataSource extends Model
     public function DataSourceAssetTypes()
     {
         return $this->hasMany(DataSourceAssetType::class, 'data_source_id', 'data_source_id');
+    }
+
+    public function DataSourceAttributes()
+    {
+        return $this->hasMany(DataSourceAttribute::class, 'data_source_id', 'data_source_id');
+    }
+    
+    public function getDataSourceValues($data_source_id)
+    {
+        $datasourcevalue = DataSourceAttributeValue::where('data_source_id', $data_source_id)->get();
+        return $datasourcevalue;
     }
 }

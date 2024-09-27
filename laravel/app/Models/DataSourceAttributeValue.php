@@ -22,4 +22,14 @@ class DataSourceAttributeValue extends Model
     {
         return $this->hasMany(DataSourceAttribute::class, 'data_source_attribute_id', 'data_source_attribute_id');
     }
+
+    public function DataSourceAttributeValue()
+    {
+        return $this->belongsTo(DataSourceAttribute::class, 'data_source_attribute_id', 'data_source_attribute_id');
+    }
+
+    public function DataSource()
+    {
+        return $this->belongsTo(DataSource::class, 'data_source_id');
+    }
 }

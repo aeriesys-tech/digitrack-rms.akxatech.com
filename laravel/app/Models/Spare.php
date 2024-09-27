@@ -14,10 +14,15 @@ class Spare extends Model
         'spare_type_id',
         'spare_code',
         'spare_name',
-        //'list_parameter_id'
+        'list_parameter_id'
     ];
 
     protected $primaryKey = 'spare_id';
+
+    public function AssetSpare()
+    {
+        return $this->hasMany(AssetSpare::class, 'spare_id', 'spare_id');
+    }
 
     public function SpareType()
     {
@@ -29,8 +34,14 @@ class Spare extends Model
         return $this->hasMany(SpareAssetType::class, 'spare_id', 'spare_id');
     }
 
-    public function AssetSpare()
+    public function SpareAttributes()
     {
-        return $this->hasMany(AssetSpare::class, 'spare_id', 'spare_id');
+        return $this->hasMany(SpareAttribute::class, 'spare_id', 'spare_id');
+    }
+    
+    public function getSpareValues($spare_id)
+    {
+        $sparevalue = SpareAttributeValue::where('spare_id', $spare_id)->get();
+        return $sparevalue;
     }
 }

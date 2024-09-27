@@ -22,4 +22,14 @@ class VariableAttributeValue extends Model
     {
         return $this->hasMany(VariableAttribute::class, 'variable_attribute_id', 'variable_attribute_id');
     }
+
+    public function VariableAttributeData()
+    {
+        return $this->belongsTo(VariableAttribute::class, 'variable_attribute_id', 'variable_attribute_id');
+    }
+
+    public function Variable()
+    {
+        return $this->belongsTo(Variable::class, 'variable_id');
+    }
 }
