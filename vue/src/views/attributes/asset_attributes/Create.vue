@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleAssetTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.asset_types}">
                                                 <option value="">Select Asset Type</option>
@@ -44,7 +44,10 @@
                                                     <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
+                                        <MultiSelect v-model="asset_attribute.asset_types_obj"  filter optionLabel="asset_type_name" 
+                                            :options="asset_types"  placeholder="Select  Asset Type" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 40px;" />
 
                                     </div>
                                 </div>
@@ -127,8 +130,10 @@
     </template>
     <script>
 //      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "AssetAttributes.Create",
         data() {
@@ -141,6 +146,7 @@
                     field_length: '',
                     is_required: "",
                     asset_type_id: '',
+                    asset_types_obj: [],
                     asset_types:[],
                     // list_parameters:[],
                     list_parameter_id: "",
@@ -189,6 +195,15 @@
                             .then(function (response) {
                                 vm.asset_attribute = response.data.data;
                                 vm.asset_attribute.deleted_asset_attribute_types = []
+                                vm.asset_attribute.asset_types_obj = []
+
+                                vm.asset_attribute.asset_attribute_types.map(function(ele){
+                                    vm.asset_attribute.asset_types_obj.push({asset_type_code: ele.asset_type.asset_type_code, 
+                                        asset_type_id: ele.asset_type.asset_type_id, status: ele.asset_type.status,
+                                        asset_type_name: ele.asset_type.asset_type_name})
+                                })
+
+
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -250,7 +265,11 @@
             addAssetAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addAssetAttribute', data:this.asset_attribute })
+                let asset_attributes = 
+                vm.asset_attribute.asset_types_obj.map(function(ele){
+                    vm.asset_attribute.asset_types.push(ele.asset_type_id)
+                })
+                this.$store.dispatch('post', { uri: 'addAssetAttribute', data:vm.asset_attribute })
                     .then(response => {
                         loader.hide();
                         this.$store.dispatch('success',"Asset Attribute created successfully");
@@ -266,7 +285,13 @@
             updateAssetAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateAssetAttribute', data:this.asset_attribute })
+                vm.asset_attribute.deleted_asset_attribute_types = vm.asset_attribute.asset_attribute_types.filter(
+                    item1 => !vm.asset_attribute.asset_types_obj.some(item2 => item1.asset_type_id === item2.asset_type_id));
+                
+                vm.asset_attribute.asset_types = vm.asset_attribute.asset_types_obj.map(item => item.asset_type_id);
+                vm.asset_attribute.deleted_asset_attribute_types = vm.asset_attribute.deleted_asset_attribute_types.map(item => item.asset_attribute_type_id);
+
+                this.$store.dispatch('post', { uri: 'updateAssetAttribute', data:vm.asset_attribute })
                     .then(response => {
                         loader.hide();
                         this.$store.dispatch('success',"Asset Attribute updated successfully");
