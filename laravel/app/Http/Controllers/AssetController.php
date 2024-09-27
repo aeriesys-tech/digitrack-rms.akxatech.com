@@ -34,6 +34,11 @@ use App\Models\AssetServiceValue;
 use App\Models\AssetVariableValue;
 use App\Models\AssetDataSourceValue;
 use App\Models\BreakDownList;
+use App\Models\Campaign;
+use App\Models\UserActivity;
+use App\Models\UserService;
+use App\Models\UserCheck;
+use App\Models\UserVariable;
 
 class AssetController extends Controller
 {
@@ -68,10 +73,10 @@ class AssetController extends Controller
         if($request->search!='')
         {
             $query->where('asset_code', 'like', "%$request->search%")
-                ->orWhere('asset_name', 'like', "$request->search%")
+                ->orWhere('asset_name', 'like', "%$request->search%")
                 ->orWhereHas('AssetType', function ($q) use ($request) {
-                    $q->where('asset_type_code', 'like', "$request->search%")
-                    ->orWhere('asset_type_name', 'like', "$request->search%");
+                    $q->where('asset_type_code', 'like', "%$request->search%")
+                    ->orWhere('asset_type_name', 'like', "%$request->search%");
                 });
         }
         $asset = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
@@ -333,8 +338,13 @@ class AssetController extends Controller
         ]);
 
         $isReferenced = BreakDownList::where('asset_id', $request->asset_id)->exists();
-    
-        if ($isReferenced) {
+        $campaign = Campaign::where('asset_id', $request->asset_id)->exists();
+        $activity = UserActivity::where('asset_id', $request->asset_id)->exists();
+        $service = UserService::where('asset_id', $request->asset_id)->exists();
+        $check = UserCheck::where('asset_id', $request->asset_id)->exists();
+        $variable = UserVariable::where('asset_id', $request->asset_id)->exists();
+        if ($isReferenced || $campaign || $activity || $service || $check || $variable) 
+        {
             return response()->json([
                 "message" => 'Asset cannot be deleted as it is used in other records.'
             ], 400);

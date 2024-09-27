@@ -76,9 +76,9 @@
                                         <td>{{ campaign?.job_no }}</td>
                                         <td>{{campaign?.asset?.asset_name}}</td>
                                         <td>{{ campaign.datasource }}</td>
-                                        <td>{{ campaign?.job_date_time }}</td>
+                                        <td>{{convertDateFormat( campaign?.job_date_time )}}</td>
                                         <td>{{ campaign?.script }}</td>
-                                        <td class="text-center align-middle"><a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a></td>
+                                        <td class="text-center align-middle"><a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a></td>
                                     </tr>
                                     <tr v-if="campaigns.length==0">
                                         <td colspan="7" class="text-center">No records found</td>
@@ -97,7 +97,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,8 @@
 </template>
 
 <script>
-    import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
     export default {
         components: { Pagination },
         data() {
@@ -159,6 +160,10 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+             convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD HH:mm");
+            },
             search() {
                 let vm = this;
                 vm.meta.page = 1;
@@ -166,21 +171,23 @@
             },
 
             deleteHealthCheck(campaign) {
-                let vm = this;
-                alert('are you sure you want delete it!')
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", {uri: "deleteHealthCheck",data: campaign,})
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.index();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", { uri: "deleteHealthCheck", data: campaign, })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.index();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
 
             onPageChange(page) {

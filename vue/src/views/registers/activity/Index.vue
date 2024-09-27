@@ -69,7 +69,7 @@
                                     <tr v-for="activity, key in activities" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{activity.activity_no}}</td>
-                                        <td>{{activity.activity_date}}</td>
+                                        <td>{{convertDateFormat( activity.activity_date)}}</td>
                                         <td>{{activity.asset?.asset_code}}</td>
                                         <td>{{activity.reason?.reason_code}}</td>
                                         <td>{{activity.cost}}</td>
@@ -78,7 +78,7 @@
                                             <a title="Edit" v-can="'userActivities.update'" href="javascript:void(0)" class="text-success me-2" v-if="activity.status" @click="editActivity(activity)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
-                                            <a title="View" v-can="'userActivities.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userActivities.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="activities.length==0">
@@ -98,7 +98,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,8 @@
     </div>
 </template>
 <script>
-    import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
     export default {
         components: {
             Pagination,
@@ -171,29 +172,35 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD HH:mm");
+            },
             editActivity(activity) {
-                this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page))
                 this.$router.push("/activity/" + activity.user_activity_id + "/edit");
             },
             deleteActivity(activity) {
-                let vm = this;
-                alert('are you sure you want delete it!')
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", {
-                        uri: "deleteUserActivity",
-                        data: activity,
-                    })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.index();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", {
+                            uri: "deleteUserActivity",
+                            data: activity,
+                        })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.index();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             search() {
                 let vm = this;

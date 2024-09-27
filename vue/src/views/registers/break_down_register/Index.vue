@@ -53,7 +53,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('job_date')">
-                                            Job Date
+                                            Job Date & Time
                                             <span>
                                                 <i v-if="meta.keyword=='job_date' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='job_date' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -97,8 +97,8 @@
                                             </div>
                                         </td> -->
                                         <td class="text-center">
-                                            <a href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Edit" href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -115,7 +115,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -168,7 +168,7 @@ import moment from "moment";
     methods: {
              convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD HH:MM");
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             index() {
                 let vm = this;
@@ -192,14 +192,14 @@ import moment from "moment";
             },
 
             editBreakDownList(break_down_list) {
-            console.log("ddd---",break_down_list)
-                this.$store.commit("setCurrentPage", this.meta.page);
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page));
                 this.$router.push("/break_down_registers/" + break_down_list.break_down_list_id + "/edit");
             },
 
-            deleteBreakDownList(break_down_list) {
+        deleteBreakDownList(break_down_list) {
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+            if (confirmDelete) {
                 let vm = this;
-                alert('are you sure you want delete it!')
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "deleteBreakDownList", data: break_down_list })
@@ -213,6 +213,7 @@ import moment from "moment";
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            }
             },
             onPageChange(page) {
                 this.meta.page = page;
@@ -225,6 +226,11 @@ import moment from "moment";
             },
 
             search() {
+                let vm = this;
+                vm.meta.page = 1;
+                vm.index();
+            },
+                onPerPageChange() {
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();

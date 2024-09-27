@@ -28,7 +28,10 @@
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-4">
-                                    <label class="form-label">Spare Types</label><span class="text-danger"> *</span>
+                                    <div class="d-flex justify-content-between">
+                                    <div><label class="form-label">Spare Types</label><span class="text-danger"> *</span></div>
+                                     <a type="button" class="text-danger me-2" @click="reset()"><i class="ri-close-line fs-20 lh-1"></i></a>
+                                    </div>
                                     <search
                                         :class="{ 'is-invalid': errors?.spare_type_id }"
                                         :customClass="{ 'is-invalid': errors?.spare_type_id }"
@@ -284,11 +287,16 @@
                 }
                 for (const field of Object.values(this.spare.spare_attributes)) {
                     if (field.is_required && !field.spare_attribute_value.field_value) {
-                        this.errors[field.display_name] = [`${field.display_name} is required`];
-                        isValid = false;
+                        if (field.field_type === "Color") {
+                            // Set default color if not provided
+                            field.spare_attribute_value.field_value = "#000000"; // Default to black
+                        } else {
+                            this.errors[field.display_name] = [`${field.display_name} is required`];
+                            isValid = false;
+                        }
                     }
                 }
-
+                console.log("Error",this.errors)
                 return isValid;
             },
             addSpare() {
@@ -410,6 +418,16 @@
                 vm.errors = [];
                 vm.status = true;
             },
+            reset() {
+                 let vm = this;
+                vm.spare.spare_type_id = "";
+                vm.spare.asset_types = [];
+                vm.spare.frequency_id = "";
+                // vm.$refs.spare_type_id.focus();
+                vm.show_spares = [];
+                vm.spare.spare_attributes = [];
+                vm.errors = [];
+            }
         },
     };
 </script>

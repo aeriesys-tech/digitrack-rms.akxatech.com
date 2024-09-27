@@ -100,7 +100,7 @@
                                         <!-- <td>{{service.asset_zone?.zone_name}}</td> -->
                                         <td class="text-center" v-if="get_service.length">
                                             <a title="Edit" v-can="'userServices.update'" href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a title="View" v-can="'userServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="user_services.length==0">
@@ -120,7 +120,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
         methods: {
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD HH:MM");
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             index() {
                 let vm = this;
@@ -201,28 +201,30 @@
                     });
             },
             editService(service) {
-                this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page))
                 this.$router.push("/user_service/" + service.user_service_id + "/edit");
             },
             deleteService(service) {
-                let vm = this;
-                alert('are you sure you want delete it!')
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", {
-                        uri: "deleteUserService",
-                        data: service,
-                    })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.index();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", {
+                            uri: "deleteUserService",
+                            data: service,
+                        })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.index();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             search() {
                 let vm = this;

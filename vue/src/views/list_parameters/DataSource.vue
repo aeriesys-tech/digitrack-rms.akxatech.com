@@ -363,6 +363,11 @@ export default {
             vm.meta.page = 1;
             vm.index();
         },
+        onPerPageChange() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
     }
 }
 </script>

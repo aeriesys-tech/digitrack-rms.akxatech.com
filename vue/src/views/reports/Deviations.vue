@@ -29,18 +29,24 @@
                                 </span>
                             </td> -->
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-3">
+                                    <select class="form-control form-control-sm mb-2" v-model="meta.asset_id" @change="search()">
+                                        <option value="">Select Asset</option>
+                                        <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">{{ asset.asset_name }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
                                     <select class="form-control form-control-sm mb-2" v-model="meta.department_id" @change="search()">
                                         <option value="">Select Department</option>
                                         <option v-for="department, key in departments" :key="key" :value="department.department_id">{{ department.department_name }}</option>
                                     </select>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-6">
                                     <input class="form-control form-control-sm mb-2" type="text"
                                     placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
                                 </div>
                             </div>
-                            
+
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
                                     <thead>
@@ -94,6 +100,14 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
+                                            <th @click="sort('field_type')">
+                                                Field Type
+                                                <span>
+                                                    <i v-if="meta.keyword == 'field_type' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'field_type' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
                                             <th @click="sort('lcl')">
                                                 Lcl
                                                 <span>
@@ -132,6 +146,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr v-if="user_assets.length==0">
+                                              <td colspan="12" class="text-center">No records found</td>
+                                        </tr>
                                         <tr v-for="deviation, key in user_assets" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
                                             <td>{{ deviation.department?.department_name }}</td>
@@ -140,6 +157,7 @@
                                             <td>{{deviation.user_check?.reference_no}}</td>
                                             <td>{{ deviation.user_check?.reference_date}}</td>
                                             <td>{{ deviation.check?.field_name}}</td>
+                                            <td>{{ deviation?.field_type }}</td>
                                             <td>{{ deviation?.lcl }}</td>
                                             <td>{{ deviation?.ucl }}</td>
                                             <td>{{ deviation?.default_value }}</td>
@@ -169,7 +187,7 @@
                                     <option>30</option>
                                 </select>
                                 <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                                <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                                <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                             </div>
                         </div>
                     </div>
@@ -198,10 +216,12 @@
                     maxPage: 1,
                     trashed: false,
                     department_id:'',
+                    asset_id:'',
                 },
                 user_assets: [],
                 errors: [],
                 departments:[],
+                assets:[],
                 status: true,
             }
         },
@@ -217,8 +237,9 @@
         mounted() {
             this.index();
             this.getDepartments();
+            this.getAssets();
         },
-    
+
         methods: {
             index() {
                 let vm = this;
@@ -240,25 +261,39 @@
             },
 
             getDepartments() {
-            let vm = this;
-            let loader = vm.$loading.show();
-            vm.$store.dispatch('post', { uri: 'getDepartments' })
-                .then(response => {
-                    loader.hide();
-                    vm.departments = response.data.data;
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
-                });
-        },
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store.dispatch('post', { uri: 'getDepartments' })
+                    .then(response => {
+                        loader.hide();
+                        vm.departments = response.data.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getAssets() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store.dispatch('post', { uri: 'getAssets' })
+                    .then(response => {
+                        loader.hide();
+                        vm.assets = response.data.data;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
             search() {
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();
             },
-            
+
             onPageChange(page) {
                 this.meta.page = page;
                 this.index();
@@ -268,8 +303,12 @@
                 this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
                 this.index();
             },
-            
+            onPerPageChange() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
+
         }
     }
     </script>
-    

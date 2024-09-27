@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('user_spares', function (Blueprint $table) {
             $table->id('user_spare_id');
             $table->foreignId('user_service_id');
-            $table->foreignId('spare_id');
+            $table->foreignId('spare_id')->nullable();
             $table->string('spare_cost')->nullable();
             $table->timestamps();
             $table->foreign('user_service_id')->references('user_service_id')->on('user_services');

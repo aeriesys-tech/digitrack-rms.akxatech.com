@@ -32,11 +32,15 @@
                                 <div class="card-body">
                                     <div class="row g-2">
                                         <div class="col-md-4">
-                                            <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
+                                            <div class="d-flex justify-content-between">
+                                                <div><label class="form-label">Asset Type</label><span class="text-danger"> *</span></div>
+                                                <a type="button" class="text-danger me-2" @click="reset()"><i class="ri-close-line fs-20 lh-1"></i></a>
+                                            </div>
+                                            <!-- <label class="form-label">Asset Type</label><span class="text-danger"> *</span> -->
                                             <search
                                                 :class="{ 'is-invalid': errors.asset_type_id }"
                                                 :customClass="{ 'is-invalid': errors?.asset_type_id }"
-                                                :initialize="asset.asset_type_id"
+                                                :initialize="asset?.asset_type_id"
                                                 id="asset_type_id"
                                                 label="asset_type_name"
                                                 label2="asset_type_code"
@@ -183,7 +187,7 @@
                                 </div>
                             </div>
 
-                            <div class="card mb-3">
+                            <div class="card mb-3" v-if="asset.asset_attributes.length">
                                 <div class="card-header d-flex justify-content-between">
                                     <h6 class="card-title">Attributes</h6>
                                 </div>
@@ -694,6 +698,9 @@
             },
 
             updateAsset() {
+                 if (!this.validateFields()) {
+                    return;
+                }
                 let vm = this;
                 // vm.asset.asset_code = vm.device_code.join("");
                 let loader = vm.$loading.show();
@@ -750,11 +757,18 @@
                 vm.make = "";
                 vm.speed = "";
                 vm.show_assets = [];
+                vm.asset.asset_attributes = [];
                 vm.asset.asset_type_id = "";
                 let discard_zone = vm.asset.zone_name.filter(function (element) {
                     element.zone_name = "";
                 });
                 // vm.$refs.asset_code.focus();
+            },
+                reset() {
+                let vm = this;
+                vm.asset.asset_attributes = [];
+                vm.asset.asset_type_id = "";
+                vm.errors = [];
             },
 
             getAssetType(asset_type_id) {

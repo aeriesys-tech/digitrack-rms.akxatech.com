@@ -328,9 +328,17 @@ class AssetCheckController extends Controller
             });
         }     
 
+        if (isset($request->asset_id)) 
+        {
+            $query->whereHas('UserCheck', function ($qu) use ($request) {
+                $qu->where('asset_id', $request->asset_id);
+            });
+        }     
+
         if($request->search!='')
         {
             $query->where('default_value', 'like', "$request->search%")->orWhere('value', 'like', "$request->search%")
+                ->orwhere('field_type', 'like', "$request->search%")
                 ->orWhereHas('Check', function($que) use ($request) {
                 $que->where('field_name', 'like', "$request->search%");
             })->orWhereHas('UserCheck', function($qu) use ($request) {

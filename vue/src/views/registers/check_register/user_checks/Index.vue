@@ -45,7 +45,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('reference_date')">
-                                            Reference Date.
+                                            Reference Date & Time
                                             <span>
                                                 <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'reference_date' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -53,7 +53,7 @@
                                             </span>
                                         </th>
                                         <th>
-                                            Asset Zone.
+                                            Asset Zone
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -75,7 +75,7 @@
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
                                             <a title="View" href="javascript:void(0)" @click="viewUserCheck(user_check)" class="text-primary me-2" ><i class="ri-eye-fill fs-18 lh-1"></i></a>
-                                            <a title="View" v-can="'userChecks.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userChecks.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="user_checks.length==0">
@@ -95,7 +95,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -174,7 +174,7 @@ export default {
             });
         },
         editUserCheck(user_check) {
-            this.$store.commit("setCurrentPage", this.meta.page)
+            this.$store.commit("setCurrentPage", parseInt(this.meta.page))
             this.$router.push("/user_check/" + user_check.user_check_id + "/edit");
         },
         viewUserCheck(user_check){
@@ -182,21 +182,23 @@ export default {
             this.$router.push("/user_check/" + user_check.user_check_id + "/view");
         },
         deleteUserCheck(user_check) {
-            let vm = this;
-            alert('are you sure you want delete it!')
-            let loader = vm.$loading.show();
-            vm.$store
-                .dispatch("post", {uri: "deleteUserCheck",data: user_check,})
-                .then((response) => {
-                    loader.hide();
-                    vm.$store.dispatch("success", response.data.message);
-                    vm.index();
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
-                });
+            const confirmDelete = confirm("Are you sure you want to delete it ?");
+            if (confirmDelete) {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "deleteUserCheck", data: user_check, })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.index();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            }
         },
         search() {
             let vm = this;

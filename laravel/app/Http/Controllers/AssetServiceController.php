@@ -139,7 +139,7 @@ class AssetServiceController extends Controller
                         'service_id' => $assetService->service_id,
                         'asset_zone_id' => $assetService->asset_zone_id,
                         'service_attribute_id' => $attribute['service_attribute_id'],
-                        'field_value' => $attribute['field_value']
+                        'field_value' => $attribute['field_value'] ?? ''
                     ]);
                 }
             }
@@ -160,7 +160,7 @@ class AssetServiceController extends Controller
                     'service_id' => $assetService->service_id,
                     'asset_zone_id' => $assetService->asset_zone_id,
                     'service_attribute_id' => $attribute['service_attribute_id'],
-                    'field_value' => $attribute['field_value']
+                    'field_value' => $attribute['field_value'] ?? ''
                 ]);
             }
         }
@@ -255,7 +255,7 @@ class AssetServiceController extends Controller
 
         foreach ($request->asset_service_attributes as $attribute) 
         {
-            $fieldValue = $attribute['field_value'];
+            $fieldValue = $attribute['field_value'] ?? '';
 
             if ($fieldValue !== null) {
                 AssetServiceValue::updateOrCreate(

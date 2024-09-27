@@ -6,13 +6,14 @@ import axios from "axios";
 export default createStore({
   state: {
     // apiUrl:"https://digitrack-rms.akxatech.com/api/",
-    apiUrl: "http://localhost/rms/laravel/public/api/",
+    apiUrl: "http://192.168.0.213/digitrack-rms.akxatech.com/laravel/public/api/",
     user: null,
     token: '',
     permissions: [],
     current_page: '',
     page: '',
-    asset_id: ''
+    asset_id: '',
+    assets: '',
   },
   getters: {
     user(state) {
@@ -32,6 +33,9 @@ export default createStore({
     },
     asset_id(state) {
       return state.asset_id;
+    },
+    assets(state) {
+      return state.assets;
     },
   },
   mutations: {
@@ -53,6 +57,9 @@ export default createStore({
     setAssetId(state, asset_id) {
       state.asset_id = asset_id;
     },
+    setAssets(state, assets) {
+      state.assets = assets;
+    },
   },
   actions: {
     async setUser(context, payload) {
@@ -72,6 +79,9 @@ export default createStore({
     },
     async setAssetId(context, payload) {
       await context.commit('SetAssetID', payload);
+    },
+    async setAssets(context, payload) {
+      await context.commit('setAssets', payload);
     },
     async logout(context) {
       await context.commit('setUser', null);
