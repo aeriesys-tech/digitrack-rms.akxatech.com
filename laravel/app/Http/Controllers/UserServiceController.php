@@ -52,7 +52,7 @@ class UserServiceController extends Controller
                     });
                 })->orwhereHas('Asset', function($quer) use($request){
                     $quer->where('asset_code', 'like', "%$request->search%");
-                })->orwhere('service_date', 'like', "%$request->search%");
+                })->orwhere('service_date', 'like', "%$request->search%")->orwhere('next_service_date', 'like', "%$request->search%");
         }
         $user_service = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
         return UserServiceResource::collection($user_service);
