@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Data Source Types</li>
             </ol>
             <h4 class="main-title mb-2">Data Source Types</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4">
                 <!-- <div class="col-4" v-can="'data_source_types.create'"> -->
@@ -64,13 +64,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('data_source_type_name')">Data Source Type Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='data_source_type_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='data_source_type_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                       
+
                                         <!-- <th class="text-center" v-can="'data_source_types.delete'">Status</th>
                                         <th class="text-center" v-can="'data_source_types.update'">Actions</th> -->
                                         <th class="text-center">Status</th>
@@ -176,15 +176,15 @@ export default {
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateDataSourceTypes' , data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginateDataSourceTypes' , data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.data_source_types = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.data_source_types = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -195,13 +195,13 @@ export default {
 
         addDataSourceType() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addDataSourceType', data: vm.data_source_type })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addDataSourceType', data: vm.data_source_type })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
-                    this.index();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
+                    vm.index();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -233,13 +233,13 @@ export default {
 
         updateDataSourceType() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateDataSourceType', data: this.data_source_type })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateDataSourceType', data: vm.data_source_type })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
-                    this.index();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
+                    vm.index();
                 })
                 .catch(function (error) {
                     loader.hide();

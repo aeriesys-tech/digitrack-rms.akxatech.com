@@ -179,12 +179,12 @@ export default {
 
         addList() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addListParameter', data: vm.list })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addListParameter', data: vm.list })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -217,12 +217,12 @@ export default {
 
         updateList() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateListParameter', data: this.list })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateListParameter', data: vm.list })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

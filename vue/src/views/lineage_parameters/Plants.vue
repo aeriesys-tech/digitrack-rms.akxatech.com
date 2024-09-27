@@ -254,15 +254,15 @@ export default {
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginatePlants', data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginatePlants', data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.plants = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.plants = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -273,12 +273,12 @@ export default {
 
         addPlant() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addPlant', data: this.plant })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addPlant', data: vm.plant })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                     // this.index();
                 })
                 .catch(function (error) {
@@ -310,12 +310,12 @@ export default {
 
         updatePlant() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updatePlant', data: this.plant })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updatePlant', data: vm.plant })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

@@ -199,7 +199,7 @@
                     let check_asset_type_id = check_asset_type[0].check_asset_type_id;
                     if (isChecked) {
                         if (vm.check.deleted_check_asset_types.includes(check_asset_type_id)) {
-                            let deleted_check_asset_types = this.check.deleted_check_asset_types.filter(function (element) {
+                            let deleted_check_asset_types = vm.check.deleted_check_asset_types.filter(function (element) {
                                 return element != check_asset_type_id;
                             });
                             vm.check.deleted_check_asset_types = deleted_check_asset_types;
@@ -210,7 +210,7 @@
                         }
                     }
                 }
-                console.log("Checked IDs:", this.check.asset_types);
+                console.log("Checked IDs:", vm.check.asset_types);
                 console.log("Unchecked IDs:", vm.check.deleted_check_asset_types);
             },
             toggleAssetTypeStatus() {
