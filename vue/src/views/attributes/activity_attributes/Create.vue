@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Activity Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleActivityTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleActivityTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors?.activity_types}">
                                                 <option value="">Select Activity Type</option>
@@ -44,7 +44,11 @@
                                                     <label style="margin-left: 5px;">{{ activity_type.reason_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
+
+                                        <MultiSelect v-model="activity_attribute.activity_types_obj"  filter optionLabel="reason_name" 
+                                            :options="activity_types"  placeholder="Select Activity Type" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" />
 
                                     </div>
                                 </div>
@@ -126,8 +130,10 @@
     </template>
     <script>
 //      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "ActivityAttributes.Create",
         data() {
@@ -140,6 +146,7 @@
                     field_length: '',
                     is_required: "",
                     activity_type_id: '',
+                    activity_types_obj:[],
                     activity_types:[],
                     list_parameter_id: '',
                     deleted_activity_types:[],
@@ -177,14 +184,13 @@
                             .then(function (response) {
                                 vm.activity_attribute = response.data.data;
                                 vm.activity_attribute.deleted_activity_types = []
-                                // console.log("att--", vm.activity_attribute.activity_types)
+                                vm.activity_attribute.activity_types_obj = []
 
-                            //      vm.activity_attribute.activity_attribute_types.map(function (element) {
-                            //     console.log("elem----",element);
-                            //          vm.deleted_activity_types.push(element.activity_attribute_type_id);
-
-                            // });
-                            // vm.activity_attribute.deleted_activity_types = [];
+                                vm.activity_attribute.activity_attribute_types.map(function(ele){
+                                    vm.activity_attribute.activity_types_obj.push({reason_code: ele.activity_type.reason_code, 
+                                        reason_id: ele.activity_type.reason_id, status: ele.activity_type.status,
+                                        reason_name: ele.activity_type.reason_name})
+                                })
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -258,11 +264,16 @@
 
             addActivityAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addActivityAttribute', data:this.activity_attribute })
+                let loader = vm.$loading.show();
+
+                vm.activity_attribute.activity_types_obj.map(function(ele){
+                    vm.activity_attribute.activity_types.push(ele.reason_id)
+                })
+
+                vm.$store.dispatch('post', { uri: 'addActivityAttribute', data:vm.activity_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Break Down Attribute created successfully");
+                        vm.$store.dispatch('success',"Break Down Attribute created successfully");
                         vm.$router.push("/activity_attributes");
                     })
                     .catch(function (error) {
@@ -273,13 +284,20 @@
             },
 
             updateActivityAttribute() {
-                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateActivityAttribute', data:this.activity_attribute })
+                let vm = this;
+                let loader = vm.$loading.show();
+
+                vm.activity_attribute.deleted_activity_types = vm.activity_attribute?.activity_attribute_types.filter(
+                    item1 => !vm.activity_attribute.activity_types_obj.some(item2 => item1.reason_id === item2.reason_id));
+                vm.activity_attribute.activity_types = vm.activity_attribute.activity_types_obj.map(item => item.reason_id);
+                vm.activity_attribute.deleted_activity_types = vm.activity_attribute.deleted_activity_types.map(item => item.activity_attribute_type_id);
+                
+
+                vm.$store.dispatch('post', { uri: 'updateActivityAttribute', data:vm.activity_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Break Down Attribute updated successfully");
-                        this.$router.push('/activity_attributes');
+                        vm.$store.dispatch('success',"Break Down Attribute updated successfully");
+                        vm.$router.push('/activity_attributes');
                     })
                     .catch(function (error) {
                         loader.hide();
