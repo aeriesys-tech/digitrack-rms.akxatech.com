@@ -45,9 +45,13 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="asset_attribute.asset_types_obj"  filter optionLabel="asset_type_name" 
-                                            :options="asset_types"  placeholder="Select  Asset Type" :maxSelectedLabels="3"  
-                                            style="width: 100%;; height: 40px;" />
+                                        <!-- <MultiSelect v-model="asset_attribute.asset_types_obj"  filter optionLabel="asset_type_name"
+                                            :options="asset_types"  placeholder="Select  Asset Type" :maxSelectedLabels="3"
+                                            style="width: 100%;; height: 40px;" /> -->
+
+                                             <MultiSelect v-model="asset_attribute.asset_types_obj"  filter optionLabel="asset_type_name"
+                                            :options="asset_types"  placeholder="Select  Asset Type" :maxSelectedLabels="3"
+                                            style="width: 100%;; height: 37px;" />
 
                                     </div>
                                 </div>
@@ -198,7 +202,7 @@
                                 vm.asset_attribute.asset_types_obj = []
 
                                 vm.asset_attribute.asset_attribute_types.map(function(ele){
-                                    vm.asset_attribute.asset_types_obj.push({asset_type_code: ele.asset_type.asset_type_code, 
+                                    vm.asset_attribute.asset_types_obj.push({asset_type_code: ele.asset_type.asset_type_code,
                                         asset_type_id: ele.asset_type.asset_type_id, status: ele.asset_type.status,
                                         asset_type_name: ele.asset_type.asset_type_name})
                                 })
@@ -265,7 +269,6 @@
             addAssetAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                let asset_attributes = 
                 vm.asset_attribute.asset_types_obj.map(function(ele){
                     vm.asset_attribute.asset_types.push(ele.asset_type_id)
                 })
@@ -287,7 +290,7 @@
                 let loader = this.$loading.show();
                 vm.asset_attribute.deleted_asset_attribute_types = vm.asset_attribute.asset_attribute_types.filter(
                     item1 => !vm.asset_attribute.asset_types_obj.some(item2 => item1.asset_type_id === item2.asset_type_id));
-                
+
                 vm.asset_attribute.asset_types = vm.asset_attribute.asset_types_obj.map(item => item.asset_type_id);
                 vm.asset_attribute.deleted_asset_attribute_types = vm.asset_attribute.deleted_asset_attribute_types.map(item => item.asset_attribute_type_id);
 
