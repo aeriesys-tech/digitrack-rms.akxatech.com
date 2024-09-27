@@ -172,16 +172,16 @@ import moment from "moment";
             },
             index() {
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch("post", {uri: "paginateBreakDownLists", data: vm.meta,})
+                let loader = vm.$loading.show();
+                vm.$store.dispatch("post", {uri: "paginateBreakDownLists", data: vm.meta,})
                     .then((response) => {
                         loader.hide();
                         console.log("breakdown-response",response)
-                        this.break_down_lists = response.data.data;
-                        this.meta.totalRows = response.data.meta.total;
-                        this.meta.from = response.data.meta.from;
-                        this.meta.lastPage = response.data.meta.last_page;
-                        this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                        vm.break_down_lists = response.data.data;
+                        vm.meta.totalRows = response.data.meta.total;
+                        vm.meta.from = response.data.meta.from;
+                        vm.meta.lastPage = response.data.meta.last_page;
+                        vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                     })
                     .catch(function (error) {
                         loader.hide();
