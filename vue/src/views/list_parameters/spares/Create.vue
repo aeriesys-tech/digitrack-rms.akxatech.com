@@ -241,7 +241,7 @@
                     let spare_asset_type_id = spare_asset_type[0].spare_asset_type_id;
                     if (isChecked) {
                         if (vm.spare.deleted_spare_asset_types.includes(spare_asset_type_id)) {
-                            let deleted_spare_asset_types = this.spare.deleted_spare_asset_types.filter(function (element) {
+                            let deleted_spare_asset_types = vm.spare.deleted_spare_asset_types.filter(function (element) {
                                 return element != spare_asset_type_id;
                             });
                             vm.spare.deleted_spare_asset_types = deleted_spare_asset_types;

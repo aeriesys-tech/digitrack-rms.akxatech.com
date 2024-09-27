@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Activity Types</li>
             </ol>
             <h4 class="main-title mb-2">Activity Types</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" v-can="'reasons.create'">
                 <form @submit.prevent="submitForm()">
@@ -63,13 +63,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('reason_name')">Activity Type Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='reason_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='reason_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                       
+
                                         <th class="text-center" v-can="'reasons.delete'">Status</th>
                                         <th class="text-center" v-can="'reasons.update'">Actions</th>
                                     </tr>
@@ -172,15 +172,15 @@ export default {
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateReasons' , data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginateReasons' , data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.reasons = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.reasons = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -191,13 +191,13 @@ export default {
 
         addReason() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addReason', data: vm.reason })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addReason', data: vm.reason })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
-                    this.index();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
+                    vm.index();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -229,12 +229,12 @@ export default {
 
         updateReason() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateReason', data: this.reason })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateReason', data: vm.reason })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

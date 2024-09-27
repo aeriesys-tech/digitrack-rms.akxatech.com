@@ -238,7 +238,7 @@
                     let variable_asset_type_id = variable_asset_type[0].variable_asset_type_id;
                     if (isChecked) {
                         if (vm.variable.deleted_variable_asset_types.includes(variable_asset_type_id)) {
-                            let deleted_variable_asset_types = this.variable.deleted_variable_asset_types.filter(function (element) {
+                            let deleted_variable_asset_types = vm.variable.deleted_variable_asset_types.filter(function (element) {
                                 return element != variable_asset_type_id;
                             });
                             vm.variable.deleted_variable_asset_types = deleted_variable_asset_types;

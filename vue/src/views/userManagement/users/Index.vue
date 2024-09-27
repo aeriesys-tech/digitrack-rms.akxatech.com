@@ -166,7 +166,7 @@ export default {
     methods: {
         index() {
             let vm = this;
-            let loader = this.$loading.show();
+            let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'paginateUsers', data: vm.meta })
                 .then(response => {
                     loader.hide();

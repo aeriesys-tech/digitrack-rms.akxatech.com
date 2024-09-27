@@ -386,7 +386,7 @@
                         zone_name: 'Overall',
                     });
                 }
-                if (this.status) {
+                if (vm.status) {
                     for (let i = 0; i < vm.asset.no_of_zones; i++) {
                         vm.asset.zone_name.push({
                             zone_name: i===0 ? 'Overall' : null,
@@ -401,9 +401,9 @@
                     }
                     if (vm.asset.no_of_zones && vm.asset.no_of_zones > vm.prev_zone_names.length) {
                         let number = vm.asset.no_of_zones - vm.prev_zone_names.length;
-                        this.new_zone_names = [];
+                        vm.new_zone_names = [];
                         for (let i = 0; i < number; i++) {
-                            this.new_zone_names.push({
+                            vm.new_zone_names.push({
                                 zone_name: null,
                             });
                         }
@@ -545,7 +545,7 @@
                     // console.log('department_id:-----', department_id)
                     if (isChecked) {
                         if (vm.asset.deleted_asset_departments.includes(department_id)) {
-                            let deleted_asset_departments = this.asset.deleted_asset_departments.filter(function (element) {
+                            let deleted_asset_departments = vm.asset.deleted_asset_departments.filter(function (element) {
                                 return element != department_id
                             })
                             vm.asset.deleted_asset_departments = deleted_asset_departments

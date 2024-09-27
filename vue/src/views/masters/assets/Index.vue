@@ -107,7 +107,7 @@
                                         </td>
                                         <td class="text-center" v-if="get_assetviews.length || get_asset.length">
                                             <a v-can="'assets.update'" title="Edit Asset Attributes" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a v-can="'assetviews.view'" title="View Register Attributes" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
+                                            <a v-can="'assetviews.view'" title="View Register Attributes" href="javascript:void(0)" class="text-primary me-2" v-if="asset.status"  @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                             <!-- <a href="javascript:void(0)" title="QR code" class="text-dark me-2" @click.prevent="getQRCode(asset)"><i class="ri-qr-code-line fs-18 lh-1"></i></a> -->
                                             <a title="Asset Delete" v-can="'assets.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="forceDeleteAsset(asset)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>

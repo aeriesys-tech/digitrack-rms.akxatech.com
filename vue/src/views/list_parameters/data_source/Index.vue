@@ -153,19 +153,19 @@
         methods: {
             index() {
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store
+                let loader = vm.$loading.show();
+                vm.$store
                     .dispatch("post", {
                         uri: "paginateDataSources",
                         data: vm.meta,
                     })
                     .then((response) => {
                         loader.hide();
-                        this.data_sources = response.data.data;
-                        this.meta.totalRows = response.data.meta.total;
-                        this.meta.from = response.data.meta.from;
-                        this.meta.lastPage = response.data.meta.last_page;
-                        this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                        vm.data_sources = response.data.data;
+                        vm.meta.totalRows = response.data.meta.total;
+                        vm.meta.from = response.data.meta.from;
+                        vm.meta.lastPage = response.data.meta.last_page;
+                        vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                     })
                     .catch(function (error) {
                         loader.hide();

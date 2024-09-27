@@ -237,7 +237,7 @@
                     let data_source_asset_type_id = data_source_asset_type[0].data_source_asset_type_id;
                     if (isChecked) {
                         if (vm.data_source.deleted_data_source_asset_types.includes(data_source_asset_type_id)) {
-                            let deleted_data_source_asset_types = this.data_source.deleted_data_source_asset_types.filter(function (element) {
+                            let deleted_data_source_asset_types = vm.data_source.deleted_data_source_asset_types.filter(function (element) {
                                 return element != data_source_asset_type_id;
                             });
                             vm.data_source.deleted_data_source_asset_types = deleted_data_source_asset_types;
@@ -248,7 +248,7 @@
                         }
                     }
                 }
-                console.log("Checked IDs:", this.data_source.asset_types);
+                console.log("Checked IDs:", vm.data_source.asset_types);
                 console.log("Unchecked IDs:", vm.data_source.deleted_data_source_asset_types);
             },
             toggleAssetTypeStatus() {

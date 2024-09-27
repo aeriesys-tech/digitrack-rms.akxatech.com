@@ -181,15 +181,15 @@ export default {
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateRoles' , data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginateRoles' , data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.roles = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.roles = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -200,12 +200,12 @@ export default {
 
         addRole() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addRole', data: vm.role })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addRole', data: vm.role })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -216,7 +216,7 @@ export default {
 
         deleteRole(role) {
             let vm = this;
-            let loader = this.$loading.show();
+            let loader = vm.$loading.show();
             role.status = role.status == 1 ? 0 : 1;
             vm.$store
                 .dispatch("post", { uri: "deleteRole", data: role })
@@ -235,19 +235,19 @@ export default {
 
         editRole(role) {
             let vm = this;
-            this.role = role;
-            this.update = true;
-            this.status = false;
+            vm.role = role;
+            vm.update = true;
+            vm.status = false;
         },
 
         updateRole() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateRole', data: this.role })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateRole', data: vm.role })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

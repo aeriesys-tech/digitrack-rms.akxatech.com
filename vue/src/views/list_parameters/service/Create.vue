@@ -239,7 +239,7 @@
                     let service_asset_type_id = service_asset_type[0].service_asset_type_id;
                     if (isChecked) {
                         if (vm.service.deleted_service_asset_types.includes(service_asset_type_id)) {
-                            let deleted_service_asset_types = this.service.deleted_service_asset_types.filter(function (element) {
+                            let deleted_service_asset_types = vm.service.deleted_service_asset_types.filter(function (element) {
                                 return element != service_asset_type_id;
                             });
                             vm.service.deleted_service_asset_types = deleted_service_asset_types;
