@@ -30,7 +30,7 @@ class SpareTypeController extends Controller
         if($request->search!='')
         {
             $query->where('spare_type_code', 'like', "%$request->search%")
-                ->orWhere('spare_type_name', 'like', "$request->search%");
+                ->orWhere('spare_type_name', 'like', "%$request->search%");
         }
         $spare_type = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return SpareTypeResource::collection($spare_type);

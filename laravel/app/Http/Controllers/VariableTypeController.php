@@ -30,7 +30,7 @@ class VariableTypeController extends Controller
         if($request->search!='')
         {
             $query->where('variable_type_code', 'like', "%$request->search%")
-                ->orWhere('variable_type_name', 'like', "$request->search%");
+                ->orWhere('variable_type_name', 'like', "%$request->search%");
         }
         $variable_type = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return VariableTypeResource::collection($variable_type);

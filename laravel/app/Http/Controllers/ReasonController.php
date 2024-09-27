@@ -30,7 +30,7 @@ class ReasonController extends Controller
         if($request->search!='')
         {
             $query->where('reason_code', 'like', "%$request->search%")
-                ->orWhere('reason_name', 'like', "$request->search%");
+                ->orWhere('reason_name', 'like', "%$request->search%");
         }
         $reason = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return ReasonResource::collection($reason);

@@ -289,7 +289,7 @@ class AssetDataSourceController extends Controller
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
 
-        $scripts = AssetDataSource::where('asset_id', $request->asset_id)->pluck('script');
+        $scripts = AssetDataSource::where('asset_id', $request->asset_id)->pluck('script')->unique();
         return $scripts;
     }
 
