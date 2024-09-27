@@ -11,6 +11,10 @@ use App\Models\DataSourceAttribute;
 use App\Http\Resources\DataSourceAttributeResource;
 use Auth;
 use App\Models\DataSourceAttributeValue;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DataSourceExport;
+use App\Exports\DataSourceHeadingsExport;
+use App\Imports\DataSourceImport;
 
 class DataSourceController extends Controller
 {
@@ -225,5 +229,33 @@ class DataSourceController extends Controller
         })->get();
 
         return DataSourceAttributeResource::collection($data_source_type);
+    }
+
+    public function downloadDataSources(Request $request)
+    {
+        $filename = "DataSource.xlsx";
+
+        $excel = new DataSourceExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadDataSourceHeadings()
+    {
+        $filename = "DataSource Headings.xlsx";
+        $excel = new DataSourceHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importDataSource(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new DataSourceImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

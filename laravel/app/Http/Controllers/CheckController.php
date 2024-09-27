@@ -7,6 +7,10 @@ use App\Models\Check;
 use App\Models\CheckAssetType;
 use App\Http\Resources\CheckResource;
 use App\Models\Asset;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CheckExport;
+use App\Exports\CheckHeadingsExport;
+use App\Imports\CheckImport;
 
 class CheckController extends Controller
 {
@@ -189,5 +193,33 @@ class CheckController extends Controller
                 "message" =>"Check Deactivated successfully"
             ], 200);
         }
+    }
+
+    public function downloadChecks(Request $request)
+    {
+        $filename = "Check.xlsx";
+
+        $excel = new CheckExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadCheckHeadings()
+    {
+        $filename = "Check Headings.xlsx";
+        $excel = new CheckHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importCheck(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new CheckImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

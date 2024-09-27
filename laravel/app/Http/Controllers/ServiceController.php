@@ -9,6 +9,10 @@ use App\Http\Resources\ServiceResource;
 use Auth;
 use App\Models\ServiceAttribute;
 use App\Models\ServiceAttributeValue;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ServiceExport;
+use App\Exports\ServiceHeadingsExport;
+use App\Imports\ServiceImport;
 
 class ServiceController extends Controller
 {
@@ -210,5 +214,30 @@ class ServiceController extends Controller
             ], 200); 
         }
     }
-}
 
+    public function downloadServices(Request $request)
+    {
+        $excel = new ServiceExport();
+
+        return Excel::download($excel, 'Service.xlsx');
+    }
+
+    public function downloadServiceHeadings()
+    {
+        $filename = "Service Headings.xlsx";
+        $excel = new ServiceHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importService(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new ServiceImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
+    }
+}

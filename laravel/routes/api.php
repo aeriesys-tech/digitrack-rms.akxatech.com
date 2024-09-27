@@ -146,6 +146,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateCheck',[CheckController::class, 'updateCheck']);
     Route::post('deleteCheck',[CheckController::class, 'deleteCheck']);
     Route::post('getAssetTypeChecks',[CheckController::class, 'getAssetTypeChecks']);
+    Route::post('downloadChecks',[CheckController::class, 'downloadChecks']);
+    Route::post('downloadCheckHeadings',[CheckController::class, 'downloadCheckHeadings']);
+    Route::post('importCheck',[CheckController::class, 'importCheck']);
 
     //Module 
     Route::post('/paginateModules', [ModuleController::class, 'paginateModules']);
@@ -182,6 +185,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteSpare',[SpareController::class, 'deleteSpare']);
     Route::post('getAssetTypeSpares',[SpareController::class, 'getAssetTypeSpares']);
     Route::post('getSpareData',[SpareController::class, 'getSpareData']);
+    Route::post('downloadSpares',[SpareController::class, 'downloadSpares']);
+    Route::post('downloadSpareHeadings',[SpareController::class, 'downloadSpareHeadings']);
+    Route::post('importSpare',[SpareController::class, 'importSpare']);
 
     Route::post('paginateServices',[ServiceController::class, 'paginateServices']);
     Route::post('getServices',[ServiceController::class, 'getServices']);
@@ -191,6 +197,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteService',[ServiceController::class, 'deleteService']);
     Route::post('getAssetTypeServices',[ServiceController::class, 'getAssetTypeServices']);
     Route::post('getServiceData',[ServiceController::class, 'getServiceData']);
+    Route::post('downloadServices',[ServiceController::class, 'downloadServices']);
+    Route::post('downloadServiceHeadings',[ServiceController::class, 'downloadServiceHeadings']);
+    Route::post('importService',[ServiceController::class, 'importService']);
 
     Route::post('paginateAssets',[AssetController::class, 'paginateAssets']);
     Route::post('addAsset',[AssetController::class, 'addAsset']);
@@ -417,6 +426,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetTypeVariables',[VariableController::class, 'getAssetTypeVariables']);
     Route::post('getVariableData',[VariableController::class, 'getVariableData']);
     Route::post('getVariablesDropdown',[VariableController::class, 'getVariablesDropdown']);
+    Route::post('downloadVariables',[VariableController::class, 'downloadVariables']);
+    Route::post('downloadVariableHeadings',[VariableController::class, 'downloadVariableHeadings']);
+    Route::post('importVariable',[VariableController::class, 'importVariable']);
 
     Route::post('paginateDataSources',[DataSourceController::class, 'paginateDataSources']);
     Route::post('getDataSources',[DataSourceController::class, 'getDataSources']);
@@ -427,6 +439,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetTypeDataSources',[DataSourceController::class, 'getAssetTypeDataSources']);
     Route::post('getDataSourceData',[DataSourceController::class, 'getDataSourceData']);
     Route::post('getDataSourcesDropdown',[DataSourceController::class, 'getDataSourcesDropdown']);
+    Route::post('downloadDataSources',[DataSourceController::class, 'downloadDataSources']);
+    Route::post('downloadDataSourceHeadings',[DataSourceController::class, 'downloadDataSourceHeadings']);
+    Route::post('importDataSource',[DataSourceController::class, 'importDataSource']);
 
     Route::post('paginateBreakDownLists',[BreakDownListController::class, 'paginateBreakDownLists']);
     Route::post('getBreakDownLists',[BreakDownListController::class, 'getBreakDownLists']);

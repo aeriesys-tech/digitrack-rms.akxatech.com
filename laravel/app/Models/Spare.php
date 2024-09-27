@@ -14,7 +14,7 @@ class Spare extends Model
         'spare_type_id',
         'spare_code',
         'spare_name',
-        'list_parameter_id'
+        //'list_parameter_id'
     ];
 
     protected $primaryKey = 'spare_id';

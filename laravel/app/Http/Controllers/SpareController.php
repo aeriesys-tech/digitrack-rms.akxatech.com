@@ -9,6 +9,10 @@ use App\Http\Resources\SpareResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SpareAttribute;
 use App\Models\SpareAttributeValue;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SpareExport;
+use App\Exports\SpareHeadingsExport;
+use App\Imports\SpareImport;
 
 class SpareController extends Controller
 {
@@ -211,5 +215,33 @@ class SpareController extends Controller
                 "message" =>"Spare Deactivated successfully"
             ], 200);
         }
+    }
+
+    public function downloadSpares(Request $request)
+    {
+        $filename = "Spare.xlsx";
+
+        $excel = new SpareExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadSpareHeadings()
+    {
+        $filename = "Spare Headings.xlsx";
+        $excel = new SpareHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importSpare(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new SpareImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

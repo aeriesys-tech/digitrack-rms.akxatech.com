@@ -10,6 +10,10 @@ use Auth;
 use App\Models\VariableAttributeValue;
 use App\Models\VariableAttribute;
 use App\Http\Resources\VariableAttributeResource;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\VariableExport;
+use App\Exports\VariableHeadingsExport;
+use App\Imports\VariableImport;
 
 class VariableController extends Controller
 {
@@ -223,5 +227,33 @@ class VariableController extends Controller
         })->get();
 
         return VariableAttributeResource::collection($variable_type);
+    }
+
+    public function downloadVariables(Request $request)
+    {
+        $filename = "Variable.xlsx";
+
+        $excel = new VariableExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadVariableHeadings()
+    {
+        $filename = "Variable Headings.xlsx";
+        $excel = new VariableHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importVariable(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new VariableImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }
