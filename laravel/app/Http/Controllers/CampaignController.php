@@ -43,7 +43,7 @@ class CampaignController extends Controller
             $query->where('datasource', 'like', "%$request->search%")->orwhere('job_no', 'like', "%$request->search%")
             ->orwhere('datasource', 'like', "%$request->search%")->orwhere('script', 'like', "%$request->search%")
                 ->orwhereHas('Asset', function($que) use($request){
-                    $que->where('asset_name', 'like', "$request->search%");
+                    $que->where('asset_name', 'like', "%$request->search%");
                 });
         }
         $campaign = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
