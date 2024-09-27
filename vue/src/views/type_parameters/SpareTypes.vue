@@ -78,6 +78,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr v-if="spare_types.length==0">
+                                        <td colspan="5" class="text-center">No records found</td>
+                                    </tr>
                                     <tr v-for="spare_type, key in spare_types" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{ spare_type.spare_type_code }}</td>
