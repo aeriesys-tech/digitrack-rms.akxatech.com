@@ -22,7 +22,9 @@ class Asset extends Model
         'functional_id',
         'section_id',
         'radius',
-        'geometry_type'
+        'geometry_type',
+        'height',
+        'diameter'
     ];
 
     protected $primaryKey = 'asset_id';

@@ -14,7 +14,9 @@ class AssetZoneResource extends JsonResource
             'asset_id' => $this->asset_id,
             // 'asset' => new AssetResource($this->Asset),
             'zone_name' => $this->zone_name,
-            'status' => $this->deleted_at?false:true
+            'status' => $this->deleted_at?false:true,
+            'height' => $this->height,
+            'diameter' => $this->diameter,
         ];
     }
 }

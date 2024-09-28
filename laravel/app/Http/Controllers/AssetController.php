@@ -83,10 +83,102 @@ class AssetController extends Controller
         return AssetResource::collection($asset);
     }
 
+    // public function addAsset(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'asset_code' => 'required|string|unique:assets,asset_code',
+    //         'asset_name' => 'required|string|unique:assets,asset_name',
+    //         'no_of_zones' => 'required|integer',
+    //         'asset_type_id' => 'required|exists:asset_type,asset_type_id',
+    //         'asset_attributes' => 'nullable|array',
+    //         'asset_attributes.*.asset_attribute_id' => 'nullable|exists:asset_attributes,asset_attribute_id',
+    //         'asset_attributes.*.asset_attribute_value.field_value' => 'nullable',
+    //         'longitude' => 'nullable|sometimes|numeric',
+    //         'latitude' => 'nullable|sometimes|numeric',
+    //         'functional_id' => 'nullable|exists:functionals,functional_id',
+    //         'section_id' => 'nullable|exists:sections,section_id',
+    //         'radius' => 'nullable|sometimes|numeric',
+    //         'zone_name' => 'nullable|array', 
+    //         'zone_name.*' => 'nullable',
+    //         'plant_id' => 'required|exists:plants,plant_id' ,
+    //         'area_id' => 'nullable|exists:areas,area_id',
+    //         'geometry_type' => 'nullable',
+    //         'height' => 'nullable|required_if:geometry_type,Cylindrical',
+    //         'diameter' => 'nullable|required_if:geometry_type,Cylindricale'
+    //     ]);
+        
+    //     $asset = Asset::updateOrCreate([
+    //         'asset_code' => $data['asset_code']
+    //     ],$data);
+
+    //     if(isset($request->asset_departments))
+    //     {
+    //         foreach ($request->asset_departments as $department) 
+    //         {
+    //             AssetDepartment::create([
+    //                 'asset_id' => $asset->asset_id,
+    //                 'department_id' => $department,
+    //             ]);
+    //         }
+    //     }
+
+    //     foreach ($request->asset_attributes as $attribute) 
+    //     {
+    //         AssetAttributeValue::create([
+    //             'asset_id' => $asset->asset_id,
+    //             'asset_attribute_id' => $attribute['asset_attribute_id'],
+    //             'field_value' => $attribute['asset_attribute_value']['field_value'] ?? '',
+    //         ]);
+    //     }
+                
+    //     $no_of_zones = $request->no_of_zones;
+    //     $zoneNames = $request->zone_name;
+    
+    //     // if (count($zoneNames) !== $no_of_zones) {
+    //     //     return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
+    //     // }
+    
+    //     // foreach($zoneNames as $zoneName) 
+    //     // {
+    //     //     AssetZone::create([
+    //     //         'asset_id' => $asset->asset_id,
+    //     //         'zone_name' => $zoneName['zone_name'],
+    //     //         'height' => $zoneName['height'],
+    //     //         'diameter' => $zoneName['diameter']
+    //     //     ]);
+    //     // }
+
+    //     $totalHeight = 0;
+    //     $totalDiameter = 0;
+
+    //     foreach ($zoneNames as $zoneName) 
+    //     {
+    //         $zoneHeight = $zoneName['height'] ?? 0;
+    //         $zoneDiameter = $zoneName['diameter'] ?? 0;
+
+    //         $totalHeight += $zoneHeight;
+    //         $totalDiameter += $zoneDiameter;
+
+    //         if ($totalHeight > $asset->height || $totalDiameter > $asset->diameter) {
+    //             return response()->json(["error" => "The total height or diameter of AssetZones cannot exceed the Asset's height or diameter."], 400);
+    //         }
+
+    //         AssetZone::updateOrCreate(
+    //             [
+    //                 'asset_id' => $asset->asset_id,
+    //                 'zone_name' => $zoneName['zone_name']
+    //             ],
+    //             [
+    //                 'height' => $zoneHeight,
+    //                 'diameter' => $zoneDiameter
+    //             ]
+    //         );
+    //     }
+    //     return response()->json(["message" => "Asset Created Successfully"]);
+    // }
+
     public function addAsset(Request $request)
     {
-        // $userPlantId = Auth::User()->plant_id;
-        // $areaId = Auth::User()->Plant->area_id;
         $data = $request->validate([
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
@@ -102,52 +194,84 @@ class AssetController extends Controller
             'radius' => 'nullable|sometimes|numeric',
             'zone_name' => 'nullable|array', 
             'zone_name.*' => 'nullable',
-            'plant_id' => 'required|exists:plants,plant_id' ,
+            'plant_id' => 'required|exists:plants,plant_id',
             'area_id' => 'nullable|exists:areas,area_id',
-            'geometry_type' => 'nullable'
+            'geometry_type' => 'nullable',
+            'height' => 'nullable|required_if:geometry_type,Cylindrical',
+            'diameter' => 'nullable|required_if:geometry_type,Cylindrical'
         ]);
-        // $data['plant_id'] = $userPlantId;
-        // $data['area_id'] = $areaId;
+
+        $request->validate([
+            'zone_name' => function ($attribute, $value, $fail) use ($request) {
+                if (isset($value)) {
+                    $totalHeight = 0;
+                    $totalDiameter = 0;
+                    foreach ($value as $zone) {
+                        $zoneHeight = $zone['height'] ?? 0;
+                        $zoneDiameter = $zone['diameter'] ?? 0;
+    
+                        $totalHeight += $zoneHeight;
+                        $totalDiameter += $zoneDiameter;
+                    }
+    
+                    $assetHeight = $request->input('height', 0);
+                    $assetDiameter = $request->input('diameter', 0);
+    
+                    if ($totalHeight > $assetHeight  || $totalHeight < $assetHeight ) {
+                        $fail("The total height of AssetZones cannot exceed or be less than the Asset's height.");
+                    }
+                    elseif( $totalDiameter > $assetDiameter || $totalDiameter < $assetDiameter){
+                        $fail("The diameter of AssetZones cannot exceed or be less than the Asset's diameter.");
+                    }
+                }
+            }
+        ]);       
         
         $asset = Asset::create($data);
 
-        if(isset($request->asset_departments))
+        if (isset($request->asset_departments)) 
         {
-            foreach ($request->asset_departments as $department) 
-            {
-                AssetDepartment::create([
+            foreach ($request->asset_departments as $department) {
+                AssetDepartment::updateOrCreate([
                     'asset_id' => $asset->asset_id,
                     'department_id' => $department,
                 ]);
             }
         }
 
-        foreach ($request->asset_attributes as $attribute) 
-        {
-            AssetAttributeValue::create([
-                'asset_id' => $asset->asset_id,
-                'asset_attribute_id' => $attribute['asset_attribute_id'],
-                'field_value' => $attribute['asset_attribute_value']['field_value'] ?? '',
-            ]);
+        if (isset($request->asset_attributes)) {
+            foreach ($request->asset_attributes as $attribute) {
+                AssetAttributeValue::updateOrCreate(
+                    [
+                        'asset_id' => $asset->asset_id,
+                        'asset_attribute_id' => $attribute['asset_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $attribute['asset_attribute_value']['field_value'] ?? '',
+                    ]
+                );
+            }
         }
-                
+
         $no_of_zones = $request->no_of_zones;
         $zoneNames = $request->zone_name;
-    
-        if (count($zoneNames) !== $no_of_zones) {
-            return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
+
+        foreach ($zoneNames as $zoneName) {
+            AssetZone::updateOrCreate(
+                [
+                    'asset_id' => $asset->asset_id,
+                    'zone_name' => $zoneName['zone_name']
+                ],
+                [
+                    'height' => $zoneName['height'] ?? 0,
+                    'diameter' => $zoneName['diameter'] ?? 0
+                ]
+            );
         }
-    
-        foreach($zoneNames as $zoneName) 
-        {
-            AssetZone::create([
-                'asset_id' => $asset->asset_id,
-                'zone_name' => $zoneName['zone_name']
-            ]);
-        }
-        
-        return response()->json(["message" => "Asset Created Successfully"]);
+
+        return response()->json(["message" => "Asset created/updated successfully"], 200);
     }
+
 
     public function getAssets()
     {
@@ -202,8 +326,6 @@ class AssetController extends Controller
 
     public function updateAsset(Request $request)
     {
-        // $userPlantId = Auth::user()->plant_id;
-        // $areaId = Auth::user()->Plant->area_id;
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_code' => 'required|string|unique:assets,asset_code,' . $request->asset_id . ',asset_id',
@@ -222,11 +344,36 @@ class AssetController extends Controller
             'deleted_asset_attribute_values' => 'nullable',
             'plant_id' => 'required|exists:plants,plant_id' ,
             'area_id' => 'nullable|exists:areas,area_id',
-            'geometry_type' => 'nullable'
+            'geometry_type' => 'nullable',
+            'height' => 'nullable|required_if:geometry_type,Cylindrical',
+            'diameter' => 'nullable|required_if:geometry_type,Cylindrical'
         ]);
+
+        $request->validate([
+            'zone_name' => function ($attribute, $value, $fail) use ($request) {
+                if (isset($value)) {
+                    $totalHeight = 0;
+                    $totalDiameter = 0;
+                    foreach ($value as $zone) {
+                        $zoneHeight = $zone['height'] ?? 0;
+                        $zoneDiameter = $zone['diameter'] ?? 0;
     
-        // $data['plant_id'] = $userPlantId;
-        // $data['area_id'] = $areaId;
+                        $totalHeight += $zoneHeight;
+                        $totalDiameter += $zoneDiameter;
+                    }
+    
+                    $assetHeight = $request->input('height', 0);
+                    $assetDiameter = $request->input('diameter', 0);
+    
+                    if ($totalHeight > $assetHeight  || $totalHeight < $assetHeight ) {
+                        $fail("The total height of AssetZones cannot exceed or be less than the Asset's height.");
+                    }
+                    elseif( $totalDiameter > $assetDiameter || $totalDiameter < $assetDiameter){
+                        $fail("The diameter of AssetZones cannot exceed or be less than the Asset's diameter.");
+                    }
+                }
+            }
+        ]);
     
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
@@ -291,16 +438,23 @@ class AssetController extends Controller
     
         foreach ($zoneNames as $zoneName) 
         {
+
             $assetZone = AssetZone::where('asset_id', $asset->asset_id)
                               ->where('asset_zone_id', $zoneName['asset_zone_id'] ?? null)->first();
             if($assetZone)
             {   
-                $assetZone ->update(['zone_name' => $zoneName['zone_name']]);
+                $assetZone ->update([
+                    'zone_name' => $zoneName['zone_name'],
+                    'height' => $zoneName['height'],
+                    'diameter' => $zoneName['diameter']
+                ]);
             }
             else {
                 AssetZone::create([
                     'asset_id' => $asset->asset_id,
                     'zone_name' => $zoneName['zone_name'],
+                    'height' => $zoneName['height'],
+                    'diameter' => $zoneName['diameter']
                 ]);
             }
         }
