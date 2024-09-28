@@ -80,8 +80,6 @@
                                             </select>
                                             <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span> -->
 
-
-
                                             <!-- <div class="dropdown" @click="toggleDepartmentStatus">
                                                 <div class="overselect"></div>
                                                 <select class="form-control form-control" :class="{'is-invalid':errors?.department_id}">
@@ -98,11 +96,17 @@
                                                 </ul>
                                             </div> -->
 
-                                            <MultiSelect v-model="asset.asset_departments_obj"  filter optionLabel="department_name" 
-                                                :options="departments"  placeholder="Select Department" :maxSelectedLabels="3"  
-                                                style="width: 100%;; height: 37px;" :style="errors?.department_id ? error_style : ''"/>
+                                            <MultiSelect
+                                                v-model="asset.asset_departments_obj"
+                                                filter
+                                                optionLabel="department_name"
+                                                :options="departments"
+                                                placeholder="Select Department"
+                                                :maxSelectedLabels="3"
+                                                style="width: 100%; height: 37px;"
+                                                :style="errors?.department_id ? error_style : ''"
+                                            />
                                             <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
-
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Section</label>
@@ -122,7 +126,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Shop</label><span class="text-danger"> *</span>
-                                            <select class="form-control" :class="{ 'is-invalid': errors?.plant_id }" v-model="asset.plant_id" @change="getAreaValue()" >
+                                            <select class="form-control" :class="{ 'is-invalid': errors?.plant_id }" v-model="asset.plant_id" @change="getAreaValue()">
                                                 <option value="">Select Shop</option>
                                                 <option v-for="plant, key in plants" :key="key" :value="plant?.plant_id">{{ plant.plant_name }} </option>
                                             </select>
@@ -130,7 +134,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Area</label><span class="text-danger"> *</span>
-                                            <input type="text" disabled="disabled" class="form-control"  :value="asset?.area_name" />
+                                            <input type="text" disabled="disabled" class="form-control" :value="asset?.area_name" />
                                             <!-- <input type="text" disabled="disabled" v-else class="form-control"  :value="asset?.area?.area_name" /> -->
                                             <!-- <select class="form-control" :class="{ 'is-invalid': errors?.area_id }" v-model="asset.area_id">
                                                 <option value="">Select Area</option>
@@ -148,35 +152,9 @@
                                 <div class="card-body">
                                     <div class="row g-2">
                                         <div class="col-md-4">
-                                            <label class="form-label">No Of Zones </label><span class="text-danger"> *</span>
-                                            <input type="number" placeholder="Enter No Of Zones " class="form-control" :class="{ 'is-invalid': errors?.no_of_zones }" v-model="asset.no_of_zones" min="1" @input="checkZoneValue($event, asset)"/>
-                                            <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
-                                        </div>
-                                        <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4">
-                                            <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                            <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index===0" />
-                                            <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Latitude</label>
-                                            <input type="number" placeholder="Enter Latitude" class="form-control" :class="{ 'is-invalid': errors?.latitude }" v-model="asset.latitude" />
-                                            <span v-if="errors?.latitude" class="invalid-feedback">{{ errors.latitude[0] }}</span>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label class="form-label">Longitude</label>
-                                            <input type="number" placeholder="Enter Longitude" class="form-control" :class="{ 'is-invalid': errors?.longitude }" v-model="asset.longitude" />
-                                            <span v-if="errors?.longitude" class="invalid-feedback">{{ errors.longitude[0] }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Radius</label>
-                                            <input type="number" placeholder="Enter Radius" class="form-control" :class="{ 'is-invalid': errors?.radius }" v-model="asset.radius" />
-                                            <span v-if="errors?.radius" class="invalid-feedback">{{ errors.radius[0] }}</span>
-                                        </div>
-                                        <div class="col-md-4">
                                             <label class="form-label">Geometry Type</label>
                                             <!-- <input type="text" placeholder="Enter Geometry Type" class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type" /> -->
-                                              <select class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type">
+                                            <select class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type">
                                                 <option value="">Select Geometry Type</option>
                                                 <option value="Cylindrical">Cylindrical </option>
                                                 <option value="Cubical">Cubical</option>
@@ -185,6 +163,81 @@
                                                 <option value="Others">Others</option>
                                             </select>
                                             <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Height </label><span class="text-danger"> *</span>
+                                            <input
+                                                type="number"
+                                                placeholder="Enter Height "
+                                                class="form-control"
+                                                :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('height')) }"
+                                                v-model="asset.height"
+                                            />
+                                            <span v-if="errors?.height" class="invalid-feedback">{{ errors.height[0] }}</span>
+                                            <!-- <span v-if="errors?.zone_name && errors.zone_name.includes('Height')" class="invalid-feedback">{{ errors.zone_name[0] }}</span> -->
+                                            <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('height'))" class="invalid-feedback">{{ errors.zone_name[0] }}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Diameter </label><span class="text-danger"> *</span>
+                                            <input
+                                                type="number"
+                                                placeholder="Enter Diameter "
+                                                class="form-control"
+                                                :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('diameter')) }"
+                                                v-model="asset.diameter"
+                                            />
+                                            <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('diameter'))" class="invalid-feedback">{{ errors.zone_name[0] }}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">No Of Zones </label><span class="text-danger"> *</span>
+                                            <input
+                                                type="number"
+                                                placeholder="Enter No Of Zones "
+                                                class="form-control"
+                                                :class="{ 'is-invalid': errors?.no_of_zones }"
+                                                v-model="asset.no_of_zones"
+                                                min="1"
+                                                @input="checkZoneValue($event, asset)"
+                                            />
+                                            <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
+                                        </div>
+                                        <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4">
+                                            <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
+                                            <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index===0" />
+                                            <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
+
+                                            <div class="row g-2">
+                                                <div class="col">
+                                                    <!-- try starts heigth n diameter -->
+                                                    <label class="form-label">Height</label><span class="text-danger"> *</span>
+                                                    <input type="number" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
+                                                    <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="form-label">Diameter</label><span class="text-danger"> *</span>
+                                                    <input type="number" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
+                                                    <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
+                                                </div>
+                                            </div>
+                                            <!-- ends  -->
+                                        </div>
+                                        <div class="row g-2">
+                                            <div class="col-md-4">
+                                                <label class="form-label">Latitude</label>
+                                                <input type="number" placeholder="Enter Latitude" class="form-control" :class="{ 'is-invalid': errors?.latitude }" v-model="asset.latitude" />
+                                                <span v-if="errors?.latitude" class="invalid-feedback">{{ errors.latitude[0] }}</span>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label">Longitude</label>
+                                                <input type="number" placeholder="Enter Longitude" class="form-control" :class="{ 'is-invalid': errors?.longitude }" v-model="asset.longitude" />
+                                                <span v-if="errors?.longitude" class="invalid-feedback">{{ errors.longitude[0] }}</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Radius</label>
+                                                <input type="number" placeholder="Enter Radius" class="form-control" :class="{ 'is-invalid': errors?.radius }" v-model="asset.radius" />
+                                                <span v-if="errors?.radius" class="invalid-feedback">{{ errors.radius[0] }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -280,7 +333,7 @@
 </template>
 <script>
     import Search from "@/components/Search.vue";
-    import MultiSelect from 'primevue/multiselect';
+    import MultiSelect from "primevue/multiselect";
     export default {
         name: "Assets.Create",
         components: { Search, MultiSelect },
@@ -299,20 +352,22 @@
                     status: "",
                     asset_attributes: [],
                     department_id: "",
-                    asset_departments_obj:[],
-                    asset_departments:[],
-                    asset_department_ids:[],
+                    asset_departments_obj: [],
+                    asset_departments: [],
+                    asset_department_ids: [],
                     section_id: "",
                     functional_id: "",
                     area_id: "",
-                    area_name:null,
+                    area_name: null,
                     radius: "",
                     zone_name: [],
                     deleted_asset_attribute_values: [],
                     area_name: "",
-                    deleted_asset_departments:[],
-                    deleted_asset_zones:[],
-                    geometry_type:'',
+                    deleted_asset_departments: [],
+                    deleted_asset_zones: [],
+                    geometry_type: "",
+                    height: "",
+                    diameter: "",
                 },
 
                 voltage: {
@@ -325,7 +380,7 @@
 
                 device_code: "",
                 deleted_asset_attribute_values: [],
-                deleted_asset_departments:[],
+                deleted_asset_departments: [],
                 // asset_attributes: [],
                 showDepartment: false,
                 departments: [],
@@ -342,13 +397,13 @@
                 new_zone_names: [],
                 prev_zone_names: [],
                 error_style: {
-                    'border-color': '#dc3545',
-                    'padding-right': 'calc(1.5em + 0.812rem)',
-                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
-                    'background-repeat': 'no-repeat',
-                    'background-position': 'right calc(0.375em + 0.203rem) center',
-                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
-                }
+                    "border-color": "#dc3545",
+                    "padding-right": "calc(1.5em + 0.812rem)",
+                    "background-image": `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    "background-repeat": "no-repeat",
+                    "background-position": "right calc(0.375em + 0.203rem) center",
+                    "background-size": "calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)",
+                },
             };
         },
         beforeRouteEnter(to, from, next) {
@@ -358,7 +413,7 @@
                 if (to.name == "Assets.Create") {
                     // vm.$refs.asset_code.focus();
                     vm.asset.zone_name.push({
-                        zone_name: 'Overall',
+                        zone_name: "Overall",
                     });
                 } else {
                     vm.status = false;
@@ -370,22 +425,25 @@
                             vm.initial_zone_no = vm.asset.no_of_zones;
                             vm.prev_zone_names = vm.asset.zone_name;
                             vm.show_assets = response.data.data?.asset_attributes;
-                            vm.asset.area_id = vm.asset.area.area_id
-                            vm.asset.area_name=vm.asset.area.area_name
+                            vm.asset.area_id = vm.asset.area.area_id;
+                            vm.asset.area_name = vm.asset.area.area_name;
                             // vm.asset_departments =
                             vm.asset.deleted_asset_departments = [];
-                            vm.asset.deleted_asset_zones = []
+                            vm.asset.deleted_asset_zones = [];
                             vm.asset.asset_attributes.map(function (element) {
                                 vm.deleted_asset_attribute_values.push(element.asset_attribute_value.asset_attribute_value_id);
                             });
                             vm.asset.deleted_asset_attribute_values = [];
 
-                            vm.asset.asset_departments_obj = []
-                            vm.asset.asset_department_ids.map(function(ele){
-                                vm.asset.asset_departments_obj.push({department_code: ele.department.department_code, 
-                                    department_id: ele.department.department_id, status: ele.department.status,
-                                    department_name: ele.department.department_name})
-                            })
+                            vm.asset.asset_departments_obj = [];
+                            vm.asset.asset_department_ids.map(function (ele) {
+                                vm.asset.asset_departments_obj.push({
+                                    department_code: ele.department.department_code,
+                                    department_id: ele.department.department_id,
+                                    status: ele.department.status,
+                                    department_name: ele.department.department_name,
+                                });
+                            });
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -403,13 +461,15 @@
                 if (vm.asset.no_of_zones <= 0) {
                     vm.asset.no_of_zones = 1;
                     vm.asset.zone_name.push({
-                        zone_name: 'Overall',
+                        zone_name: "Overall",
+                        height: null, // Add height field
+                        diameter: null, // Add diameter field
                     });
                 }
                 if (vm.status) {
                     for (let i = 0; i < vm.asset.no_of_zones; i++) {
                         vm.asset.zone_name.push({
-                            zone_name: i===0 ? 'Overall' : null,
+                            zone_name: i === 0 ? "Overall" : null,
                         });
                     }
                 } else {
@@ -432,7 +492,7 @@
                         });
                     }
                 }
-                console.log('vm.asset.zone_name:----', vm.asset.zone_name)
+                console.log("vm.asset.zone_name:----", vm.asset.zone_name);
             },
         },
 
@@ -466,25 +526,23 @@
                 if (this.asset.no_of_zones <= 0) {
                     this.asset.no_of_zones = 1; // Reset to minimum allowed value
                     this.asset.zone_name.push({
-                        zone_name: 'Overall',
+                        zone_name: "Overall",
                     });
                 }
 
-                let value = event?.target?.value?.replace(/[^0-9]/g, '');
+                let value = event?.target?.value?.replace(/[^0-9]/g, "");
                 // console.log('value:----',value ? Number(value) : null)
 
-                if (value >= 1 ) {
-                    let popped_data = asset.no_of_zones - value
-                    for(let i=0; i<popped_data; i++){
-                        let del_asset_zone = asset.zone_name.pop()
-                        this.asset.deleted_asset_zones.push(del_asset_zone.asset_zone_id)
-                        this.prev_zone_names.pop()
+                if (value >= 1) {
+                    let popped_data = asset.no_of_zones - value;
+                    for (let i = 0; i < popped_data; i++) {
+                        let del_asset_zone = asset.zone_name.pop();
+                        this.asset.deleted_asset_zones.push(del_asset_zone.asset_zone_id);
+                        this.prev_zone_names.pop();
                     }
                 }
-                asset.no_of_zones = asset.zone_name.length
+                asset.no_of_zones = asset.zone_name.length;
             },
-
-
 
             // selectColor(colorValue, colorName, field) {
             //     this.selectedColor = colorValue;
@@ -531,8 +589,8 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-            toggleDepartmentStatus(){
-                this.showDepartment = !this.showDepartment
+            toggleDepartmentStatus() {
+                this.showDepartment = !this.showDepartment;
             },
             getDepartments() {
                 let vm = this;
@@ -554,26 +612,26 @@
             updateDepartemnts(event, asset_departments) {
                 // console.log(event.target.value)
                 // console.log(asset_departments)
-                let vm = this
+                let vm = this;
                 const isChecked = event.target.checked;
                 let departments = asset_departments.asset_department_ids.filter(function (element) {
-                    return element.department_id == event.target.value
-                })
+                    return element.department_id == event.target.value;
+                });
                 // console.log('departments:---', departments, isChecked, vm.asset.deleted_asset_departments)
                 if (departments.length) {
-                    let department_id = departments[0].asset_department_id
+                    let department_id = departments[0].asset_department_id;
                     // console.log('department_id:-----', department_id)
                     if (isChecked) {
                         if (vm.asset.deleted_asset_departments.includes(department_id)) {
                             let deleted_asset_departments = vm.asset.deleted_asset_departments.filter(function (element) {
-                                return element != department_id
-                            })
-                            vm.asset.deleted_asset_departments = deleted_asset_departments
+                                return element != department_id;
+                            });
+                            vm.asset.deleted_asset_departments = deleted_asset_departments;
                         }
                     } else {
                         if (!vm.asset.deleted_asset_departments.includes(department_id)) {
-                            console.log(department_id)
-                            vm.asset.deleted_asset_departments.push(department_id)
+                            console.log(department_id);
+                            vm.asset.deleted_asset_departments.push(department_id);
                         }
                     }
                 }
@@ -701,38 +759,37 @@
                 if (!this.validateFields()) {
                     return;
                 }
-                
-                vm.asset.asset_departments_obj.map(function(ele){
-                    vm.asset.asset_departments.push(ele.department_id)
-                })
-                
-                let loader = vm.$loading.show();
-                vm.$store.dispatch("post", { uri: "addAsset", data: vm.asset })
-                .then((response) => {
-                    loader.hide();
-                    vm.$store.dispatch("success", response.data.message);
-                    vm.$router.push("/assets");
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
+
+                vm.asset.asset_departments_obj.map(function (ele) {
+                    vm.asset.asset_departments.push(ele.department_id);
                 });
+
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "addAsset", data: vm.asset })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.$router.push("/assets");
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
             },
 
             updateAsset() {
                 let vm = this;
 
+                vm.asset.deleted_asset_departments = vm.asset?.asset_department_ids.filter((item1) => !vm.asset.asset_departments_obj.some((item2) => item1.department_id === item2.department_id));
+                vm.asset.asset_departments = vm.asset.asset_departments_obj.map((item) => item.department_id);
+                vm.asset.deleted_asset_departments = vm.asset.deleted_asset_departments.map((item) => item.asset_department_id);
 
-                vm.asset.deleted_asset_departments = vm.asset?.asset_department_ids.filter(
-                    item1 => !vm.asset.asset_departments_obj.some(item2 => item1.department_id === item2.department_id));
-                vm.asset.asset_departments = vm.asset.asset_departments_obj.map(item => item.department_id);
-                vm.asset.deleted_asset_departments = vm.asset.deleted_asset_departments.map(item => item.asset_department_id);
-
-                 if (!vm.validateFields()) {
+                if (!vm.validateFields()) {
                     return;
                 }
-                
+
                 // vm.asset.asset_code = vm.device_code.join("");
                 let loader = vm.$loading.show();
                 vm.$store
@@ -772,7 +829,7 @@
                 vm.asset.latitude = "";
                 vm.asset.longitude = "";
                 vm.asset.radius = "";
-                vm.asset.geometry_type="";
+                vm.asset.geometry_type = "";
                 vm.asset.department_id = "";
                 vm.asset.section_id = "";
                 vm.asset.functional_id = "";
@@ -795,7 +852,7 @@
                 });
                 // vm.$refs.asset_code.focus();
             },
-                reset() {
+            reset() {
                 let vm = this;
                 vm.asset.asset_attributes = [];
                 vm.asset.asset_type_id = "";
@@ -824,17 +881,17 @@
             getAreaValue() {
                 let vm = this;
                 let area = vm.plants.filter(function (element) {
-                    return element.plant_id == vm.asset.plant_id
-                })
+                    return element.plant_id == vm.asset.plant_id;
+                });
                 if (area.length) {
-                    if ('Area' in area[0]) {
-                        vm.asset.area_id = area[0].Area?.area_id
-                        vm.asset.area_name = area[0].Area?.area_name
+                    if ("Area" in area[0]) {
+                        vm.asset.area_id = area[0].Area?.area_id;
+                        vm.asset.area_name = area[0].Area?.area_name;
                     }
                 }
-                console.log('asset')
-                console.log(vm.asset)
-            }
+                console.log("asset");
+                console.log(vm.asset);
+            },
         },
     };
 </script>
@@ -864,7 +921,6 @@
     .dropdown-menu.show {
         display: block;
     }
-
 
     .multiselect {
         position: relative;
