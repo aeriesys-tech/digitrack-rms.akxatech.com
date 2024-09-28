@@ -164,28 +164,30 @@
                                             </select>
                                             <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
                                             <label class="form-label">Height </label><span class="text-danger"> *</span>
                                             <input
                                                 type="number"
                                                 placeholder="Enter Height "
                                                 class="form-control"
-                                                :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('height')) }"
+                                                :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('height')) ||  errors?.height }"
+
                                                 v-model="asset.height"
                                             />
                                             <span v-if="errors?.height" class="invalid-feedback">{{ errors.height[0] }}</span>
                                             <!-- <span v-if="errors?.zone_name && errors.zone_name.includes('Height')" class="invalid-feedback">{{ errors.zone_name[0] }}</span> -->
-                                            <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('height'))" class="invalid-feedback">{{ errors.zone_name[0] }}</span>
+                                            <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('height')) " class="invalid-feedback">{{ errors.zone_name[0] }}</span>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
                                             <label class="form-label">Diameter </label><span class="text-danger"> *</span>
                                             <input
                                                 type="number"
                                                 placeholder="Enter Diameter "
                                                 class="form-control"
-                                                :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('diameter')) }"
+                                                :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('diameter')) ||  errors?.diameter }"
                                                 v-model="asset.diameter"
                                             />
+                                             <span v-if="errors?.diameter" class="invalid-feedback">{{ errors.diameter[0] }}</span>
                                             <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('diameter'))" class="invalid-feedback">{{ errors.zone_name[0] }}</span>
                                         </div>
                                         <div class="col-md-4">
