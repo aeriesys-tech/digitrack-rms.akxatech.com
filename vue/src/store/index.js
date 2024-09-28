@@ -6,7 +6,7 @@ import axios from "axios";
 export default createStore({
   state: {
     // apiUrl:"https://digitrack-rms.akxatech.com/api/",
-    apiUrl: "http://192.168.0.213/digitrack-rms.akxatech.com/laravel/public/api/",
+    apiUrl: "http://localhost/rms/laravel/public/api/",
     user: null,
     token: '',
     permissions: [],
