@@ -82,7 +82,7 @@
 
 
 
-                                            <div class="dropdown" @click="toggleDepartmentStatus">
+                                            <!-- <div class="dropdown" @click="toggleDepartmentStatus">
                                                 <div class="overselect"></div>
                                                 <select class="form-control form-control" :class="{'is-invalid':errors?.department_id}">
                                                     <option value="">Select Department</option>
@@ -96,9 +96,12 @@
                                                         <label style="margin-left: 5px;">{{ department?.department_name }}</label>
                                                     </li>
                                                 </ul>
-                                            </div>
+                                            </div> -->
 
-
+                                            <MultiSelect v-model="asset.asset_departments_obj"  filter optionLabel="department_name" 
+                                                :options="departments"  placeholder="Select Department" :maxSelectedLabels="3"  
+                                                style="width: 100%;; height: 37px;" :style="errors?.department_id ? error_style : ''"/>
+                                            <span v-if="errors?.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
 
                                         </div>
                                         <div class="col-md-4">
@@ -277,9 +280,10 @@
 </template>
 <script>
     import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         name: "Assets.Create",
-        components: { Search },
+        components: { Search, MultiSelect },
         data() {
             return {
                 sample: "",
@@ -295,6 +299,7 @@
                     status: "",
                     asset_attributes: [],
                     department_id: "",
+                    asset_departments_obj:[],
                     asset_departments:[],
                     asset_department_ids:[],
                     section_id: "",
@@ -336,6 +341,14 @@
                 initial_zone_no: null,
                 new_zone_names: [],
                 prev_zone_names: [],
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             };
         },
         beforeRouteEnter(to, from, next) {
@@ -366,6 +379,13 @@
                                 vm.deleted_asset_attribute_values.push(element.asset_attribute_value.asset_attribute_value_id);
                             });
                             vm.asset.deleted_asset_attribute_values = [];
+
+                            vm.asset.asset_departments_obj = []
+                            vm.asset.asset_department_ids.map(function(ele){
+                                vm.asset.asset_departments_obj.push({department_code: ele.department.department_code, 
+                                    department_id: ele.department.department_id, status: ele.department.status,
+                                    department_name: ele.department.department_name})
+                            })
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -677,12 +697,15 @@
             },
 
             addAsset() {
+                let vm = this;
                 if (!this.validateFields()) {
                     return;
                 }
-                let vm = this;
-                console.log('vm.asset:----', vm.asset)
-                // vm.asset.asset_code = vm.device_code.join("");
+                
+                vm.asset.asset_departments_obj.map(function(ele){
+                    vm.asset.asset_departments.push(ele.department_id)
+                })
+                
                 let loader = vm.$loading.show();
                 vm.$store.dispatch("post", { uri: "addAsset", data: vm.asset })
                 .then((response) => {
@@ -698,10 +721,18 @@
             },
 
             updateAsset() {
-                 if (!this.validateFields()) {
+                let vm = this;
+
+
+                vm.asset.deleted_asset_departments = vm.asset?.asset_department_ids.filter(
+                    item1 => !vm.asset.asset_departments_obj.some(item2 => item1.department_id === item2.department_id));
+                vm.asset.asset_departments = vm.asset.asset_departments_obj.map(item => item.department_id);
+                vm.asset.deleted_asset_departments = vm.asset.deleted_asset_departments.map(item => item.asset_department_id);
+
+                 if (!vm.validateFields()) {
                     return;
                 }
-                let vm = this;
+                
                 // vm.asset.asset_code = vm.device_code.join("");
                 let loader = vm.$loading.show();
                 vm.$store

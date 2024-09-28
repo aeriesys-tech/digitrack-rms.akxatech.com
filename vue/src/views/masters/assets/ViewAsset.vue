@@ -99,8 +99,9 @@
                                                 </li>
                                             </ul>
                                         </div> -->
+
                                         <label class="form-label">Asset Zone</label>
-                                        <div class="dropdown" @click="toggleAssetZoneStatus('spares')">
+                                        <!-- <div class="dropdown" @click="toggleAssetZoneStatus('spares')">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors?.spare_asset_zones}">
                                                 <option value="">Select Asset Zone</option>
@@ -114,7 +115,13 @@
                                                     <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
+
+                                        <MultiSelect v-model="spare.spare_asset_zones_obj"  filter optionLabel="zone_name" 
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.spare_asset_zones ? error_style : ''" :disabled="zone_read_only" />
+                                        <span v-if="errors?.spare_asset_zones" class="invalid-feedback">{{ errors?.spare_asset_zones[0] }}</span>
+
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
@@ -361,7 +368,7 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <div class="dropdown" @click="toggleAssetZoneStatus('checks')">
+                                        <!-- <div class="dropdown" @click="toggleAssetZoneStatus('checks')">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.check_asset_zones}">
                                                 <option value="">Select Asset Zone</option>
@@ -375,7 +382,11 @@
                                                     <label style="margin-left: 5px;">{{ asset_zone.zone_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
+                                        <MultiSelect v-model="check.check_asset_zones_obj"  filter optionLabel="zone_name" 
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.check_asset_zones ? error_style : ''"/>
+                                        <span v-if="errors?.check_asset_zones" class="invalid-feedback">{{ errors?.check_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-8" v-can="'assetChecks.create'">
                                         <!-- <label>Check</label> -->
@@ -1785,9 +1796,10 @@
     import axios from "axios";
     import Search from "@/components/Search.vue";
     import Pagination from "@/components/Pagination.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         name: "Assets.View",
-        components: { Search, Pagination },
+        components: { Search, Pagination, MultiSelect },
         data() {
             return {
                 meta: {
@@ -1899,12 +1911,14 @@
                     spare_name: "",
                     asset_id: "",
                     asset_zone_id: "",
+                    spare_asset_zones_obj: [],
                     spare_asset_zones: [],
                     quantity: "",
                     asset_spare_attributes: [],
                     initial_spare_id: "",
                     initial_asset_spare_attributes: [],
                     deleted_asset_spare_values: [],
+                    zone_read_only: false,
                 },
                 check: {
                     check_id: "",
@@ -1916,6 +1930,7 @@
                     default_value: "",
                     asset_check_id: "",
                     asset_zone_id: "",
+                    check_asset_zones_obj: [],
                     check_asset_zones: [],
                 },
                 service: {
@@ -1925,6 +1940,7 @@
                     asset_id: "",
                     asset_zone_id: "",
                     asset_service_id: "",
+                    service_asset_zones_obj: [],
                     service_asset_zones: [],
                     asset_service_attributes: [],
                     initial_service_id: "",
@@ -1937,6 +1953,7 @@
                     data_source_name: "",
                     asset_id: "",
                     asset_zone_id: "",
+                    data_source_asset_zones_obj: [],
                     data_source_asset_zones: [],
                     asset_data_source_id: "",
                     script: "",
@@ -1951,6 +1968,7 @@
                     variable_name: "",
                     asset_id: "",
                     asset_zone_id: "",
+                    variable_asset_zones_obj: [],
                     variable_asset_zones: [],
                     asset_variable_id: "",
                     asset_variable_attributes: [],
@@ -1993,6 +2011,14 @@
                 initial_status: true,
                 isValid: true,
                 assets1: [],
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             };
         },
         // watch:{
@@ -2127,6 +2153,7 @@
                 return color;
             },
             editSpare(spare) {
+                console.log('spare:----', spare)
                 this.spare.spare_id = spare.spare_id;
                 this.spare.asset_id = spare.asset_id;
                 this.spare.asset_spare_id = spare.asset_spare_id;
@@ -2134,6 +2161,12 @@
                 this.spare.spare_name = spare.spare_name;
                 this.spare.spare_asset_zones = [];
                 this.spare.spare_asset_zones.push(spare.asset_zone_id);
+                this.spare.spare_asset_zones_obj.push({asset_id: spare.asset_zone.asset_id, 
+                    asset_zone_id: spare.asset_zone.asset_zone_id, status: spare.asset_zone.status,
+                    zone_name: spare.asset_zone.zone_name
+                    
+                });
+                this.zone_read_only = true;
                 this.spare.asset_zone_id = spare.asset_zone_id;
                 this.spare.quantity = spare.quantity;
                 this.spare.asset_spare_attributes = spare.asset_spare_attributes;
@@ -2291,7 +2324,7 @@
                         // vm.meta.from = response.data.meta.from;
                         vm.meta.lastPage = response.data.meta.last_page;
                         vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
-                        // vm.getChecks();
+                        // vm.getChecks();                        
                         if (vm.initial_status) {
                             vm.getAssetChecks();
                         }
@@ -2465,6 +2498,11 @@
             addSpare() {
                 let vm = this;
                 vm.spare.asset_id = vm.asset.asset_id;
+
+                vm.spare.spare_asset_zones_obj.map(function(ele){
+                    vm.spare.spare_asset_zones.push(ele.asset_zone_id)
+                })
+
                 let loader = vm.$loading.show();
                 vm.validateFields();
                 if (vm.isValid) {
@@ -2476,6 +2514,7 @@
                             vm.spare.spare_id = "";
                             vm.spare.asset_zone_id = [];
                             vm.spare.spare_asset_zones = [];
+                            vm.spare.spare_asset_zones_obj = [];
                             vm.spare.quantity = "";
                             vm.spare.asset_spare_attributes = [];
                             vm.spare.initial_spare_id = "";
@@ -2483,6 +2522,7 @@
                             vm.spare.deleted_asset_spare_values = [];
                             vm.asset_zone_status_spares = false;
                             vm.errors = [];
+                            vm.zone_read_only = false;
                             vm.getAssetSpares();
                         })
                         .catch(function (error) {
@@ -2510,6 +2550,7 @@
                         vm.spare.spare_id = "";
                         vm.spare.asset_zone_id = "";
                         vm.spare.asset_spare_id = "";
+                        vm.spare.spare_asset_zones_obj = [];
                         vm.spare.spare_asset_zones = [];
                         vm.spare.quantity = "";
                         vm.spare.asset_spare_attributes = [];
@@ -2518,6 +2559,7 @@
                         vm.spare.deleted_asset_spare_values = [];
                         vm.asset_zone_status_spares = false;
                         vm.errors = [];
+                        vm.zone_read_only = false;
                         vm.getAssetSpares();
                     })
                     .catch(function (error) {
