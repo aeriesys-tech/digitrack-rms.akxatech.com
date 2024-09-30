@@ -91,9 +91,10 @@ class UserServiceController extends Controller
         //     ->where('service_id', $data['service_id'])
         //     ->update(['is_latest' => false]);
 
+        $asset_zone = AssetZone::where('asset_id', $request->asset_id)->first();
         $userServiceIds = UserSpare::whereHas('userService', function ($query) use ($request) {
             $query->where('asset_id', $request->asset_id);
-        })->where('service_id', $request->service_id)->pluck('user_service_id');
+        })->where('service_id', $request->service_id)->where('asset_zone_id', $asset_zone->asset_zone_id)->pluck('user_service_id');
     
         // Update is_latest to false for these user_service_id
         UserService::whereIn('user_service_id', $userServiceIds)->update(['is_latest' => false]);
@@ -278,21 +279,21 @@ class UserServiceController extends Controller
         if($request->search!='')
         {
             $query->where(function($query) use ($request) {
-                $query->where('service_date', 'like', "{$request->search}%")
-                    ->orWhere('service_no', 'like', "{$request->search}%")  
-                    ->orWhere('next_service_date', 'like', "{$request->search}%") 
+                $query->where('service_date', 'like', "%{$request->search}%")
+                    ->orWhere('service_no', 'like', "%{$request->search}%")  
+                    ->orWhere('next_service_date', 'like', "%{$request->search}%") 
                     ->orwhereHas('Asset', function($que) use ($request) {
-                        $que->where('asset_code', 'like', "{$request->search}%");
+                        $que->where('asset_code', 'like', "%{$request->search}%");
                     })->orwhereHas('Asset', function($que) use($request){
                         $que->whereHas('AssetType', function($qu) use($request){
-                            $qu->where('asset_type_name', 'like', "{$request->search}%");
+                            $qu->where('asset_type_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('UserSpare', function($que) use($request){
                     $que->whereHas('Service',function($qu) use($request){
-                        $qu->where('service_name', 'like', "{$request->search}%");
+                        $qu->where('service_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('Asset.AssetDepartment.Department', function ($qu) use ($request) {
-                    $qu->where('department_name', 'like', "{$request->search}%");
+                    $qu->where('department_name', 'like', "%{$request->search}%");
                 });
             });
         }
@@ -342,21 +343,21 @@ class UserServiceController extends Controller
         if($request->search!='')
         {
             $query->where(function($query) use ($request) {
-                $query->where('service_date', 'like', "{$request->search}%")
-                    ->orWhere('service_no', 'like', "{$request->search}%")  
-                    ->orWhere('next_service_date', 'like', "{$request->search}%") 
+                $query->where('service_date', 'like', "%{$request->search}%")
+                    ->orWhere('service_no', 'like', "%{$request->search}%")  
+                    ->orWhere('next_service_date', 'like', "%{$request->search}%") 
                     ->orwhereHas('Asset', function($que) use ($request) {
-                        $que->where('asset_code', 'like', "{$request->search}%");
+                        $que->where('asset_code', 'like', "%{$request->search}%");
                     })->orwhereHas('Asset', function($que) use($request){
                         $que->whereHas('AssetType', function($qu) use($request){
-                            $qu->where('asset_type_name', 'like', "{$request->search}%");
+                            $qu->where('asset_type_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('UserSpare', function($que) use($request){
                     $que->whereHas('Service',function($qu) use($request){
-                        $qu->where('service_name', 'like', "{$request->search}%");
+                        $qu->where('service_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('Asset.AssetDepartment.Department', function ($qu) use ($request) {
-                    $qu->where('department_name', 'like', "{$request->search}%");
+                    $qu->where('department_name', 'like', "%{$request->search}%");
                 });
             });
         }
