@@ -52,7 +52,9 @@ class AssetResource extends JsonResource
             'zone_name' => AssetZoneResource::collection($this->Zones),
             'asset_department_ids' => AssetDepartmentResource::collection($this->AssetDepartment),
             'asset_departments' => $asset_department_id,
-            'geometry_type' => $this->geometry_type
+            'geometry_type' => $this->geometry_type,
+            'height' => $this->height,
+            'diameter' => $this->diameter
         ];
     }
 }

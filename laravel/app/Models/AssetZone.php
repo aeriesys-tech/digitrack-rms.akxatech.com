@@ -12,7 +12,9 @@ class AssetZone extends Model
 
     protected $fillable = [
         'asset_id',
-        'zone_name'
+        'zone_name',
+        'height',
+        'diameter'
     ];
 
     protected $primaryKey = 'asset_zone_id';
