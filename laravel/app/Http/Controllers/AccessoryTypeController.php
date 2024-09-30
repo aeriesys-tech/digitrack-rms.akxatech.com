@@ -31,7 +31,7 @@ class AccessoryTypeController extends Controller
         if($request->search!='')
         {
             $query->where('accessory_type_code', 'like', "%$request->search%")
-                 ->orWhere('accessory_type_name', 'like', "$request->search%");
+                 ->orWhere('accessory_type_name', 'like', "%$request->search%");
         }
 
         $accessory_type = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 

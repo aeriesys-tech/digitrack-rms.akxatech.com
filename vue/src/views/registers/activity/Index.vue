@@ -61,7 +61,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th class="text-center">Status</th>
+                                        <!-- <th class="text-center">Status</th> -->
                                         <th class="text-center" v-if="get_activity.length">Actions</th>
                                     </tr>
                                 </thead>
@@ -73,7 +73,7 @@
                                         <td>{{activity.asset?.asset_code}}</td>
                                         <td>{{activity.reason?.reason_code}}</td>
                                         <td>{{activity.cost}}</td>
-                                        <td>{{activity.activity_status}}</td>
+                                        <!-- <td>{{activity.activity_status}}</td> -->
                                         <td class="text-center" v-if="get_activity.length">
                                             <a title="Edit" v-can="'userActivities.update'" href="javascript:void(0)" class="text-success me-2" v-if="activity.status" @click="editActivity(activity)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>

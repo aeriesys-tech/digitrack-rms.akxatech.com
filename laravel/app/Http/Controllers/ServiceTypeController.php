@@ -30,7 +30,7 @@ class ServiceTypeController extends Controller
         if($request->search!='')
         {
             $query->where('service_type_code', 'like', "%$request->search%")
-                ->orWhere('service_type_name', 'like', "$request->search%");
+                ->orWhere('service_type_name', 'like', "%$request->search%");
         }
         $service_type = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return ServiceTypeResource::collection($service_type);

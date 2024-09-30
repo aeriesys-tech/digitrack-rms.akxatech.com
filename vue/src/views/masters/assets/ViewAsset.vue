@@ -308,11 +308,9 @@
                                                             <a href="javascript:void(0)" class="text-success me-2" @click="editSpare(spare)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                                             <!-- <a href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(spare, 'Spares')"><i class="ri-eye-fill fs-18 lh-1"></i></a> -->
 
-                                                            <!-- try -->
                                                             <a href="javascript:void(0)" class="text-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" @click.prevent="viewAsset(spare, 'Spares')">
                                                                 <i class="ri-eye-fill fs-18 lh-1"></i>
                                                             </a>
-                                                            <!-- ends -->
                                                             <a href="javascript:void(0)" class="text-danger me-2" @click="deleteSpare(spare)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                                         </td>
                                                     </tr>
@@ -1293,7 +1291,6 @@
                                         <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addAccessory()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
                                         </div>
-                                        <!-- <button class="btn border-left btn-outline-success" type="button" @click="addSpare()"><i class="ri-add-circle-line icon-hgt"></i>ADD</button> -->
                                     </div>
 
                                     <div class="col-12">
@@ -1381,7 +1378,6 @@
                     <!-- accessories end -->
                 </div>
             </div>
-            <!-- try ends -->
         </div>
     </div>
 

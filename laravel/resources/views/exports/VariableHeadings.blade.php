@@ -11,12 +11,13 @@
     <table border="1" width="100%" class="table" style="border-collapse: collapse;">
         <thead>
             <tr>
-                <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Variable Type Id</strong></th>
-                <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Variable Code</strong></th>
-                <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Variable Name</strong></th>
-                <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>List Parameter Id</strong></th>
+                @foreach($rows[0] as $heading)
+                    <th  style="width: 200%;">{{ $heading }}</th>
+                @endforeach
             </tr>
         </thead>
+        <tbody>
+        </tbody>
     </table>
 </body>
 </html>

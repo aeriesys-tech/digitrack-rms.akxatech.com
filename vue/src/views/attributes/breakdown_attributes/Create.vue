@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Break Down Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleBreakDownTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleBreakDownTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.break_down_types}">
                                                 <option value="">Select Break Down Type</option>
@@ -44,8 +44,11 @@
                                                     <label style="margin-left: 5px;">{{ break_down_type.break_down_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
-
+                                        </div> -->
+                                        <MultiSelect v-model="break_down_attribute.break_down_types_obj"  filter optionLabel="break_down_type_name" 
+                                            :options="break_down_types"  placeholder="Select Break Down Type" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.break_down_types ? error_style : ''"/>
+                                        <span v-if="errors?.break_down_types"><small class="text-danger">{{ errors?.break_down_types[0] }}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -127,8 +130,10 @@
     </template>
     <script>
 //      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "BreakDownAttributes.Create",
         data() {
@@ -141,6 +146,7 @@
                     field_length: '',
                     is_required: "",
                     break_down_type_id: '',
+                    break_down_types_obj:[],
                     break_down_types:[],
                     list_parameter_id: '',
                     deleted_break_down_attribute_types:[],
@@ -153,6 +159,14 @@
                 errors: [],
                 status:true,
                 break_down_type_status:false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -178,6 +192,13 @@
                             .then(function (response) {
                                 vm.break_down_attribute = response.data.data;
                                 vm.break_down_attribute.deleted_break_down_attribute_types = []
+                                vm.break_down_attribute.break_down_types_obj = []
+
+                                vm.break_down_attribute.break_down_attribute_types.map(function(ele){
+                                    vm.break_down_attribute.break_down_types_obj.push({break_down_type_code: ele.break_down_type.break_down_type_code, 
+                                        break_down_type_id: ele.break_down_type.break_down_type_id, status: ele.break_down_type.status,
+                                        break_down_type_name: ele.break_down_type.break_down_type_name})
+                                })
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -248,11 +269,16 @@
 
             addBreakDownAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addBreakDownAttribute', data:this.break_down_attribute })
+                let loader = vm.$loading.show();
+
+                vm.break_down_attribute.break_down_types_obj.map(function(ele){
+                    vm.break_down_attribute.break_down_types.push(ele.break_down_type_id)
+                })
+
+                vm.$store.dispatch('post', { uri: 'addBreakDownAttribute', data:vm.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Break Down Attribute created successfully");
+                        vm.$store.dispatch('success',"Break Down Attribute created successfully");
                         vm.$router.push("/break_down_attributes");
                     })
                     .catch(function (error) {
@@ -264,12 +290,19 @@
 
             updateBreakDownAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateBreakDownAttribute', data:this.break_down_attribute })
+                let loader = vm.$loading.show();
+
+                vm.break_down_attribute.deleted_break_down_attribute_types = vm.break_down_attribute?.break_down_attribute_types.filter(
+                    item1 => !vm.break_down_attribute.break_down_types_obj.some(item2 => item1.break_down_type_id === item2.break_down_type_id));
+                vm.break_down_attribute.break_down_types = vm.break_down_attribute.break_down_types_obj.map(item => item.break_down_type_id);
+                vm.break_down_attribute.deleted_break_down_attribute_types = vm.break_down_attribute.deleted_break_down_attribute_types.map(item => item.break_down_attribute_type_id);
+                
+                
+                vm.$store.dispatch('post', { uri: 'updateBreakDownAttribute', data:vm.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Break Down Attribute updated successfully");
-                        this.$router.push('/break_down_attributes');
+                        vm.$store.dispatch('success',"Break Down Attribute updated successfully");
+                        vm.$router.push('/break_down_attributes');
                     })
                     .catch(function (error) {
                         loader.hide();

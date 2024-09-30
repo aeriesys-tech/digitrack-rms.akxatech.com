@@ -220,7 +220,7 @@
 
             addHealthCheck() {
                 let vm = this;
-                let loader = this.$loading.show();
+                let loader = vm.$loading.show();
                 const data = new FormData();
                 data.append("asset_id", vm.campaign.asset_id);
                 data.append("datasource", vm.campaign.datasource_id);
@@ -243,7 +243,7 @@
                     })
                     .then((response) => {
                         loader.hide();
-                        this.$store.dispatch("success", "Health check created successfully");
+                        vm.$store.dispatch("success", "Health check created successfully");
 
                         // vm.$router.push("/health_checks");
                         vm.campaign_results = response.data[0];

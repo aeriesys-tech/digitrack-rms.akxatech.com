@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Spare Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleSpareTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleSpareTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.spare_types}">
                                                 <option value="">Select Spare Type</option>
@@ -44,8 +44,11 @@
                                                     <label style="margin-left: 5px;">{{ spare_type.spare_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
-
+                                        </div> -->
+                                        <MultiSelect v-model="spare_attribute.spare_types_obj"  filter optionLabel="spare_type_name" 
+                                            :options="spare_types"  placeholder="Select Spare Type" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.spare_types ? error_style : ''"/>
+                                        <span v-if="errors?.spare_types"><small class="text-danger">{{ errors?.spare_types[0] }}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -119,8 +122,10 @@
     </template>
     <script>
 //      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "SpareAttributes.Create",
         data() {
@@ -133,6 +138,7 @@
                     field_length: '',
                     is_required: "",
                     spare_type_id: '',
+                    spare_types_obj: [],
                     spare_types:[],
                     list_parameter_id: "",
                     deleted_spare_attribute_types:[],
@@ -145,6 +151,14 @@
                 errors: [],
                 status:true,
                 spare_type_status:false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -171,6 +185,13 @@
                             .then(function (response) {
                                 vm.spare_attribute = response.data.data;
                                 vm.spare_attribute.deleted_spare_attribute_types = []
+                                vm.spare_attribute.spare_types_obj = []
+
+                                vm.spare_attribute.spare_attribute_types.map(function(ele){
+                                    vm.spare_attribute.spare_types_obj.push({spare_type_code: ele.spare_type.spare_type_code, 
+                                        spare_type_id: ele.spare_type.spare_type_id, status: ele.spare_type.status,
+                                        spare_type_name: ele.spare_type.spare_type_name})
+                                })
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -229,7 +250,7 @@
                 vm.$store.dispatch('post', { uri: 'getSpareTypes' })
                     .then(response => {
                         loader.hide();
-                        vm.spare_types = response.data.data;
+                        vm.spare_types = response.data.data;                    
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -255,6 +276,11 @@
             addSpareAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
+
+                vm.spare_attribute.spare_types_obj.map(function(ele){
+                    vm.spare_attribute.spare_types.push(ele.spare_type_id)
+                })
+
                 vm.$store.dispatch('post', { uri: 'addSpareAttribute', data:vm.spare_attribute })
                     .then(response => {
                         loader.hide();
@@ -271,6 +297,13 @@
             updateSpareAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
+
+                vm.spare_attribute.deleted_spare_attribute_types = vm.spare_attribute.spare_attribute_types.filter(
+                    item1 => !vm.spare_attribute.spare_types_obj.some(item2 => item1.spare_type_id === item2.spare_type_id));
+                
+                vm.spare_attribute.spare_types = vm.spare_attribute.spare_types_obj.map(item => item.spare_type_id);
+                vm.spare_attribute.deleted_spare_attribute_types = vm.spare_attribute.deleted_spare_attribute_types.map(item => item.spare_attribute_type_id);
+
                 vm.$store.dispatch('post', { uri: 'updateSpareAttribute', data:vm.spare_attribute })
                     .then(response => {
                         loader.hide();

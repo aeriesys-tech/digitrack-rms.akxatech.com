@@ -240,10 +240,10 @@ class DataSourceController extends Controller
         return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
-    public function downloadDataSourceHeadings()
+    public function downloadDataSourceHeadings(Request $request)
     {
         $filename = "DataSource Headings.xlsx";
-        $excel = new DataSourceHeadingsExport();
+        $excel = new DataSourceHeadingsExport($request->data_source_type_id);
         
         return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
@@ -251,7 +251,7 @@ class DataSourceController extends Controller
     public function importDataSource(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls',
+            'file' => 'required|mimes:xlsx,xls'
         ]);
 
         Excel::import(new DataSourceImport, $request->file('file'));

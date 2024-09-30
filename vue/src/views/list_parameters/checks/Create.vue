@@ -28,27 +28,7 @@
                             <h6 class="card-title" v-else>Update Check</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row g-2">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
-                                            <div class="overselect"></div>
-                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
-                                                <option value="">Select Asset Type</option>
-                                            </select>
-                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
-                                        </div>
-                                        <div class="multiselect" v-if="asset_type_status">
-                                            <ul>
-                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="check.asset_types" style="padding: 2px;" @click="updateActivityType($event, check)" />
-                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="row g-2">                                
                                 <div class="col-md-4">
                                     <label class="form-label">Department</label><span class="text-danger"> *</span>
                                     <select class="form-control" :class="{ 'is-invalid': errors?.department_id }" v-model="check.department_id">
@@ -111,6 +91,31 @@
                                     <input type="text" placeholder="Order" class="form-control" :class="{ 'is-invalid': errors.order}" v-model="check.order" />
                                     <span v-if="errors.order" class="invalid-feedback">{{ errors.order[0] }}</span>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Assign To</label><span class="text-danger"> *</span>
+                                        <!-- <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                            <div class="overselect"></div>
+                                            <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
+                                                <option value="">Select Asset Type</option>
+                                            </select>
+                                            <span v-if="errors.asset_types"><small class="text-danger">{{ errors.asset_types[0] }}</small></span>
+                                        </div>
+                                        <div class="multiselect" v-if="asset_type_status">
+                                            <ul>
+                                                <li class="" v-for="(asset_type, index) in asset_types" :key="index">
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="check.asset_types" style="padding: 2px;" @click="updateActivityType($event, check)" />
+                                                    <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
+                                                </li>
+                                            </ul>
+                                        </div> -->
+
+                                        <MultiSelect v-model="check.asset_types_obj"  filter optionLabel="asset_type_name" 
+                                            :options="asset_types"  placeholder="Select Assign To" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.asset_types ? error_style : ''"/>
+                                        <span v-if="errors?.asset_types"><small class="text-danger">{{ errors?.asset_types[0] }}</small></span>
+                                    </div>
+                                </div>
 
                                 <!-- <div class="col-md-4">
                                         <label class="form-label">Frequency</label>
@@ -136,8 +141,12 @@
     </div>
 </template>
 <script>
+    import MultiSelect from 'primevue/multiselect';
     export default {
         name: "Checks.Create",
+        components: {
+            MultiSelect
+        },
         data() {
             return {
                 // check_update: false,
@@ -152,6 +161,7 @@
                     ucl: "",
                     field_values: "",
                     order: "",
+                    asset_types_obj:[],
                     asset_types: [],
                     frequency_id: "",
                     department_id: "",
@@ -164,6 +174,14 @@
                 departments: [],
                 status: true,
                 asset_type_status: false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             };
         },
         beforeRouteEnter(to, from, next) {
@@ -180,6 +198,13 @@
                         .then(function (response) {
                             vm.check = response.data.data;
                             vm.check.deleted_check_asset_types = [];
+                            vm.check.asset_types_obj = []
+
+                            vm.check.check_asset_types.map(function(ele){
+                                vm.check.asset_types_obj.push({asset_type_code: ele.asset_types.asset_type_code, 
+                                    asset_type_id: ele.asset_types.asset_type_id, status: ele.asset_types.status,
+                                    asset_type_name: ele.asset_types.asset_type_name})
+                            })
                         })
                         .catch(function (error) {
                             vm.errors = error.response.data.errors;
@@ -199,7 +224,7 @@
                     let check_asset_type_id = check_asset_type[0].check_asset_type_id;
                     if (isChecked) {
                         if (vm.check.deleted_check_asset_types.includes(check_asset_type_id)) {
-                            let deleted_check_asset_types = this.check.deleted_check_asset_types.filter(function (element) {
+                            let deleted_check_asset_types = vm.check.deleted_check_asset_types.filter(function (element) {
                                 return element != check_asset_type_id;
                             });
                             vm.check.deleted_check_asset_types = deleted_check_asset_types;
@@ -210,7 +235,7 @@
                         }
                     }
                 }
-                console.log("Checked IDs:", this.check.asset_types);
+                console.log("Checked IDs:", vm.check.asset_types);
                 console.log("Unchecked IDs:", vm.check.deleted_check_asset_types);
             },
             toggleAssetTypeStatus() {
@@ -242,6 +267,11 @@
             addCheck() {
                 let vm = this;
                 let loader = vm.$loading.show();
+
+                vm.check.asset_types_obj.map(function(ele){
+                    vm.check.asset_types.push(ele.asset_type_id)
+                })
+
                 vm.$store
                     .dispatch("post", { uri: "addCheck", data: vm.check })
                     .then((response) => {
@@ -315,6 +345,13 @@
             updateCheck() {
                 let vm = this;
                 let loader = vm.$loading.show();
+
+                vm.check.deleted_check_asset_types = vm.check?.check_asset_types.filter(
+                    item1 => !vm.check.asset_types_obj.some(item2 => item1.asset_type_id === item2.asset_type_id));
+                vm.check.asset_types = vm.check.asset_types_obj.map(item => item.asset_type_id);
+                vm.check.deleted_check_asset_types = vm.check.deleted_check_asset_types.map(item => item.check_asset_type_id);
+                
+
                 vm.$store
                     .dispatch("post", { uri: "updateCheck", data: vm.check })
                     .then((response) => {

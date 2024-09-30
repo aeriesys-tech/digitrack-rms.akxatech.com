@@ -78,6 +78,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr v-if="spare_types.length==0">
+                                        <td colspan="5" class="text-center">No records found</td>
+                                    </tr>
                                     <tr v-for="spare_type, key in spare_types" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{ spare_type.spare_type_code }}</td>
@@ -173,15 +176,15 @@ export default {
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateSpareTypes' , data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginateSpareTypes' , data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.spare_types = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.spare_types = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -192,12 +195,12 @@ export default {
 
         addSpareType() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addSpareType', data: vm.spare_type })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addSpareType', data: vm.spare_type })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -208,7 +211,7 @@ export default {
 
         deleteSpareType(spare_type) {
             let vm = this;
-            let loader = this.$loading.show();
+            let loader = vm.$loading.show();
             spare_type.status = spare_type.status == 1 ? 0 : 1;
             vm.$store
                 .dispatch("post", { uri: "deleteSpareType", data: spare_type })
@@ -227,20 +230,20 @@ export default {
 
         editSpareType(spare_type) {
             let vm = this;
-            this.spare_type = spare_type;
-            this.update = true;
-            this.status = false;
-            this.$refs.spare_type_code.focus();
+            vm.spare_type = spare_type;
+            vm.update = true;
+            vm.status = false;
+            vm.$refs.spare_type_code.focus();
         },
 
         updateSpareType() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateSpareType', data: this.spare_type })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateSpareType', data: vm.spare_type })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

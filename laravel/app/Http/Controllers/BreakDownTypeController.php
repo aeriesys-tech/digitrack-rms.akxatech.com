@@ -30,7 +30,7 @@ class BreakDownTypeController extends Controller
         if($request->search!='')
         {
             $query->where('break_down_type_code', 'like', "%$request->search%")
-                ->orWhere('break_down_type_name', 'like', "$request->search%");
+                ->orWhere('break_down_type_name', 'like', "%$request->search%");
         }
         $break_down_type = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return BreakDownTypeResource::collection($break_down_type);

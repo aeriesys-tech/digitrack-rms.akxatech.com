@@ -49,6 +49,8 @@ class UserCheckController extends Controller
             $query->where('reference_no', 'like', "%$request->search%")
                 ->orwhereHas('Asset', function($que) use($request){
                 $que->where('asset_code', 'like', "%$request->search%");
+            })->orwhereHas('AssetZone', function($que) use($request){
+                $que->where('zone_name', 'like', "%$request->search%");
             });
         }
         $user_checks = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 

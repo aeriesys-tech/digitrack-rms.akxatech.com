@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Service Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleServiceTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleServiceTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors?.service_types}">
                                                 <option value="">Select Service Type</option>
@@ -44,8 +44,11 @@
                                                     <label style="margin-left: 5px;">{{ service_type.service_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
-
+                                        </div> -->
+                                        <MultiSelect v-model="service_attribute.service_types_obj"  filter optionLabel="service_type_name" 
+                                            :options="service_types"  placeholder="Select Service Type" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.service_types ? error_style : ''"/>
+                                            <span v-if="errors?.service_types"><small class="text-danger">{{ errors?.service_types[0] }}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -117,8 +120,10 @@
     </template>
     <script>
 //      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "ServiceAttributes.Create",
         data() {
@@ -131,6 +136,7 @@
                     field_length: '',
                     is_required: "",
                     service_type_id: '',
+                    service_types_obj:[],
                     service_types:[],
                     list_parameter_id: '',
                     deleted_service_attribute_types:[],
@@ -143,6 +149,14 @@
                 errors: [],
                 status:true,
                 service_type_status:false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -168,6 +182,13 @@
                             .then(function (response) {
                                 vm.service_attribute = response.data.data;
                                 vm.service_attribute.deleted_service_attribute_types = []
+                                vm.service_attribute.service_types_obj = []
+
+                                vm.service_attribute.service_attribute_types.map(function(ele){
+                                    vm.service_attribute.service_types_obj.push({service_type_code: ele.service_type.service_type_code, 
+                                        service_type_id: ele.service_type.service_type_id, status: ele.service_type.status,
+                                        service_type_name: ele.service_type.service_type_name})
+                                })
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -238,11 +259,16 @@
 
             addServiceAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addServiceAttribute', data:this.service_attribute })
+                let loader = vm.$loading.show();
+
+                vm.service_attribute.service_types_obj.map(function(ele){
+                    vm.service_attribute.service_types.push(ele.service_type_id)
+                })
+
+                vm.$store.dispatch('post', { uri: 'addServiceAttribute', data:vm.service_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Service Attribute created successfully");
+                        vm.$store.dispatch('success',"Service Attribute created successfully");
                         vm.$router.push("/service_attributes");
                     })
                     .catch(function (error) {
@@ -254,12 +280,18 @@
 
             updateServiceAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateServiceAttribute', data:this.service_attribute })
+                let loader = vm.$loading.show();
+
+                vm.service_attribute.deleted_service_attribute_types = vm.service_attribute?.service_attribute_types.filter(
+                    item1 => !vm.service_attribute.service_types_obj.some(item2 => item1.service_type_id === item2.service_type_id));
+                vm.service_attribute.service_types = vm.service_attribute.service_types_obj.map(item => item.service_type_id);
+                vm.service_attribute.deleted_service_attribute_types = vm.service_attribute.deleted_service_attribute_types.map(item => item.service_attribute_type_id);
+                
+                vm.$store.dispatch('post', { uri: 'updateServiceAttribute', data:vm.service_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Service Attribute updated successfully");
-                        this.$router.push('/service_attributes');
+                        vm.$store.dispatch('success',"Service Attribute updated successfully");
+                        vm.$router.push('/service_attributes');
                     })
                     .catch(function (error) {
                         loader.hide();

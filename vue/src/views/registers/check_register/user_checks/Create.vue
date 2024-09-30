@@ -322,11 +322,11 @@ export default {
         addUserCheck(){
 
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addUserCheck', data:vm.user_check })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addUserCheck', data:vm.user_check })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
+                    vm.$store.dispatch('success',response.data.message);
                     vm.$router.push("/user_checks");
                 })
                 .catch(function (error) {
@@ -337,11 +337,11 @@ export default {
         },
         updateUserCheck(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateUserCheck', data:vm.user_check })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateUserCheck', data:vm.user_check })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
+                    vm.$store.dispatch('success',response.data.message);
                     vm.$router.push("/user_checks");
                 })
                 .catch(function (error) {

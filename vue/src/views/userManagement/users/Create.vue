@@ -158,11 +158,11 @@ export default {
 
         addUser(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addUser', data:this.user })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addUser', data:vm.user })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
+                    vm.$store.dispatch('success',response.data.message);
                     vm.$router.push("/users");
                 })
                 .catch(function (error) {
@@ -174,12 +174,12 @@ export default {
 
         updateUser(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateUser', data:this.user })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateUser', data:vm.user })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
-                    this.$router.push('/users');
+                    vm.$store.dispatch('success',response.data.message);
+                    vm.$router.push('/users');
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -190,11 +190,11 @@ export default {
 
         getUser(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'showUser', data:this.user })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'showUser', data:vm.user })
                 .then(response => {
                     loader.hide();
-                    this.user = response.data.data;
+                    vm.user = response.data.data;
                 })
                 .catch(function (error) {
                     loader.hide();

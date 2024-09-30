@@ -73,6 +73,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                     <tr v-if="users.length==0">
+                                        <td colspan="8" class="text-center">No records found</td>
+                                    </tr>
                                     <tr v-for="user, key in users" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{user.name}}</td>
@@ -163,7 +166,7 @@ export default {
     methods: {
         index() {
             let vm = this;
-            let loader = this.$loading.show();
+            let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'paginateUsers', data: vm.meta })
                 .then(response => {
                     loader.hide();

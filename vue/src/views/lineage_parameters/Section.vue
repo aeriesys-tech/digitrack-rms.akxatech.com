@@ -231,13 +231,13 @@ export default {
 
         updateSection() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateSection', data: this.section })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateSection', data: vm.section })
                 .then(response => {
                     loader.hide();
-                    this.update = false;
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.update = false;
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

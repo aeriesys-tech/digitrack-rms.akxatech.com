@@ -44,9 +44,14 @@ class ActivityAttributeController extends Controller
         
         if($request->search!='')
         {
-            $query->where('field_name', 'like', "$request->search%")
-            ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
-            ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%");    
+            $query->where('field_name', 'like', "%$request->search%")
+            ->orwhere('display_name', 'like', "%$request->search%")->orwhere('field_values', 'like', "%$request->search%")
+            ->orwhere('field_type', 'like', "%$request->search%")->orwhere('field_length', 'like', "%$request->search%")
+            ->orwhereHas('ActivityAttributeTypes', function($que) use($request){
+                $que->whereHas('Reason', function($qu) use($request){
+                    $qu->where('reason_name', 'like', "%$request->search%" );
+                });
+            });    
         }
         $activity = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return ActivityAttributeResource::collection($activity);

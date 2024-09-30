@@ -348,7 +348,7 @@
                 let vm = this;
                 vm.activity.cost = "";
                 vm.activity.note = "";
-                this.activity.activity_attributes.forEach((field) => {
+                vm.activity.activity_attributes.forEach((field) => {
                     field.activity_attribute_value.field_value = ""; // Clear the value
                 });
                 vm.$refs.activity_date.focus();

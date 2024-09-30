@@ -40,7 +40,10 @@ class UserController extends Controller
         {
             $query->where('name', 'like', "%$request->search%")
                  ->orWhere('email', 'like', "$request->search%")
-                 ->orWhere('mobile_no', 'like', "$request->search%");
+                 ->orWhere('mobile_no', 'like', "%$request->search%")
+                 ->orwhereHas('Role', function($que) use($request){
+                    $que->where('role', 'like', "%$request->search%");
+                 });
         }
         $user = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return UserResource::collection($user);

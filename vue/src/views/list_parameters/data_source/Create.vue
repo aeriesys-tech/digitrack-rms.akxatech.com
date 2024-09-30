@@ -134,7 +134,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">Assign To</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleAssetTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
                                                 <option value="">Select Assign To</option>
@@ -148,7 +148,11 @@
                                                     <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
+                                        <MultiSelect v-model="data_source.asset_types_obj"  filter optionLabel="asset_type_name" 
+                                            :options="asset_types"  placeholder="Select Assign To" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.asset_types ? error_style : ''"/>
+                                        <span v-if="errors?.asset_types"><small class="text-danger">{{ errors?.asset_types[0] }}</small></span>
                                     </div>
                                 </div>
                             </div>
@@ -169,10 +173,12 @@
 <script>
     import Pagination from "@/components/Pagination.vue";
     import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
             Pagination,
             Search,
+            MultiSelect
         },
         data() {
             return {
@@ -183,6 +189,7 @@
                     data_source_code: "",
                     data_source_name: "",
                     data_source_attributes: [],
+                    asset_types_obj:[],
                     asset_types: [],
                     frequency_id: "",
                     deleted_data_source_attribute_values: [],
@@ -197,6 +204,14 @@
                 frequencies: [],
                 show_data_sources: [],
                 asset_type_status: false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             };
         },
 
@@ -217,6 +232,12 @@
                             });
                             vm.data_source.deleted_data_source_attribute_values = [];
                             vm.data_source.deleted_data_source_asset_types = [];
+                            vm.data_source.asset_types_obj = []
+                            vm.data_source.data_source_asset_types.map(function(ele){
+                                vm.data_source.asset_types_obj.push({asset_type_code: ele.asset_types.asset_type_code, 
+                                    asset_type_id: ele.asset_types.asset_type_id, status: ele.asset_types.status,
+                                    asset_type_name: ele.asset_types.asset_type_name})
+                            })
                         })
                         .catch(function (error) {
                             vm.errors = error.response.data.errors;
@@ -237,7 +258,7 @@
                     let data_source_asset_type_id = data_source_asset_type[0].data_source_asset_type_id;
                     if (isChecked) {
                         if (vm.data_source.deleted_data_source_asset_types.includes(data_source_asset_type_id)) {
-                            let deleted_data_source_asset_types = this.data_source.deleted_data_source_asset_types.filter(function (element) {
+                            let deleted_data_source_asset_types = vm.data_source.deleted_data_source_asset_types.filter(function (element) {
                                 return element != data_source_asset_type_id;
                             });
                             vm.data_source.deleted_data_source_asset_types = deleted_data_source_asset_types;
@@ -248,7 +269,7 @@
                         }
                     }
                 }
-                console.log("Checked IDs:", this.data_source.asset_types);
+                console.log("Checked IDs:", vm.data_source.asset_types);
                 console.log("Unchecked IDs:", vm.data_source.deleted_data_source_asset_types);
             },
             toggleAssetTypeStatus() {
@@ -301,10 +322,14 @@
             },
 
             addDataSource() {
-                if (!this.validateFields()) {
+                let vm = this;
+                vm.data_source.asset_types_obj.map(function(ele){
+                    vm.data_source.asset_types.push(ele.asset_type_id)
+                })
+                if (!vm.validateFields()) {
                     return;
                 }
-                let vm = this;
+                
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "addDataSource", data: vm.data_source })
@@ -353,10 +378,15 @@
             },
 
             updateDataSource() {
-                if (!this.validateFields()) {
+                let vm = this;
+                vm.data_source.deleted_data_source_asset_types = vm.data_source?.data_source_asset_types.filter(
+                    item1 => !vm.data_source.asset_types_obj.some(item2 => item1.asset_type_id === item2.asset_type_id));
+                vm.data_source.asset_types = vm.data_source.asset_types_obj.map(item => item.asset_type_id);
+                vm.data_source.deleted_data_source_asset_types = vm.data_source.deleted_data_source_asset_types.map(item => item.data_source_asset_type_id);
+
+                if (!vm.validateFields()) {
                     return;
                 }
-                let vm = this;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "updateDataSource", data: vm.data_source })

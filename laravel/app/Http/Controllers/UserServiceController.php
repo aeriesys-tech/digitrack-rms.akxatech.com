@@ -46,12 +46,13 @@ class UserServiceController extends Controller
         if($request->search!='')
         {
             $query->where('service_no', 'like', "%$request->search%")
-                ->orWhere('service_cost', 'like', "%$request->search%")
-                ->orWhereHas('Service', function($quer) use($request){
-                    $quer->where('service_name', 'like', "%$request->search%");
-                })->orWhereHas('Asset', function($que) use($request){
-                    $que->where('asset_code', 'like', "%$request->search%");
-                });
+                ->orWhereHas('UserSpare', function($quer) use($request){
+                    $quer->whereHas('Service', function($que) use($request){
+                        $que->where('service_name','like', "%$request->search%");
+                    });
+                })->orwhereHas('Asset', function($quer) use($request){
+                    $quer->where('asset_code', 'like', "%$request->search%");
+                })->orwhere('service_date', 'like', "%$request->search%")->orwhere('next_service_date', 'like', "%$request->search%");
         }
         $user_service = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
         return UserServiceResource::collection($user_service);

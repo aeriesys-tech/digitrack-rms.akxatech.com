@@ -49,8 +49,13 @@ class UserActivityController extends Controller
         if($request->search!='')
         {
             $query->where('activity_no', 'like', "%$request->search%")
-                ->orWhere('activity_date', 'like', "$request->search%")
-                ->orWhere('status', 'like', "$request->search%");
+                ->orWhere('activity_date', 'like', "%$request->search%")
+                ->orWhere('status', 'like', "%$request->search%")
+                ->orwhereHas('Reason', function($que) use($request){
+                    $que->where('reason_name', 'like', "%$request->search%");
+                })->orwhereHas('Asset', function($que) use($request){
+                    $que->where('asset_code', 'like', "%$request->search%");
+                });
         }
         $speed = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
         return UserActivityResource::collection($speed);
