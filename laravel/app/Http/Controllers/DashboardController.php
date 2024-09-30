@@ -26,9 +26,9 @@ class DashboardController extends Controller
               $query->where('plant_id', $authPlantId);
           })->whereColumn('default_value', '!=', 'value')->count();
 
-        $pending_services = UserService::where('plant_id', $authPlantId)->where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->count();
+        $pending_services = UserService::where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->count();
 
-        $upcoming_jobs = UserService::where('plant_id', $authPlantId)->where('next_service_date', '>=', Carbon::now())
+        $upcoming_jobs = UserService::where('next_service_date', '>=', Carbon::now())
             ->where('is_latest', true)->count();
 
         return response()->json([

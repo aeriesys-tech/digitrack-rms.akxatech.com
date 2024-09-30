@@ -266,11 +266,11 @@ class UserServiceController extends Controller
             'keyword' => 'required'
         ]);
     
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query = UserService::query();
 
-        $query->where('plant_id', $authPlantId)
-        ->where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->get();
+        // $query->where('plant_id', $authPlantId)
+        $query->where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->get();
 
         if (isset($request->department_id)) 
         {
@@ -330,11 +330,11 @@ class UserServiceController extends Controller
             'keyword' => 'required'
         ]);
     
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         
         $query = UserService::query();
-        $query->where('plant_id', $authPlantId)
-          ->where('next_service_date', '>=', Carbon::now())->where('is_latest', true)->get();
+        // $query->where('plant_id', $authPlantId)
+          $query->where('next_service_date', '>=', Carbon::now())->where('is_latest', true)->get();
 
         if (isset($request->department_id)) 
         {

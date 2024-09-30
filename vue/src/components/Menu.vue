@@ -121,7 +121,7 @@
                         <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' || $route.name === 'BreakDownAttributes.Create' || $route.path === 'BreakDownAttributes.Edit'}" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Breakdown Attribute</span></router-link>
                     </li>
                       <li class="nav-item">
-                        <router-link to="/activity_attributes" v-bind:class="{ active: $route.path === '/activity_attributes' || $route.name === 'ActivityAttributes.Create' || $route.path === 'ActivityAttributes.Edit'}" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Activity Attribute</span></router-link>
+                        <router-link to="/activity_attributes" v-bind:class="{ active: $route.path === '/activity_attributes' || $route.name === 'ActivityAttributes.Create' || $route.path === 'ActivityAttributes.Edit'}" class="nav-link"><i class="ri-color-filter-line"></i> <span>Activity Attribute</span></router-link>
                     </li>
                 </ul>
             </div>
