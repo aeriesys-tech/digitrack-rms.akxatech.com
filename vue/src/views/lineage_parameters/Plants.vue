@@ -95,11 +95,11 @@
                                 <thead>
                                     <tr style="background-color: #9b9b9b; color: white;">
                                         <th>#</th>
-                                        <th @click="sort('area_id')">
+                                        <th @click="sort('area_name')">
                                             Area
                                             <span>
-                                                <i v-if="meta.keyword=='area_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='area_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='area_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='area_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>

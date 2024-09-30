@@ -209,13 +209,13 @@
                                             <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
 
                                             <div class="row g-2">
-                                                <div class="col">
+                                                <div class="col pt-2">
                                                     <!-- try starts heigth n diameter -->
                                                     <label class="form-label">Height</label><span class="text-danger"> *</span>
                                                     <input type="number" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
                                                     <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
                                                 </div>
-                                                <div class="col">
+                                                <div class="col pt-2">
                                                     <label class="form-label">Diameter</label><span class="text-danger"> *</span>
                                                     <input type="number" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
                                                     <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
@@ -254,17 +254,26 @@
                                         <div class="col-md-4" v-for="field, key in asset.asset_attributes" :key="key">
                                             <div v-if="field.field_type == 'Text'">
                                                 <label class="form-label">{{ field.display_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                                <input type="text" class="form-control" :placeholder="'Enter ' + field.display_name" :class="{ 'is-invalid': errors[field.display_name] }" v-model="field.asset_attribute_value.field_value" />
+                                                <input type="text" class="form-control" :placeholder="'Enter ' + field.display_name"  :maxlength="field.field_length" :class="{ 'is-invalid': errors[field.display_name] }" v-model="field.asset_attribute_value.field_value" />
 
                                                 <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                             </div>
                                             <div v-if="field.field_type == 'Number'">
                                                 <label class="form-label">{{ field.display_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                                <input
-                                                    type="text"
+                                                <!-- <input
+                                                    type="number"
                                                     class="form-control"
                                                     min="0"
                                                     oninput="validity.valid||(value='');"
+                                                    :placeholder="'Enter ' + field.display_name"
+                                                    :class="{ 'is-invalid': errors[field.display_name] }"
+                                                    v-model="field.asset_attribute_value.field_value"
+                                                /> -->
+                                                 <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    min="0"
+                                                    @input="validateNumberLength(field)"
                                                     :placeholder="'Enter ' + field.display_name"
                                                     :class="{ 'is-invalid': errors[field.display_name] }"
                                                     v-model="field.asset_attribute_value.field_value"
@@ -513,7 +522,18 @@
                 // }
             },
         },
-        methods: {
+    methods: {
+            validateNumberLength(field) {
+                if (field.asset_attribute_value.field_value) {
+                    const valueStr = String(field.asset_attribute_value.field_value);
+                    if (valueStr.length > field.field_length) {
+                        field.asset_attribute_value.field_value = valueStr.slice(0, field.field_length);
+                        this.errors[field.display_name] = [`${field.display_name} must be at most ${field.field_length} digits.`];
+                    } else {
+                        this.errors[field.display_name] = null;
+                    }
+                }
+            },
             getZoneNameError(index) {
                 let zone_names = Object.entries(this.errors);
                 let err = zone_names.filter(function (element) {
