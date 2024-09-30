@@ -49,7 +49,16 @@ class DataSourceController extends Controller
                     });
                 });
         }
-        $data_source = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'data_source_type_name') {
+            $query->join('data_source_types', 'data_sources.data_source_type_id', '=', 'data_source_types.data_source_type_id')->select('data_sources.*') 
+                  ->orderBy('data_source_types.data_source_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $data_source = $query->withTrashed()->paginate($request->per_page); 
         return DataSourceResource::collection($data_source);
     }
 

@@ -47,7 +47,16 @@ class ServiceController extends Controller
                     });
                 });
         }
-        $service = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+        
+        if ($request->keyword == 'service_type_name') {
+            $query->join('service_type', 'services.service_type_id', '=', 'service_type.service_type_id')->select('services.*') 
+                  ->orderBy('service_type.service_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $service = $query->withTrashed()->paginate($request->per_page); 
         return ServiceResource::collection($service);
     }
 

@@ -11,7 +11,7 @@
                     <li class="breadcrumb-item active" aria-current="page">Departments</li>
                 </ol>
                 <h4 class="main-title mb-2">Departments</h4>
-            </div> 
+            </div>
             <div class="row g-2">
                 <div class="col-4">
                     <form @submit.prevent="submitForm()">
@@ -28,7 +28,7 @@
                                             v-model="department.department_code"/>
                                         <span v-if="errors.department_code" class="invalid-feedback">{{ errors.department_code[0] }}</span>
                                     </div>
-    
+
                                     <div class="col-md-12">
                                         <label class="form-label">Department Name</label><span class="text-danger"> *</span>
                                         <input type="text" placeholder="Enter Department name" class="form-control" :class="{ 'is-invalid': errors.department_name }"
@@ -57,8 +57,8 @@
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
                                     <thead>
-                                        <tr class="text-center" style="background-color: #9b9b9b; color: white;">
-                                            <th>#</th>
+                                        <tr style="background-color: #9b9b9b; color: white;">
+                                            <th class="text-center">#</th>
                                             <th @click="sort('department_code')">Department Code
                                                 <span>
                                                     <i v-if="meta.keyword=='department_code' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
@@ -66,15 +66,15 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span></th>
                                             <th @click="sort('department_name')">Department Name
-                                            
+
                                                 <span>
                                                     <i v-if="meta.keyword=='department_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword=='department_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span></th>
-                                           
-                                            <th>Status</th>
-                                            <th>Actions</th>
+
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -162,7 +162,7 @@
             this.getDepartments();
             this.$refs.department_code.focus();
         },
-    
+
         methods: {
             submitForm() {
                 let vm = this;
@@ -190,7 +190,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addDepartment() {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -207,7 +207,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             deleteDepartment(department) {
                 let vm = this;
                 department.status = department.status == 1 ? 0 : 1;
@@ -222,13 +222,13 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             editDepartment(department) {
                 this.department = department;
                 this.status = false;
                 this.$refs.department_code.focus();
             },
-    
+
             updateDepartment() {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -244,7 +244,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getDepartments() {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -259,7 +259,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             onPageChange(page) {
                 this.meta.page = page;
                 this.index();
@@ -278,7 +278,7 @@
                 vm.status = true;
                 vm.index();
             },
-    
+
             search() {
                 let vm = this;
                 vm.meta.page = 1;
@@ -292,4 +292,3 @@
         }
     }
     </script>
-    

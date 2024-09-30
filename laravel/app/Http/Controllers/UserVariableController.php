@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserVariableResource;
 use App\Models\UserAssetVariable;
 use App\Models\AssetVariable;
+use App\Models\Asset;
 
 class UserVariableController extends Controller
 {
@@ -91,6 +92,7 @@ class UserVariableController extends Controller
 
     public function addUserVariable(Request $request)
     {
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required',
@@ -100,7 +102,7 @@ class UserVariableController extends Controller
             'user_asset_variables.*.*.value.required' => "value field is required"
         ]);
         $data['job_no'] = $this->generateJobNo();
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
         $data['user_id'] = Auth::id();
 
         $user_variable = UserVariable::create($data);
@@ -128,6 +130,7 @@ class UserVariableController extends Controller
 
     public function updateUserVariable(Request $request)
     {
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required|date',
@@ -137,7 +140,7 @@ class UserVariableController extends Controller
             'user_asset_variables.*.*.value.required' => "value field is required"
         ]);
         
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
         $user_variable = UserVariable::where('user_variable_id', $request->user_variable_id)->first();

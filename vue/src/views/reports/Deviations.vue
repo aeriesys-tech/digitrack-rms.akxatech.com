@@ -151,7 +151,9 @@
                                         </tr>
                                         <tr v-for="deviation, key in user_assets" :key="key">
                                             <td class="text-center">{{ meta.from + key }}</td>
-                                            <td>{{ deviation.department?.department_name }}</td>
+                                            <td>
+                                                {{ deviation?.asset?.asset_department_ids.map(department => department.department?.department_name).join(', ') }}
+                                            </td>
                                             <td>{{deviation?.asset?.asset_name}}</td>
                                             <td>{{deviation.asset_type?.asset_type_name}}</td>
                                             <td>{{deviation.user_check?.reference_no}}</td>

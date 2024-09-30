@@ -27,7 +27,7 @@ class UserAssetCheckDeviationResource extends JsonResource
             'check' => $check,
             'user_check_id' => $this->user_check_id,
             'user_check' => $user_check,
-            'asset' => $asset,
+            'asset' => new AssetResource($asset),
             'asset_type' => $asset_type,
             'asset_check_id' => $this->asset_check_id,
             'field_name' => $this->field_name,

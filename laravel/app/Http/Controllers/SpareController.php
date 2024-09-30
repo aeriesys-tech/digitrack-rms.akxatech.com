@@ -47,7 +47,14 @@ class SpareController extends Controller
                     });
                 });
         }
-        $spare = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+        if ($request->keyword == 'spare_type_name') {
+            $query->join('spare_types', 'spares.spare_type_id', '=', 'spare_types.spare_type_id')->select('spares.*') 
+                  ->orderBy('spare_types.spare_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+        $spare = $query->withTrashed()->paginate($request->per_page); 
         return SpareResource::collection($spare);
     }
 

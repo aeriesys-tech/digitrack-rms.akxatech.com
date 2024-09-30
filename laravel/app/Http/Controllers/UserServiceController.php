@@ -10,6 +10,7 @@ use App\Http\Resources\UserServicePendingResource;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\AssetZone;
+use App\Models\Asset;
 use App\Models\AssetSpare;
 
 class UserServiceController extends Controller
@@ -21,10 +22,10 @@ class UserServiceController extends Controller
             'per_page' => 'required',
             'keyword' => 'required'
         ]);
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query = UserService::query();
 
-        $query->where('plant_id', $authPlantId);
+        // $query->where('plant_id', $authPlantId);
 
         if(isset($request->plant_id))
         {
@@ -54,7 +55,16 @@ class UserServiceController extends Controller
                     $quer->where('asset_code', 'like', "%$request->search%");
                 })->orwhere('service_date', 'like', "%$request->search%")->orwhere('next_service_date', 'like', "%$request->search%");
         }
-        $user_service = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
+
+        if ($request->keyword == 'asset_code') {
+            $query->join('assets', 'user_services.asset_id', '=', 'assets.asset_id')->select('user_services.*') 
+                  ->orderBy('assets.asset_code', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+        
+        $user_service = $query->paginate($request->per_page); 
         return UserServiceResource::collection($user_service);
     }
 
@@ -69,7 +79,7 @@ class UserServiceController extends Controller
         // else {
         //     $data['asset_zone_id'] = $request->input('asset_zone_id', null);
         // }
-
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             // 'service_id' => 'required|exists:services,service_id',
             // 'service_cost' => 'nullable|sometimes',
@@ -82,7 +92,7 @@ class UserServiceController extends Controller
         ]);
 
         $data['service_no'] = $this->generateServiceNo();
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
         // //Previus False
@@ -91,9 +101,10 @@ class UserServiceController extends Controller
         //     ->where('service_id', $data['service_id'])
         //     ->update(['is_latest' => false]);
 
+        $asset_zone = AssetZone::where('asset_id', $request->asset_id)->first();
         $userServiceIds = UserSpare::whereHas('userService', function ($query) use ($request) {
             $query->where('asset_id', $request->asset_id);
-        })->where('service_id', $request->service_id)->pluck('user_service_id');
+        })->where('service_id', $request->service_id)->where('asset_zone_id', $asset_zone->asset_zone_id)->pluck('user_service_id');
     
         // Update is_latest to false for these user_service_id
         UserService::whereIn('user_service_id', $userServiceIds)->update(['is_latest' => false]);
@@ -149,7 +160,7 @@ class UserServiceController extends Controller
         // else {
         //     $data['asset_zone_id'] = $request->input('asset_zone_id', null);
         // }
-        
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'user_service_id' => 'required|exists:user_services,user_service_id',
             // 'service_id' => 'required|exists:services,service_id',
@@ -162,7 +173,7 @@ class UserServiceController extends Controller
             'deleted_user_spares' => 'nullable|array'
         ]);
 
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
         $service = UserService::where('user_service_id', $request->user_service_id)->first();
@@ -278,21 +289,21 @@ class UserServiceController extends Controller
         if($request->search!='')
         {
             $query->where(function($query) use ($request) {
-                $query->where('service_date', 'like', "{$request->search}%")
-                    ->orWhere('service_no', 'like', "{$request->search}%")  
-                    ->orWhere('next_service_date', 'like', "{$request->search}%") 
+                $query->where('service_date', 'like', "%{$request->search}%")
+                    ->orWhere('service_no', 'like', "%{$request->search}%")  
+                    ->orWhere('next_service_date', 'like', "%{$request->search}%") 
                     ->orwhereHas('Asset', function($que) use ($request) {
-                        $que->where('asset_code', 'like', "{$request->search}%");
+                        $que->where('asset_code', 'like', "%{$request->search}%");
                     })->orwhereHas('Asset', function($que) use($request){
                         $que->whereHas('AssetType', function($qu) use($request){
-                            $qu->where('asset_type_name', 'like', "{$request->search}%");
+                            $qu->where('asset_type_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('UserSpare', function($que) use($request){
                     $que->whereHas('Service',function($qu) use($request){
-                        $qu->where('service_name', 'like', "{$request->search}%");
+                        $qu->where('service_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('Asset.AssetDepartment.Department', function ($qu) use ($request) {
-                    $qu->where('department_name', 'like', "{$request->search}%");
+                    $qu->where('department_name', 'like', "%{$request->search}%");
                 });
             });
         }
@@ -342,21 +353,21 @@ class UserServiceController extends Controller
         if($request->search!='')
         {
             $query->where(function($query) use ($request) {
-                $query->where('service_date', 'like', "{$request->search}%")
-                    ->orWhere('service_no', 'like', "{$request->search}%")  
-                    ->orWhere('next_service_date', 'like', "{$request->search}%") 
+                $query->where('service_date', 'like', "%{$request->search}%")
+                    ->orWhere('service_no', 'like', "%{$request->search}%")  
+                    ->orWhere('next_service_date', 'like', "%{$request->search}%") 
                     ->orwhereHas('Asset', function($que) use ($request) {
-                        $que->where('asset_code', 'like', "{$request->search}%");
+                        $que->where('asset_code', 'like', "%{$request->search}%");
                     })->orwhereHas('Asset', function($que) use($request){
                         $que->whereHas('AssetType', function($qu) use($request){
-                            $qu->where('asset_type_name', 'like', "{$request->search}%");
+                            $qu->where('asset_type_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('UserSpare', function($que) use($request){
                     $que->whereHas('Service',function($qu) use($request){
-                        $qu->where('service_name', 'like', "{$request->search}%");
+                        $qu->where('service_name', 'like', "%{$request->search}%");
                     });
                 })->orwhereHas('Asset.AssetDepartment.Department', function ($qu) use ($request) {
-                    $qu->where('department_name', 'like', "{$request->search}%");
+                    $qu->where('department_name', 'like', "%{$request->search}%");
                 });
             });
         }
