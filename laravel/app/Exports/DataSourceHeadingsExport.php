@@ -2,27 +2,58 @@
 
 namespace App\Exports;
 
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Illuminate\Contracts\View\View;
 use App\Models\DataSourceAttribute;
+use App\Models\DataSourceAttributeType;
 
-class DataSourceHeadingsExport implements FromView
+class DataSourceHeadingsExport implements WithMultipleSheets
+{
+    private $data_source_type_ids;
+
+    public function __construct($data_source_type_ids)
+    {
+        $this->data_source_type_ids = $data_source_type_ids;
+    }
+
+    public function sheets(): array
+    {
+        $sheets = [];
+
+        foreach ($this->data_source_type_ids as $data_source_type_id) {
+            $sheets[] = new DataSourceHeadingsSheet($data_source_type_id);
+        }
+
+        return $sheets;
+    }
+}
+
+class DataSourceHeadingsSheet implements FromView, WithTitle, WithColumnWidths
 {
     private $data_source_type_id;
+    private $data_source_type_name;
 
     public function __construct($data_source_type_id)
     {
         $this->data_source_type_id = $data_source_type_id;
+
+        $data_sourceType = DataSourceAttributeType::with('DataSourceType')->where('data_source_type_id', $this->data_source_type_id)->first();
+
+        $this->data_source_type_name = $data_sourceType ? $data_sourceType->DataSourceType->data_source_type_name : 'Unknown Type';
     }
 
     public function view(): View
     {
         $data_sources = DataSourceAttribute::whereHas('DataSourceAttributeTypes', function($query) {
             $query->where('data_source_type_id', $this->data_source_type_id);
-        })->get();
+        })->get();                  
 
         $rows = [];
 
+        // headers
         $headers = [
             'DataSource Type',
             'DataSource Code',
@@ -30,48 +61,58 @@ class DataSourceHeadingsExport implements FromView
             'Asset Type'
         ];
 
+        $values = [
+            $this->data_source_type_name 
+        ];
+
         foreach ($data_sources as $data_source) {
             array_push($headers, $data_source->display_name);
         }
 
         array_push($rows, $headers);
+        array_push($rows, $values);
 
         return view('exports.DataSourceHeadings', [
             'rows' => $rows
         ]);
     }
 
+    public function title(): string
+    {
+        return "DataSource Type: " . $this->data_source_type_name;
+    }
+
     public function columnWidths(): array
     {
         return [
             'A' => 20, 
-            'B' => 50,  
-            'C' => 50,  
-            'D' => 30,  
-            'E' => 30,  
-            'F' => 30,
-            'G' => 30,
-            'H' => 30,
-            'I' => 30,
-            'J' => 30,
-            'K' => 30,
-            'L' => 30,
-            'M' => 30,
-            'N' => 30,
-            'O' => 30,
-            'P' => 30,
-            'Q' => 30,
-            'R' => 30,
-            'S' => 30,
-            'T' => 30,
-            'U' => 30,
-            'V' => 30,
-            'W' => 30,
-            'X' => 30,
-            'Y' => 30,
-            'Z' => 30,
-            'AA' => 30,
-            'AB' => 30,
+            'B' => 25,  
+            'C' => 25,  
+            'D' => 45,  
+            'E' => 45,  
+            'F' => 45,
+            'G' => 45,
+            'H' => 45,
+            'I' => 45,
+            'J' => 45,
+            'K' => 45,
+            'L' => 45,
+            'M' => 45,
+            'N' => 45,
+            'O' => 45,
+            'P' => 45,
+            'Q' => 45,
+            'R' => 45,
+            'S' => 45,
+            'T' => 45,
+            'U' => 45,
+            'V' => 45,
+            'W' => 45,
+            'X' => 45,
+            'Y' => 45,
+            'Z' => 45,
+            'AA' => 45,
+            'AB' => 45,
         ];
     }
 }
