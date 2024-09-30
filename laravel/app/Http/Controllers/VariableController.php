@@ -48,7 +48,16 @@ class VariableController extends Controller
                     });
                 });
         }
-        $variable = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'variable_type_name') {
+            $query->join('variable_types', 'variables.variable_type_id', '=', 'variable_types.variable_type_id')->select('variables.*') 
+                  ->orderBy('variable_types.variable_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $variable = $query->withTrashed()->paginate($request->per_page); 
         return VariableResource::collection($variable);
     }
 

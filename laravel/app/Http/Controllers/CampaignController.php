@@ -46,7 +46,16 @@ class CampaignController extends Controller
                     $que->where('asset_name', 'like', "%$request->search%");
                 });
         }
-        $campaign = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'asset_name') {
+            $query->join('assets', 'campaigns.asset_id', '=', 'assets.asset_id')->select('campaigns.*') 
+                  ->orderBy('assets.asset_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $campaign = $query->withTrashed()->paginate($request->per_page); 
         return CampaignResource::collection($campaign);
     }
 

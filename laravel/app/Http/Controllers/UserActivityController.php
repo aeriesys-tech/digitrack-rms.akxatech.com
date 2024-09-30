@@ -20,10 +20,10 @@ class UserActivityController extends Controller
             'keyword' => 'required'
         ]);
 
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query =  UserActivity::query();
 
-        $query->where('plant_id', $authPlantId);
+        // $query->where('plant_id', $authPlantId);
 
         if(isset($request->activity_no))
         {
@@ -57,12 +57,25 @@ class UserActivityController extends Controller
                     $que->where('asset_code', 'like', "%$request->search%");
                 });
         }
-        $speed = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
-        return UserActivityResource::collection($speed);
+        if ($request->keyword == 'asset_code') {
+            $query->join('assets', 'user_activities.asset_id', '=', 'assets.asset_id')->select('user_activities.*') 
+                  ->orderBy('assets.asset_code', $request->order_by);
+        }
+        elseif ($request->keyword == 'reason_code') {
+            $query->join('reasons', 'user_activities.reason_id', '=', 'reasons.reason_id')->select('user_activities.*') 
+                  ->orderBy('reasons.reason_code', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $activity = $query->paginate($request->per_page); 
+        return UserActivityResource::collection($activity);
     }
     
     public function addUserActivity(Request $request)
     {
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'activity_date' => 'required',
             'asset_id' => 'required|exists:assets,asset_id',
@@ -77,7 +90,7 @@ class UserActivityController extends Controller
     
         $data['activity_no'] = $this->generateActivityNo();
         $data['user_id'] = Auth::User()->user_id;
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
     
         $UserActivity = UserActivity::create($data);
 
@@ -104,6 +117,7 @@ class UserActivityController extends Controller
 
     public function updateUserActivity(Request $request)
     {
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'user_activity_id' => 'required|exists:user_activities,user_activity_id',
             'activity_date' => 'required',
@@ -117,7 +131,7 @@ class UserActivityController extends Controller
             'activity_attributes.*.activity_attribute_value.field_value' => 'nullable',
         ]);
         $data['user_id'] = Auth::User()->user_id;
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
 
         $UserActivity = UserActivity::where('user_activity_id', $request->user_activity_id)->first();
         $UserActivity->update($data);

@@ -40,7 +40,20 @@ class BreakDownListController extends Controller
                 $que->where('asset_name', 'like', "%$request->search%");
             });
         }
-        $break_down_list = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'asset_name') {
+            $query->join('assets', 'break_down_lists.asset_id', '=', 'assets.asset_id')->select('break_down_lists.*') 
+                  ->orderBy('assets.asset_name', $request->order_by);
+        }
+        elseif ($request->keyword == 'break_down_type_name') {
+            $query->join('break_down_types', 'break_down_lists.break_down_type_id', '=', 'break_down_types.break_down_type_id')->select('break_down_lists.*') 
+                  ->orderBy('break_down_types.break_down_type_name', $request->order_by);
+        }  
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $break_down_list = $query->withTrashed()->paginate($request->per_page); 
         return BreakDownListResource::collection($break_down_list);
     }
 

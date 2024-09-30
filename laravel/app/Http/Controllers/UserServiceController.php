@@ -10,6 +10,7 @@ use App\Http\Resources\UserServicePendingResource;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\AssetZone;
+use App\Models\Asset;
 use App\Models\AssetSpare;
 
 class UserServiceController extends Controller
@@ -21,10 +22,10 @@ class UserServiceController extends Controller
             'per_page' => 'required',
             'keyword' => 'required'
         ]);
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query = UserService::query();
 
-        $query->where('plant_id', $authPlantId);
+        // $query->where('plant_id', $authPlantId);
 
         if(isset($request->plant_id))
         {
@@ -54,7 +55,16 @@ class UserServiceController extends Controller
                     $quer->where('asset_code', 'like', "%$request->search%");
                 })->orwhere('service_date', 'like', "%$request->search%")->orwhere('next_service_date', 'like', "%$request->search%");
         }
-        $user_service = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
+
+        if ($request->keyword == 'asset_code') {
+            $query->join('assets', 'user_services.asset_id', '=', 'assets.asset_id')->select('user_services.*') 
+                  ->orderBy('assets.asset_code', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+        
+        $user_service = $query->paginate($request->per_page); 
         return UserServiceResource::collection($user_service);
     }
 
@@ -69,7 +79,7 @@ class UserServiceController extends Controller
         // else {
         //     $data['asset_zone_id'] = $request->input('asset_zone_id', null);
         // }
-
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             // 'service_id' => 'required|exists:services,service_id',
             // 'service_cost' => 'nullable|sometimes',
@@ -82,7 +92,7 @@ class UserServiceController extends Controller
         ]);
 
         $data['service_no'] = $this->generateServiceNo();
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
         // //Previus False
@@ -150,7 +160,7 @@ class UserServiceController extends Controller
         // else {
         //     $data['asset_zone_id'] = $request->input('asset_zone_id', null);
         // }
-        
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'user_service_id' => 'required|exists:user_services,user_service_id',
             // 'service_id' => 'required|exists:services,service_id',
@@ -163,7 +173,7 @@ class UserServiceController extends Controller
             'deleted_user_spares' => 'nullable|array'
         ]);
 
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
         $service = UserService::where('user_service_id', $request->user_service_id)->first();

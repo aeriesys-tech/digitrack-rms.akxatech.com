@@ -79,6 +79,17 @@ class AssetController extends Controller
                     ->orWhere('asset_type_name', 'like', "%$request->search%");
                 });
         }
+        if ($request->keyword == 'asset_type_name') {
+            $query->join('asset_type', 'assets.asset_type_id', '=', 'asset_type.asset_type_id')->select('assets.*') 
+                  ->orderBy('asset_type.asset_type_name', $request->order_by);
+        }
+        elseif ($request->keyword == 'reason_code') {
+            $query->join('reasons', 'user_activities.reason_id', '=', 'reasons.reason_id')->select('user_activities.*') 
+                  ->orderBy('reasons.reason_code', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
         $asset = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
         return AssetResource::collection($asset);
     }
