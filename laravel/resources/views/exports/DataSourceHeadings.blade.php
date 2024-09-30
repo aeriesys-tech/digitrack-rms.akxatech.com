@@ -11,12 +11,17 @@
     <table border="1" width="100%" class="table" style="border-collapse: collapse;">
         <thead>
             <tr>
-                @foreach($rows[0] as $heading)
-                    <th  style="width: 200%;">{{ $heading }}</th>
+                @foreach($rows[0] as $header)
+                    <th><strong>{{ $header }}</strong></th>
                 @endforeach
             </tr>
         </thead>
         <tbody>
+            <tr>
+                @foreach($rows[1] as $value)
+                    <td>{{ $value }}</td>
+                @endforeach
+            </tr>
         </tbody>
     </table>
 </body>
