@@ -117,8 +117,8 @@
                                             </ul>
                                         </div> -->
 
-                                        <MultiSelect v-model="spare.spare_asset_zones_obj"  filter optionLabel="zone_name" 
-                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="spare.spare_asset_zones_obj"  filter optionLabel="zone_name"
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.spare_asset_zones ? error_style : ''" :disabled="spare.spare_zone_read_only" />
                                         <span v-if="errors?.spare_asset_zones" class="invalid-feedback">{{ errors?.spare_asset_zones[0] }}</span>
 
@@ -383,8 +383,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="check.check_asset_zones_obj"  filter optionLabel="zone_name" 
-                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="check.check_asset_zones_obj"  filter optionLabel="zone_name"
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.check_asset_zones ? error_style : ''" :disabled="check.check_zone_read_only"/>
                                         <span v-if="errors?.check_asset_zones" class="invalid-feedback">{{ errors?.check_asset_zones[0] }}</span>
                                     </div>
@@ -552,8 +552,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="service.service_asset_zones_obj"  filter optionLabel="zone_name" 
-                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="service.service_asset_zones_obj"  filter optionLabel="zone_name"
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.service_asset_zones ? error_style : ''" :disabled="service.service_zone_read_only" />
                                         <span v-if="errors?.service_asset_zones" class="invalid-feedback">{{ errors?.service_asset_zones[0] }}</span>
                                     </div>
@@ -781,8 +781,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="variable.variable_asset_zones_obj"  filter optionLabel="zone_name" 
-                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="variable.variable_asset_zones_obj"  filter optionLabel="zone_name"
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.variable_asset_zones ? error_style : ''" :disabled="variable.variable_zone_read_only" />
                                         <span v-if="errors?.variable_asset_zones" class="invalid-feedback">{{ errors?.variable_asset_zones[0] }}</span>
                                     </div>
@@ -1023,8 +1023,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="datasource.data_source_asset_zones_obj"  filter optionLabel="zone_name" 
-                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="datasource.data_source_asset_zones_obj"  filter optionLabel="zone_name"
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.data_source_asset_zones ? error_style : ''" :disabled="datasource.data_source_zone_read_only" />
                                         <span v-if="errors?.data_source_asset_zones" class="invalid-feedback">{{ errors?.data_source_asset_zones[0] }}</span>
                                     </div>
@@ -1283,8 +1283,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="accessory.accessory_asset_zones_obj"  filter optionLabel="zone_name" 
-                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="accessory.accessory_asset_zones_obj"  filter optionLabel="zone_name"
+                                            :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.accessory_asset_zones ? error_style : ''" :disabled="accessory.accessory_zone_read_only" />
                                         <span v-if="errors?.accessory_asset_zones" class="invalid-feedback">{{ errors?.accessory_asset_zones[0] }}</span>
                                     </div>
@@ -2048,7 +2048,15 @@
         //         if(typeof this.check.check_id === 'number' && !this.check.asset_check_id)
         //             this.getCheck()
         //     }
-        // },
+    // },
+    watch: {
+        assets1() {
+        this.assets1 = this.$store.getters.assets;
+        // You can also add any additional logic here if needed
+    }
+    },
+
+
         beforeRouteEnter(to, from, next) {
             next((vm) => {
                 document.body.classList.add("sidebar-hide");
@@ -2174,7 +2182,7 @@
                 }
                 return color;
             },
-            editSpare(spare) {                
+            editSpare(spare) {
                 this.spare.spare_id = spare.spare_id;
                 this.spare.asset_id = spare.asset_id;
                 this.spare.asset_spare_id = spare.asset_spare_id;
@@ -2183,11 +2191,11 @@
                 this.spare.spare_asset_zones = [];
                 this.spare.spare_asset_zones.push(spare.asset_zone_id);
                 this.spare.spare_asset_zones_obj = []
-                this.spare.spare_asset_zones_obj.push({asset_id: spare.asset_zone.asset_id, 
+                this.spare.spare_asset_zones_obj.push({asset_id: spare.asset_zone.asset_id,
                     asset_zone_id: spare.asset_zone.asset_zone_id, status: spare.asset_zone.status,
-                    zone_name: spare.asset_zone.zone_name, diameter: spare.asset_zone.diameter, 
+                    zone_name: spare.asset_zone.zone_name, diameter: spare.asset_zone.diameter,
                     height: spare.asset_zone.height
-                    
+
                 });
                 this.spare.spare_zone_read_only = true;
                 this.spare.asset_zone_id = spare.asset_zone_id;
@@ -2208,11 +2216,11 @@
                 this.check.check_asset_zones.push(check.asset_zone_id);
                 this.check.asset_zone_id = check.asset_zone_id;
                 this.check.check_asset_zones_obj = [];
-                this.check.check_asset_zones_obj.push({asset_id: check.asset_zone.asset_id, 
+                this.check.check_asset_zones_obj.push({asset_id: check.asset_zone.asset_id,
                     asset_zone_id: check.asset_zone.asset_zone_id, status: check.asset_zone.status,
-                    zone_name: check.asset_zone.zone_name, diameter: check.asset_zone.diameter, 
+                    zone_name: check.asset_zone.zone_name, diameter: check.asset_zone.diameter,
                     height: check.asset_zone.height
-                    
+
                 });
                 this.check.check_zone_read_only = true;
             },
@@ -2230,15 +2238,15 @@
                 this.service.initial_asset_service_attributes = service.asset_service_attributes;
 
                 this.service.service_asset_zones_obj = []
-                this.service.service_asset_zones_obj.push({asset_id: service.asset_zone.asset_id, 
+                this.service.service_asset_zones_obj.push({asset_id: service.asset_zone.asset_id,
                     asset_zone_id: service.asset_zone.asset_zone_id, status: service.asset_zone.status,
-                    zone_name: service.asset_zone.zone_name, diameter: service.asset_zone.diameter, 
+                    zone_name: service.asset_zone.zone_name, diameter: service.asset_zone.diameter,
                     height: service.asset_zone.height
-                    
+
                 });
                 this.service.service_zone_read_only = true;
             },
-            editVariable(variable) {                
+            editVariable(variable) {
                 this.variable.variable_id = variable.variable_id;
                 this.variable.asset_id = variable.asset_id;
                 this.variable.asset_variable_id = variable.asset_variable_id;
@@ -2253,15 +2261,15 @@
                 this.variable.initial_asset_variable_attributes = variable.asset_variable_attributes;
 
                 this.variable.variable_asset_zones_obj = []
-                this.variable.variable_asset_zones_obj.push({asset_id: variable.asset_zone.asset_id, 
+                this.variable.variable_asset_zones_obj.push({asset_id: variable.asset_zone.asset_id,
                     asset_zone_id: variable.asset_zone.asset_zone_id, status: variable.asset_zone.status,
-                    zone_name: variable.asset_zone.zone_name, diameter: variable.asset_zone.diameter, 
+                    zone_name: variable.asset_zone.zone_name, diameter: variable.asset_zone.diameter,
                     height: variable.asset_zone.height
-                    
+
                 });
                 this.variable.variable_zone_read_only = true;
             },
-            editDataSource(datasource) {                
+            editDataSource(datasource) {
                 this.datasource.data_source_id = datasource.data_source_id;
                 this.datasource.asset_id = datasource.asset_id;
                 this.datasource.asset_data_source_id = datasource.asset_data_source_id;
@@ -2276,11 +2284,11 @@
                 this.datasource.initial_asset_datasource_attributes = datasource.asset_datasource_attributes;
 
                 this.datasource.data_source_asset_zones_obj = []
-                this.datasource.data_source_asset_zones_obj.push({asset_id: datasource.asset_zone.asset_id, 
+                this.datasource.data_source_asset_zones_obj.push({asset_id: datasource.asset_zone.asset_id,
                     asset_zone_id: datasource.asset_zone.asset_zone_id, status: datasource.asset_zone.status,
-                    zone_name: datasource.asset_zone.zone_name, diameter: datasource.asset_zone.diameter, 
+                    zone_name: datasource.asset_zone.zone_name, diameter: datasource.asset_zone.diameter,
                     height: datasource.asset_zone.height
-                    
+
                 });
                 this.datasource.data_source_zone_read_only = true;
             },
@@ -2382,7 +2390,7 @@
                         // vm.meta.from = response.data.meta.from;
                         vm.meta.lastPage = response.data.meta.last_page;
                         vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
-                        // vm.getChecks();                        
+                        // vm.getChecks();
                         if (vm.initial_status) {
                             vm.getAssetChecks();
                         }
@@ -2918,7 +2926,7 @@
                             vm.$store.dispatch("error", error.response.data.message);
                         });
                 }
-            },            
+            },
             deleteCheck(check) {
                 const confirmDelete = confirm("Are you sure you want to delete it ?");
                 if (confirmDelete) {
@@ -3271,8 +3279,19 @@
                   console.log('from:-----', from)
                 // this.$store.commit("setAssets", asset)
                 // this.$router.push({ name: 'Assets.DynamicAssets', params: { assets: from } });
+
+
+                // this.asset_type = from;
+                // this.assets1 = asset;
+
+
+
+                // try starts
+                this.$store.commit("setAssets", asset)
                 this.asset_type = from;
-                this.assets1 = asset;
+                this.assets1 = this.$store.getters.assets;
+
+                // try ends
             },
             discard() {
                 let vm = this;
