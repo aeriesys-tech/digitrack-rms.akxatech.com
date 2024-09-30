@@ -44,22 +44,15 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('role_id')">
+                                        <th @click="sort('role')">
                                             Role
                                             <span>
-                                                <i v-if="meta.keyword == 'role_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'role_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword == 'role' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'role' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('plant_id')">
-                                            Plant
-                                            <span>
-                                                <i v-if="meta.keyword == 'plant_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'plant_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                <i v-else class="fas fa-sort"></i>
-                                            </span>
-                                        </th>
+                                        <th >Plant</th>
                                         <th @click="sort('mobile_no')">
                                             Mobile No.
                                             <span>

@@ -69,11 +69,11 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th> -->
-                                        <th @click="sort('asset_id')">
+                                        <th @click="sort('asset_code')">
                                             Asset Code
                                             <span>
-                                                <i v-if="meta.keyword == 'asset_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'asset_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword == 'asset_code' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'asset_code' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
