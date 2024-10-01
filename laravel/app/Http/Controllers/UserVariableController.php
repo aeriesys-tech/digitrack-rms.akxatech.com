@@ -211,7 +211,7 @@ class UserVariableController extends Controller
         UserVariable::where('user_variable_id', $request->user_variable_id)->forceDelete();
 
         return response()->json([
-            'message' => "UserVariable Deleted Successfully"
+            'message' => "Process Register Deleted Successfully"
         ]);
     }
 

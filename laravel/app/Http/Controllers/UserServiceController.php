@@ -86,7 +86,7 @@ class UserServiceController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             // 'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'service_date' => 'required',
-            'next_service_date' => 'nullable|sometimes',
+            'next_service_date' => 'nullable|sometimes|after:service_date',
             'note' => 'nullable|sometimes',
             'is_latest' => 'nullable|sometimes|boolean'
         ]);
@@ -101,13 +101,29 @@ class UserServiceController extends Controller
         //     ->where('service_id', $data['service_id'])
         //     ->update(['is_latest' => false]);
 
-        $asset_zone = AssetZone::where('asset_id', $request->asset_id)->first();
-        $userServiceIds = UserSpare::whereHas('userService', function ($query) use ($request) {
-            $query->where('asset_id', $request->asset_id);
-        })->where('service_id', $request->service_id)->where('asset_zone_id', $asset_zone->asset_zone_id)->pluck('user_service_id');
+        // $asset_zone = AssetZone::where('asset_id', $request->asset_id)->first();
+
+        // $userServiceIds = UserSpare::whereHas('userService', function ($query) use ($request) {
+        //     $query->where('asset_id', $request->asset_id);
+        // })->where('service_id', $request->service_id)->where('asset_zone_id', $asset_zone->asset_zone_id)->pluck('user_service_id');
     
-        // Update is_latest to false for these user_service_id
-        UserService::whereIn('user_service_id', $userServiceIds)->update(['is_latest' => false]);
+        // // Update is_latest to false for these user_service_id
+        // UserService::whereIn('user_service_id', $userServiceIds)->update(['is_latest' => false]);
+
+        foreach ($request->user_spares as $spare) 
+        {
+            $service_id = $spare['service_id'];
+            $asset_zone_id = $spare['asset_zone_id'];
+    
+            $existingUserServiceIds = UserSpare::whereHas('userService', function ($query) use ($request) {
+                $query->where('asset_id', $request->asset_id);
+            })
+            ->where('service_id', $service_id)
+            ->where('asset_zone_id', $asset_zone_id)
+            ->pluck('user_service_id');
+    
+            UserService::whereIn('user_service_id', $existingUserServiceIds)->update(['is_latest' => false]);
+        }
 
         //New Value
         $data['is_latest'] = true;
@@ -168,7 +184,7 @@ class UserServiceController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             // 'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'service_date' => 'required',
-            'next_service_date' => 'nullable|sometimes',
+            'next_service_date' => 'nullable|sometimes|after:service_date',
             'note' => 'nullable|sometimes',
             'deleted_user_spares' => 'nullable|array'
         ]);
@@ -221,7 +237,7 @@ class UserServiceController extends Controller
         UserService::where('user_service_id', $request->user_service_id)->delete();
 
         return response()->json([
-            "message" => "UserService Deleted Successfully"
+            "message" => "Service Register Deleted Successfully"
         ]);
     }
 

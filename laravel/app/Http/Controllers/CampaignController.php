@@ -40,7 +40,7 @@ class CampaignController extends Controller
     
         if($request->search!='')
         {
-            $query->where('datasource', 'like', "%$request->search%")->orwhere('job_no', 'like', "%$request->search%")
+            $query->where('datasource', 'like', "%$request->search%")->orwhere('job_no', 'like', "%$request->search%")->orwhere('job_date_time', 'like', "%$request->search%")
             ->orwhere('datasource', 'like', "%$request->search%")->orwhere('script', 'like', "%$request->search%")
                 ->orwhereHas('Asset', function($que) use($request){
                     $que->where('asset_name', 'like', "%$request->search%");
@@ -146,7 +146,7 @@ class CampaignController extends Controller
         Campaign::where('campaign_id', $request->campaign_id)->forceDelete();
 
         return response()->json([
-            'message' => 'HealthCheck Deleted Successfully'
+            'message' => 'Health Check Register Deleted Successfully'
         ]);
     }
 

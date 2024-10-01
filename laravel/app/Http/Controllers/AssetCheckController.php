@@ -339,27 +339,31 @@ class AssetCheckController extends Controller
 
         if($request->search!='')
         {
-            $query->where('default_value', 'like', "%$request->search%")->orWhere('value', 'like', "%$request->search%")
-                ->orwhere('field_type', 'like', "%$request->search%")
-                ->orWhereHas('Check', function($que) use ($request) {
-                $que->where('field_name', 'like', "%$request->search%");
-            })->orWhereHas('UserCheck', function($qu) use ($request) {
-                $qu->whereHas('Asset', function($que) use ($request) {
-                    $que->where('asset_name', 'like', "%$request->search%");
-                });
-            })->orwhereHas('UserCheck', function($quer) use($request){
-                $quer->whereHas('Asset', function($que) use($request){
-                    $que->whereHas('AssetType', function($qu) use($request){
-                        $qu->where('asset_type_name', 'like', "%$request->search%");
+            $query->where(function($query) use ($request) {
+                $query->where('default_value', 'like', "%$request->search%")->orWhere('value', 'like', "%$request->search%")
+                    ->orwhere('field_type', 'like', "%$request->search%")
+                    ->orWhereHas('Check', function($que) use ($request) {
+                    $que->where('field_name', 'like', "%$request->search%");
+                })->orWhereHas('UserCheck', function($qu) use ($request) {
+                    $qu->whereHas('Asset', function($que) use ($request) {
+                        $que->where('asset_name', 'like', "%$request->search%");
                     });
-                });
-            })->orwhereHas('UserCheck', function($que) use($request){
-                $que->whereHas('Asset',function($q) use($request){
-                    $q->whereHas('AssetDepartment', function($qu) use($request){
-                        $qu->whereHas('Department', function($qr) use($request){
-                            $qr->where('department_name', 'like', "%$request->search%");
+                })->orwhereHas('UserCheck', function($quer) use($request){
+                    $quer->whereHas('Asset', function($que) use($request){
+                        $que->whereHas('AssetType', function($qu) use($request){
+                            $qu->where('asset_type_name', 'like', "%$request->search%");
                         });
                     });
+                })->orwhereHas('UserCheck', function($que) use($request){
+                    $que->whereHas('Asset',function($q) use($request){
+                        $q->whereHas('AssetDepartment', function($qu) use($request){
+                            $qu->whereHas('Department', function($qr) use($request){
+                                $qr->where('department_name', 'like', "%$request->search%");
+                            });
+                        });
+                    });
+                })->orwhereHas('UserCheck', function($que) use($request){
+                    $que->where('reference_no', 'like', "%$request->search%");
                 });
             });
         }

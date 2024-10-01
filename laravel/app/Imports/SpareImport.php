@@ -1,145 +1,171 @@
 <?php
 
-// namespace App\Imports;
-
-// use App\Models\Spare;
-// use App\Models\SpareAssetType;
-// use App\Models\SpareAttributeValue;
-// use Maatwebsite\Excel\Concerns\ToCollection;
-// use Illuminate\Support\Collection;
-// use Maatwebsite\Excel\Concerns\WithHeadingRow;
-// use Auth;
-
-// class SpareImport implements ToCollection, WithHeadingRow
-// {
-//     public function collection(Collection $rows)
-//     {
-//         $userPlantId = Auth::user()->plant_id;
-
-//         foreach ($rows as $row) 
-//         {
-//             if (!isset($row['spare_code']) || !isset($row['spare_name']) || !isset($row['spare_type_id'])) 
-//             {
-//                 continue; 
-//             }
-
-//             $data = [
-//                 'spare_code' => $row['spare_code'],
-//                 'spare_name' => $row['spare_name'],
-//                 'spare_type_id' => $row['spare_type_id'],
-//                 'plant_id' => $userPlantId,
-//             ];
-
-//             $spare = Spare::create($data);
-
-//             if (isset($row['asset_types'])) 
-//             {
-//                 $assetTypes = explode(',', $row['asset_types']);
-//                 foreach ($assetTypes as $asset_type_id) 
-//                 {
-//                     SpareAssetType::create([
-//                         'spare_id' => $spare->spare_id,
-//                         'asset_type_id' => trim($asset_type_id),
-//                     ]);
-//                 }
-//             }
-
-//             if (isset($row['spare_attributes'])) 
-//             {
-//                 $spareAttributes = json_decode($row['spare_attributes'], true); 
-
-//                 foreach ($spareAttributes as $attribute) 
-//                 {
-//                     if (isset($attribute['spare_attribute_id'], $attribute['spare_attribute_value']['field_value'])) 
-//                     {
-//                         SpareAttributeValue::create([
-//                             'spare_id' => $spare->spare_id,
-//                             'spare_attribute_id' => $attribute['spare_attribute_id'],
-//                             'field_value' => $attribute['spare_attribute_value']['field_value'],
-//                         ]);
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
-
 namespace App\Imports;
 
 use App\Models\Spare;
 use App\Models\SpareAssetType;
+use App\Models\AssetType;
 use App\Models\SpareAttributeValue;
+use App\Models\SpareAttributeType;
+use App\Models\SpareAttribute;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class SpareImport implements ToCollection, WithHeadingRow
 {
+    // public function collection(Collection $rows)
+    // {
+    //     $errorRows = [];
+
+    //     // Fetch Asset Types and Spare Types to map names to IDs
+    //     $assetTypes = SpareAssetType::whereHas('AssetType')->with('AssetType')->get()
+    //         ->keyBy(function ($spareAssetType) {
+    //             return $spareAssetType->AssetType->asset_type_name;
+    //         });
+
+    //     // dd($assetTypes);
+
+    //     $spareTypes = SpareAttributeType::whereHas('SpareType')->with('SpareType')->get()
+    //         ->keyBy(function ($spareAttributeType) {
+    //             return $spareAttributeType->SpareType->spare_type_name;
+    //         });
+
+    //     $spareAttributes = SpareAttribute::all()->keyBy('display_name');
+
+    //     // dd(type($rows));
+    //     // dd(gettype($rows));
+
+    //     foreach ($rows as $row) 
+    //     {
+            
+    //         if (!isset($row['spare_code']) || !isset($row['spare_name']) || !isset($row['spare_type'])) 
+    //         {
+    //             $errorRows[] = $row; 
+    //             continue; 
+    //         }
+
+    //         $data = [
+    //             'spare_type_id' => $spareTypes->get(trim($row['spare_type'])) ? 
+    //                 $spareTypes->get(trim($row['spare_type']))->spare_type_id : null,
+    //             'spare_code' => trim($row['spare_code']),
+    //             'spare_name' => trim($row['spare_name']),
+    //         ];
+
+    //         // Log::info($row['asset_type']);
+    //         $spare = Spare::create($data);
+
+    //         if (isset($row['asset_type'])) 
+    //         {
+    //             $assetTypeNames = explode(',', $row['asset_type']);
+    //             $assetTypeNames = array_map('trim', $assetTypeNames);
+            
+    //             $assetTypes = AssetType::whereIn('asset_type_name', $assetTypeNames)->get();
+            
+    //             if ($assetTypes->isNotEmpty()) {
+    //                 foreach ($assetTypes as $assetType) {
+    //                     $assetTypeId = $assetType->asset_type_id;
+            
+    //                     SpareAssetType::create([
+    //                         'spare_id' => $spare->spare_id,
+    //                         'asset_type_id' => $assetTypeId,
+    //                     ]);
+    //                 }
+    //             } 
+    //         }
+    //         foreach ($row as $key => $value) 
+    //         {
+    //             if (!in_array($key, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) {
+    //                 $spareAttribute = $spareAttributes->get(trim($key));
+    //                 if ($spareAttribute) {
+    //                     SpareAttributeValue::create([
+    //                         'spare_id' => $spare->spare_id,
+    //                         'spare_attribute_id' => $spareAttribute->spare_attribute_id,
+    //                         'field_value' => trim($value),
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
     public function collection(Collection $rows)
     {
-        $userPlantId = Auth::user()->plant_id;
-        $successCount = 0;
         $errorRows = [];
+  
+        $assetTypes = SpareAssetType::whereHas('AssetType')->with('AssetType')->get()
+            ->keyBy(function ($spareAssetType) {
+                return $spareAssetType->AssetType->asset_type_name;
+            });
+
+        $spareTypes = SpareAttributeType::whereHas('SpareType')->with('SpareType')->get()
+            ->keyBy(function ($spareAttributeType) {
+                return $spareAttributeType->SpareType->spare_type_name;
+            });
+
+        $spareAttributes = SpareAttribute::all()->keyBy('display_name');
 
         foreach ($rows as $row) 
         {
-            if (!isset($row['spare_code']) || !isset($row['spare_name']) || !isset($row['spare_type_id'])) 
+            if (!isset($row['spare_code']) || !isset($row['spare_name']) || !isset($row['spare_type'])) 
             {
-                $errorRows[] = $row; // Store invalid rows for logging
+                $errorRows[] = $row; 
                 continue; 
             }
 
+            $spareTypeId = $spareTypes->get(trim($row['spare_type'])) ? 
+                $spareTypes->get(trim($row['spare_type']))->spare_type_id : null;
+
+            // if ($spareTypeId === null) {
+            //     Log::error('Spare Type ID is null for spare type: ' . trim($row['spare_type']));
+            //     $errorRows[] = $row; 
+            //     continue;
+            // }
+
             $data = [
-                'spare_code' => $row['spare_code'],
-                'spare_name' => $row['spare_name'],
-                'spare_type_id' => $row['spare_type_id'],
-                'plant_id' => $userPlantId,
+                'spare_type_id' => $spareTypeId,
+                'spare_code' => trim($row['spare_code']),
+                'spare_name' => trim($row['spare_name']),
             ];
 
-            try {
-                $spare = Spare::create($data);
-                $successCount++;
+            $spare = Spare::create($data);
 
-                // Handle asset types
-                if (isset($row['asset_types'])) 
-                {
-                    $assetTypes = explode(',', $row['asset_types']);
-                    foreach ($assetTypes as $asset_type_id) 
-                    {
+            // Handle asset types
+            if (isset($row['asset_type'])) 
+            {
+                $assetTypeNames = explode(',', $row['asset_type']);
+                $assetTypeNames = array_map('trim', $assetTypeNames);
+            
+                $assetTypes = AssetType::whereIn('asset_type_name', $assetTypeNames)->get();
+            
+                if ($assetTypes->isNotEmpty()) {
+                    foreach ($assetTypes as $assetType) {
+                        $assetTypeId = $assetType->asset_type_id;
+            
                         SpareAssetType::create([
                             'spare_id' => $spare->spare_id,
-                            'asset_type_id' => trim($asset_type_id),
+                            'asset_type_id' => $assetTypeId,
+                        ]);
+                    }
+                } 
+            }
+            
+            // Handle spare attributes
+            foreach ($row as $key => $value) 
+            {
+                if (!in_array($key, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) {
+                    $spareAttribute = $spareAttributes->get(trim($key));
+                    if ($spareAttribute) {
+                        SpareAttributeValue::create([
+                            'spare_id' => $spare->spare_id,
+                            'spare_attribute_id' => $spareAttribute->spare_attribute_id,
+                            'field_value' => trim($value),
                         ]);
                     }
                 }
-
-                // Handle spare attributes
-                if (isset($row['spare_attributes'])) 
-                {
-                    $spareAttributes = json_decode($row['spare_attributes'], true); 
-                    foreach ($spareAttributes as $attribute) 
-                    {
-                        if (isset($attribute['spare_attribute_id'], $attribute['spare_attribute_value']['field_value'])) 
-                        {
-                            SpareAttributeValue::create([
-                                'spare_id' => $spare->spare_id,
-                                'spare_attribute_id' => $attribute['spare_attribute_id'],
-                                'field_value' => $attribute['spare_attribute_value']['field_value'],
-                            ]);
-                        }
-                    }
-                }
-            } catch (\Exception $e) {
-                Log::error('Error importing spare: ' . $e->getMessage(), ['row' => $row]);
-                $errorRows[] = $row; // Store failed row for error reporting
             }
         }
-
-        // Optional: Log success and errors
-        Log::info('Spare import completed. Success: ' . $successCount . ', Errors: ' . count($errorRows));
-
-        // Optionally return the success/error counts or detailed reports
     }
 }

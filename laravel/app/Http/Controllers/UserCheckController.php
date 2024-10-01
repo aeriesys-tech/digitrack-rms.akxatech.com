@@ -193,7 +193,7 @@ class UserCheckController extends Controller
         UserCheck::where('user_check_id', $request->user_check_id)->delete();
 
         return response()->json([
-            'message' => "UserCheck Deleted Successfully"
+            'message' => "Check Register Deleted Successfully"
         ]);
     }
 

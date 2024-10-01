@@ -236,7 +236,7 @@ class SpareController extends Controller
     public function downloadSpareHeadings(Request $request)
     {
         $filename = "Spare Headings.xlsx";
-        $excel = new SpareHeadingsExport($request->spare_type_id);
+        $excel = new SpareHeadingsExport($request->spare_type_ids);
         
         return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }    

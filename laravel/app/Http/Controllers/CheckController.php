@@ -61,7 +61,16 @@ class CheckController extends Controller
                     });
                 });
         }
-        $check = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'department_name') {
+            $query->join('departments', 'checks.department_id', '=', 'departments.department_id')->select('checks.*') 
+                  ->orderBy('departments.department_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $check = $query->withTrashed()->paginate($request->per_page); 
         return CheckResource::collection($check);
     }
 

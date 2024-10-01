@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ActivityAttributeResource;
 use App\Models\ActivityAttribute;
 use App\Models\ActivityAttributeValue;
+use App\Models\Asset;
 
 class UserActivityController extends Controller
 {
@@ -172,7 +173,7 @@ class UserActivityController extends Controller
         ActivityAttributeValue::where('user_activity_id', $request->user_activity_id)->forceDelete();
         $activity = UserActivity::where('user_activity_id', $request->user_activity_id)->forceDelete();
         return response()->json([
-            "message" => "UserActivity Deleted Successfully"
+            "message" => "Activity Register Deleted Successfully"
         ]);
     }
 
