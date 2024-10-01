@@ -355,7 +355,6 @@
                 vm.errors = [];
             },
             getActivityTypeFields(activity) {
-                console.log("activity", activity);
                 let vm = this;
                 let loader = vm.$loading.show();
                 if (vm.deleted_activity_attribute_values.length) {

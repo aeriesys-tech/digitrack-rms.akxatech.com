@@ -84,9 +84,6 @@ export default {
                 let result = vm.data?.filter(function (el) {
                     return el[vm.id] == vm.initialize
                 });
-                // console.log('vm.id:---',vm.id)
-                // console.log('el[vm.id]:---',result)
-                // console.log('vm.label:---',vm.label)
                 if (result && result.length != 0) {
                     if (result[0][vm.label2])
                         return result[0][vm.label] + ' :: ' + result[0][vm.label2]

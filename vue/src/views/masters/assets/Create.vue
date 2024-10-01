@@ -553,7 +553,6 @@
                 }
 
                 let value = event?.target?.value?.replace(/[^0-9]/g, "");
-                // console.log('value:----',value ? Number(value) : null)
 
                 if (value >= 1) {
                     let popped_data = asset.no_of_zones - value;
@@ -632,17 +631,13 @@
             },
 
             updateDepartemnts(event, asset_departments) {
-                // console.log(event.target.value)
-                // console.log(asset_departments)
                 let vm = this;
                 const isChecked = event.target.checked;
                 let departments = asset_departments.asset_department_ids.filter(function (element) {
                     return element.department_id == event.target.value;
                 });
-                // console.log('departments:---', departments, isChecked, vm.asset.deleted_asset_departments)
                 if (departments.length) {
                     let department_id = departments[0].asset_department_id;
-                    // console.log('department_id:-----', department_id)
                     if (isChecked) {
                         if (vm.asset.deleted_asset_departments.includes(department_id)) {
                             let deleted_asset_departments = vm.asset.deleted_asset_departments.filter(function (element) {
@@ -911,8 +906,6 @@
                         vm.asset.area_name = area[0].Area?.area_name;
                     }
                 }
-                console.log("asset");
-                console.log(vm.asset);
             },
         },
     };

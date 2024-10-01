@@ -10,7 +10,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Assets</h4>
             </div>
-            <router-link v-can="'assets.create'" to="/asset/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD Asset</router-link>
+            <router-link v-can="'assets.create'" to="/asset/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ASSET</router-link>
         </div>
         <div class="row">
             <div class="col-12">

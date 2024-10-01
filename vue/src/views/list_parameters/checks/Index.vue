@@ -45,10 +45,10 @@
                             <thead>
                                 <tr class="" style="background-color: #9b9b9b; color: white;">
                                     <th class="text-center">#</th>
-                                    <th @click="sort('department_id')">Department
+                                    <th @click="sort('department_name')">Department
                                         <span>
-                                            <i v-if="meta.keyword=='department_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                            <i v-else-if="meta.keyword=='department_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                            <i v-if="meta.keyword=='department_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                            <i v-else-if="meta.keyword=='department_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                             <i v-else class="fas fa-sort"></i>
                                         </span></th>
                                     <th @click="sort('field_name')">Field Name

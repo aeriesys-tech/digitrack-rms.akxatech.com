@@ -261,7 +261,6 @@ export default {
             vm.status = true;
             vm.index();
         },
-
         search() {
             let vm = this;
             vm.meta.page = 1;

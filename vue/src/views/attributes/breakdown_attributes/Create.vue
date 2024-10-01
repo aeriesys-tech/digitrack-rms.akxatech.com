@@ -45,8 +45,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="break_down_attribute.break_down_types_obj"  filter optionLabel="break_down_type_name" 
-                                            :options="break_down_types"  placeholder="Select Break Down Type" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="break_down_attribute.break_down_types_obj"  filter optionLabel="break_down_type_name"
+                                            :options="break_down_types"  placeholder="Select Break Down Type" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.break_down_types ? error_style : ''"/>
                                         <span v-if="errors?.break_down_types"><small class="text-danger">{{ errors?.break_down_types[0] }}</small></span>
                                     </div>
@@ -129,7 +129,6 @@
         </div>
     </template>
     <script>
-//      import Search from "@/components/Search.vue";
     import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
@@ -195,7 +194,7 @@
                                 vm.break_down_attribute.break_down_types_obj = []
 
                                 vm.break_down_attribute.break_down_attribute_types.map(function(ele){
-                                    vm.break_down_attribute.break_down_types_obj.push({break_down_type_code: ele.break_down_type.break_down_type_code, 
+                                    vm.break_down_attribute.break_down_types_obj.push({break_down_type_code: ele.break_down_type.break_down_type_code,
                                         break_down_type_id: ele.break_down_type.break_down_type_id, status: ele.break_down_type.status,
                                         break_down_type_name: ele.break_down_type.break_down_type_name})
                                 })
@@ -291,13 +290,10 @@
             updateBreakDownAttribute(){
                 let vm = this;
                 let loader = vm.$loading.show();
-
                 vm.break_down_attribute.deleted_break_down_attribute_types = vm.break_down_attribute?.break_down_attribute_types.filter(
-                    item1 => !vm.break_down_attribute.break_down_types_obj.some(item2 => item1.break_down_type_id === item2.break_down_type_id));
+                item1 => !vm.break_down_attribute.break_down_types_obj.some(item2 => item1.break_down_type_id === item2.break_down_type_id));
                 vm.break_down_attribute.break_down_types = vm.break_down_attribute.break_down_types_obj.map(item => item.break_down_type_id);
                 vm.break_down_attribute.deleted_break_down_attribute_types = vm.break_down_attribute.deleted_break_down_attribute_types.map(item => item.break_down_attribute_type_id);
-                
-                
                 vm.$store.dispatch('post', { uri: 'updateBreakDownAttribute', data:vm.break_down_attribute })
                     .then(response => {
                         loader.hide();
@@ -324,7 +320,6 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
-
             },
             getBreakDownAttribute(){
                 let vm = this;
@@ -341,20 +336,20 @@
                     });
             },
             discard() {
-                    let vm = this;
-                    vm.break_down_attribute.field_name = "";
-                    vm.break_down_attribute.field_type = "";
-                    vm.break_down_attribute.display_name = "";
-                    vm.break_down_attribute.field_values = "";
-                    vm.break_down_attribute.field_length = "";
-                    vm.break_down_attribute.is_required = "";
-                    vm.break_down_attribute.break_down_type_id = "";
-                    vm.break_down_attribute.list_parameter_id = "";
-                    // vm.$refs.field_name.focus();
-                    vm.break_down_attribute.break_down_types = [],
-                    vm.errors = [];
-                    vm.status = true;
-                },
+                let vm = this;
+                vm.break_down_attribute.field_name = "";
+                vm.break_down_attribute.field_type = "";
+                vm.break_down_attribute.display_name = "";
+                vm.break_down_attribute.field_values = "";
+                vm.break_down_attribute.field_length = "";
+                vm.break_down_attribute.is_required = "";
+                vm.break_down_attribute.break_down_type_id = "";
+                vm.break_down_attribute.list_parameter_id = "";
+                // vm.$refs.field_name.focus();
+                vm.break_down_attribute.break_down_types = [],
+                vm.errors = [];
+                vm.status = true;
+            },
 
         }
     }

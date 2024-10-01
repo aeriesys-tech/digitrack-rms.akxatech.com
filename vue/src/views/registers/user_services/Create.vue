@@ -318,7 +318,6 @@
                 let asset_zone = vm.asset_zones?.filter(function (ele) {
                     return ele.asset_zone_id == value;
                 });
-                console.log("aaa--",asset_zone,value)
                  if (asset_zone.length) {
                     vm.user_service.asset_zone_id = asset_zone[0].asset_zone_id
                     vm.user_spare.asset_zone.zone_name = asset_zone[0].zone_name;
@@ -564,7 +563,6 @@
                     });
                     vm.user_service.user_spares[spare_data.key] = spare_data;
                     vm.user_service.user_spares.splice(vm.user_spare.key, 1);
-                    console.log("push",vm.user_spare)
                     vm.user_service.user_spares.push({
                         asset_zone_id: vm.user_spare.asset_zone_id,
                          asset_zone: {

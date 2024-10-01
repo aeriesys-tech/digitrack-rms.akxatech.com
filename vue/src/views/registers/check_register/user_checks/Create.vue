@@ -217,9 +217,6 @@ export default {
                     .dispatch("post", uri)
                     .then(function (response) {
                         vm.user_check = response.data.data;
-                        console.log("ss--",vm.user_check)
-
-
                     })
                     .catch(function (error) {
                         vm.errors = error.response.data.errors;

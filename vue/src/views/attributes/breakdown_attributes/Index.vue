@@ -61,14 +61,6 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
-                                            <!-- <th @click="sort('list_parameter_id')">
-                                                List
-                                                <span>
-                                                    <i v-if="meta.keyword == 'list_parameter_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'list_parameter_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th> -->
                                             <th @click="sort('field_length')">
                                                 Field Length
                                                 <span>
@@ -85,14 +77,7 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
-                                            <th>
-                                                Break Down Type
-                                                <!-- <span>
-                                                    <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span> -->
-                                            </th>
+                                            <th>Break Down Type</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Actions</th>
                                         </tr>
@@ -107,7 +92,6 @@
                                             <td>{{break_down_attribute.display_name}}</td>
                                             <td>{{break_down_attribute.field_type}}</td>
                                             <td>{{break_down_attribute.field_values}}</td>
-                                            <!-- <td>{{break_down_attribute?.list_parameter?.list_parameter_name }}</td> -->
                                             <td>{{break_down_attribute.field_length}}</td>
                                             <!-- <td v-if="break_down_parameter.is_required">Yes</td> -->
                                             <td>{{break_down_attribute?.is_required==1 ?'Yes' : 'No'  }}</td>
