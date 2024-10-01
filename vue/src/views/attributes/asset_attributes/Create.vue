@@ -115,8 +115,6 @@
                                     </select>
                                     <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                 </div> -->
-
-
                             </div>
                         </div>
                         <div class="card-footer text-end">

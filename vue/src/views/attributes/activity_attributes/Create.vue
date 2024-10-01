@@ -46,8 +46,8 @@
                                             </ul>
                                         </div> -->
 
-                                        <MultiSelect v-model="activity_attribute.activity_types_obj"  filter optionLabel="reason_name" 
-                                            :options="activity_types"  placeholder="Select Activity Type" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="activity_attribute.activity_types_obj"  filter optionLabel="reason_name"
+                                            :options="activity_types"  placeholder="Select Activity Type" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.activity_types ? error_style : ''"/>
                                         <span v-if="errors?.activity_types"><small class="text-danger">{{ errors?.activity_types[0] }}</small></span>
                                     </div>
@@ -195,7 +195,7 @@
                                 vm.activity_attribute.activity_types_obj = []
 
                                 vm.activity_attribute.activity_attribute_types.map(function(ele){
-                                    vm.activity_attribute.activity_types_obj.push({reason_code: ele.activity_type.reason_code, 
+                                    vm.activity_attribute.activity_types_obj.push({reason_code: ele.activity_type.reason_code,
                                         reason_id: ele.activity_type.reason_id, status: ele.activity_type.status,
                                         reason_name: ele.activity_type.reason_name})
                                 })
@@ -299,7 +299,7 @@
                     item1 => !vm.activity_attribute.activity_types_obj.some(item2 => item1.reason_id === item2.reason_id));
                 vm.activity_attribute.activity_types = vm.activity_attribute.activity_types_obj.map(item => item.reason_id);
                 vm.activity_attribute.deleted_activity_types = vm.activity_attribute.deleted_activity_types.map(item => item.activity_attribute_type_id);
-                
+
 
                 vm.$store.dispatch('post', { uri: 'updateActivityAttribute', data:vm.activity_attribute })
                     .then(response => {

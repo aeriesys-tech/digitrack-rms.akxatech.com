@@ -176,7 +176,6 @@ import moment from "moment";
                 vm.$store.dispatch("post", {uri: "paginateBreakDownLists", data: vm.meta,})
                     .then((response) => {
                         loader.hide();
-                        console.log("breakdown-response",response)
                         vm.break_down_lists = response.data.data;
                         vm.meta.totalRows = response.data.meta.total;
                         vm.meta.from = response.data.meta.from;

@@ -14,7 +14,7 @@
                 <h4 class="main-title mb-0">Process Registers</h4>
             </div>
             <router-link to="/process_registers/create" class="btn btn-primary" style="float: right;"><i
-                    class="ri-list-check"></i> Add Process Register</router-link>
+                    class="ri-list-check"></i> ADD PROCESS REGISTER</router-link>
         </div>
         <div class="row">
             <div class="col-12">

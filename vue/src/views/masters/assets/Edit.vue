@@ -65,7 +65,7 @@
                                     <select class="form-control" :class="{ 'is-invalid': errors.department_id}" v-model="asset.department_id">
                                             <option value="">Select Department</option>
                                             <option v-for="department, key in departments" :key="key" :value="department?.department_id">{{ department?.department_name }}</option>
-                                    </select> 
+                                    </select>
                                     <span v-if="errors.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
                             </div>
 
@@ -74,10 +74,10 @@
                                 <select class="form-control" :class="{ 'is-invalid': errors.section_id}" v-model="asset.section_id">
                                     <option value="">Select Section</option>
                                     <option v-for="section, key in sections" :key="key" :value="section?.section_id">{{ section?.section_name }}</option>
-                                </select> 
+                                </select>
                                 <span v-if="errors.section_id" class="invalid-feedback">{{ errors.section_id[0] }}</span>
                             </div>
-                            
+
                                 <div class="col-md-4">
                                     <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
                                     <search
@@ -93,17 +93,17 @@
                                         @selectsearch="getAssetType(asset.asset_type_id)"
                                     >
                                     </search>
-                            
+
                                     <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                 </div>
-                                
+
                                 <div class="col-md-4" v-for="field, key in asset?.asset_parameters" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.asset_parameter_value.field_value" />
                                         <span v-if="errors[field.field_name]" class="invalid-feedback">{{ errors[field.field_name][0] }}</span>
                                     </div>
-                                    
+
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.field_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.field_name" :class="{'is-invalid': errors[field.field_name]}" v-model="field.asset_parameter_value.field_value"/>
@@ -115,13 +115,13 @@
                                             {{ field.field_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                       
-                                        <input 
-                                            type="date" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.field_name" 
-                                            :class="{'is-invalid': errors[field.field_name]}" 
-                                            v-model="field.asset_parameter_value.field_value"  
+
+                                        <input
+                                            type="date"
+                                            class="form-control"
+                                            :placeholder="'Enter ' + field.field_name"
+                                            :class="{'is-invalid': errors[field.field_name]}"
+                                            v-model="field.asset_parameter_value.field_value"
                                         />
                                         <span v-if="errors[field.field_name]" class="invalid-feedback">
                                             {{ errors[field.field_name][0] }}
@@ -133,13 +133,13 @@
                                             {{ field.field_name }}
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
-                                        <input 
-                                            type="datetime-local" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.field_name" 
-                                            :class="{'is-invalid': errors[field.field_name]}" 
-                                            v-model="field.asset_parameter_value.field_value" 
-                                            step="1" 
+                                        <input
+                                            type="datetime-local"
+                                            class="form-control"
+                                            :placeholder="'Enter ' + field.field_name"
+                                            :class="{'is-invalid': errors[field.field_name]}"
+                                            v-model="field.asset_parameter_value.field_value"
+                                            step="1"
                                         />
                                         <span v-if="errors[field.field_name]" class="invalid-feedback">
                                             {{ errors[field.field_name][0] }}
@@ -160,10 +160,10 @@
                                         <span v-if="field.is_required" class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-text" :style="getColor(field)"></span>
-                                            <input 
-                                                type="text" 
-                                                class="form-control" 
-                                                v-model="field.asset_parameter_value.field_value" 
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                v-model="field.asset_parameter_value.field_value"
                                                 readonly
                                                 :style="{ color: selectedColor ? 'black' : 'gray', cursor: 'pointer' }"
                                                 @click="toggleDropdown"
@@ -171,14 +171,14 @@
                                             />
                                             <div class="dropdown-menu" :class="{ show: dropdownVisible }">
                                                 <ul class="list-unstyled mb-0">
-                                                    <li 
-                                                        v-for="color in colors" 
-                                                        :key="color.value" 
-                                                        @click="selectColor(color.value, color.name, field)" 
+                                                    <li
+                                                        v-for="color in colors"
+                                                        :key="color.value"
+                                                        @click="selectColor(color.value, color.name, field)"
                                                         class="dropdown-item d-flex align-items-center"
                                                     >
-                                                        <span 
-                                                            :style="{ backgroundColor: color.value }" 
+                                                        <span
+                                                            :style="{ backgroundColor: color.value }"
                                                             class="color-square me-2"
                                                         ></span>
                                                         <span>{{ color.name }}</span>
@@ -242,7 +242,7 @@
             //         color: "#ffffff",
             //         voltage_code: "",
             //     },
-               
+
             //     device_code: "",
                 asset_parameters: [],
                 plants: [],
@@ -266,7 +266,7 @@
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.asset = response.data.data;
-                            
+
                             // vm.voltage = response.data.data?.voltage;
                             // vm.watt_rating = response.data.data?.watt_rating?.watt_rating_code;
                             // vm.frame = response.data.data?.frame?.frame_code;
@@ -301,16 +301,14 @@
         },
         methods: {
             getColor(asset_parameter){
-                    console.log(asset_parameter)
                     let color = 'color:black'
                     if(asset_parameter.field_name = 'Color'){
                     color = 'background-color:'+asset_parameter.asset_parameter_value?.field_value +'; color:white; padding:5px'
-                    }  
+                    }
                     return color
 
             },
             selectColor(colorValue, colorName, field) {
-                    // console.log(field)
                     if(field.asset_parameter_value)
                         field.asset_parameter_value.field_value = colorValue;
                     field.field_name = colorName;
@@ -322,7 +320,6 @@
                 this.dropdownVisible = !this.dropdownVisible;
             },
             updateAssetParameters(field){
-                console.log(field)
                 let apid = this.asset.asset_parameters.filter(function(element){
                     return element.asset_parameter_id == field.asset_parameter_id
                 })

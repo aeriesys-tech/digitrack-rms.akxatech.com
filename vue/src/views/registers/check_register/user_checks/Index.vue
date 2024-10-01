@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Check Registers</h4>
             </div>
-            <router-link v-can="'userChecks.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Check Register</router-link>
+            <router-link v-can="'userChecks.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD CHECK REGISTER</router-link>
         </div>
         <div class="row">
             <div class="col-12">

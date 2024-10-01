@@ -120,7 +120,7 @@
                                         <MultiSelect v-model="spare.spare_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.spare_asset_zones ? error_style : ''" :disabled="spare.spare_zone_read_only" />
-                                        <span v-if="errors?.spare_asset_zones" class="invalid-feedback">{{ errors?.spare_asset_zones[0] }}</span>
+                                        <span v-if="errors?.spare_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.spare_asset_zones[0] }}</span>
 
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
@@ -386,7 +386,7 @@
                                         <MultiSelect v-model="check.check_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.check_asset_zones ? error_style : ''" :disabled="check.check_zone_read_only"/>
-                                        <span v-if="errors?.check_asset_zones" class="invalid-feedback">{{ errors?.check_asset_zones[0] }}</span>
+                                        <span v-if="errors?.check_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.check_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-8" v-can="'assetChecks.create'">
                                         <!-- <label>Check</label> -->
@@ -555,7 +555,7 @@
                                         <MultiSelect v-model="service.service_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.service_asset_zones ? error_style : ''" :disabled="service.service_zone_read_only" />
-                                        <span v-if="errors?.service_asset_zones" class="invalid-feedback">{{ errors?.service_asset_zones[0] }}</span>
+                                        <span v-if="errors?.service_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.service_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Service</label>
@@ -784,7 +784,7 @@
                                         <MultiSelect v-model="variable.variable_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.variable_asset_zones ? error_style : ''" :disabled="variable.variable_zone_read_only" />
-                                        <span v-if="errors?.variable_asset_zones" class="invalid-feedback">{{ errors?.variable_asset_zones[0] }}</span>
+                                        <span v-if="errors?.variable_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.variable_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Variable</label>
@@ -1026,7 +1026,7 @@
                                         <MultiSelect v-model="datasource.data_source_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.data_source_asset_zones ? error_style : ''" :disabled="datasource.data_source_zone_read_only" />
-                                        <span v-if="errors?.data_source_asset_zones" class="invalid-feedback">{{ errors?.data_source_asset_zones[0] }}</span>
+                                        <span v-if="errors?.data_source_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.data_source_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Data Source</label>
@@ -1286,7 +1286,7 @@
                                         <MultiSelect v-model="accessory.accessory_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.accessory_asset_zones ? error_style : ''" :disabled="accessory.accessory_zone_read_only" />
-                                        <span v-if="errors?.accessory_asset_zones" class="invalid-feedback">{{ errors?.accessory_asset_zones[0] }}</span>
+                                        <span v-if="errors?.accessory_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.accessory_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
@@ -2793,7 +2793,6 @@
                 })
                 .catch(function (error) {
                     loader.hide();
-                    console.log("eeee-00", error);
                     vm.errors = error.response.data.errors;
                     vm.$store.dispatch("error", error.response.data.message);
                 });
@@ -3213,7 +3212,6 @@
                     .dispatch("post", { uri: "assetSpareAttributeValues", data: { spare_id: spare_id } })
                     .then((response) => {
                         loader.hide();
-                        // console.log('getSpareAttribute:----', response.data.data)
                         vm.spare.asset_spare_attributes = response.data.data;
                     })
                     .catch(function (error) {
@@ -3231,7 +3229,6 @@
                     .dispatch("post", { uri: "assetServiceAttributeValues", data: { service_id: service_id } })
                     .then((response) => {
                         loader.hide();
-                        // console.log('getSpareAttribute:----', response.data.data)
                         vm.service.asset_service_attributes = response.data.data;
                     })
                     .catch(function (error) {
@@ -3248,7 +3245,6 @@
                     .dispatch("post", { uri: "assetVariableAttributeValues", data: { variable_id: variable_id } })
                     .then((response) => {
                         loader.hide();
-                        // console.log('getSpareAttribute:----', response.data.data)
                         vm.variable.asset_variable_attributes = response.data.data;
                     })
                     .catch(function (error) {

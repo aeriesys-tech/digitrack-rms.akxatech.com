@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Service Registers</h4>
             </div>
-            <router-link v-can="'userServices.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Service Register</router-link>
+            <router-link v-can="'userServices.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD SERVICE REGISTER</router-link>
         </div>
 
         <div class="row">
@@ -181,7 +181,6 @@
             },
             index() {
                 let vm = this;
-                console.log("page", vm.meta.page)
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "paginateUserServices", data: vm.meta })

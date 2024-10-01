@@ -142,7 +142,6 @@ import Pagination from "@/components/Pagination.vue";
         this.index()
     },
     beforeRouteEnter(to, from, next) {
-        console.log('from.name:----', from.name)
             next((vm) => {
                 if(from.name == 'Assets'){
                     vm.asset_from = true;

@@ -14,8 +14,7 @@
                 </ol>
                 <h4 class="main-title mb-0">User</h4>
             </div>
-            <router-link to="/users" type="submit" class="btn btn-primary" style="float: right;"><i
-                    class="ri-list-check"></i> USERS</router-link>
+            <router-link to="/users" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> USERS</router-link>
         </div>
         <div class="row">
             <div class="col-12">

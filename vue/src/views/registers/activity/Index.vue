@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Activities</h4>
             </div>
-            <router-link v-can="'userActivities.create'" to="/activity/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Activity</router-link>
+            <router-link v-can="'userActivities.create'" to="/activity/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ACTIVITY</router-link>
         </div>
         <div class="row">
             <div class="col-12">
