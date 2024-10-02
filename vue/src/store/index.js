@@ -14,6 +14,7 @@ export default createStore({
     page: '',
     asset_id: '',
     assets: '',
+    meter: '20',
   },
   getters: {
     user(state) {
@@ -36,6 +37,9 @@ export default createStore({
     },
     assets(state) {
       return state.assets;
+    },
+    meter(state) {
+      return state.meter;
     },
   },
   mutations: {
@@ -60,6 +64,9 @@ export default createStore({
     setAssets(state, assets) {
       state.assets = assets;
     },
+    setMeter(state, meter) {
+      state.meter = meter;
+    },
   },
   actions: {
     async setUser(context, payload) {
@@ -82,6 +89,9 @@ export default createStore({
     },
     async setAssets(context, payload) {
       await context.commit('setAssets', payload);
+    },
+    async setMeter(context, payload) {
+      await context.commit('setMeter', payload);
     },
     async logout(context) {
       await context.commit('setUser', null);

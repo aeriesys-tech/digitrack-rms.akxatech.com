@@ -115,9 +115,9 @@
                                             <!-- <a title="Activity Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/activity/create')"><i class="ri-stack-fill fs-18 lh-1"></i></a>
                                             <a title="Service Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
                                             <a title="Check Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a> -->
-                                            <a title="Asset Accessories" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-survey-line fs-18 lh-1"></i></a>
+                                            <a title="Asset Accessories" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories/'+asset.asset_id)"><i class="ri-survey-line fs-18 lh-1"></i></a>
                                             <!-- <a title="Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-pentagon-line fs-18 lh-1"></i></a> -->
-                                            <a title="Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a>
+                                            <a title="Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewGeometric(asset)"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a>
                                         </td>
                                     </tr>
                                     <tr v-if="assets.length==0">
@@ -273,6 +273,11 @@
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();
+            },
+            viewGeometric(asset)
+            {
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page))
+                this.$router.push("/geometric/" + asset.asset_id );
             },
         },
     };
