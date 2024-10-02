@@ -139,7 +139,7 @@ import Pagination from "@/components/Pagination.vue";
         }
     },
     mounted(){
-        this.index()
+
     },
     beforeRouteEnter(to, from, next) {
             next((vm) => {
@@ -148,12 +148,16 @@ import Pagination from "@/components/Pagination.vue";
                 }else{
                     vm.asset_from = false;
                 }
+                vm.accessory_meta_service.asset_id = to.params.asset_id;
+                vm.index()
             });
+
+
         },
     methods:{
         index() {
             let vm = this;
-            vm.accessory_meta_service.asset_id = vm.$store.getters.asset_id;
+            // vm.accessory_meta_service.asset_id = vm.$store.getters.asset_id;
             let loader = vm.$loading.show();
             vm.$store
                 .dispatch("post", { uri: "paginateAssetAccessories", data: vm.accessory_meta_service })

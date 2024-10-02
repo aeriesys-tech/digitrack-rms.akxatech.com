@@ -144,6 +144,8 @@ import Test from "@/views/Test.vue";
 //Reviews
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
 import AssetDetails from "@/views/Reviews/AssetDetails.vue"
+import Geometric from "@/views/masters/assets/Geometric.vue"
+
 
 const routes = [
   {
@@ -289,7 +291,7 @@ const routes = [
     component: CreateAsset,
   },
   {
-    path: "/asset/accessories",
+    path: "/asset/accessories/:asset_id",
     name: "Assets.accessories",
     component: AssetAccessories,
   },
@@ -792,6 +794,11 @@ const routes = [
     path: "/asset_details",
     name: "AssetDetails",
     component: AssetDetails,
+  },
+  {
+    path: "/geometric/:asset_id",
+    name: "Geometric",
+    component: Geometric,
   },
 
   // spare campaign
