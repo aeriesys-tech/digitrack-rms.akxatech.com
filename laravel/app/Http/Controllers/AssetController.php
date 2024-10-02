@@ -211,33 +211,33 @@ class AssetController extends Controller
             'height' => 'nullable|required_if:geometry_type,Cylindrical',
             'diameter' => 'nullable|required_if:geometry_type,Cylindrical'
         ]);
-
+     
         $request->validate([
             'zone_name' => function ($attribute, $value, $fail) use ($request) {
                 if (isset($value)) {
                     $totalHeight = 0;
-                    $totalDiameter = 0;
+                    $assetDiameter = $request->input('diameter', 0); 
+        
                     foreach ($value as $zone) {
                         $zoneHeight = $zone['height'] ?? 0;
                         $zoneDiameter = $zone['diameter'] ?? 0;
-    
+        
                         $totalHeight += $zoneHeight;
-                        $totalDiameter += $zoneDiameter;
+        
+                        if ($zoneDiameter != $assetDiameter) {
+                            $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
+                            return; 
+                        }
                     }
-    
+        
                     $assetHeight = $request->input('height', 0);
-                    $assetDiameter = $request->input('diameter', 0);
-    
-                    if ($totalHeight > $assetHeight  || $totalHeight < $assetHeight ) {
-                        $fail("The total height of AssetZones cannot exceed or be less than the Asset's height.");
-                    }
-                    elseif( $totalDiameter > $assetDiameter || $totalDiameter < $assetDiameter){
-                        $fail("The diameter of AssetZones cannot exceed or be less than the Asset's diameter.");
+                    if ($totalHeight != $assetHeight) {
+                        $fail("The total height of AssetZones must be equal to the Asset's height.");
                     }
                 }
             }
         ]);       
-        
+
         $asset = Asset::create($data);
 
         if (isset($request->asset_departments)) 
@@ -364,27 +364,27 @@ class AssetController extends Controller
             'zone_name' => function ($attribute, $value, $fail) use ($request) {
                 if (isset($value)) {
                     $totalHeight = 0;
-                    $totalDiameter = 0;
+                    $assetDiameter = $request->input('diameter', 0); 
+        
                     foreach ($value as $zone) {
                         $zoneHeight = $zone['height'] ?? 0;
                         $zoneDiameter = $zone['diameter'] ?? 0;
-    
+        
                         $totalHeight += $zoneHeight;
-                        $totalDiameter += $zoneDiameter;
+        
+                        if ($zoneDiameter != $assetDiameter) {
+                            $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
+                            return; 
+                        }
                     }
-    
+        
                     $assetHeight = $request->input('height', 0);
-                    $assetDiameter = $request->input('diameter', 0);
-    
-                    if ($totalHeight > $assetHeight  || $totalHeight < $assetHeight ) {
-                        $fail("The total height of AssetZones cannot exceed or be less than the Asset's height.");
-                    }
-                    elseif( $totalDiameter > $assetDiameter || $totalDiameter < $assetDiameter){
-                        $fail("The diameter of AssetZones cannot exceed or be less than the Asset's diameter.");
+                    if ($totalHeight != $assetHeight) {
+                        $fail("The total height of AssetZones must be equal to the Asset's height.");
                     }
                 }
             }
-        ]);
+        ]);        
     
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);

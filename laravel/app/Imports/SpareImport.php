@@ -16,81 +16,6 @@ use Illuminate\Support\Facades\Log;
 
 class SpareImport implements ToCollection, WithHeadingRow
 {
-    // public function collection(Collection $rows)
-    // {
-    //     $errorRows = [];
-
-    //     // Fetch Asset Types and Spare Types to map names to IDs
-    //     $assetTypes = SpareAssetType::whereHas('AssetType')->with('AssetType')->get()
-    //         ->keyBy(function ($spareAssetType) {
-    //             return $spareAssetType->AssetType->asset_type_name;
-    //         });
-
-    //     // dd($assetTypes);
-
-    //     $spareTypes = SpareAttributeType::whereHas('SpareType')->with('SpareType')->get()
-    //         ->keyBy(function ($spareAttributeType) {
-    //             return $spareAttributeType->SpareType->spare_type_name;
-    //         });
-
-    //     $spareAttributes = SpareAttribute::all()->keyBy('display_name');
-
-    //     // dd(type($rows));
-    //     // dd(gettype($rows));
-
-    //     foreach ($rows as $row) 
-    //     {
-            
-    //         if (!isset($row['spare_code']) || !isset($row['spare_name']) || !isset($row['spare_type'])) 
-    //         {
-    //             $errorRows[] = $row; 
-    //             continue; 
-    //         }
-
-    //         $data = [
-    //             'spare_type_id' => $spareTypes->get(trim($row['spare_type'])) ? 
-    //                 $spareTypes->get(trim($row['spare_type']))->spare_type_id : null,
-    //             'spare_code' => trim($row['spare_code']),
-    //             'spare_name' => trim($row['spare_name']),
-    //         ];
-
-    //         // Log::info($row['asset_type']);
-    //         $spare = Spare::create($data);
-
-    //         if (isset($row['asset_type'])) 
-    //         {
-    //             $assetTypeNames = explode(',', $row['asset_type']);
-    //             $assetTypeNames = array_map('trim', $assetTypeNames);
-            
-    //             $assetTypes = AssetType::whereIn('asset_type_name', $assetTypeNames)->get();
-            
-    //             if ($assetTypes->isNotEmpty()) {
-    //                 foreach ($assetTypes as $assetType) {
-    //                     $assetTypeId = $assetType->asset_type_id;
-            
-    //                     SpareAssetType::create([
-    //                         'spare_id' => $spare->spare_id,
-    //                         'asset_type_id' => $assetTypeId,
-    //                     ]);
-    //                 }
-    //             } 
-    //         }
-    //         foreach ($row as $key => $value) 
-    //         {
-    //             if (!in_array($key, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) {
-    //                 $spareAttribute = $spareAttributes->get(trim($key));
-    //                 if ($spareAttribute) {
-    //                     SpareAttributeValue::create([
-    //                         'spare_id' => $spare->spare_id,
-    //                         'spare_attribute_id' => $spareAttribute->spare_attribute_id,
-    //                         'field_value' => trim($value),
-    //                     ]);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
     public function collection(Collection $rows)
     {
         $errorRows = [];
@@ -105,7 +30,7 @@ class SpareImport implements ToCollection, WithHeadingRow
                 return $spareAttributeType->SpareType->spare_type_name;
             });
 
-        $spareAttributes = SpareAttribute::all()->keyBy('display_name');
+        $spareAttributes = SpareAttribute::all()->keyBy('field_name');
 
         foreach ($rows as $row) 
         {
@@ -118,12 +43,6 @@ class SpareImport implements ToCollection, WithHeadingRow
             $spareTypeId = $spareTypes->get(trim($row['spare_type'])) ? 
                 $spareTypes->get(trim($row['spare_type']))->spare_type_id : null;
 
-            // if ($spareTypeId === null) {
-            //     Log::error('Spare Type ID is null for spare type: ' . trim($row['spare_type']));
-            //     $errorRows[] = $row; 
-            //     continue;
-            // }
-
             $data = [
                 'spare_type_id' => $spareTypeId,
                 'spare_code' => trim($row['spare_code']),
@@ -132,7 +51,7 @@ class SpareImport implements ToCollection, WithHeadingRow
 
             $spare = Spare::create($data);
 
-            // Handle asset types
+            // asset types
             if (isset($row['asset_type'])) 
             {
                 $assetTypeNames = explode(',', $row['asset_type']);
@@ -151,21 +70,96 @@ class SpareImport implements ToCollection, WithHeadingRow
                     }
                 } 
             }
+
+            // foreach ($row as $key => $value) 
+            // {
+            //     $normalizedKey = $this->normalizeKey($key);
+            //     if (!in_array($normalizedKey, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) 
+            //     {
+            //         $spareAttribute = $spareAttributes->get($key); 
+            //         if (!$spareAttribute) 
+            //         {
+            //             $spareAttribute = $spareAttributes->get(ucwords(str_replace('_', ' ', $normalizedKey)));
+            //         }
             
-            // Handle spare attributes
+            //         if ($spareAttribute) 
+            //         {
+            //             $fieldValue = trim($value);
+            
+            //             if (is_numeric($fieldValue)) {
+            //                 $fieldValue = $fieldValue;
+            //             }
+            
+            //             if ($this->isDate($fieldValue)) {
+            //                 $fieldValue = Carbon::parse($fieldValue);
+            //             }
+            
+            //             SpareAttributeValue::create([
+            //                 'spare_id' => $spare->spare_id,
+            //                 'spare_attribute_id' => $spareAttribute->spare_attribute_id,
+            //                 'field_value' => $fieldValue,
+            //             ]);
+            //         }
+            //     }
+            // }
+
             foreach ($row as $key => $value) 
             {
-                if (!in_array($key, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) {
-                    $spareAttribute = $spareAttributes->get(trim($key));
-                    if ($spareAttribute) {
+                $normalizedKey = $this->normalizeKey($key);
+
+                // Skip the known keys like spare_type, spare_code, spare_name, and asset_type
+                if (!in_array($normalizedKey, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) 
+                {
+                    // Fetch spare attribute using normalized key
+                    $spareAttribute = $spareAttributes->get($normalizedKey); 
+                    if (!$spareAttribute) 
+                    {
+                        // Attempt to find the attribute using a different normalization method (e.g., title casing)
+                        $spareAttribute = $spareAttributes->get(ucwords(str_replace('_', ' ', $normalizedKey)));
+                    }
+
+                    if ($spareAttribute) 
+                    {
+                        $fieldValue = trim($value);
+
+                        // Process the field value for number or date types
+                        if (is_numeric($fieldValue)) {
+                            $fieldValue = $fieldValue;
+                        }
+
+                        if ($this->isDate($fieldValue)) {
+                            $fieldValue = Carbon::parse($fieldValue);
+                        }
+
+                        // Insert the attribute value into SpareAttributeValue
                         SpareAttributeValue::create([
                             'spare_id' => $spare->spare_id,
                             'spare_attribute_id' => $spareAttribute->spare_attribute_id,
-                            'field_value' => trim($value),
+                            'field_value' => $fieldValue,
                         ]);
                     }
                 }
             }
+
+        }
+    }
+
+    private function normalizeKey($key)
+    {
+        return strtolower(trim(str_replace(' ', '_', $key)));
+    }
+
+    private function isDate($value)
+    {
+        if (is_numeric($value)) {
+            return false;
+        }
+
+        try {
+            Carbon::parse($value);
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
     }
 }

@@ -69,7 +69,7 @@ class SpareHeadingsSheet implements FromView, WithTitle, WithColumnWidths
         ];
 
         foreach ($spares as $spare) {
-            array_push($headers, $spare->display_name);
+            array_push($headers, $spare->field_name);
         }
 
         array_push($rows, $headers);
