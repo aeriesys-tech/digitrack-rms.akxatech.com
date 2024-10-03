@@ -1,36 +1,69 @@
 <template>
-    <div class="card">
+    <div class="card" v-if="assets">
         <div class="card-body">
             <h4 class="text-center">{{ assets.asset_name }}</h4>
             <div class="row">
-                <div class="col-md-6 align-items-center justify-content-center">
-                    <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter*meter)}} (m)</h6>
+                <div class="col-md-4 align-items-center justify-content-center">
+                    <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter)}} (m)</h6>
                     <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; margin-left:50px;` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
                     <div class="row">
                         <div class="col-1 d-flex align-items-center justify-content-center">
                             <div class="dimensions-y" :style="`height:${Number(assets.height*meter)}px;`"><span class="arrow-top"></span><span class="arrow-bottom"></span></div>
-                            <h6 class="vertical-text mr-0">Heigth={{Number(assets.height*meter)}} (m)</h6>
-
+                            <h6 class="vertical-text mr-0">Heigth={{Number(assets.height)}} (m)</h6>
                         </div>
                         <div class="col-11">
-
-                            <div :title="assets.asset_name" class=""  :style="`height:${Number(assets.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:2px solid gray`" @click="showAssetZones()"></div>
+                            <div :title="assets.asset_name" class="" :style="`height:${Number(assets.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:2px solid gray`" @click="showAssetZones()"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6" v-if="display_asset_zone">
-                      <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter*meter)}} (m)</h6>
+                <div class="col-md-4" v-if="display_asset_zone">
+                    <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter)}} (m)</h6>
                     <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; ` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
-                       <div v-for="zone,key in assets.zone_name" :key="key" class="" :style="`height:${Number(zone.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:1px solid gray`" >
-
-                        <!-- <div class="dimensions-y" :style="`height:${Number(zone.height*meter)}px;`"><span class="arrow-top"></span><span class="arrow-bottom"></span></div>
-                            <h6 class="vertical-text mr-0">Heigth={{Number(zone.height*meter)}} (m)</h6> -->
-
-                        <div :title="zone.zone_name" v-for="spare,key1 in zone.asset_spares" :key="key1" :style="`height:${Number((zone.height*meter)/zone.asset_spares.length)}px; width:${Number(assets.diameter*meter)}px; border:1px solid gray; cursor:pointer;text-align: center;align-content: center;`">
-                            {{ spare?.spare?.spare_name }}
+                    <div v-for="zone,key in assets.zone_name" :key="key" class="zone-container" :style="`height:${Number(zone.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:1px solid gray`">
+                        <div class="zone-name-container">
+                            <span class="vertical-text1">{{ zone.zone_name }}</span>
+                            <span class="vertical-text1">{{ Number(zone.height) }}(m)</span>
                         </div>
-                       </div>
+                        <!-- <div> -->
+                            <!-- {{ spareCreation(zone.asset_spares, Number(zone.height)) }} -->
+                            <!-- <div
+                                :title="zone.zone_name"
+                                v-for="(spare, key1) in zone.asset_spares"
+                                :key="key1"
+                                :style="{
+                                        height: `${(zone.height * meter) / zone.asset_spares.length}px`,
+                                        width: `${assets.diameter * meter}px`,
+                                        cursor: 'pointer',
+                                        textAlign: 'center',
+                                        alignContent: 'center',
+                                        borderBottom: key1 % 2 === 0 ? '1px solid gray' : '',
+                                        borderTop: key1 % 2 !== 0 ? '1px solid gray' : ''
+                                    }"
+                            >
+                                {{ spare?.spare?.spare_name }}
+                            </div> -->
+                        <!-- </div> -->
 
+                        <!-- <div v-if="totalQuantity"> -->
+                            <div
+                                v-for="(spare, key1) in zone.asset_spares"
+                                :key="key1"
+                                :style="{
+                                height: `${Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter)}px`, // Calculate height proportionally
+                                width: `${assets.diameter * meter}px`,
+                                cursor: 'pointer',
+                                textAlign: 'center',
+                                alignContent: 'center',
+                                borderBottom: key1 % 2 === 0 ? '1px solid gray' : '',
+                                borderTop: key1 % 2 !== 0 ? '1px solid gray' : ''
+                                }"
+                                :title="zone.zone_name"
+                            >
+                            {{ Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter).toFixed(2)}}
+                                <span>{{ spare?.spare?.spare_name }}</span>
+                            </div>
+                            <!-- </div> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,8 +80,7 @@
                 },
                 assets: "",
                 meter: null,
-                display_asset_zone:false,
-
+                display_asset_zone: false,
             };
         },
         mounted() {
@@ -69,17 +101,53 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             });
-        },
-    methods: {
-        showAssetZones() {
+    },
+        methods: {
+            showAssetZones() {
+                let vm = this;
+                console.log("dcdc", vm.display_asset_zone);
+                vm.display_asset_zone = !vm.display_asset_zone;
+                console.log("dcdc", vm.display_asset_zone);
+            },
+            totalQuantity(spare) {
+                console.log('spare:---computed', spare)
+                return spare.reduce((sum, item) => sum + item.quantity, 0);
+                // Calculate the total quantity from the spares
+                // return this.zone.asset_spares.reduce((sum, spare) => sum + spare.quantity, 0);
+            },
+            spareCreation(spare, height) {
 
-            let vm = this;
-             console.log("dcdc",vm.display_asset_zone)
-            vm.display_asset_zone = !vm.display_asset_zone
-             console.log("dcdc",vm.display_asset_zone)
+                // console.log('spare:----', spare, height)
+                // const 1 = spare.reduce((sum, item) => sum + item.quantity, 0);
+                // console.log('1:----', 1)
+                // if (1) {
+                //     for (let i = 0; i < spare.length; i++){
+                //         spare_height = (spare[i].quantity / 1) * height;
+
+                //         <div
+                //             :title="zone.zone_name"
+                //             v-for="(spare, key1) in zone.asset_spares"
+                //             :key="key1"
+                //             :style="{
+                //                     height: `${(zone.height * meter) / zone.asset_spares.length}px`,
+                //                     width: `${assets.diameter * meter}px`,
+                //                     cursor: 'pointer',
+                //                     textAlign: 'center',
+                //                     alignContent: 'center',
+                //                     borderBottom: key1 % 2 === 0 ? '1px solid gray' : '',
+                //                     borderTop: key1 % 2 !== 0 ? '1px solid gray' : ''
+                //                 }"
+                //         >
+                //             {{ spare?.spare?.spare_name }}
+                //         </div>
+                //     }
+                // }
+
+
 
             },
-        },
+    },
+
     };
 </script>
 <style scoped>
@@ -149,5 +217,57 @@
     }
     .mr-0 {
         margin-right: 0px;
+    }
+    .zone-container {
+        position: relative;
+    }
+
+    .zone-name-container {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 100%;
+        transform: translateX(-50%);
+        z-index: 1;
+        display: flex;
+        /* align-items: center;
+  justify-content: center; */
+        border-right: 1px solid gray;
+        /* padding: 10px;
+  padding-right: 0px; */
+    }
+
+    /* Arrow at the top */
+    .zone-name-container::before {
+        content: "";
+        position: absolute;
+        right: -6px; /* Slightly outside the border */
+        top: 0; /* Positioned at the top of the container */
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid gray; /* Downward-facing triangle */
+    }
+
+    /* Arrow at the bottom */
+    .zone-name-container::after {
+        content: "";
+        position: absolute;
+        right: -6px; /* Slightly outside the border */
+        bottom: 0; /* Positioned at the bottom of the container */
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid gray; /* Upward-facing triangle */
+    }
+
+    .vertical-text1 {
+        transform: rotate(90deg);
+        white-space: nowrap;
+        /* font-weight: bold; */
+        color: gray;
+        text-align: center;
     }
 </style>
