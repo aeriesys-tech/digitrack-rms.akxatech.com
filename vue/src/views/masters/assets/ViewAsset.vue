@@ -2183,6 +2183,7 @@
                 return color;
             },
             editSpare(spare) {
+                // console.log('spare.asset_zone:----', spare.asset_zone);
                 this.spare.spare_id = spare.spare_id;
                 this.spare.asset_id = spare.asset_id;
                 this.spare.asset_spare_id = spare.asset_spare_id;
@@ -2194,7 +2195,7 @@
                 this.spare.spare_asset_zones_obj.push({asset_id: spare.asset_zone.asset_id,
                     asset_zone_id: spare.asset_zone.asset_zone_id, status: spare.asset_zone.status,
                     zone_name: spare.asset_zone.zone_name, diameter: spare.asset_zone.diameter,
-                    height: spare.asset_zone.height
+                    height: spare.asset_zone.height, asset_spares: spare.asset_zone.asset_spares
 
                 });
                 this.spare.spare_zone_read_only = true;
@@ -2219,7 +2220,7 @@
                 this.check.check_asset_zones_obj.push({asset_id: check.asset_zone.asset_id,
                     asset_zone_id: check.asset_zone.asset_zone_id, status: check.asset_zone.status,
                     zone_name: check.asset_zone.zone_name, diameter: check.asset_zone.diameter,
-                    height: check.asset_zone.height
+                    height: check.asset_zone.height, asset_spares: check.asset_zone.asset_spares
 
                 });
                 this.check.check_zone_read_only = true;
@@ -2241,7 +2242,7 @@
                 this.service.service_asset_zones_obj.push({asset_id: service.asset_zone.asset_id,
                     asset_zone_id: service.asset_zone.asset_zone_id, status: service.asset_zone.status,
                     zone_name: service.asset_zone.zone_name, diameter: service.asset_zone.diameter,
-                    height: service.asset_zone.height
+                    height: service.asset_zone.height, asset_spares: service.asset_zone.asset_spares
 
                 });
                 this.service.service_zone_read_only = true;
@@ -2264,7 +2265,7 @@
                 this.variable.variable_asset_zones_obj.push({asset_id: variable.asset_zone.asset_id,
                     asset_zone_id: variable.asset_zone.asset_zone_id, status: variable.asset_zone.status,
                     zone_name: variable.asset_zone.zone_name, diameter: variable.asset_zone.diameter,
-                    height: variable.asset_zone.height
+                    height: variable.asset_zone.height, asset_spares: variable.asset_zone.asset_spares
 
                 });
                 this.variable.variable_zone_read_only = true;
@@ -2287,7 +2288,7 @@
                 this.datasource.data_source_asset_zones_obj.push({asset_id: datasource.asset_zone.asset_id,
                     asset_zone_id: datasource.asset_zone.asset_zone_id, status: datasource.asset_zone.status,
                     zone_name: datasource.asset_zone.zone_name, diameter: datasource.asset_zone.diameter,
-                    height: datasource.asset_zone.height
+                    height: datasource.asset_zone.height, asset_spares: datasource.asset_zone.asset_spares
 
                 });
                 this.datasource.data_source_zone_read_only = true;
