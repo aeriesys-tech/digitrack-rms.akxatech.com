@@ -234,7 +234,7 @@ class ServiceController extends Controller
     public function downloadServiceHeadings(Request $request)
     {
         $filename = "Service Headings.xlsx";
-        $excel = new ServiceHeadingsExport($request->service_type_id);
+        $excel = new ServiceHeadingsExport($request->service_type_ids);
         
         return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }

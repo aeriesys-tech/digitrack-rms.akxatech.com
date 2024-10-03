@@ -71,38 +71,6 @@ class SpareImport implements ToCollection, WithHeadingRow
                 } 
             }
 
-            // foreach ($row as $key => $value) 
-            // {
-            //     $normalizedKey = $this->normalizeKey($key);
-            //     if (!in_array($normalizedKey, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) 
-            //     {
-            //         $spareAttribute = $spareAttributes->get($key); 
-            //         if (!$spareAttribute) 
-            //         {
-            //             $spareAttribute = $spareAttributes->get(ucwords(str_replace('_', ' ', $normalizedKey)));
-            //         }
-            
-            //         if ($spareAttribute) 
-            //         {
-            //             $fieldValue = trim($value);
-            
-            //             if (is_numeric($fieldValue)) {
-            //                 $fieldValue = $fieldValue;
-            //             }
-            
-            //             if ($this->isDate($fieldValue)) {
-            //                 $fieldValue = Carbon::parse($fieldValue);
-            //             }
-            
-            //             SpareAttributeValue::create([
-            //                 'spare_id' => $spare->spare_id,
-            //                 'spare_attribute_id' => $spareAttribute->spare_attribute_id,
-            //                 'field_value' => $fieldValue,
-            //             ]);
-            //         }
-            //     }
-            // }
-
             foreach ($row as $key => $value) 
             {
                 $normalizedKey = $this->normalizeKey($key);
@@ -131,7 +99,7 @@ class SpareImport implements ToCollection, WithHeadingRow
                             $fieldValue = Carbon::parse($fieldValue);
                         }
 
-                        // Insert the attribute value into SpareAttributeValue
+                        //SpareAttributeValue
                         SpareAttributeValue::create([
                             'spare_id' => $spare->spare_id,
                             'spare_attribute_id' => $spareAttribute->spare_attribute_id,

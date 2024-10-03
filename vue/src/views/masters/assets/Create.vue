@@ -165,7 +165,7 @@
                                             <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
                                         </div>
                                         <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
-                                            <label class="form-label">Height </label><span class="text-danger"> *</span>
+                                            <label class="form-label">Height (in m)</label><span class="text-danger"> *</span>
                                             <input
                                                 type="number"
                                                 placeholder="Enter Height "

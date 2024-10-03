@@ -66,7 +66,7 @@ class ServiceHeadingsSheet implements FromView, WithTitle, WithColumnWidths
         ];
 
         foreach ($services as $service) {
-            array_push($headers, $service->display_name);
+            array_push($headers, $service->field_name);
         }
 
         array_push($rows, $headers);
