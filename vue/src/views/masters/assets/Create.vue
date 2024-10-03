@@ -179,7 +179,7 @@
                                             <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('height')) " class="invalid-feedback">{{ errors.zone_name[0] }}</span>
                                         </div>
                                         <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
-                                            <label class="form-label">Diameter </label><span class="text-danger"> *</span>
+                                            <label class="form-label">Diameter (in m)</label><span class="text-danger"> *</span>
                                             <input
                                                 type="number"
                                                 placeholder="Enter Diameter "
@@ -211,12 +211,12 @@
                                             <div class="row g-2">
                                                 <div class="col pt-2">
                                                     <!-- try starts heigth n diameter -->
-                                                    <label class="form-label">Height</label><span class="text-danger"> *</span>
+                                                    <label class="form-label">Height (in m)</label><span class="text-danger"> *</span>
                                                     <input type="number" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
                                                     <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
                                                 </div>
                                                 <div class="col pt-2">
-                                                    <label class="form-label">Diameter</label><span class="text-danger"> *</span>
+                                                    <label class="form-label">Diameter (in m)</label><span class="text-danger"> *</span>
                                                     <input type="number" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
                                                     <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
                                                 </div>

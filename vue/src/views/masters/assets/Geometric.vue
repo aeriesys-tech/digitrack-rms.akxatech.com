@@ -1,11 +1,14 @@
 <template>
-    <div class="card" v-if="assets">
+    <div class="card card-one" v-if="assets">
+        <div class="card-header text-center">
+            <h6 class="card-title">{{ assets.asset_name }}</h6>
+        </div>
         <div class="card-body">
-            <h4 class="text-center">{{ assets.asset_name }}</h4>
+            <h6 class="mb-3"><span class="text-primary">Note:</span> 1 meter=10px</h6>
             <div class="row">
                 <div class="col-md-4 align-items-center justify-content-center">
-                    <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter)}} (m)</h6>
-                    <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; margin-left:50px;` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
+                    <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;margin-left:35px;`">Dia={{Number(assets.diameter)}} (m)</h6>
+                    <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; margin-left:35px;` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
                     <div class="row">
                         <div class="col-1 d-flex align-items-center justify-content-center">
                             <div class="dimensions-y" :style="`height:${Number(assets.height*meter)}px;`"><span class="arrow-top"></span><span class="arrow-bottom"></span></div>
@@ -20,49 +23,32 @@
                     <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter)}} (m)</h6>
                     <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; ` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
                     <div v-for="zone,key in assets.zone_name" :key="key" class="zone-container" :style="`height:${Number(zone.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:1px solid gray`">
-                        <div class="zone-name-container">
-                            <span class="vertical-text1">{{ zone.zone_name }}</span>
-                            <span class="vertical-text1">{{ Number(zone.height) }}(m)</span>
+                        <div class="zone-name-container" style="text-align: center; align-items: center;">
+                            <span style="writing-mode: vertical-lr;">{{ Number(zone.height) }} (m)</span>
+                            <span class="vertical-text1">&nbsp;&nbsp;{{ zone.zone_name }}</span>
                         </div>
-                        <!-- <div> -->
-                            <!-- {{ spareCreation(zone.asset_spares, Number(zone.height)) }} -->
-                            <!-- <div
-                                :title="zone.zone_name"
-                                v-for="(spare, key1) in zone.asset_spares"
-                                :key="key1"
-                                :style="{
-                                        height: `${(zone.height * meter) / zone.asset_spares.length}px`,
-                                        width: `${assets.diameter * meter}px`,
-                                        cursor: 'pointer',
-                                        textAlign: 'center',
-                                        alignContent: 'center',
-                                        borderBottom: key1 % 2 === 0 ? '1px solid gray' : '',
-                                        borderTop: key1 % 2 !== 0 ? '1px solid gray' : ''
-                                    }"
-                            >
-                                {{ spare?.spare?.spare_name }}
-                            </div> -->
-                        <!-- </div> -->
-
-                        <!-- <div v-if="totalQuantity"> -->
-                            <div
-                                v-for="(spare, key1) in zone.asset_spares"
-                                :key="key1"
-                                :style="{
+                        <div
+                            v-for="(spare, key1) in zone.asset_spares"
+                            :key="key1"
+                            :style="{
                                 height: `${Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter)}px`, // Calculate height proportionally
                                 width: `${assets.diameter * meter}px`,
+                                backgroundColor: spareColorCode(spare),
                                 cursor: 'pointer',
                                 textAlign: 'center',
                                 alignContent: 'center',
                                 borderBottom: key1 % 2 === 0 ? '1px solid gray' : '',
-                                borderTop: key1 % 2 !== 0 ? '1px solid gray' : ''
+                                borderTop: key1 % 2 !== 0 ? '1px solid gray' : '',
+                                color: 'white'
                                 }"
-                                :title="zone.zone_name"
-                            >
-                            {{ Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter).toFixed(2)}}
-                                <span>{{ spare?.spare?.spare_name }}</span>
+                            :title="zone.zone_name"
+                        >
+                            <div class="zone-name-container2" style="color: #41505f;">
+                                <span>{{ Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter).toFixed(2)}}</span>
                             </div>
-                            <!-- </div> -->
+
+                            <span>{{ spare?.spare?.spare_name }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,53 +87,24 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             });
-    },
+        },
         methods: {
             showAssetZones() {
                 let vm = this;
-                console.log("dcdc", vm.display_asset_zone);
                 vm.display_asset_zone = !vm.display_asset_zone;
-                console.log("dcdc", vm.display_asset_zone);
             },
             totalQuantity(spare) {
-                console.log('spare:---computed', spare)
                 return spare.reduce((sum, item) => sum + item.quantity, 0);
-                // Calculate the total quantity from the spares
-                // return this.zone.asset_spares.reduce((sum, spare) => sum + spare.quantity, 0);
             },
-            spareCreation(spare, height) {
-
-                // console.log('spare:----', spare, height)
-                // const 1 = spare.reduce((sum, item) => sum + item.quantity, 0);
-                // console.log('1:----', 1)
-                // if (1) {
-                //     for (let i = 0; i < spare.length; i++){
-                //         spare_height = (spare[i].quantity / 1) * height;
-
-                //         <div
-                //             :title="zone.zone_name"
-                //             v-for="(spare, key1) in zone.asset_spares"
-                //             :key="key1"
-                //             :style="{
-                //                     height: `${(zone.height * meter) / zone.asset_spares.length}px`,
-                //                     width: `${assets.diameter * meter}px`,
-                //                     cursor: 'pointer',
-                //                     textAlign: 'center',
-                //                     alignContent: 'center',
-                //                     borderBottom: key1 % 2 === 0 ? '1px solid gray' : '',
-                //                     borderTop: key1 % 2 !== 0 ? '1px solid gray' : ''
-                //                 }"
-                //         >
-                //             {{ spare?.spare?.spare_name }}
-                //         </div>
-                //     }
-                // }
-
-
-
+            spareColorCode(spare) {
+                console.log("spare:----", spare.asset_spare_value);
+                for (let i = 0; i < spare.asset_spare_value.length; i++) {
+                    if (spare.asset_spare_value[i].field_value.includes("#")) {
+                        return spare.asset_spare_value[i].field_value;
+                    }
+                }
             },
-    },
-
+        },
     };
 </script>
 <style scoped>
@@ -185,7 +142,7 @@
         margin-right: -3px;
     }
     .dimensions-y {
-        width: 2px;
+        width: 1px;
         background: #000;
         margin-left: 5px;
         display: inline-block;
@@ -226,8 +183,8 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        left: 100%;
-        transform: translateX(-50%);
+        left: 105%;
+        /* transform: translateX(-50%); */
         z-index: 1;
         display: flex;
         /* align-items: center;
@@ -264,10 +221,28 @@
     }
 
     .vertical-text1 {
-        transform: rotate(90deg);
+        /* transform: rotate(90deg); */
         white-space: nowrap;
         /* font-weight: bold; */
         color: gray;
+        text-align: center;
+        position: absolute;
+        left: inherit;
+    }
+
+    .zone-name-container2 {
+        position: absolute;
+        /* top: 0;
+        bottom: 0; */
+        right: 100%;
+        transform: translateX(-50%);
+        z-index: 1;
+        /* display: flex; */
+    }
+    .vertical-text2 {
+        /* transform: rotate(90deg); */
+        white-space: nowrap;
+        color: orange;
         text-align: center;
     }
 </style>
