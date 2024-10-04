@@ -78,7 +78,7 @@
 
                             <!-- try -->
                             <!-- <div class="col-md-12 mb-3" v-for="asset_zone,key in asset_zones" :key="key"> -->
-                                <div class="col-md-12 mb-3">
+                                <!-- <div class="col-md-12 mb-3">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 class="mb-0">Overall</h6>
@@ -218,7 +218,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
 
 
                             <!-- ends -->
@@ -226,7 +226,7 @@
 
 
 
-                            <!-- <div class="row g-2">
+                         <div class="row g-2">
                                 <div class="">
                                     <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                         <thead>
@@ -331,7 +331,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="card-footer text-end">
                             <router-link type="button" to="/user_services" class="btn btn-danger me-2"><i class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
