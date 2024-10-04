@@ -44,10 +44,10 @@
                             :title="zone.zone_name"
                         >
                             <div class="zone-name-container2" style="color: #41505f;">
-                                <span>{{ Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter).toFixed(2)}}</span>
+                                <span class="text-nowrap">{{ Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter).toFixed(2)}} %</span>
                             </div>
 
-                            <span>{{ spare?.spare?.spare_name }}</span>
+                            <span style="color: black;">{{ spare?.spare?.spare_name }} ({{ spare.quantity }})</span>
                         </div>
                     </div>
                 </div>

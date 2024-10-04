@@ -76,7 +76,157 @@
                                 </div>
                             </div>
 
-                            <div class="row g-2">
+                            <!-- try -->
+                            <!-- <div class="col-md-12 mb-3" v-for="asset_zone,key in asset_zones" :key="key"> -->
+                                <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Overall</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Spare</th>
+                                                        <th>Service</th>
+                                                        <th>Service Cost</th>
+                                                        <th>Quantity</th>
+                                                        <th>Spare Cost</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare1</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                     <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare2</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                      <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare3</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Zone1</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Spare</th>
+                                                        <th>Service</th>
+                                                        <th>Service Cost</th>
+                                                        <th>Quantity</th>
+                                                        <th>Spare Cost</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare2</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                     <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare4</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                 <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Zone3</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Spare</th>
+                                                        <th>Service</th>
+                                                        <th>Service Cost</th>
+                                                        <th>Quantity</th>
+                                                        <th>Spare Cost</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare2</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            <!-- ends -->
+
+
+
+
+                            <!-- <div class="row g-2">
                                 <div class="">
                                     <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                         <thead>
@@ -146,7 +296,6 @@
                                                 <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                             </td>
                                             <td>
-                                                <!-- oninput="validity.valid||(value='');" -->
                                                 <input type="number" placeholder="Enter Quantity" min="0" class="form-control"
                                                     :class="{'is-invalid':errors.quantity}" v-model="user_spare.quantity"
                                                     :max="user_spare.max_quantity" @input="enforceMinMax($event, user_spare)"/>
@@ -182,7 +331,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="card-footer text-end">
                             <router-link type="button" to="/user_services" class="btn btn-danger me-2"><i class="ri-arrow-left-line fs-18 lh-1"></i> Back</router-link>
