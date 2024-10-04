@@ -252,7 +252,7 @@ class DataSourceController extends Controller
     public function downloadDataSourceHeadings(Request $request)
     {
         $filename = "DataSource Headings.xlsx";
-        $excel = new DataSourceHeadingsExport($request->data_source_type_id);
+        $excel = new DataSourceHeadingsExport($request->data_source_type_ids);
         
         return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }

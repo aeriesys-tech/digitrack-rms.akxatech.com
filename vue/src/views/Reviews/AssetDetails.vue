@@ -53,6 +53,15 @@
                                             </span>
                                         </th>
 
+                                        <th @click="sort('geometry_type')">
+                                           Geometry Type
+                                            <span>
+                                                <i v-if="meta.keyword == 'geometry_type' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'geometry_type' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
+
                                         <th @click="sort('latitude')">
                                             Latitude
                                             <span>
@@ -98,6 +107,7 @@
                                         <td>{{ asset.asset_type.asset_type_name }}</td>
                                         <td>{{asset.asset_code}}</td>
                                         <td>{{asset.asset_name}}</td>
+                                        <td>{{asset?.geometry_type}}</td>
                                         <td>{{asset.latitude}}</td>
                                         <td>{{asset.longitude}}</td>
                                         <td>{{asset.radius}}</td>

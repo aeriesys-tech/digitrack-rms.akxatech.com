@@ -1,117 +1,126 @@
 <?php
 
-// namespace App\Imports;
-
-// use App\Models\Variable;
-// use App\Models\VariableAssetType;
-// Use App\Models\VariableAttributeValue;
-// use Maatwebsite\Excel\Concerns\ToCollection;
-// use Illuminate\Support\Collection;
-// use Maatwebsite\Excel\Concerns\WithHeadingRow;
-// use Auth;
-
-// class VariableImport implements ToCollection, WithHeadingRow
-// {
-//     public function collection(Collection $rows)
-//     {
-//         $userPlantId = Auth::user()->plant_id;
-
-//         foreach ($rows as $row) 
-//         {
-//             $data = [
-//                 'variable_code' => $row['variable_code'],
-//                 'variable_name' => $row['variable_name'],
-//                 'variable_type_id' => $row['variable_type_id'],
-//                 'plant_id' => $userPlantId,
-//             ];
-
-//             $variable = Variable::create($data);
-
-//             if (isset($row['asset_types'])) 
-//             {
-//                 $assetTypes = explode(',', $row['asset_types']);
-//                 foreach ($assetTypes as $asset_type_id) 
-//                 {
-//                     VariableAssetType::create([
-//                         'variable_id' => $variable->variable_id,
-//                         'asset_type_id' => trim($asset_type_id),
-//                     ]);
-//                 }
-//             }
-
-//             if (isset($row['variable_attributes'])) 
-//             {
-//                 $variableAttributes = json_decode($row['variable_attributes'], true); 
-
-//                 foreach ($variableAttributes as $attribute) 
-//                 {
-//                     VariableAttributeValue::create([
-//                         'variable_id' => $variable->variable_id,
-//                         'variable_attribute_id' => $attribute['variable_attribute_id'],
-//                         'field_value' => $attribute['variable_attribute_value']['field_value'] ?? '',
-//                     ]);
-//                 }
-//             }
-//         }
-//     }
-// }
-
 namespace App\Imports;
 
 use App\Models\Variable;
+use App\Models\AssetType;
 use App\Models\VariableAssetType;
 use App\Models\VariableAttributeValue;
+use App\Models\VariableAttributeType;
+use App\Models\VariableAttribute;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class VariableImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {
-        $userPlantId = Auth::user()->plant_id;
+        $errorRows = [];
+  
+        $assetTypes = VariableAssetType::whereHas('AssetType')->with('AssetType')->get()
+            ->keyBy(function ($variableAssetType) {
+                return $variableAssetType->AssetType->asset_type_name;
+            });
+
+        $variableTypes = VariableAttributeType::whereHas('VariableType')->with('VariableType')->get()
+            ->keyBy(function ($variableAttributeType) {
+                return $variableAttributeType->VariableType->variable_type_name;
+            });
+
+        $variableAttributes = VariableAttribute::all()->keyBy('field_name');
 
         foreach ($rows as $row) 
         {
-            if (!isset($row['variable_code']) || !isset($row['variable_name']) || !isset($row['variable_type_id'])) {
+            if (!isset($row['variable_code']) || !isset($row['variable_name']) || !isset($row['variable_type'])) 
+            {
+                $errorRows[] = $row; 
                 continue; 
             }
 
+            $variableTypeId = $variableTypes->get(trim($row['variable_type'])) ? 
+                $variableTypes->get(trim($row['variable_type']))->variable_type_id : null;
+
             $data = [
-                'variable_code' => $row['variable_code'],
-                'variable_name' => $row['variable_name'],
-                'variable_type_id' => $row['variable_type_id'],
-                'plant_id' => $userPlantId,
+                'variable_type_id' => $variableTypeId,
+                'variable_code' => trim($row['variable_code']),
+                'variable_name' => trim($row['variable_name']),
             ];
 
             $variable = Variable::create($data);
 
-            if (isset($row['asset_types'])) 
+            // asset types
+            if (isset($row['asset_type'])) 
             {
-                $assetTypes = explode(',', $row['asset_types']);
-                foreach ($assetTypes as $asset_type_id) 
+                $assetTypeNames = explode(',', $row['asset_type']);
+                $assetTypeNames = array_map('trim', $assetTypeNames);
+            
+                $assetTypes = AssetType::whereIn('asset_type_name', $assetTypeNames)->get();
+            
+                if ($assetTypes->isNotEmpty()) {
+                    foreach ($assetTypes as $assetType) {
+                        $assetTypeId = $assetType->asset_type_id;
+            
+                        VariableAssetType::create([
+                            'variable_id' => $variable->variable_id,
+                            'asset_type_id' => $assetTypeId,
+                        ]);
+                    }
+                } 
+            }
+            // Log::info($row);
+            foreach ($row as $key => $value) 
+            {
+                $normalizedKey = $this->normalizeKey($key);
+
+                // Skip the known keys like spare_type, spare_code, spare_name, and asset_type
+                if (!in_array($normalizedKey, ['variable_type', 'variable_code', 'variable_name', 'asset_type']) && !empty($value)) 
                 {
-                    VariableAssetType::create([
-                        'variable_id' => $variable->variable_id,
-                        'asset_type_id' => trim($asset_type_id),
-                    ]);
+                    $variableAttribute = $variableAttributes->get($normalizedKey); 
+                    if (!$variableAttribute) 
+                    {
+                        $variableAttribute = $variableAttributes->get(ucwords(str_replace('_', ' ', $normalizedKey)));
+                    }
+
+                    if ($variableAttribute) 
+                    {
+                        $fieldValue = trim($value);
+
+                        if ($this->isDate($fieldValue)) {
+                            $fieldValue = Carbon::parse($fieldValue)->format('Y-m-d'); 
+                        }
+
+                        VariableAttributeValue::create([
+                            'variable_id' => $variable->variable_id,
+                            'variable_attribute_id' => $variableAttribute->variable_attribute_id,
+                            'field_value' => $fieldValue,
+                        ]);
+                    }
                 }
             }
+        }
+    }
 
-            if (isset($row['variable_attributes'])) 
-            {
-                $variableAttributes = json_decode($row['variable_attributes'], true); 
+    private function normalizeKey($key)
+    {
+        return strtolower(trim(str_replace(' ', '_', $key)));
+    }
 
-                foreach ($variableAttributes as $attribute) 
-                {
-                    VariableAttributeValue::create([
-                        'variable_id' => $variable->variable_id,
-                        'variable_attribute_id' => $attribute['variable_attribute_id'],
-                        'field_value' => $attribute['variable_attribute_value']['field_value'] ?? '',
-                    ]);
-                }
-            }
+    private function isDate($value)
+    {
+        if (is_numeric($value)) {
+            return false;
+        }
+
+        try {
+            Carbon::parse($value);
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
     }
 }

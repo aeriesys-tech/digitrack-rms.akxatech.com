@@ -67,7 +67,7 @@ class VariableHeadingsSheet implements FromView, WithTitle, WithColumnWidths
         ];
 
         foreach ($variables as $variable) {
-            array_push($headers, $variable->display_name);
+            array_push($headers, $variable->field_name);
         }
 
         array_push($rows, $headers);

@@ -250,7 +250,7 @@ class VariableController extends Controller
     public function downloadVariableHeadings(Request $request)
     {
         $filename = "Variable Headings.xlsx";
-        $excel = new VariableHeadingsExport($request->variable_type_id);
+        $excel = new VariableHeadingsExport($request->variable_type_ids);
         
         return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }

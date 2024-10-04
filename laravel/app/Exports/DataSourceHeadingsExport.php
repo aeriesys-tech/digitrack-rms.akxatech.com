@@ -66,7 +66,7 @@ class DataSourceHeadingsSheet implements FromView, WithTitle, WithColumnWidths
         ];
 
         foreach ($data_sources as $data_source) {
-            array_push($headers, $data_source->display_name);
+            array_push($headers, $data_source->field_name);
         }
 
         array_push($rows, $headers);

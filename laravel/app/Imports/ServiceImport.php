@@ -77,7 +77,7 @@ class ServiceImport implements ToCollection, WithHeadingRow
                 $normalizedKey = $this->normalizeKey($key);
 
                 // Skip the known keys like spare_type, spare_code, spare_name, and asset_type
-                if (!in_array($normalizedKey, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) 
+                if (!in_array($normalizedKey, ['service_type', 'service_code', 'service_name', 'asset_type']) && !empty($value)) 
                 {
                     $serviceAttribute = $serviceAttributes->get($normalizedKey); 
                     if (!$serviceAttribute) 
