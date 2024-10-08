@@ -14,7 +14,7 @@ class AssetServiceValueResource extends JsonResource
             'asset_service_id' => $this->asset_service_id,
             'asset_id' => $this->asset_id,
             'service_id' => $this->service_id,
-            'asset_zone_id' => $this->asset_zone_id,
+            // 'asset_zone_id' => $this->asset_zone_id,
             'service_attribute_id' => $this->service_attribute_id,
             'service_attributes' => ServiceAttributeResource::collection($this->ServiceAttribute),
             'field_value' => $this->field_value

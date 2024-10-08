@@ -13,7 +13,7 @@ class AssetServiceValue extends Model
         'asset_service_id',
         'asset_id',
         'service_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'service_attribute_id',
         'field_value'
     ];

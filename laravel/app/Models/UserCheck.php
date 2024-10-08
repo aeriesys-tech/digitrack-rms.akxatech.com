@@ -16,7 +16,7 @@ class UserCheck extends Model
         'reference_no',
         'reference_date',
         'note',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'department_id'
     ];
 
@@ -47,10 +47,10 @@ class UserCheck extends Model
         return $this->hasMany(UserCheckAttachment::class, 'user_check_id','user_check_id');
     }
 
-    public function AssetZone()
-    {
-        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
-    }
+    // public function AssetZone()
+    // {
+    //     return $this->belongsTo(AssetZone::class, 'asset_zone_id');
+    // }
 
     public function Department()
     {

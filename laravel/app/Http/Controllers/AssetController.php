@@ -19,7 +19,7 @@ use App\Models\AssetAttribute;
 use App\Models\AssetAttributeValue;
 use App\Http\Resources\AssetAttributeValueResource;
 use App\Models\CampaignResult;
-use App\Models\AssetZone;
+// use App\Models\AssetZone;
 use App\Http\Resources\AssetZoneResource;
 use App\Models\AssetDepartment;
 use App\Models\AssetSpare;
@@ -193,7 +193,7 @@ class AssetController extends Controller
         $data = $request->validate([
             'asset_code' => 'required|string|unique:assets,asset_code',
             'asset_name' => 'required|string|unique:assets,asset_name',
-            'no_of_zones' => 'required|integer',
+            // 'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'nullable|array',
             'asset_attributes.*.asset_attribute_id' => 'nullable|exists:asset_attributes,asset_attribute_id',
@@ -203,8 +203,8 @@ class AssetController extends Controller
             'functional_id' => 'nullable|exists:functionals,functional_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes|numeric',
-            'zone_name' => 'nullable|array', 
-            'zone_name.*' => 'nullable',
+            // 'zone_name' => 'nullable|array', 
+            // 'zone_name.*' => 'nullable',
             'plant_id' => 'required|exists:plants,plant_id',
             'area_id' => 'nullable|exists:areas,area_id',
             'geometry_type' => 'nullable',
@@ -212,31 +212,31 @@ class AssetController extends Controller
             'diameter' => 'nullable|required_if:geometry_type,Cylindrical'
         ]);
      
-        $request->validate([
-            'zone_name' => function ($attribute, $value, $fail) use ($request) {
-                if (isset($value)) {
-                    $totalHeight = 0;
-                    $assetDiameter = $request->input('diameter', 0); 
+        // $request->validate([
+        //     'zone_name' => function ($attribute, $value, $fail) use ($request) {
+        //         if (isset($value)) {
+        //             $totalHeight = 0;
+        //             $assetDiameter = $request->input('diameter', 0); 
         
-                    foreach ($value as $zone) {
-                        $zoneHeight = $zone['height'] ?? 0;
-                        $zoneDiameter = $zone['diameter'] ?? 0;
+        //             foreach ($value as $zone) {
+        //                 $zoneHeight = $zone['height'] ?? 0;
+        //                 $zoneDiameter = $zone['diameter'] ?? 0;
         
-                        $totalHeight += $zoneHeight;
+        //                 $totalHeight += $zoneHeight;
         
-                        if ($zoneDiameter != $assetDiameter) {
-                            $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
-                            return; 
-                        }
-                    }
+        //                 if ($zoneDiameter != $assetDiameter) {
+        //                     $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
+        //                     return; 
+        //                 }
+        //             }
         
-                    $assetHeight = $request->input('height', 0);
-                    if ($totalHeight != $assetHeight) {
-                        $fail("The total height of AssetZones must be equal to the Asset's height.");
-                    }
-                }
-            }
-        ]);       
+        //             $assetHeight = $request->input('height', 0);
+        //             if ($totalHeight != $assetHeight) {
+        //                 $fail("The total height of AssetZones must be equal to the Asset's height.");
+        //             }
+        //         }
+        //     }
+        // ]);       
 
         $asset = Asset::create($data);
 
@@ -264,21 +264,21 @@ class AssetController extends Controller
             }
         }
 
-        $no_of_zones = $request->no_of_zones;
-        $zoneNames = $request->zone_name;
+        // $no_of_zones = $request->no_of_zones;
+        // $zoneNames = $request->zone_name;
 
-        foreach ($zoneNames as $zoneName) {
-            AssetZone::updateOrCreate(
-                [
-                    'asset_id' => $asset->asset_id,
-                    'zone_name' => $zoneName['zone_name']
-                ],
-                [
-                    'height' => $zoneName['height'] ?? 0,
-                    'diameter' => $zoneName['diameter'] ?? 0
-                ]
-            );
-        }
+        // foreach ($zoneNames as $zoneName) {
+        //     AssetZone::updateOrCreate(
+        //         [
+        //             'asset_id' => $asset->asset_id,
+        //             'zone_name' => $zoneName['zone_name']
+        //         ],
+        //         [
+        //             'height' => $zoneName['height'] ?? 0,
+        //             'diameter' => $zoneName['diameter'] ?? 0
+        //         ]
+        //     );
+        // }
 
         return response()->json(["message" => "Asset created/updated successfully"], 200);
     }
@@ -341,7 +341,7 @@ class AssetController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'asset_code' => 'required|string|unique:assets,asset_code,' . $request->asset_id . ',asset_id',
             'asset_name' => 'required|string|unique:assets,asset_name,' . $request->asset_id . ',asset_id',
-            'no_of_zones' => 'required|integer',
+            // 'no_of_zones' => 'required|integer',
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_attributes' => 'nullable|array',
             'asset_attributes.*.asset_attribute_id' => 'nullable|exists:asset_attributes,asset_attribute_id',
@@ -351,7 +351,7 @@ class AssetController extends Controller
             'functional_id' => 'nullable|exists:functionals,functional_id',
             'section_id' => 'nullable|exists:sections,section_id',
             'radius' => 'nullable|sometimes|numeric',
-            'zone_name' => 'nullable|array',
+            // 'zone_name' => 'nullable|array',
             'deleted_asset_attribute_values' => 'nullable',
             'plant_id' => 'required|exists:plants,plant_id' ,
             'area_id' => 'nullable|exists:areas,area_id',
@@ -360,31 +360,31 @@ class AssetController extends Controller
             'diameter' => 'nullable|required_if:geometry_type,Cylindrical'
         ]);
 
-        $request->validate([
-            'zone_name' => function ($attribute, $value, $fail) use ($request) {
-                if (isset($value)) {
-                    $totalHeight = 0;
-                    $assetDiameter = $request->input('diameter', 0); 
+        // $request->validate([
+        //     'zone_name' => function ($attribute, $value, $fail) use ($request) {
+        //         if (isset($value)) {
+        //             $totalHeight = 0;
+        //             $assetDiameter = $request->input('diameter', 0); 
         
-                    foreach ($value as $zone) {
-                        $zoneHeight = $zone['height'] ?? 0;
-                        $zoneDiameter = $zone['diameter'] ?? 0;
+        //             foreach ($value as $zone) {
+        //                 $zoneHeight = $zone['height'] ?? 0;
+        //                 $zoneDiameter = $zone['diameter'] ?? 0;
         
-                        $totalHeight += $zoneHeight;
+        //                 $totalHeight += $zoneHeight;
         
-                        if ($zoneDiameter != $assetDiameter) {
-                            $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
-                            return; 
-                        }
-                    }
+        //                 if ($zoneDiameter != $assetDiameter) {
+        //                     $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
+        //                     return; 
+        //                 }
+        //             }
         
-                    $assetHeight = $request->input('height', 0);
-                    if ($totalHeight != $assetHeight) {
-                        $fail("The total height of AssetZones must be equal to the Asset's height.");
-                    }
-                }
-            }
-        ]);        
+        //             $assetHeight = $request->input('height', 0);
+        //             if ($totalHeight != $assetHeight) {
+        //                 $fail("The total height of AssetZones must be equal to the Asset's height.");
+        //             }
+        //         }
+        //     }
+        // ]);        
     
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
@@ -435,40 +435,40 @@ class AssetController extends Controller
             }
         }
     
-        $existingZones = AssetZone::where('asset_id', $asset->asset_id)->get();
-        $zoneNames = $request->zone_name;
+        // $existingZones = AssetZone::where('asset_id', $asset->asset_id)->get();
+        // $zoneNames = $request->zone_name;
 
-        if(isset($request->deleted_asset_zones) > 0)
-        {
-            AssetZone::whereIn('asset_zone_id', $request->deleted_asset_zones)->forceDelete();
-        }
+        // if(isset($request->deleted_asset_zones) > 0)
+        // {
+        //     AssetZone::whereIn('asset_zone_id', $request->deleted_asset_zones)->forceDelete();
+        // }
     
-        if (count($zoneNames) !== $data['no_of_zones']) {
-            return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
-        }
+        // if (count($zoneNames) !== $data['no_of_zones']) {
+        //     return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
+        // }
     
-        foreach ($zoneNames as $zoneName) 
-        {
+        // foreach ($zoneNames as $zoneName) 
+        // {
 
-            $assetZone = AssetZone::where('asset_id', $asset->asset_id)
-                              ->where('asset_zone_id', $zoneName['asset_zone_id'] ?? null)->first();
-            if($assetZone)
-            {   
-                $assetZone ->update([
-                    'zone_name' => $zoneName['zone_name'],
-                    'height' => $zoneName['height'],
-                    'diameter' => $zoneName['diameter']
-                ]);
-            }
-            else {
-                AssetZone::create([
-                    'asset_id' => $asset->asset_id,
-                    'zone_name' => $zoneName['zone_name'],
-                    'height' => $zoneName['height'],
-                    'diameter' => $zoneName['diameter']
-                ]);
-            }
-        }
+        //     $assetZone = AssetZone::where('asset_id', $asset->asset_id)
+        //                       ->where('asset_zone_id', $zoneName['asset_zone_id'] ?? null)->first();
+        //     if($assetZone)
+        //     {   
+        //         $assetZone ->update([
+        //             'zone_name' => $zoneName['zone_name'],
+        //             'height' => $zoneName['height'],
+        //             'diameter' => $zoneName['diameter']
+        //         ]);
+        //     }
+        //     else {
+        //         AssetZone::create([
+        //             'asset_id' => $asset->asset_id,
+        //             'zone_name' => $zoneName['zone_name'],
+        //             'height' => $zoneName['height'],
+        //             'diameter' => $zoneName['diameter']
+        //         ]);
+        //     }
+        // }
     
         return response()->json(["message" => "Asset Updated Successfully"]);
     }    
@@ -525,7 +525,7 @@ class AssetController extends Controller
         AssetDataSourceValue::where('asset_id', $request->asset_id)->forceDelete();
         AssetDataSource::where('asset_id', $request->asset_id)->forceDelete();
         AssetAccessory::where('asset_id', $request->asset_id)->forceDelete();
-        AssetZone::where('asset_id', $request->asset_id)->forceDelete();
+        // AssetZone::where('asset_id', $request->asset_id)->forceDelete();
         AssetDepartment::where('asset_id', $request->asset_id)->forceDelete();
         AssetAttributeValue::where('asset_id', $request->asset_id)->forceDelete();
 
@@ -590,9 +590,9 @@ class AssetController extends Controller
         return $pdf->stream('QRCode.pdf');
     }
 
-    public function getAssetZones(Request $request)
-    {
-        $zones = AssetZone::where('asset_id', $request->asset_id)->get();
-        return AssetZoneResource::collection($zones);
-    }
+    // public function getAssetZones(Request $request)
+    // {
+    //     $zones = AssetZone::where('asset_id', $request->asset_id)->get();
+    //     return AssetZoneResource::collection($zones);
+    // }
 }

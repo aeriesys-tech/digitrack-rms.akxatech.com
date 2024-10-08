@@ -12,7 +12,7 @@ class AssetSpareValue extends Model
     protected $fillable = [
         'asset_spare_id',
         'asset_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'spare_id',
         'spare_attribute_id',
         'field_value'

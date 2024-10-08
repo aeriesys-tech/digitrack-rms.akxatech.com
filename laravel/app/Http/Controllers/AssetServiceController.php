@@ -76,35 +76,36 @@ class AssetServiceController extends Controller
         // $areaId = Auth::User()->Plant->area_id;
         $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
-            'service_id' => [
-                'required',
-                'exists:services,service_id',
-                function ($attribute, $value, $fail) use ($request, $assetHasZones) {
-                    $exists = AssetService::where('service_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request, $assetHasZones) {
-                            if ($assetHasZones && $request->filled('service_asset_zones')) {
-                                $query->whereIn('asset_zone_id', $request->service_asset_zones);
-                            } else {
-                                $query->whereNull('asset_zone_id');
-                            }
-                        })->exists();
+            // 'service_id' => [
+            //     'required',
+            //     'exists:services,service_id',
+            //     function ($attribute, $value, $fail) use ($request, $assetHasZones) {
+            //         $exists = AssetService::where('service_id', $value)
+            //             ->where('asset_id', $request->asset_id)
+            //             ->where(function ($query) use ($request, $assetHasZones) {
+            //                 if ($assetHasZones && $request->filled('service_asset_zones')) {
+            //                     $query->whereIn('asset_zone_id', $request->service_asset_zones);
+            //                 } else {
+            //                     $query->whereNull('asset_zone_id');
+            //                 }
+            //             })->exists();
 
-                    if ($exists) {
-                        if ($request->filled('service_asset_zones') && $assetHasZones) {
-                            $fail('The combination of Service and Asset Zone already exists.');
-                        } else {
-                            $fail('The combination of Service and Asset already exists.');
-                        }
-                    }
-                },
-            ],
+            //         if ($exists) {
+            //             if ($request->filled('service_asset_zones') && $assetHasZones) {
+            //                 $fail('The combination of Service and Asset Zone already exists.');
+            //             } else {
+            //                 $fail('The combination of Service and Asset already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
+            'service_id' => 'required|exists:services,service_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'service_asset_zones' => [
-                $assetHasZones ? 'required' : 'nullable', 
-                'array',
-            ],
-            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
+            // 'service_asset_zones' => [
+            //     $assetHasZones ? 'required' : 'nullable', 
+            //     'array',
+            // ],
+            // 'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $service = Service::where('service_id', $request->service_id)->first();
@@ -114,57 +115,54 @@ class AssetServiceController extends Controller
         $data['area_id'] = $asset->area_id;
         $data['service_type_id'] = $service->service_type_id;
 
-        $createdServices = [];
+        // $createdServices = [];
+        // if (!empty($data['service_asset_zones'])) 
+        // {
+        //     foreach ($data['service_asset_zones'] as $zoneId) 
+        //     {              
+        //         if (is_null($zoneId) || $zoneId == 0) 
+        //         {
+        //             continue;
+        //         }
 
-        if (!empty($data['service_asset_zones'])) 
+        //         $serviceData = $data;
+        //         $serviceData['asset_zone_id'] = $zoneId;
+
+        //         $assetService = AssetService::create($serviceData);
+        //         $createdServices[] = new AssetServiceResource($assetService);
+
+        //         foreach($request->asset_service_attributes as $attribute)
+        //         {
+        //             AssetServiceValue::create([
+        //                 'asset_service_id' => $assetService->asset_service_id,
+        //                 'asset_id' => $assetService->asset_id,
+        //                 'service_id' => $assetService->service_id,
+        //                 'asset_zone_id' => $assetService->asset_zone_id,
+        //                 'service_attribute_id' => $attribute['service_attribute_id'],
+        //                 'field_value' => $attribute['field_value'] ?? ''
+        //             ]);
+        //         }
+        //     }
+        // } 
+
+        $assetService = AssetService::create($data);
+        
+        foreach($request->asset_service_attributes as $attribute)
         {
-            foreach ($data['service_asset_zones'] as $zoneId) 
-            {              
-                if (is_null($zoneId) || $zoneId == 0) 
-                {
-                    continue;
-                }
-
-                $serviceData = $data;
-                $serviceData['asset_zone_id'] = $zoneId;
-
-                $assetService = AssetService::create($serviceData);
-                $createdServices[] = new AssetServiceResource($assetService);
-
-                foreach($request->asset_service_attributes as $attribute)
-                {
-                    AssetServiceValue::create([
-                        'asset_service_id' => $assetService->asset_service_id,
-                        'asset_id' => $assetService->asset_id,
-                        'service_id' => $assetService->service_id,
-                        'asset_zone_id' => $assetService->asset_zone_id,
-                        'service_attribute_id' => $attribute['service_attribute_id'],
-                        'field_value' => $attribute['field_value'] ?? ''
-                    ]);
-                }
-            }
-        } 
-        else 
-        {
-            $serviceData = $data;
-            $serviceData['asset_zone_id'] = null;
-
-            $assetService = AssetService::create($serviceData);
-            $createdServices[] = new AssetServiceResource($assetService);
-
-            foreach($request->asset_service_attributes as $attribute)
-            {
-                AssetServiceValue::create([
-                    'asset_service_id' => $assetService->asset_service_id,
-                    'asset_id' => $assetService->asset_id,
-                    'service_id' => $assetService->service_id,
-                    'asset_zone_id' => $assetService->asset_zone_id,
-                    'service_attribute_id' => $attribute['service_attribute_id'],
-                    'field_value' => $attribute['field_value'] ?? ''
-                ]);
-            }
+            AssetServiceValue::create([
+                'asset_service_id' => $assetService->asset_service_id,
+                'asset_id' => $assetService->asset_id,
+                'service_id' => $assetService->service_id,
+                // 'asset_zone_id' => $assetService->asset_zone_id,
+                'service_attribute_id' => $attribute['service_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? ''
+            ]);
         }
-        return response()->json([$createdServices, "message" => "AssetService Created Successfully"]);
+        
+        return response()->json([
+            new AssetServiceResource($assetService),
+            "message" => "AssetService Created Successfully"
+        ]);
     }
 
     public function getAssetService(Request $request)
@@ -176,7 +174,6 @@ class AssetServiceController extends Controller
         $asset_service = AssetService::where('asset_service_id',$request->asset_service_id)->first();
         return new AssetServiceResource($asset_service);
     }
-
 
     public function getAssetsServices(Request $request)
     {
@@ -197,7 +194,6 @@ class AssetServiceController extends Controller
         return response()->json($asset_services);
     }
 
-
     public function getAssetServices()
     {
         $asset_service = AssetService::all();
@@ -210,32 +206,33 @@ class AssetServiceController extends Controller
         $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'asset_service_id' => 'required|exists:asset_services,asset_service_id',
-            'service_id' => [
-                'required',
-                'exists:services,service_id',
-                function ($attribute, $value, $fail) use ($request, $asset_services) 
-                {
-                    if ($value != $asset_services->service_id) {
-                        $exists = AssetService::where('service_id', $value)
-                            ->where('asset_id', $request->asset_id)
-                            ->where(function ($query) use ($request) {
-                                if ($request->filled('asset_zone_id')) {
-                                    $query->where('asset_zone_id', $request->asset_zone_id);
-                                } else {
-                                    $query->whereNull('asset_zone_id');
-                                }
-                            })->where('asset_service_id', '!=', $request->asset_service_id)->exists();
+            // 'service_id' => [
+            //     'required',
+            //     'exists:services,service_id',
+            //     function ($attribute, $value, $fail) use ($request, $asset_services) 
+            //     {
+            //         if ($value != $asset_services->service_id) {
+            //             $exists = AssetService::where('service_id', $value)
+            //                 ->where('asset_id', $request->asset_id)
+            //                 ->where(function ($query) use ($request) {
+            //                     if ($request->filled('asset_zone_id')) {
+            //                         $query->where('asset_zone_id', $request->asset_zone_id);
+            //                     } else {
+            //                         $query->whereNull('asset_zone_id');
+            //                     }
+            //                 })->where('asset_service_id', '!=', $request->asset_service_id)->exists();
     
-                        if ($exists) {
-                            $fail('The combination of Service, Asset, and Asset Zone already exists.');
-                        }
-                    }
-                },
-            ],
+            //             if ($exists) {
+            //                 $fail('The combination of Service, Asset, and Asset Zone already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
+            'service_id' => 'required|exists:services,service_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => [
-                $assetHasZones ? 'required' : 'nullable',
-            ],
+            // 'asset_zone_id' => [
+            //     $assetHasZones ? 'required' : 'nullable',
+            // ],
         ]);
 
         $service = Service::where('service_id', $request->service_id)->first();
@@ -261,7 +258,7 @@ class AssetServiceController extends Controller
                 AssetServiceValue::updateOrCreate(
                     [
                         'asset_service_id' => $asset_service->asset_service_id,
-                        'asset_zone_id' => $asset_service->asset_zone_id,
+                        // 'asset_zone_id' => $asset_service->asset_zone_id,
                         'service_id' => $service->service_id,
                         'asset_id' =>  $asset_service->asset_id,
                         'service_attribute_id' => $attribute['service_attribute_id'],

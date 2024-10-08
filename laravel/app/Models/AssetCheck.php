@@ -14,7 +14,7 @@ class AssetCheck extends Model
         'area_id',
         'plant_id',
         'asset_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'check_id',
         'default_value',
         'lcl',

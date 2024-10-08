@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Resources\AssetSpareResource;
 use App\Models\AssetSpare;
 use App\Models\Spare;
-use App\Models\AssetZone;
 use App\Models\Asset;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SpareResource;
@@ -72,37 +71,9 @@ class AssetSpareController extends Controller
 
     public function addAssetSpare(Request $request)
     {
-        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
-           'spare_id' => [
-                'required',
-                'exists:spares,spare_id',
-                function ($attribute, $value, $fail) use ($request, $assetHasZones) {
-                    $exists = AssetSpare::where('spare_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request, $assetHasZones) {
-                            if ($assetHasZones && $request->filled('spare_asset_zones')) {
-                                $query->whereIn('asset_zone_id', $request->spare_asset_zones);
-                            } else {
-                                $query->whereNull('asset_zone_id');
-                            }
-                        })->exists();
-
-                    if ($exists) {
-                        if ($request->filled('spare_asset_zones') && $assetHasZones) {
-                            $fail('The combination of Spare, Asset, and Asset Zone already exists.');
-                        } else {
-                            $fail('The combination of Spare and Asset already exists.');
-                        }
-                    }
-                },
-            ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'spare_asset_zones' => [
-                $assetHasZones ? 'required' : 'nullable', 
-                'array',
-            ],
-            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id',
+            'spare_id' => 'required|exists:spares,spare_id',
             'quantity' =>  'required|integer|min:1'
         ]);
 
@@ -113,57 +84,24 @@ class AssetSpareController extends Controller
         $data['plant_id'] = $asset->plant_id;
         $data['area_id'] = $asset->area_id;
 
-        $createdSpares = [];
+        $assetSpare = AssetSpare::create($data);
 
-        if (!empty($data['spare_asset_zones'])) 
+        foreach($request->asset_spare_attributes as $attribute)
         {
-            foreach ($data['spare_asset_zones'] as $zoneId) 
-            {              
-                if (is_null($zoneId) || $zoneId == 0) 
-                {
-                    continue;
-                }
-
-                $spareData = $data;
-                $spareData['asset_zone_id'] = $zoneId;
-
-                $assetSpare = AssetSpare::create($spareData);
-                $createdSpares[] = new AssetSpareResource($assetSpare);
-
-                foreach($request->asset_spare_attributes as $attribute)
-                {
-                    AssetSpareValue::create([
-                        'asset_spare_id' => $assetSpare->asset_spare_id,
-                        'asset_id' => $assetSpare->asset_id,
-                        'spare_id' => $assetSpare->spare_id,
-                        'asset_zone_id' => $assetSpare->asset_zone_id,
-                        'spare_attribute_id' => $attribute['spare_attribute_id'],
-                        'field_value' => $attribute['field_value'] ?? ''
-                    ]);
-                }
-            }
-        } 
-        else 
-        {
-            $spareData = $data;
-            $spareData['asset_zone_id'] = null;
-
-            $assetSpare = AssetSpare::create($spareData);
-            $createdSpares[] = new AssetSpareResource($assetSpare);
-
-            foreach($request->asset_spare_attributes as $attribute)
-            {
-                AssetSpareValue::create([
-                    'asset_spare_id' => $assetSpare->asset_spare_id,
-                    'asset_id' => $assetSpare->asset_id,
-                    'spare_id' => $assetSpare->spare_id,
-                    'asset_zone_id' => $assetSpare->asset_zone_id,
-                    'spare_attribute_id' => $attribute['spare_attribute_id'],
-                    'field_value' => $attribute['field_value'] ?? ''
-                ]);
-            }
+            AssetSpareValue::create([
+                'asset_spare_id' => $assetSpare->asset_spare_id,
+                'asset_id' => $assetSpare->asset_id,
+                'spare_id' => $assetSpare->spare_id,
+                'asset_zone_id' => $assetSpare->asset_zone_id,
+                'spare_attribute_id' => $attribute['spare_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? ''
+            ]);
         }
-        return response()->json([$createdSpares, 201,  "message" => "AssetSpare Created Successfully"]);
+       
+        return response()->json([ 
+            new AssetSpareResource($assetSpare),
+            "message" => "AssetSpare Created Successfully"
+        ]);
     }
 
     public function getAssetSpare(Request $request)
@@ -209,36 +147,37 @@ class AssetSpareController extends Controller
         // $userPlantId = Auth::User()->plant_id;
         // $areaId = Auth::User()->Plant->area_id;
 
-        $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->first();
-        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        // $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->first();
+        // $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'asset_spare_id' => 'required|exists:asset_spares,asset_spare_id',
-            'spare_id' => [
-                'required',
-                'exists:spares,spare_id',
-                function ($attribute, $value, $fail) use ($request, $asset_spare) 
-                {
-                    if ($value != $asset_spare->spare_id) {
-                        $exists = AssetSpare::where('spare_id', $value)
-                            ->where('asset_id', $request->asset_id)
-                            ->where(function ($query) use ($request) {
-                                if ($request->filled('asset_zone_id')) {
-                                    $query->where('asset_zone_id', $request->asset_zone_id);
-                                } else {
-                                    $query->whereNull('asset_zone_id');
-                                }
-                            })->where('asset_spare_id', '!=', $request->asset_spare_id)->exists();
+            // 'spare_id' => [
+            //     'required',
+            //     'exists:spares,spare_id',
+            //     function ($attribute, $value, $fail) use ($request, $asset_spare) 
+            //     {
+            //         if ($value != $asset_spare->spare_id) {
+            //             $exists = AssetSpare::where('spare_id', $value)
+            //                 ->where('asset_id', $request->asset_id)
+            //                 ->where(function ($query) use ($request) {
+            //                     if ($request->filled('asset_zone_id')) {
+            //                         $query->where('asset_zone_id', $request->asset_zone_id);
+            //                     } else {
+            //                         $query->whereNull('asset_zone_id');
+            //                     }
+            //                 })->where('asset_spare_id', '!=', $request->asset_spare_id)->exists();
     
-                        if ($exists) {
-                            $fail('The combination of Spare, Asset, and Asset Zone already exists.');
-                        }
-                    }
-                },
-            ],
+            //             if ($exists) {
+            //                 $fail('The combination of Spare, Asset, and Asset Zone already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => [
-                $assetHasZones ? 'required' : 'nullable',
-            ],
+            // 'asset_zone_id' => [
+            //     $assetHasZones ? 'required' : 'nullable',
+            // ],
+            'spare_id' => 'required|exists:spares,spare_id',
             'quantity' =>  'required|integer|min:1'
         ]);
 
@@ -265,7 +204,7 @@ class AssetSpareController extends Controller
                 AssetSpareValue::updateOrCreate(
                     [
                         'asset_spare_id' => $asset_spare->asset_spare_id,
-                        'asset_zone_id' => $asset_spare->asset_zone_id,
+                        // 'asset_zone_id' => $asset_spare->asset_zone_id,
                         'spare_id' => $spare->spare_id,
                         'asset_id' =>  $asset_spare->asset_id,
                         'spare_attribute_id' => $attribute['spare_attribute_id'],

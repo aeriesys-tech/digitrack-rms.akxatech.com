@@ -13,7 +13,7 @@ class AssetVariableValue extends Model
         'asset_variable_id',
         'asset_id',
         'variable_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'variable_attribute_id',
         'field_value'
     ];

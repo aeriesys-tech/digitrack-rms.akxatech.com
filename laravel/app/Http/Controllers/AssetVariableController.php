@@ -77,37 +77,38 @@ class AssetVariableController extends Controller
 
     public function addAssetVariable(Request $request)
     {
-        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        // $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
-            'variable_id' => [
-                'required',
-                'exists:variables,variable_id',
-                function ($attribute, $value, $fail) use ($request, $assetHasZones) {
-                    $exists = AssetVariable::where('variable_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request, $assetHasZones) {
-                            if ($assetHasZones && $request->filled('variable_asset_zones')) {
-                                $query->whereIn('asset_zone_id', $request->variable_asset_zones);
-                            } else {
-                                $query->whereNull('asset_zone_id');
-                            }
-                        })->exists();
+            // 'variable_id' => [
+            //     'required',
+            //     'exists:variables,variable_id',
+            //     function ($attribute, $value, $fail) use ($request, $assetHasZones) {
+            //         $exists = AssetVariable::where('variable_id', $value)
+            //             ->where('asset_id', $request->asset_id)
+            //             ->where(function ($query) use ($request, $assetHasZones) {
+            //                 if ($assetHasZones && $request->filled('variable_asset_zones')) {
+            //                     $query->whereIn('asset_zone_id', $request->variable_asset_zones);
+            //                 } else {
+            //                     $query->whereNull('asset_zone_id');
+            //                 }
+            //             })->exists();
 
-                    if ($exists) {
-                        if ($request->filled('variable_asset_zones') && $assetHasZones) {
-                            $fail('The combination of Variable and Asset Zone already exists.');
-                        } else {
-                            $fail('The combination of Variable and Asset already exists.');
-                        }
-                    }
-                },
-            ],
+            //         if ($exists) {
+            //             if ($request->filled('variable_asset_zones') && $assetHasZones) {
+            //                 $fail('The combination of Variable and Asset Zone already exists.');
+            //             } else {
+            //                 $fail('The combination of Variable and Asset already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
+            'variable_id' => 'required|exists:variables,variable_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'variable_asset_zones' => [
-                $assetHasZones ? 'required' : 'nullable', 
-                'array',
-            ],
-            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
+            // 'variable_asset_zones' => [
+            //     $assetHasZones ? 'required' : 'nullable', 
+            //     'array',
+            // ],
+            // 'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $variable = Variable::where('variable_id', $request->variable_id)->first();
@@ -120,55 +121,53 @@ class AssetVariableController extends Controller
 
         $createdVariables = [];
 
-        if (!empty($data['variable_asset_zones'])) 
+        // if (!empty($data['variable_asset_zones'])) 
+        // {
+        //     foreach ($data['variable_asset_zones'] as $zoneId) 
+        //     {              
+        //         if (is_null($zoneId) || $zoneId == 0) 
+        //         {
+        //             continue;
+        //         }
+
+        //         $variableData = $data;
+        //         $variableData['asset_zone_id'] = $zoneId;
+
+        //         $assetVariable = AssetVariable::create($variableData);
+        //         $createdVariables[] = new AssetVariableResource($assetVariable);
+
+        //         foreach($request->asset_variable_attributes as $attribute)
+        //         {
+        //             AssetVariableValue::create([
+        //                 'asset_variable_id' => $assetVariable->asset_variable_id,
+        //                 'asset_id' => $assetVariable->asset_id,
+        //                 'variable_id' => $variable->variable_id,
+        //                 'asset_zone_id' => $assetVariable->asset_zone_id,
+        //                 'variable_attribute_id' => $attribute['variable_attribute_id'],
+        //                 'field_value' => $attribute['field_value'] ?? ''
+        //             ]);
+        //         }
+        //     }
+        // } 
+
+        $assetVariable = AssetVariable::create($data);
+
+        foreach($request->asset_variable_attributes as $attribute)
         {
-            foreach ($data['variable_asset_zones'] as $zoneId) 
-            {              
-                if (is_null($zoneId) || $zoneId == 0) 
-                {
-                    continue;
-                }
-
-                $variableData = $data;
-                $variableData['asset_zone_id'] = $zoneId;
-
-                $assetVariable = AssetVariable::create($variableData);
-                $createdVariables[] = new AssetVariableResource($assetVariable);
-
-                foreach($request->asset_variable_attributes as $attribute)
-                {
-                    AssetVariableValue::create([
-                        'asset_variable_id' => $assetVariable->asset_variable_id,
-                        'asset_id' => $assetVariable->asset_id,
-                        'variable_id' => $variable->variable_id,
-                        'asset_zone_id' => $assetVariable->asset_zone_id,
-                        'variable_attribute_id' => $attribute['variable_attribute_id'],
-                        'field_value' => $attribute['field_value'] ?? ''
-                    ]);
-                }
-            }
-        } 
-        else 
-        {
-            $variableData = $data;
-            $variableData['asset_zone_id'] = null;
-
-            $assetVariable = AssetVariable::create($variableData);
-            $createdVariables[] = new AssetVariableResource($assetVariable);
-            foreach($request->asset_variable_attributes as $attribute)
-            {
-                AssetVariableValue::create([
-                    'asset_variable_id' => $assetVariable->asset_variable_id,
-                    'asset_id' => $assetVariable->asset_id,
-                    'variable_id' => $variable->variable_id,
-                    'asset_zone_id' => $assetVariable->asset_zone_id,
-                    'variable_attribute_id' => $attribute['variable_attribute_id'],
-                    'field_value' => $attribute['field_value'] ?? ''
-                ]);
-            }
+            AssetVariableValue::create([
+                'asset_variable_id' => $assetVariable->asset_variable_id,
+                'asset_id' => $assetVariable->asset_id,
+                'variable_id' => $variable->variable_id,
+                // 'asset_zone_id' => $assetVariable->asset_zone_id,
+                'variable_attribute_id' => $attribute['variable_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? ''
+            ]);
         }
 
-        return response()->json([$createdVariables, "message" => "AssetVariable Created Successfully"]);
+        return response()->json([
+            new AssetVariableResource($assetVariable), 
+            "message" => "AssetVariable Created Successfully"
+        ]);
     }
 
     public function getAssetVariable(Request $request)
@@ -187,32 +186,33 @@ class AssetVariableController extends Controller
         $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'asset_variable_id' => 'required|exists:asset_variables,asset_variable_id',
-            'variable_id' => [
-                'required',
-                'exists:variables,variable_id',
-                function ($attribute, $value, $fail) use ($request, $asset_variables) 
-                {
-                    if ($value != $asset_variables->variable_id) {
-                        $exists = AssetVariable::where('variable_id', $value)
-                            ->where('asset_id', $request->asset_id)
-                            ->where(function ($query) use ($request) {
-                                if ($request->filled('asset_zone_id')) {
-                                    $query->where('asset_zone_id', $request->asset_zone_id);
-                                } else {
-                                    $query->whereNull('asset_zone_id');
-                                }
-                            })->where('asset_variable_id', '!=', $request->asset_variable_id)->exists();
+            // 'variable_id' => [
+            //     'required',
+            //     'exists:variables,variable_id',
+            //     function ($attribute, $value, $fail) use ($request, $asset_variables) 
+            //     {
+            //         if ($value != $asset_variables->variable_id) {
+            //             $exists = AssetVariable::where('variable_id', $value)
+            //                 ->where('asset_id', $request->asset_id)
+            //                 ->where(function ($query) use ($request) {
+            //                     if ($request->filled('asset_zone_id')) {
+            //                         $query->where('asset_zone_id', $request->asset_zone_id);
+            //                     } else {
+            //                         $query->whereNull('asset_zone_id');
+            //                     }
+            //                 })->where('asset_variable_id', '!=', $request->asset_variable_id)->exists();
     
-                        if ($exists) {
-                            $fail('The combination of Service, Asset, and Asset Zone already exists.');
-                        }
-                    }
-                },
-            ],
+            //             if ($exists) {
+            //                 $fail('The combination of Service, Asset, and Asset Zone already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
+            'variable_id' => 'required|exists:variables,variable_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => [
-                $assetHasZones ? 'required' : 'nullable',
-            ],
+            // 'asset_zone_id' => [
+            //     $assetHasZones ? 'required' : 'nullable',
+            // ],
         ]);
 
         $variable = Variable::where('variable_id', $request->variable_id)->first();
@@ -239,7 +239,7 @@ class AssetVariableController extends Controller
                 AssetVariableValue::updateOrCreate(
                     [
                         'asset_variable_id' => $asset_variable->asset_variable_id,
-                        'asset_zone_id' => $asset_variable->asset_zone_id,
+                        // 'asset_zone_id' => $asset_variable->asset_zone_id,
                         'variable_id' => $variable->variable_id,
                         'asset_id' =>  $asset_variable->asset_id,
                         'variable_attribute_id' => $attribute['variable_attribute_id'],
@@ -282,54 +282,53 @@ class AssetVariableController extends Controller
     }
 
 
-    // public function getAssetRegisterVariables(Request $request)
-    // {
-    //     $request->validate([
-    //         'asset_id' => 'required|exists:assets,asset_id',
-    //         // 'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id'
-    //     ]);
-
-    //     $asset = Asset::where('asset_id', $request->asset_id)->with('Zones')->first();
-
-    //     $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
-    //     $query = AssetVariable::where('asset_id', $request->asset_id)->whereIn('asset_zone_id', $asset_zone_ids);
-
-    //     $asset_variable_ids =  $query->pluck('variable_id')->toArray();
-    //     $asset_variable = Variable::whereIn('variable_id', $asset_variable_ids)->get();
-
-    //     return $asset_variable;
-    // }
-
     public function getAssetRegisterVariables(Request $request)
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
+            // 'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id'
         ]);
-    
-        // Fetch the asset and its associated zones
-        $asset = Asset::where('asset_id', $request->asset_id)->with('Zones')->first();
-        
-        if (!$asset || $asset->Zones->isEmpty()) {
-            return response()->json(['message' => 'No asset zones found for this asset.'], 200);
-        }
-    
-        $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
-       
-        $variable_ids = collect();
-        foreach ($asset_zone_ids as $zone_id) 
-        {            
-            $variable_collection = collect();
-            $asset_variables = AssetVariable::where('asset_zone_id', $zone_id)->pluck('variable_id')->toArray();
 
-            foreach($asset_variables as $variable_id)
-            {
-                $variables = Variable::where('variable_id', $variable_id)->get();
-                $variable_collection = $variable_collection->merge($variables);
-            }
-            $variable_ids = $variable_ids->push($variable_collection);
-        }
-        return response()->json($variable_ids);
-    }    
+        // $asset = Asset::where('asset_id', $request->asset_id)->first();
+        // $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
+        $query = AssetVariable::where('asset_id', $request->asset_id);
+
+        $asset_variable_ids =  $query->pluck('variable_id')->toArray();
+        $asset_variable = Variable::whereIn('variable_id', $asset_variable_ids)->get();
+
+        return $asset_variable;
+    }
+
+    // public function getAssetRegisterVariables(Request $request)
+    // {
+    //     $request->validate([
+    //         'asset_id' => 'required|exists:assets,asset_id',
+    //     ]);
+    
+    //     // Fetch the asset and its associated zones
+    //     $asset = Asset::where('asset_id', $request->asset_id)->with('Zones')->first();
+        
+    //     if (!$asset || $asset->Zones->isEmpty()) {
+    //         return response()->json(['message' => 'No asset zones found for this asset.'], 200);
+    //     }
+    
+    //     $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
+       
+    //     $variable_ids = collect();
+    //     foreach ($asset_zone_ids as $zone_id) 
+    //     {            
+    //         $variable_collection = collect();
+    //         $asset_variables = AssetVariable::where('asset_zone_id', $zone_id)->pluck('variable_id')->toArray();
+
+    //         foreach($asset_variables as $variable_id)
+    //         {
+    //             $variables = Variable::where('variable_id', $variable_id)->get();
+    //             $variable_collection = $variable_collection->merge($variables);
+    //         }
+    //         $variable_ids = $variable_ids->push($variable_collection);
+    //     }
+    //     return response()->json($variable_ids);
+    // }    
 
     public function assetVariableAttributeValues(Request $request)
     {

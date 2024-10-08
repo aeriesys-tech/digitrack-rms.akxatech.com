@@ -15,7 +15,7 @@ class AssetService extends Model
         'asset_id',
         'plant_id',
         'area_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'service_type_id'
     ];
 
@@ -41,10 +41,10 @@ class AssetService extends Model
         return $this->belongsTo(Area::class, 'area_id');
     }
 
-    public function AssetZone()
-    {
-        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
-    }
+    // public function AssetZone()
+    // {
+    //     return $this->belongsTo(AssetZone::class, 'asset_zone_id');
+    // }
 
     public function ServiceType()
     {

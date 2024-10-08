@@ -85,37 +85,38 @@ class AssetCheckController extends Controller
 
     public function addAssetCheck(Request $request)
     {
-        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        // $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
-            'check_id' => [
-                'required',
-                'exists:checks,check_id',
-                function ($attribute, $value, $fail) use ($request, $assetHasZones) {
-                    $exists = AssetCheck::where('check_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request, $assetHasZones) {
-                            if ($assetHasZones && $request->filled('check_asset_zones')) {
-                                $query->whereIn('asset_zone_id', $request->check_asset_zones);
-                            } else {
-                                $query->whereNull('asset_zone_id');
-                            }
-                        })->exists();
+            // 'check_id' => [
+            //     'required',
+            //     'exists:checks,check_id',
+            //     function ($attribute, $value, $fail) use ($request, $assetHasZones) {
+            //         $exists = AssetCheck::where('check_id', $value)
+            //             ->where('asset_id', $request->asset_id)
+            //             ->where(function ($query) use ($request, $assetHasZones) {
+            //                 if ($assetHasZones && $request->filled('check_asset_zones')) {
+            //                     $query->whereIn('asset_zone_id', $request->check_asset_zones);
+            //                 } else {
+            //                     $query->whereNull('asset_zone_id');
+            //                 }
+            //             })->exists();
 
-                    if ($exists) {
-                        if ($request->filled('check_asset_zones') && $assetHasZones) {
-                            $fail('The combination of Check and Asset Zone already exists.');
-                        } else {
-                            $fail('The combination of Check and Asset already exists.');
-                        }
-                    }
-                },
-            ],
+            //         if ($exists) {
+            //             if ($request->filled('check_asset_zones') && $assetHasZones) {
+            //                 $fail('The combination of Check and Asset Zone already exists.');
+            //             } else {
+            //                 $fail('The combination of Check and Asset already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
             'asset_id' => 'required|exists:assets,asset_id',
-            'check_asset_zones' => [
-                $assetHasZones ? 'required' : 'nullable', 
-                'array',
-            ],
-            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
+            // 'check_asset_zones' => [
+            //     $assetHasZones ? 'required' : 'nullable', 
+            //     'array',
+            // ],
+            'check_id' => 'required|exists:checks,check_id',
+            // 'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
         ]);
 
         $asset = Asset::where('asset_id', $request->asset_id)->first();
@@ -129,33 +130,27 @@ class AssetCheckController extends Controller
         $data['ucl'] = $request->input('ucl', $check->ucl);
         $data['default_value'] = $request->input('default_value', $check->default_value);
 
-        $createdChecks = [];
+        // $createdChecks = [];
+        // if (!empty($data['check_asset_zones'])) 
+        // {
+        //     foreach ($data['check_asset_zones'] as $zoneId) 
+        //     {              
+        //         if (is_null($zoneId) || $zoneId == 0) 
+        //         {
+        //             continue;
+        //         }
+        //         $checksData = $data;
+        //         $checksData['asset_zone_id'] = $zoneId;
+        //         $assetChecks = AssetCheck::create($checksData);
+        //         $createdChecks[] = new AssetCheckResource($assetChecks);
+        //     }
+        // } 
 
-        if (!empty($data['check_asset_zones'])) 
-        {
-            foreach ($data['check_asset_zones'] as $zoneId) 
-            {              
-                if (is_null($zoneId) || $zoneId == 0) 
-                {
-                    continue;
-                }
-
-                $checksData = $data;
-                $checksData['asset_zone_id'] = $zoneId;
-
-                $assetChecks = AssetCheck::create($checksData);
-                $createdChecks[] = new AssetCheckResource($assetChecks);
-            }
-        } 
-        else 
-        {
-            $checksData = $data;
-            $checksData['asset_zone_id'] = null;
-
-            $assetChecks = AssetCheck::create($checksData);
-            $createdChecks[] = new AssetCheckResource($assetChecks);
-        }
-        return response()->json([$createdChecks, "message" => "AssetCheck Created Successfully"]);
+        $assetChecks = AssetCheck::create($data);
+        return response()->json([
+            new AssetCheckResource($assetChecks), 
+            "message" => "AssetCheck Created Successfully"
+        ]);
     }
 
     public function getAssetCheck(Request $request)
@@ -181,15 +176,15 @@ class AssetCheckController extends Controller
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            // 'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'department_id' => 'nullable|exists:departments,department_id'
         ]);
         $query = AssetCheck::query();
 
-        if (isset($request->asset_zone_id)) 
-        {
-            $query->where('asset_zone_id', $request->asset_zone_id);
-        }
+        // if (isset($request->asset_zone_id)) 
+        // {
+        //     $query->where('asset_zone_id', $request->asset_zone_id);
+        // }
 
         if (isset($request->department_id)) 
         {
@@ -203,39 +198,40 @@ class AssetCheckController extends Controller
 
     public function updateAssetCheck(Request $request)
     {
-        $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->first();
-        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        // $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->first();
+        // $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'asset_check_id' => 'required|exists:asset_checks,asset_check_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'check_id' => [
-                'required',
-                'exists:checks,check_id',
-                function ($attribute, $value, $fail) use ($request, $asset_check) 
-                {
-                    if ($value != $asset_check->check_id) {
-                        $exists = AssetCheck::where('check_id', $value)
-                            ->where('asset_id', $request->asset_id)
-                            ->where(function ($query) use ($request) {
-                                if ($request->filled('asset_zone_id')) {
-                                    $query->where('asset_zone_id', $request->asset_zone_id);
-                                } else {
-                                    $query->whereNull('asset_zone_id');
-                                }
-                            })->where('asset_check_id', '!=', $request->asset_check_id)->exists();
+            // 'check_id' => [
+            //     'required',
+            //     'exists:checks,check_id',
+            //     function ($attribute, $value, $fail) use ($request, $asset_check) 
+            //     {
+            //         if ($value != $asset_check->check_id) {
+            //             $exists = AssetCheck::where('check_id', $value)
+            //                 ->where('asset_id', $request->asset_id)
+            //                 ->where(function ($query) use ($request) {
+            //                     if ($request->filled('asset_zone_id')) {
+            //                         $query->where('asset_zone_id', $request->asset_zone_id);
+            //                     } else {
+            //                         $query->whereNull('asset_zone_id');
+            //                     }
+            //                 })->where('asset_check_id', '!=', $request->asset_check_id)->exists();
     
-                        if ($exists) {
-                            $fail('The combination of Check, Asset, and Asset Zone already exists.');
-                        }
-                    }
-                },
-            ],
-            'lcl' => 'nullable|sometimes',
-            'ucl' => 'nullable|sometimes',
+            //             if ($exists) {
+            //                 $fail('The combination of Check, Asset, and Asset Zone already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
+            'check_id' => 'required|exists:checks,check_id',
+            'lcl' => 'nullable|sometimes|integer',
+            'ucl' => 'nullable|sometimes|integer',
             'default_value' =>'nullable|sometimes',
-            'asset_zone_id' => [
-                $assetHasZones ? 'required' : 'nullable',
-            ],
+            // 'asset_zone_id' => [
+            //     $assetHasZones ? 'required' : 'nullable',
+            // ],
         ]);
 
         $asset = Asset::where('asset_id', $request->asset_id)->first();

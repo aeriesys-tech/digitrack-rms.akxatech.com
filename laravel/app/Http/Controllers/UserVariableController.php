@@ -20,10 +20,10 @@ class UserVariableController extends Controller
             'keyword' => 'required'
         ]);
 
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query =  UserVariable::query();
 
-        $query->where('plant_id', $authPlantId);
+        // $query->where('plant_id', $authPlantId);
 
         if(isset($request->plant_id))
         {
@@ -97,9 +97,9 @@ class UserVariableController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required',
             'note' => 'nullable|sometimes',
-            'user_asset_variables.*.*.value' => 'required'
+            'user_asset_variables.*.value' => 'required'
         ],[
-            'user_asset_variables.*.*.value.required' => "value field is required"
+            'user_asset_variables.*.value.required' => "value field is required"
         ]);
         $data['job_no'] = $this->generateJobNo();
         $data['plant_id'] = $asset->plant_id;
@@ -107,19 +107,19 @@ class UserVariableController extends Controller
 
         $user_variable = UserVariable::create($data);
 
-        $assetZones = AssetZone::where('asset_id', $request->asset_id)->get();
+        // $assetZones = AssetZone::where('asset_id', $request->asset_id)->get();
 
-        foreach ($request->user_asset_variables as $variables) 
+        foreach ($request->user_asset_variables as $variable) 
         {
-            foreach($variables as $variable)
-            {
+            // foreach($variables as $variable)
+            // {
                 UserAssetVariable::create([
                     'user_variable_id' => $user_variable->user_variable_id,
                     'variable_id' =>  $variable['variable_id'],
-                    'asset_zone_id' => $variable['asset_zone_id'],
+                    // 'asset_zone_id' => $variable['asset_zone_id'],
                     'value' => $variable['value'] ?? null
                 ]); 
-            }
+            // }
         }
 
         return response()->json([
@@ -135,9 +135,9 @@ class UserVariableController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'job_date' => 'required|date',
             'note' => 'nullable|sometimes',
-            'user_asset_variables.*.*.value' => 'required'
+            'user_asset_variables.*.value' => 'required'
         ],[
-            'user_asset_variables.*.*.value.required' => "value field is required"
+            'user_asset_variables.*.value.required' => "value field is required"
         ]);
         
         $data['plant_id'] = $asset->plant_id;
@@ -147,10 +147,10 @@ class UserVariableController extends Controller
         $user_variable->update($data);
         
         //UserAssetCheck
-        foreach($request->user_asset_variables as $asset_variables)
+        foreach($request->user_asset_variables as $asset_variable)
         {
-            foreach($asset_variables as $asset_variable)
-            {
+            // foreach($asset_variables as $asset_variable)
+            // {
                 $UserAssetVariable = UserAssetVariable::where('user_asset_variable_id', $asset_variable['user_asset_variable_id'])->first();
             
                 if ($UserAssetVariable) {
@@ -162,11 +162,11 @@ class UserVariableController extends Controller
                     UserAssetVariable::create([
                         'user_variable_id' => $user_variable->user_variable_id,
                         'variable_id' => $asset_variable['variable_id'],
-                        'asset_zone_id' => $asset_variable['asset_zone_id'],
+                        // 'asset_zone_id' => $asset_variable['asset_zone_id'],
                         'value' => $asset_variable['value']
                     ]);
                 }
-            }
+            // }
         }
         return response()->json(["message" => "UserVariable Updated Successfully"]);
     }

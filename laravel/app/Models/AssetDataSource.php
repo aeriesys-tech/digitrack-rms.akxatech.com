@@ -14,7 +14,7 @@ class AssetDataSource extends Model
         'asset_id',
         'plant_id',
         'area_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'data_source_type_id',
         'script'
     ];
@@ -41,10 +41,10 @@ class AssetDataSource extends Model
         return $this->belongsTo(Area::class, 'area_id');
     }
 
-    public function AssetZone()
-    {
-        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
-    }
+    // public function AssetZone()
+    // {
+    //     return $this->belongsTo(AssetZone::class, 'asset_zone_id');
+    // }
 
     public function DataSourceType()
     {

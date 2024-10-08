@@ -71,18 +71,18 @@ class AssetAccessoryController extends Controller
 
     public function addAssetAccessory(Request $request)
     {
-        if ($request->has('asset_zone_id') && is_string($request->input('asset_zone_id'))) {
-            $request->merge([
-                'asset_zone_id' => json_decode($request->input('asset_zone_id'), true)
-            ]);
-        }
-        $hasAssetZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        // if ($request->has('asset_zone_id') && is_string($request->input('asset_zone_id'))) {
+        //     $request->merge([
+        //         'asset_zone_id' => json_decode($request->input('asset_zone_id'), true)
+        //     ]);
+        // }
+        // $hasAssetZones = AssetZone::where('asset_id', $request->asset_id)->exists();
 
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'accessory_type_id' => 'required|exists:accessory_types,accessory_type_id',
-            'accessory_asset_zones' => $hasAssetZones ? 'required' : 'nullable',
-            'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id',
+            // 'accessory_asset_zones' => $hasAssetZones ? 'required' : 'nullable',
+            // 'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id',
             'accessory_name' => 'required',
             'attachment' => 'nullable|file'
         ]);
@@ -97,34 +97,35 @@ class AssetAccessoryController extends Controller
             $data['attachment'] = $attachment;
         }
 
-        $createdAccessories = [];
-
-        $accessoryZones = (array) $data['accessory_asset_zones'];
-
-        if (!empty($accessoryZones)) 
-        {
-            foreach ($accessoryZones as $zoneId) 
-            {              
-                if (is_null($zoneId) || $zoneId == 0) {
-                    continue;
-                }
+        // $createdAccessories = [];
+        // $accessoryZones = (array) $data['accessory_asset_zones'];
+        // if (!empty($accessoryZones)) 
+        // {
+        //     foreach ($accessoryZones as $zoneId) 
+        //     {              
+        //         if (is_null($zoneId) || $zoneId == 0) {
+        //             continue;
+        //         }
     
-                $accessoryData = $data;
-                $accessoryData['asset_zone_id'] = $zoneId;
+        //         $accessoryData = $data;
+        //         $accessoryData['asset_zone_id'] = $zoneId;
     
-                $assetAccessory = AssetAccessory::create($accessoryData);
-                $createdAccessories[] = new AssetAccessoryResource($assetAccessory);
-            }
-        } 
-        else {
-            $accessoryData = $data;
-            $accessoryData['asset_zone_id'] = null;
+        //         $assetAccessory = AssetAccessory::create($accessoryData);
+        //         $createdAccessories[] = new AssetAccessoryResource($assetAccessory);
+        //     }
+        // } 
+        // else {
+            // $accessoryData = $data;
+            // $accessoryData['asset_zone_id'] = null;
     
-            $assetAccessory = AssetAccessory::create($accessoryData);
-            $createdAccessories[] = new AssetAccessoryResource($assetAccessory);
-        }
+            $assetAccessory = AssetAccessory::create($data);
+            // $createdAccessories[] = ;
+        // }
     
-        return response()->json($createdAccessories, 201);
+        return response()->json([
+            new AssetAccessoryResource($assetAccessory), 
+            "message" => "AssetAccessory Created Successfully"
+        ]);
     }
 
 
@@ -145,7 +146,7 @@ class AssetAccessoryController extends Controller
         $data = $request->validate([
             'asset_accessory_id' => 'required|exists:asset_accessories,asset_accessory_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
+            // 'asset_zone_id' => 'nullable|asset_zones,asset_zone_id',
             'accessory_type_id' => 'required|accessory_types,accessory_type_id',
             'accessory_name' => 'required',
             'attachment' => 'nullable'

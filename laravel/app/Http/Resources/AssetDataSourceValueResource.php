@@ -14,7 +14,7 @@ class AssetDataSourceValueResource extends JsonResource
             'asset_data_source_id' => $this->asset_data_source_id,
             'asset_id' => $this->asset_id,
             'data_source_id' => $this->data_source_id,
-            'asset_zone_id' => $this->asset_zone_id,
+            // 'asset_zone_id' => $this->asset_zone_id,
             'data_source_attribute_id' => $this->data_source_attribute_id,
             'data_source_attributes' => DataSourceAttributeResource::collection($this->DataSourceAttribute),
             'field_value' => $this->field_value

@@ -13,7 +13,7 @@ class AssetAccessory extends Model
         'asset_id',
         'plant_id',
         'area_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'accessory_type_id',
         'accessory_name',
         'attachment'
@@ -36,10 +36,10 @@ class AssetAccessory extends Model
         return $this->belongsTo(Area::class, 'area_id');
     }
 
-    public function AssetZone()
-    {
-        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
-    }
+    // public function AssetZone()
+    // {
+    //     return $this->belongsTo(AssetZone::class, 'asset_zone_id');
+    // }
 
     public function AccessoryType()
     {

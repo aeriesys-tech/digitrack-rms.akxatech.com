@@ -14,7 +14,7 @@ class AssetVariable extends Model
         'asset_id',
         'plant_id',
         'area_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'variable_type_id'
     ];
 

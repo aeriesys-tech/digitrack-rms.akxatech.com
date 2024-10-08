@@ -9,7 +9,7 @@ use App\Models\DataSource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\DataSourceResource;
 use App\Models\Asset;
-use App\Models\AssetZone;
+// use App\Models\AssetZone;
 use App\Models\DataSourceAttributeValue;
 use App\Http\Resources\DataSourceAttributeValueResource;
 use App\Models\AssetDataSourceValue;
@@ -79,37 +79,38 @@ class AssetDataSourceController extends Controller
     {
         // $userPlantId = Auth::User()->plant_id;
         // $areaId = Auth::User()->Plant->area_id;
-        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        // $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
-            'data_source_id' => [
-                'required',
-                'exists:data_sources,data_source_id',
-                function ($attribute, $value, $fail) use ($request, $assetHasZones) {
-                    $exists = AssetDataSource::where('data_source_id', $value)
-                        ->where('asset_id', $request->asset_id)
-                        ->where(function ($query) use ($request, $assetHasZones) {
-                            if ($assetHasZones && $request->filled('variable_asset_zones')) {
-                                $query->whereIn('asset_zone_id', $request->variable_asset_zones);
-                            } else {
-                                $query->whereNull('asset_zone_id');
-                            }
-                        })->exists();
+            // 'data_source_id' => [
+            //     'required',
+            //     'exists:data_sources,data_source_id',
+            //     function ($attribute, $value, $fail) use ($request, $assetHasZones) {
+            //         $exists = AssetDataSource::where('data_source_id', $value)
+            //             ->where('asset_id', $request->asset_id)
+            //             ->where(function ($query) use ($request, $assetHasZones) {
+            //                 if ($assetHasZones && $request->filled('variable_asset_zones')) {
+            //                     $query->whereIn('asset_zone_id', $request->variable_asset_zones);
+            //                 } else {
+            //                     $query->whereNull('asset_zone_id');
+            //                 }
+            //             })->exists();
 
-                    if ($exists) {
-                        if ($request->filled('variable_asset_zones') && $assetHasZones) {
-                            $fail('The combination of DataSource and Asset Zone already exists.');
-                        } else {
-                            $fail('The combination of DataSource and Asset already exists.');
-                        }
-                    }
-                },
-            ],
+            //         if ($exists) {
+            //             if ($request->filled('variable_asset_zones') && $assetHasZones) {
+            //                 $fail('The combination of DataSource and Asset Zone already exists.');
+            //             } else {
+            //                 $fail('The combination of DataSource and Asset already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
+            'data_source_id' => 'required|exists:data_sources,data_source_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'data_source_asset_zones' => [
-                $assetHasZones ? 'required' : 'nullable', 
-                'array',
-            ],
-            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id',
+            // 'data_source_asset_zones' => [
+            //     $assetHasZones ? 'required' : 'nullable', 
+            //     'array',
+            // ],
+            // 'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id',
             'script' => 'required'
         ]);
 
@@ -121,53 +122,50 @@ class AssetDataSourceController extends Controller
         $data['area_id'] = $asset->area_id;
         $data['data_source_type_id'] = $data_source_type;
 
-        $createdDataSources = [];
+        // $createdDataSources = [];
+        // if (!empty($data['data_source_asset_zones'])) {
+        //     foreach ($data['data_source_asset_zones'] as $zoneId) {
+        //         if (is_null($zoneId) || $zoneId == 0) {
+        //             continue;
+        //         }
 
-        if (!empty($data['data_source_asset_zones'])) {
-            foreach ($data['data_source_asset_zones'] as $zoneId) {
-                if (is_null($zoneId) || $zoneId == 0) {
-                    continue;
-                }
+        //         $data_source_data = $data;
+        //         $data_source_data['asset_zone_id'] = $zoneId;
 
-                $data_source_data = $data;
-                $data_source_data['asset_zone_id'] = $zoneId;
+        //         $assetDataSource = AssetDataSource::create($data_source_data);
+        //         $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
 
-                $assetDataSource = AssetDataSource::create($data_source_data);
-                $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
+        //         foreach($request->asset_datasource_attributes as $attribute)
+        //         {
+        //             AssetDataSourceValue::create([
+        //                 'asset_data_source_id' => $assetDataSource->asset_data_source_id,
+        //                 'asset_id' => $assetDataSource->asset_id,
+        //                 'data_source_id' => $data_source->data_source_id,
+        //                 'asset_zone_id' => $assetDataSource->asset_zone_id,
+        //                 'data_source_attribute_id' => $attribute['data_source_attribute_id'],
+        //                 'field_value' => $attribute['field_value'] ?? ''
+        //             ]);
+        //         }
+        //     }
+        // } 
+        $assetDataSource = AssetDataSource::create($data);
 
-                foreach($request->asset_datasource_attributes as $attribute)
-                {
-                    AssetDataSourceValue::create([
-                        'asset_data_source_id' => $assetDataSource->asset_data_source_id,
-                        'asset_id' => $assetDataSource->asset_id,
-                        'data_source_id' => $data_source->data_source_id,
-                        'asset_zone_id' => $assetDataSource->asset_zone_id,
-                        'data_source_attribute_id' => $attribute['data_source_attribute_id'],
-                        'field_value' => $attribute['field_value'] ?? ''
-                    ]);
-                }
-            }
-        } else {
-            $data_source_data = $data;
-            $data_source_data['asset_zone_id'] = null;
-
-            $assetDataSource = AssetDataSource::create($data_source_data);
-            $createdDataSources[] = new AssetDataSourceResource($assetDataSource);
-
-            foreach($request->asset_datasource_attributes as $attribute)
-            {
-                AssetDataSourceValue::create([
-                    'asset_data_source_id' => $assetDataSource->asset_data_source_id,
-                    'asset_id' => $assetDataSource->asset_id,
-                    'data_source_id' => $data_source->data_source_id,
-                    'asset_zone_id' => $assetDataSource->asset_zone_id,
-                    'data_source_attribute_id' => $attribute['data_source_attribute_id'],
-                    'field_value' => $attribute['field_value'] ?? ''
-                ]);
-            }
+        foreach($request->asset_datasource_attributes as $attribute)
+        {
+            AssetDataSourceValue::create([
+                'asset_data_source_id' => $assetDataSource->asset_data_source_id,
+                'asset_id' => $assetDataSource->asset_id,
+                'data_source_id' => $data_source->data_source_id,
+                // 'asset_zone_id' => $assetDataSource->asset_zone_id,
+                'data_source_attribute_id' => $attribute['data_source_attribute_id'],
+                'field_value' => $attribute['field_value'] ?? ''
+            ]);
         }
 
-        return response()->json([$createdDataSources,  "message" => "AssetDataSource Created Successfully"]);
+        return response()->json([
+            new AssetDataSourceResource($assetDataSource),  
+            "message" => "AssetDataSource Created Successfully"
+        ]);
     }
 
     public function getAssetDataSource(Request $request)
@@ -182,36 +180,37 @@ class AssetDataSourceController extends Controller
 
     public function updateAssetDataSource(Request $request)
     {
-        $asset_data_sources = AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->first();
-        $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        // $asset_data_sources = AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->first();
+        // $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
         $data = $request->validate([
             'asset_data_source_id' => 'required|exists:asset_data_sources,asset_data_source_id',
-            'data_source_id' => [
-                'required',
-                'exists:data_sources,data_source_id',
-                function ($attribute, $value, $fail) use ($request, $asset_data_sources) 
-                {
-                    if ($value != $asset_data_sources->data_source_id) {
-                        $exists = AssetDataSource::where('data_source_id', $value)
-                            ->where('asset_id', $request->asset_id)
-                            ->where(function ($query) use ($request) {
-                                if ($request->filled('asset_zone_id')) {
-                                    $query->where('asset_zone_id', $request->asset_zone_id);
-                                } else {
-                                    $query->whereNull('asset_zone_id');
-                                }
-                            })->where('asset_data_source_id', '!=', $request->asset_data_source_id)->exists();
+            // 'data_source_id' => [
+            //     'required',
+            //     'exists:data_sources,data_source_id',
+            //     function ($attribute, $value, $fail) use ($request, $asset_data_sources) 
+            //     {
+            //         if ($value != $asset_data_sources->data_source_id) {
+            //             $exists = AssetDataSource::where('data_source_id', $value)
+            //                 ->where('asset_id', $request->asset_id)
+            //                 ->where(function ($query) use ($request) {
+            //                     if ($request->filled('asset_zone_id')) {
+            //                         $query->where('asset_zone_id', $request->asset_zone_id);
+            //                     } else {
+            //                         $query->whereNull('asset_zone_id');
+            //                     }
+            //                 })->where('asset_data_source_id', '!=', $request->asset_data_source_id)->exists();
     
-                        if ($exists) {
-                            $fail('The combination of DataSource, Asset, and Asset Zone already exists.');
-                        }
-                    }
-                },
-            ],
+            //             if ($exists) {
+            //                 $fail('The combination of DataSource, Asset, and Asset Zone already exists.');
+            //             }
+            //         }
+            //     },
+            // ],
+            'data_source_id' => 'required|exists:data_sources,data_source_id',
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => [
-                $assetHasZones ? 'required' : 'nullable',
-            ],
+            // 'asset_zone_id' => [
+            //     $assetHasZones ? 'required' : 'nullable',
+            // ],
             'script' => 'required'
         ]);
 
@@ -241,7 +240,7 @@ class AssetDataSourceController extends Controller
                 AssetDataSourceValue::updateOrCreate(
                     [
                         'asset_data_source_id' => $asset_data_source->asset_data_source_id,
-                        'asset_zone_id' => $asset_data_source->asset_zone_id,
+                        // 'asset_zone_id' => $asset_data_source->asset_zone_id,
                         'data_source_id' => $data_source->data_source_id,
                         'asset_id' =>  $asset_data_source->asset_id,
                         'data_source_attribute_id' => $attribute['data_source_attribute_id'],

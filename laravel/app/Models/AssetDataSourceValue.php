@@ -13,7 +13,7 @@ class AssetDataSourceValue extends Model
         'asset_data_source_id',
         'asset_id',
         'data_source_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'data_source_attribute_id',
         'field_value'
     ];

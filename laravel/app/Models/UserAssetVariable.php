@@ -12,7 +12,7 @@ class UserAssetVariable extends Model
     protected $fillable = [
         'user_variable_id',
         'variable_id',
-        'asset_zone_id',
+        // 'asset_zone_id',
         'value'
     ];
 
@@ -23,8 +23,8 @@ class UserAssetVariable extends Model
         return $this->belongsTo(Variable::class, 'variable_id');
     }
 
-    public function AssetZone()
-    {
-        return $this->belongsTo(AssetZone::class, 'asset_zone_id');
-    }
+    // public function AssetZone()
+    // {
+    //     return $this->belongsTo(AssetZone::class, 'asset_zone_id');
+    // }
 }

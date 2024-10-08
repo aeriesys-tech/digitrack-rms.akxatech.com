@@ -15,7 +15,6 @@ class Asset extends Model
         'plant_id',
         'asset_code',
         'asset_name',
-        'no_of_zones',
         'asset_type_id',
         'longitude',
         'latitude',
