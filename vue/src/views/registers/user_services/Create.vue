@@ -222,10 +222,6 @@
 
 
                             <!-- ends -->
-
-
-
-
                          <div class="row g-2">
                                 <div class="">
                                     <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">

@@ -52,14 +52,6 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th>
-                                            Asset Zone
-                                            <span>
-                                                <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                <i v-else class="fas fa-sort"></i>
-                                            </span>
-                                        </th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -69,7 +61,6 @@
                                         <td>{{user_check.asset?.asset_code}}</td>
                                         <td>{{user_check.reference_no}}</td>
                                         <td>{{convertDateFormat(user_check.reference_date)}}</td>
-                                        <td>{{user_check?.asset_zone?.zone_name}}</td>
                                         <td class="text-center">
                                             <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)" class="text-success me-2" @click="editUserCheck(user_check)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>

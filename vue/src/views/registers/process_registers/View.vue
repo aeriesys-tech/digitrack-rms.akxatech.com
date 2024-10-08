@@ -46,9 +46,8 @@
                                     <h6>Job Date</h6>
                                     <p class="font">{{ convertDateFormat(user_variable.reference_date) }}</p>
                                 </div>
-                                <div class="col-md-12 mt-1">
-                                    <h6 class="mb-2">Asset Variables :</h6>
-                                    <div class="table-responsive table-responsive-sm row">
+                                    <!-- <h6 class="mb-2">Asset Variables :</h6> -->
+                                    <!-- <div class="table-responsive table-responsive-sm row"> -->
                                         <!-- <table
                                             class="table table-responsive table-striped table-responsive-sm table-sm text-nowrap table-bordered mb-0">
 
@@ -72,34 +71,29 @@
                                             </tbody>
                                         </table> -->
 
-                                        <div class="col-md-4" v-for="asset_zone,key in asset_zones" :key="key">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h6 class="mb-0">{{ asset_zone.zone_name }}</h6>
-                                                </div>
-                                                <div class="card-body">
-                                                    <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Variable</th>
-                                                                <th>Value</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr v-for="user_variable_data, key1 in user_variable.user_asset_variables[key]" :key="key1">
-                                                            <td>{{ user_variable_data?.variable?.variable_name}}</td>
-                                                                <td>
-                                                                    {{user_variable_data.value}}
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                <div class="col-md-12" >
+                                            <h6 class="fs-15 fw-600 text-dark mb-2">Asset Variables</h6>
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">#</th>
+                                                        <th>Variable</th>
+                                                        <th>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="user_variable_data, key in user_variable.user_asset_variables" :key="key">
+                                                        <td class="text-center">{{ key + 1 }}</td>
+                                                        <td>{{ user_variable_data?.variable?.variable_name}}</td>
+                                                        <td>
+                                                            {{user_variable_data.value}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                 </div>
+                                    <!-- </div> -->
+
                             </div>
                             <!-- <div class="row g-2">
                                 <h6>Attachments :</h6>
@@ -141,9 +135,9 @@ export default {
     },
     beforeRouteEnter(to, from, next) {
         next((vm) => {
-            vm.user_variable.user_variable_id = to.params.user_variable_id            
+            vm.user_variable.user_variable_id = to.params.user_variable_id
             vm.getUserVariable();
-            
+
         });
     },
     methods: {
@@ -172,7 +166,7 @@ export default {
                 .then(function (response) {
                     loader.hide();
                     vm.user_variable = response.data.data;
-                    vm.getAssetZones();
+                    // vm.getAssetZones();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -249,5 +243,8 @@ export default {
 .imageContainer>img:hover {
     -webkit-transform: scale(1.3);
     transform: scale(1.3);
+}
+.fw-600{
+    font-weight: 600;
 }
 </style>
