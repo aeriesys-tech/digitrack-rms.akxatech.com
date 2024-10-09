@@ -81,7 +81,7 @@ class AssetAccessoryController extends Controller
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'accessory_type_id' => 'required|exists:accessory_types,accessory_type_id',
-            'accessory_asset_zone_id' => $hasAssetZones ? 'required' : 'nullable',
+            'accessory_asset_zones' => $hasAssetZones ? 'required' : 'nullable',
             'asset_zone_id.*' => 'nullable|exists:asset_zones,asset_zone_id',
             'accessory_name' => 'required',
             'attachment' => 'nullable|file'
@@ -99,7 +99,7 @@ class AssetAccessoryController extends Controller
 
         $createdAccessories = [];
 
-        $accessoryZones = (array) $data['accessory_asset_zone_id'];
+        $accessoryZones = (array) $data['accessory_asset_zones'];
 
         if (!empty($accessoryZones)) 
         {

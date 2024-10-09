@@ -19,7 +19,7 @@ class UserAssetCheckDeviationResource extends JsonResource
 
         $asset_type = AssetType::where('asset_type_id', $asset->asset_type_id)->first();
         $check = Check::where('check_id', $this->check_id)->first();
-        $department = Department::where('department_id',  $asset->department_id)->first();
+        $department = Department::where('department_id',  $user_check->department_id)->first();
 
         return [
             'user_asset_check_id' => $this->user_asset_check_id,
@@ -27,7 +27,7 @@ class UserAssetCheckDeviationResource extends JsonResource
             'check' => $check,
             'user_check_id' => $this->user_check_id,
             'user_check' => $user_check,
-            'asset' => $asset,
+            'asset' => new AssetResource($asset),
             'asset_type' => $asset_type,
             'asset_check_id' => $this->asset_check_id,
             'field_name' => $this->field_name,

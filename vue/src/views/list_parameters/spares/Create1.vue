@@ -14,7 +14,7 @@
                 <li class="breadcrumb-item active" aria-current="page" v-else>Update Spare</li>
             </ol>
             <h4 class="main-title mb-0">Spares</h4>
-        </div> 
+        </div>
         <router-link to="/spares" type="submit" class="btn btn-primary" style="float: right;"><i
             class="ri-list-check"></i> SPARES</router-link>
             </div>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
@@ -83,8 +83,8 @@
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
 
-                                   
-                                    
+
+
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input v-if="field.spare_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.spare_attribute_value.field_value" @blur="updateSpareParameters(field)" />
@@ -110,22 +110,22 @@
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
                                         <input v-if="field.spare_attribute_value"
-                                            type="datetime-local" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.display_name" 
-                                            :class="{'is-invalid': errors[field.display_name]}" 
-                                            v-model="field.spare_attribute_value.field_value" 
-                                            @blur="updateSpareParameters(field)" 
-                                            step="1" 
+                                            type="datetime-local"
+                                            class="form-control"
+                                            :placeholder="'Enter ' + field.display_name"
+                                            :class="{'is-invalid': errors[field.display_name]}"
+                                            v-model="field.spare_attribute_value.field_value"
+                                            @blur="updateSpareParameters(field)"
+                                            step="1"
                                         />
                                         <input v-else
-                                            type="datetime-local" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.display_name" 
-                                            :class="{'is-invalid': errors[field.display_name]}" 
-                                            v-model="field.field_value" 
-                                            @blur="updateSpareParameters(field)" 
-                                            step="1" 
+                                            type="datetime-local"
+                                            class="form-control"
+                                            :placeholder="'Enter ' + field.display_name"
+                                            :class="{'is-invalid': errors[field.display_name]}"
+                                            v-model="field.field_value"
+                                            @blur="updateSpareParameters(field)"
+                                            step="1"
                                         />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
@@ -233,7 +233,7 @@ export default {
             asset_type_status:false,
         }
     },
-    
+
     beforeRouteEnter(to, from, next) {
             next((vm) => {
                 vm.getAssetTypes();
@@ -248,7 +248,7 @@ export default {
                             vm.spare = response.data.data;
                             vm.show_spares  = response.data.data?.spare_attributes
 
-            
+
                         })
                         .catch(function (error) {
                             vm.errors = error.response.data.errors;
@@ -289,14 +289,14 @@ export default {
                 }
             })
             console.log(this.show_spares)
-            
+
         },
         // error to validate ends
 
 
     //     validateFields() {
     //     let isValid = true;
-    //     this.errors = {}; 
+    //     this.errors = {};
 
     //     if (!this.spare.spare_code) {
     //         this.errors.spare_code = ['Spare Code is required'];
@@ -427,7 +427,6 @@ export default {
                 }
                 console.log(this.spare)
                 let apid = this.spare.spare_attributes?.filter(function(element){
-                    console.log("ele",element)
                     return element.spare_attribute_id == field.spare_attribute_id
                 })
                 if(!apid.length){
@@ -509,4 +508,3 @@ export default {
     display: block;
 }
 </style>
-

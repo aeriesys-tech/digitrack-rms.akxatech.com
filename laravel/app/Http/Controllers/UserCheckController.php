@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Aws\S3\S3Client;
 use App\Models\AssetZone;
+use App\Models\Asset;
 use App\Models\Department;
 
 class UserCheckController extends Controller
@@ -26,10 +27,10 @@ class UserCheckController extends Controller
             'keyword' => 'required'
         ]);
 
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query =  UserCheck::query();
 
-        $query->where('plant_id', $authPlantId);
+        // $query->where('plant_id', $authPlantId);
 
         if(isset($request->plant_id))
         {
@@ -49,9 +50,19 @@ class UserCheckController extends Controller
             $query->where('reference_no', 'like', "%$request->search%")
                 ->orwhereHas('Asset', function($que) use($request){
                 $que->where('asset_code', 'like', "%$request->search%");
+            })->orwhereHas('AssetZone', function($que) use($request){
+                $que->where('zone_name', 'like', "%$request->search%");
             });
         }
-        $user_checks = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
+
+        if ($request->keyword == 'asset_code') {
+            $query->join('assets', 'user_checks.asset_id', '=', 'assets.asset_id')->select('user_checks.*') 
+                  ->orderBy('assets.asset_code', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+        $user_checks = $query->paginate($request->per_page); 
         return UserCheckResource::collection($user_checks);
     }
 
@@ -66,17 +77,17 @@ class UserCheckController extends Controller
         else {
             $data['asset_zone_id'] = $request->input('asset_zone_id', null);
         }
-
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'reference_date' => 'required|date',
+            'reference_date' => 'required',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes',
             'attachments.*' => 'nullable'
         ]);
         
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] =  $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
         $data['reference_no'] = $this->generateReferanceNo();
 
@@ -131,15 +142,16 @@ class UserCheckController extends Controller
 
     public function updateUserCheck(Request $request)
     {
+        $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'reference_date' => 'required|date',
+            'reference_date' => 'required',
             'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
             'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes'
         ]);
         
-        $data['plant_id'] = Auth::User()->plant_id;
+        $data['plant_id'] = $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
 
         $user_check = UserCheck::where('user_check_id', $request->user_check_id)->first();
@@ -181,7 +193,7 @@ class UserCheckController extends Controller
         UserCheck::where('user_check_id', $request->user_check_id)->delete();
 
         return response()->json([
-            'message' => "UserCheck Deleted Successfully"
+            'message' => "Check Register Deleted Successfully"
         ]);
     }
 

@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Check Registers</h4>
             </div>
-            <router-link v-can="'userChecks.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Check Register</router-link>
+            <router-link v-can="'userChecks.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD CHECK REGISTER</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -28,11 +28,11 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                        <th @click="sort('asset_id')">
+                                        <th @click="sort('asset_code')">
                                             Asset
                                             <span>
-                                                <i v-if="meta.keyword == 'asset_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'asset_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword == 'asset_code' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'asset_code' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
@@ -45,7 +45,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('reference_date')">
-                                            Reference Date.
+                                            Reference Date & Time
                                             <span>
                                                 <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'reference_date' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -53,7 +53,7 @@
                                             </span>
                                         </th>
                                         <th>
-                                            Asset Zone.
+                                            Asset Zone
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_zone_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -75,11 +75,11 @@
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
                                             <a title="View" href="javascript:void(0)" @click="viewUserCheck(user_check)" class="text-primary me-2" ><i class="ri-eye-fill fs-18 lh-1"></i></a>
-                                            <a title="View" v-can="'userChecks.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userChecks.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="user_checks.length==0">
-                                        <td colspan="5" class="text-center">No records found</td>
+                                        <td colspan="6" class="text-center">No records found</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -95,7 +95,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@ export default {
             status:true,
             meta: {
                 search: "",
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "user_check_id",
                 per_page: 10,
                 totalRows: 0,
@@ -152,7 +152,7 @@ export default {
          convertDateFormat(date) {
                 let vm = this;
             // return moment(date).format("yyyy-MM-DD");
-                return moment(date).format("DD-MM-YYYY");
+                return moment(date).format("DD-MM-YYYY HH:mm");
             },
         index() {
             let vm = this;
@@ -174,7 +174,7 @@ export default {
             });
         },
         editUserCheck(user_check) {
-            this.$store.commit("setCurrentPage", this.meta.page)
+            this.$store.commit("setCurrentPage", parseInt(this.meta.page))
             this.$router.push("/user_check/" + user_check.user_check_id + "/edit");
         },
         viewUserCheck(user_check){
@@ -182,21 +182,23 @@ export default {
             this.$router.push("/user_check/" + user_check.user_check_id + "/view");
         },
         deleteUserCheck(user_check) {
-            let vm = this;
-            alert('are you sure you want delete it!')
-            let loader = vm.$loading.show();
-            vm.$store
-                .dispatch("post", {uri: "deleteUserCheck",data: user_check,})
-                .then((response) => {
-                    loader.hide();
-                    vm.$store.dispatch("success", response.data.message);
-                    vm.index();
-                })
-                .catch(function (error) {
-                    loader.hide();
-                    vm.errors = error.response.data.errors;
-                    vm.$store.dispatch("error", error.response.data.message);
-                });
+            const confirmDelete = confirm("Are you sure you want to delete it ?");
+            if (confirmDelete) {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "deleteUserCheck", data: user_check, })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        vm.index();
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            }
         },
         search() {
             let vm = this;

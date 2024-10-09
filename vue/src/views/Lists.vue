@@ -5,17 +5,17 @@
                 <li class="breadcrumb-item">
                     <router-link to="/dashboard">Dashboard</router-link>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Lists</li>
+                <li class="breadcrumb-item active" aria-current="page">List Parameters</li >
             </ol>
-            <h4 class="main-title mb-2">Lists</h4>
-        </div> 
+            <h4 class="main-title mb-2">List Parameters</h4>
+        </div>
         <div class="row g-2">
             <div class="col-4">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title" v-if="status">Add List</h6>
-                            <h6 class="card-title" v-else>Update List</h6>
+                            <h6 class="card-title" v-if="status">Add List Parameter</h6>
+                            <h6 class="card-title" v-else>Update List Parameter</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
@@ -44,7 +44,7 @@
             <div :class="column">
                 <div class="card card-one">
                     <div class="card-header d-flex justify-content-between">
-                        <h6 class="card-title">Lists</h6>
+                        <h6 class="card-title">List Parameters</h6>
                     </div>
                     <div class="card-body">
                         <input class="form-control mb-2" type="text" placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
@@ -60,13 +60,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('field_values')">Field Values
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='field_values' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='field_values' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                       
+
                                         <th class="text-center" >Status</th>
                                         <th class="text-center" >Actions</th>
                                     </tr>
@@ -179,12 +179,12 @@ export default {
 
         addList() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addListParameter', data: vm.list })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addListParameter', data: vm.list })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -209,7 +209,7 @@ export default {
         },
 
         editList(list) {
-           
+
             this.list = list;
             this.status = false;
             this.$refs.list_parameter_name.focus();
@@ -217,12 +217,12 @@ export default {
 
         updateList() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateListParameter', data: this.list })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateListParameter', data: vm.list })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

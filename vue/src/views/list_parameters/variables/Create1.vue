@@ -14,7 +14,7 @@
                     <li class="breadcrumb-item active" aria-current="page" v-else>Update Variable</li>
                 </ol>
                 <h4 class="main-title mb-0">Variables</h4>
-            </div> 
+            </div>
             <router-link to="/variables" type="submit" class="btn btn-primary" style="float: right;"><i
                 class="ri-list-check"></i> VARIABLES</router-link>
     </div>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Asset Type</label><span class="text-danger"> *</span>
@@ -82,7 +82,7 @@
                                         <input v-else type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.field_value" @blur="updateVariableParameters(field)" />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
-                                    
+
                                     <div v-if="field.field_type=='Number'">
                                         <label  class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input v-if="field.variable_attribute_value" type="number" class="form-control" min="0" oninput="validity.valid||(value='');" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.variable_attribute_value.field_value" @blur="updateVariableParameters(field)" />
@@ -108,22 +108,22 @@
                                             <span v-if="field.is_required" class="text-danger">*</span>
                                         </label>
                                         <input v-if="field.variable_attribute_value"
-                                            type="datetime-local" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.display_name" 
-                                            :class="{'is-invalid': errors[field.display_name]}" 
-                                            v-model="field.variable_attribute_value.field_value" 
-                                            @blur="updateVariableParameters(field)" 
-                                            step="1" 
+                                            type="datetime-local"
+                                            class="form-control"
+                                            :placeholder="'Enter ' + field.display_name"
+                                            :class="{'is-invalid': errors[field.display_name]}"
+                                            v-model="field.variable_attribute_value.field_value"
+                                            @blur="updateVariableParameters(field)"
+                                            step="1"
                                         />
                                         <input v-else
-                                            type="datetime-local" 
-                                            class="form-control" 
-                                            :placeholder="'Enter ' + field.display_name" 
-                                            :class="{'is-invalid': errors[field.display_name]}" 
-                                            v-model="field.field_value" 
-                                            @blur="updateVariableParameters(field)" 
-                                            step="1" 
+                                            type="datetime-local"
+                                            class="form-control"
+                                            :placeholder="'Enter ' + field.display_name"
+                                            :class="{'is-invalid': errors[field.display_name]}"
+                                            v-model="field.field_value"
+                                            @blur="updateVariableParameters(field)"
+                                            step="1"
                                         />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
@@ -204,7 +204,7 @@ export default {
             asset_type_status:false,
         }
     },
-    
+
     beforeRouteEnter(to, from, next) {
             next((vm) => {
                 vm.getAssetTypes();
@@ -239,7 +239,7 @@ export default {
                 vm.updateVariable();
             }
         },
-      
+
 
         addVariable() {
             let vm = this;
@@ -338,9 +338,7 @@ export default {
                 if(!this.variable.variable_attributes) {
                     this.variable.variable_attributes=[]
                 }
-                console.log(this.variable)
                 let apid = this.variable.variable_attributes?.filter(function(element){
-                    console.log("ele",element)
                     return element.variable_attribute_id == field.variable_attribute_id
                 })
                 if(!apid.length){
@@ -401,4 +399,3 @@ export default {
     right: 0;
 }
 </style>
-

@@ -86,9 +86,9 @@
                                     <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Reference Date</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Reference Date & Time</label><span class="text-danger"> *</span>
                                     <input
-                                        type="date"
+                                        type="datetime-local"
                                         class="form-control"
                                         placeholder="Enter Reference Date"
                                         :class="{'is-invalid': errors.reference_date}"
@@ -217,9 +217,6 @@ export default {
                     .dispatch("post", uri)
                     .then(function (response) {
                         vm.user_check = response.data.data;
-                        console.log("ss--",vm.user_check)
-
-
                     })
                     .catch(function (error) {
                         vm.errors = error.response.data.errors;
@@ -241,7 +238,7 @@ export default {
             }
         },
     mounted() {
-        this.user_check.reference_date = moment().format("yyyy-MM-DD");
+        this.user_check.reference_date = moment().format("yyyy-MM-DDTHH:mm");
     },
     methods: {
         checkAssets() {
@@ -322,11 +319,11 @@ export default {
         addUserCheck(){
 
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addUserCheck', data:vm.user_check })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addUserCheck', data:vm.user_check })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
+                    vm.$store.dispatch('success',response.data.message);
                     vm.$router.push("/user_checks");
                 })
                 .catch(function (error) {
@@ -337,11 +334,11 @@ export default {
         },
         updateUserCheck(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateUserCheck', data:vm.user_check })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateUserCheck', data:vm.user_check })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
+                    vm.$store.dispatch('success',response.data.message);
                     vm.$router.push("/user_checks");
                 })
                 .catch(function (error) {
@@ -370,7 +367,7 @@ export default {
         },
         convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format('yyyy-MM-DD')
+                return moment(date).format('yyyy-MM-DDTHH:mm')
 
             },
 

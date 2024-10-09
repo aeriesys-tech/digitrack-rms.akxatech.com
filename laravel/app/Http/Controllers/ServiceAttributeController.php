@@ -7,6 +7,10 @@ use App\Models\ServiceAttribute;
 use App\Models\ServiceAttributeType;
 use App\Http\Resources\ServiceAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ServiceAttributeExport;
+use App\Exports\ServiceAttributeHeadingsExport;
+use App\Imports\ServiceAttributesImport;
 
 class ServiceAttributeController extends Controller
 {
@@ -40,12 +44,12 @@ class ServiceAttributeController extends Controller
         
         if($request->search!='')
         {
-            $query->where('field_name', 'like', "$request->search%")
-            ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
-            ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
+            $query->where('field_name', 'like', "%$request->search%")
+            ->orwhere('display_name', 'like', "%$request->search%")->orwhere('field_values', 'like', "%$request->search%")
+            ->orwhere('field_type', 'like', "%$request->search%")->orwhere('field_length', 'like', "%$request->search%")
             ->orwhereHas('ServiceAttributeTypes', function($que) use($request){
                 $que->whereHas('ServiceType', function($qu) use($request){
-                    $qu->where('service_type_name', 'like', "$request->search%");
+                    $qu->where('service_type_name', 'like', "%$request->search%");
                 });
             });    
         }
@@ -115,13 +119,28 @@ class ServiceAttributeController extends Controller
         $service_attribute = ServiceAttribute::where('service_attribute_id', $request->service_attribute_id)->first();
         $service_attribute->update($data);
 
-        ServiceAttributeType::where('service_attribute_id', $service_attribute->service_attribute_id)->delete();
+        if(isset($request->deleted_service_attribute_types) > 0)
+        {
+            ServiceAttributeType::whereIn('service_attribute_type_id', $request->deleted_service_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['service_types'] as $service_type_id) {
-            ServiceAttributeType::create([
-                'service_attribute_id' => $service_attribute->service_attribute_id,
-                'service_type_id' => $service_type_id
-            ]);
+        foreach ($data['service_types'] as $service_type_id) 
+        {
+            $serviceType = ServiceAttributeType::where('service_attribute_id', $service_attribute->service_attribute_id)
+                ->where('service_type_id', $service_type_id)->first();
+
+            if($serviceType)
+            {
+                $serviceType->update([
+                    'service_type_id' => $service_type_id
+                ]);
+            }
+            else{
+                ServiceAttributeType::create([
+                    'service_attribute_id' => $service_attribute->service_attribute_id,
+                    'service_type_id' => $service_type_id
+                ]);
+            }
         }
         return new ServiceAttributeResource($service_attribute);
     }
@@ -148,5 +167,33 @@ class ServiceAttributeController extends Controller
                 "message" => "ServiceAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadServiceAttributes(Request $request)
+    {
+        $filename = "Service Attributes.xlsx";
+
+        $excel = new ServiceAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadServiceAttributeHeadings()
+    {
+        $filename = "Service Attribute Headings.xlsx";
+        $excel = new ServiceAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importServiceAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new ServiceAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

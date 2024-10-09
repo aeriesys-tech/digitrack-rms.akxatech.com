@@ -508,7 +508,6 @@ export default {
         //     this.dropdownVisible = !this.dropdownVisible;
         // },
         updateAssetParameters(field) {
-            console.log(field)
             let apid = this.asset.asset_attributes.filter(function (element) {
                 return element.asset_attribute_id == field.asset_attribute_id
             })
@@ -666,7 +665,6 @@ export default {
             vm.show_assets = [];
             vm.asset.asset_type_id = "";
             let discard_zone = vm.asset.zone_name.filter(function (element) {
-                console.log("dd--", element)
                 element.zone_name = ""
             })
             vm.$refs.asset_code.focus();

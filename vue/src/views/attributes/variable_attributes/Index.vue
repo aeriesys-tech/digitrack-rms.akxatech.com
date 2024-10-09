@@ -26,7 +26,8 @@
                                 placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                    <tr style="background-color:#9b9b9b;color:white;">
+                                    <thead>
+                                        <tr style="background-color:#9b9b9b;color:white;">
                                             <th class="text-center">#</th>
                                             <th @click="sort('field_name')">
                                                 Field Name
@@ -95,6 +96,7 @@
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Actions</th>
                                         </tr>
+                                    </thead>
                                     <tbody>
                                         <tr v-if="variableattributes.length==0">
                                             <td colspan="10" class="text-center">No records found</td>
@@ -119,7 +121,7 @@
                                                 </div>
                                             </td>
                                             <td class="text-center" >
-                                                <a href="javascript:void(0)" class="text-success" v-if="variableattribute.status" 
+                                                <a href="javascript:void(0)" class="text-success" v-if="variableattribute.status"
                                                     @click="editVariableAttribute(variableattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>
                                         </tr>
@@ -137,7 +139,7 @@
                                     <option>30</option>
                                 </select>
                                 <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                                <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                                <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                             </div>
                         </div>
                     </div>
@@ -155,7 +157,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "variable_attribute_id",
                     per_page: 10,
                     totalRows: 0,
@@ -173,17 +175,18 @@
         },
         beforeRouteEnter(to, from, next) {
             next((vm) => {
-                if(from.name != 'VariableAttributes.Edit'){
-                    vm.$store.commit("setCurrentPage", vm.meta.page)
-                }else{
+                if(from.name == 'VariableAttributes.Edit'){
                     vm.meta.page = vm.$store.getters.current_page
+                }else{
+                    vm.meta.page = 1
                 }
             });
         },
+
         mounted() {
             this.index();
         },
-    
+
         methods: {
             index() {
                 let vm = this;
@@ -204,10 +207,10 @@
                     });
             },
             editVariableAttribute(variableattribute) {
-                // this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page))
                 this.$router.push("/variable_attributes/" + variableattribute.variable_attribute_id + "/edit");
             },
-         
+
             deleteVariableAttribute(variableattribute) {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -232,7 +235,7 @@
                 vm.meta.page = 1;
                 vm.index();
             },
-            
+
             onPageChange(page) {
                 this.meta.page = page;
                 this.index();
@@ -242,8 +245,12 @@
                 this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
                 this.index();
             },
-            
+            onPerPageChange() {
+                let vm = this;
+                vm.meta.page = 1;
+                vm.index();
+            },
+
         }
     }
     </script>
-    

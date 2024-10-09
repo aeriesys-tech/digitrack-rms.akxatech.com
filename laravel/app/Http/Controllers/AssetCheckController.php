@@ -55,21 +55,21 @@ class AssetCheckController extends Controller
         $asset_check = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
 
         //DropDown AssetCheck
-        if(isset($request->department_id))
-        {
-            $asset = Asset::where('department_id', $request->department_id)->where('asset_type_id', $request->asset_type_id)->first();
-            if ($asset) 
-            {
-                $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
-                    $que->where('asset_type_id', $request->asset_type_id);
-                })->where('department_id', $request->department_id)->get();
-            } 
-        }
-        else {
+        // if(isset($request->department_id))
+        // {
+        //     $asset = Asset::where('department_id', $request->department_id)->where('asset_type_id', $request->asset_type_id)->first();
+        //     if ($asset) 
+        //     {
+        //         $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
+        //             $que->where('asset_type_id', $request->asset_type_id);
+        //         })->where('department_id', $request->department_id)->get();
+        //     } 
+        // }
+        // else {
             $checks = Check::whereHas('CheckAssetTypes', function($que) use ($request) {
                 $que->where('asset_type_id', $request->asset_type_id);
             })->get();
-        }
+        // }
 
         return response()->json([
             'paginate_checks' => AssetCheckResource::collection($asset_check),
@@ -318,45 +318,71 @@ class AssetCheckController extends Controller
 
         $authPlantId = Auth::User()->plant_id;
         $query = UserAssetCheck::query();
-        $query->whereHas('UserCheck', function($query) use ($authPlantId) {
-                $query->where('plant_id', $authPlantId);
-            })->whereColumn('default_value', '!=', 'value')->get();
 
-        if (isset($request->department_id)) {
-            $query->whereHas('UserCheck', function($quer) use ($request) {
-                $quer->whereHas('Asset', function($que) use ($request){
-                    $que->where('department_id', $request->department_id);
+        if (isset($request->department_id)) 
+        {
+            $query->whereHas('UserCheck', function ($qu) use ($request) {
+                $qu->whereHas('Asset', function ($que) use ($request) {
+                        $que->whereHas('AssetDepartment', function($quer) use($request){
+                            $quer->where('department_id', $request->department_id);
+                        });
                 });
             });
-        }
-            
+        }     
+
+        if (isset($request->asset_id)) 
+        {
+            $query->whereHas('UserCheck', function ($qu) use ($request) {
+                $qu->where('asset_id', $request->asset_id);
+            });
+        }     
+
         if($request->search!='')
         {
             $query->where(function($query) use ($request) {
-                $query->where('default_value', 'like', "{$request->search}%")
-                    ->orWhere('value', 'like', "{$request->search}%")
+                $query->where('default_value', 'like', "%$request->search%")->orWhere('value', 'like', "%$request->search%")
+                    ->orwhere('field_type', 'like', "%$request->search%")
                     ->orWhereHas('Check', function($que) use ($request) {
-                    $que->where('field_name', 'like', "{$request->search}%");
+                    $que->where('field_name', 'like', "%$request->search%");
                 })->orWhereHas('UserCheck', function($qu) use ($request) {
                     $qu->whereHas('Asset', function($que) use ($request) {
-                        $que->where('asset_name', 'like', "{$request->search}%");
+                        $que->where('asset_name', 'like', "%$request->search%");
                     });
                 })->orwhereHas('UserCheck', function($quer) use($request){
                     $quer->whereHas('Asset', function($que) use($request){
                         $que->whereHas('AssetType', function($qu) use($request){
-                            $qu->where('asset_type_name', 'like', "{$request->search}%");
+                            $qu->where('asset_type_name', 'like', "%$request->search%");
                         });
                     });
-                })->orwhereHas('UserCheck', function($quer) use($request){
-                    $quer->whereHas('Asset', function($que) use($request){
-                        $que->whereHas('Department', function($qu) use($request){
-                            $qu->where('department_name', 'like', "{$request->search}%");
+                })->orwhereHas('UserCheck', function($que) use($request){
+                    $que->whereHas('Asset',function($q) use($request){
+                        $q->whereHas('AssetDepartment', function($qu) use($request){
+                            $qu->whereHas('Department', function($qr) use($request){
+                                $qr->where('department_name', 'like', "%$request->search%");
+                            });
                         });
                     });
+                })->orwhereHas('UserCheck', function($que) use($request){
+                    $que->where('reference_no', 'like', "%$request->search%");
                 });
             });
         }
-       
+        
+        $query->where(function($q) 
+        {
+            $q->where('field_type', 'Number')
+            ->where(function($subQuery) 
+            {
+                $subQuery->whereRaw('CAST(value AS DECIMAL) < CAST(lcl AS DECIMAL)')
+                        ->orWhereRaw('CAST(value AS DECIMAL) > CAST(ucl AS DECIMAL)');
+            });
+        })->orWhere(function($q) use ($authPlantId) {
+            $q->where('field_type', '!=', 'Number')
+              ->whereHas('UserCheck', function ($subQuery) use ($authPlantId) {
+                  $subQuery->where('plant_id', $authPlantId);
+              })
+              ->whereColumn('default_value', '!=', 'value');
+        });      
     
         // Sort by related table columns
         if ($request->keyword == 'field_name') {

@@ -28,7 +28,10 @@
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-4">
-                                    <label class="form-label">Service Types</label><span class="text-danger"> *</span>
+                                    <div class="d-flex justify-content-between">
+                                        <div><label class="form-label">Service Types</label><span class="text-danger"> *</span></div>
+                                        <a type="button" class="text-danger me-2" @click="reset()"><i class="ri-close-line fs-20 lh-1"></i></a>
+                                    </div>
                                     <search
                                         :class="{ 'is-invalid': errors.service_type_id }"
                                         :customClass="{ 'is-invalid': errors.service_type_id }"
@@ -54,7 +57,7 @@
                                     <input type="text" placeholder="Service Name" class="form-control" :class="{ 'is-invalid': errors.service_name }" v-model="service.service_name" />
                                     <span v-if="errors.service_name" class="invalid-feedback">{{ errors.service_name[0] }}</span>
                                 </div>
-                                 <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
+                                <div class="col-md-4" v-for="field, key in service.service_attributes" :key="key">
                                     <div v-if="field.field_type=='Text'">
                                         <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
                                         <input type="text" class="form-control" :placeholder="'Enter '+ field.display_name" :class="{'is-invalid': errors[field.display_name]}" v-model="field.service_attribute_value.field_value" />
@@ -66,6 +69,7 @@
                                         <input
                                             type="number"
                                             class="form-control"
+                                            step="any"
                                             min="0"
                                             oninput="validity.valid||(value='');"
                                             :placeholder="'Enter '+ field.display_name"
@@ -129,10 +133,10 @@
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                     </div>
                                 </div>
-                                 <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">Assign To</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleAssetTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleAssetTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control" :class="{ 'is-invalid': errors.asset_types }" :customClass="{ 'is-invalid': errors.asset_types }">
                                                 <option value="">Select Assign To</option>
@@ -142,11 +146,16 @@
                                         <div class="multiselect" v-if="asset_type_status">
                                             <ul>
                                                 <li class="" v-for="(asset_type, index) in asset_types" :key="index">
-                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="service.asset_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="asset_type.asset_type_id" v-model="service.asset_types" style="padding: 2px;" @click="updateActivityType($event, service)" />
                                                     <label style="margin-left: 5px;">{{ asset_type.asset_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
+
+                                        <MultiSelect v-model="service.asset_types_obj"  filter optionLabel="asset_type_name" 
+                                            :options="asset_types"  placeholder="Select Assign To" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.asset_types ? error_style : ''"/>
+                                        <span v-if="errors?.asset_types"><small class="text-danger">{{ errors?.asset_types[0] }}</small></span>
                                     </div>
                                 </div>
                             </div>
@@ -167,10 +176,12 @@
 <script>
     import Pagination from "@/components/Pagination.vue";
     import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
             Pagination,
             Search,
+            MultiSelect
         },
         data() {
             return {
@@ -181,10 +192,13 @@
                     service_code: "",
                     service_name: "",
                     service_attributes: [],
+                    asset_types_obj:[],
                     asset_types: [],
                     frequency_id: "",
                     deleted_service_attribute_values: [],
+                    deleted_service_asset_types: [],
                 },
+                deleted_service_asset_types: [],
                 status: true,
                 errors: [],
                 deleted_service_attribute_values: [],
@@ -193,6 +207,14 @@
                 frequencies: [],
                 show_services: [],
                 asset_type_status: false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             };
         },
 
@@ -212,6 +234,15 @@
                                 vm.deleted_service_attribute_values.push(element.service_attribute_value.service_attribute_value_id);
                             });
                             vm.service.deleted_service_attribute_values = [];
+                            vm.service.deleted_service_asset_types = [];
+
+                            vm.service.asset_types_obj = []
+                            vm.service.service_asset_types.map(function(ele){
+                                vm.service.asset_types_obj.push({asset_type_code: ele.asset_types.asset_type_code, 
+                                    asset_type_id: ele.asset_types.asset_type_id, status: ele.asset_types.status,
+                                    asset_type_name: ele.asset_types.asset_type_name})
+                            })
+
                         })
                         .catch(function (error) {
                             vm.errors = error.response.data.errors;
@@ -222,6 +253,28 @@
         },
 
         methods: {
+            updateActivityType(event, activity_type) {
+                let vm = this;
+                const isChecked = event.target.checked;
+                let service_asset_type = activity_type?.service_asset_types?.filter(function (element) {
+                    return element.asset_type_id == event.target.value;
+                });
+                if (service_asset_type?.length) {
+                    let service_asset_type_id = service_asset_type[0].service_asset_type_id;
+                    if (isChecked) {
+                        if (vm.service.deleted_service_asset_types.includes(service_asset_type_id)) {
+                            let deleted_service_asset_types = vm.service.deleted_service_asset_types.filter(function (element) {
+                                return element != service_asset_type_id;
+                            });
+                            vm.service.deleted_service_asset_types = deleted_service_asset_types;
+                        }
+                    } else {
+                        if (!vm.service.deleted_service_asset_types.includes(service_asset_type_id)) {
+                            vm.service.deleted_service_asset_types.push(service_asset_type_id);
+                        }
+                    }
+                }
+            },
             toggleAssetTypeStatus() {
                 this.asset_type_status = !this.asset_type_status;
             },
@@ -255,19 +308,30 @@
                 }
                 for (const field of Object.values(this.service.service_attributes)) {
                     if (field.is_required && !field.service_attribute_value.field_value) {
-                        this.errors[field.display_name] = [`${field.display_name} is required`];
-                        isValid = false;
+                        // this.errors[field.display_name] = [`${field.display_name} is required`];
+                        // isValid = false;
+                         if (field.field_type === "Color") {
+                            // Set default color if not provided
+                            field.service_attribute_value.field_value = "#000000"; // Default to black
+                        } else {
+                            this.errors[field.display_name] = [`${field.display_name} is required`];
+                            isValid = false;
+                        }
                     }
                 }
 
                 return isValid;
             },
             addService() {
-                if (!this.validateFields()) {
+                let vm = this;
+                vm.service.asset_types_obj.map(function(ele){
+                    vm.service.asset_types.push(ele.asset_type_id)
+                })
+                if (!vm.validateFields()) {
                     return;
                 }
-                let vm = this;
-                let loader = this.$loading.show();
+                
+                let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "addService", data: vm.service })
                     .then((response) => {
@@ -315,10 +379,15 @@
             },
 
             updateService() {
+                let vm = this;
+                vm.service.deleted_service_asset_types = vm.service?.service_asset_types.filter(
+                    item1 => !vm.service.asset_types_obj.some(item2 => item1.asset_type_id === item2.asset_type_id));
+                vm.service.asset_types = vm.service.asset_types_obj.map(item => item.asset_type_id);
+                vm.service.deleted_service_asset_types = vm.service.deleted_service_asset_types.map(item => item.service_asset_type_id);
+
                 if (!this.validateFields()) {
                     return;
                 }
-                let vm = this;
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "updateService", data: vm.service })
@@ -359,7 +428,6 @@
                     .dispatch("post", { uri: "getServicesDropdown", data: { service_type_id: service_type_id } })
                     .then((response) => {
                         loader.hide();
-                        console.log("dropdown--",response.data.data)
                         vm.service.service_attributes = response.data.data;
                     })
                     .catch(function (error) {
@@ -381,6 +449,15 @@
                 vm.service.service_attributes = [];
                 vm.errors = [];
                 vm.status = true;
+            },
+            reset() {
+                let vm = this;
+                vm.service.service_type_id = "";
+                vm.service.asset_types = [];
+                vm.service.frequency_id = "";
+                vm.show_services = [];
+                vm.service.service_attributes = [];
+                vm.errors = [];
             },
         },
     };

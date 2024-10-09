@@ -21,4 +21,10 @@ class ServiceAssetType extends Model
     {
         return $this->belongsTo(AssetType::class, 'asset_type_id', 'asset_type_id');
     }
+
+    public function Service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'service_id');
+    }
 }
+

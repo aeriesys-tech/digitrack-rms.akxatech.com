@@ -29,7 +29,7 @@ class DataSourceAttributeResource extends JsonResource
             'status' => $this->deleted_at?false:true,
             'data_source_types' => $data_source_types,
             'data_source_attribute_value' => [
-                "field_value" => null
+                "field_value" => ''
             ]
         ];
     }

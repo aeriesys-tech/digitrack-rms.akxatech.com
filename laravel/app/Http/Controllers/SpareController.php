@@ -9,6 +9,10 @@ use App\Http\Resources\SpareResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SpareAttribute;
 use App\Models\SpareAttributeValue;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SpareExport;
+use App\Exports\SpareHeadingsExport;
+use App\Imports\SpareImport;
 
 class SpareController extends Controller
 {
@@ -34,9 +38,23 @@ class SpareController extends Controller
         if($request->search!='')
         {
             $query->where('spare_code', 'like', "%$request->search%")
-                ->orWhere('spare_name', 'like', "$request->search%");
+                ->orWhere('spare_name', 'like', "%$request->search%")
+                ->orwhereHas('SpareType', function($que) use($request){
+                    $que->where('spare_type_name', 'like', "%$request->search%" );
+                })->orwhereHas('SpareAssetTypes', function($qu) use($request){
+                    $qu->whereHas('AssetType', function($que) use($request){
+                        $que->where('asset_type_name', 'like', "%$request->search%");
+                    });
+                });
         }
-        $spare = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+        if ($request->keyword == 'spare_type_name') {
+            $query->join('spare_types', 'spares.spare_type_id', '=', 'spare_types.spare_type_id')->select('spares.*') 
+                  ->orderBy('spare_types.spare_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+        $spare = $query->withTrashed()->paginate($request->per_page); 
         return SpareResource::collection($spare);
     }
 
@@ -134,13 +152,26 @@ class SpareController extends Controller
         $spare = Spare::where('spare_id', $request->spare_id)->first();
         $spare->update($data);
 
-        SpareAssetType::where('spare_id', $spare->spare_id)->delete();
+        if(isset($request->deleted_spare_asset_types) > 0)
+        {
+            SpareAssetType::whereIn('spare_asset_type_id', $request->deleted_spare_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type) {
-            SpareAssetType::create([
-                'spare_id' => $spare->spare_id,
-                'asset_type_id' => $asset_type,
-            ]);
+        foreach ($data['asset_types'] as $asset_type) 
+        {
+            $spareType = SpareAssetType::where('spare_id', $spare->spare_id)->where('asset_type_id', $asset_type)->first();
+            if($spareType)
+            {
+                $spareType->update([
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
+            else {
+                SpareAssetType::create([
+                    'spare_id' => $spare->spare_id,
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
         }
 
         if($request->deleted_spare_attribute_values > 0)
@@ -191,5 +222,33 @@ class SpareController extends Controller
                 "message" =>"Spare Deactivated successfully"
             ], 200);
         }
+    }
+
+    public function downloadSpares(Request $request)
+    {
+        $filename = "Spare.xlsx";
+
+        $excel = new SpareExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadSpareHeadings(Request $request)
+    {
+        $filename = "Spare Headings.xlsx";
+        $excel = new SpareHeadingsExport($request->spare_type_ids);
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }    
+
+    public function importSpare(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new SpareImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

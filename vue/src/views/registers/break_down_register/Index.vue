@@ -28,19 +28,19 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                         <th @click="sort('asset_id')">
+                                         <th @click="sort('asset_name')">
                                             Asset
                                             <span>
-                                                <i v-if="meta.keyword=='asset_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='asset_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='asset_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='asset_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('break_down_list_id')">
+                                        <th @click="sort('break_down_type_name')">
                                             Break Down Type
                                             <span>
-                                                <i v-if="meta.keyword=='break_down_list_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='break_down_list_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='break_down_type_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='break_down_type_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
@@ -53,7 +53,7 @@
                                             </span>
                                         </th>
                                         <th @click="sort('job_date')">
-                                            Job Date
+                                            Job Date & Time
                                             <span>
                                                 <i v-if="meta.keyword=='job_date' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='job_date' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -89,7 +89,7 @@
                                         <td>{{ break_down_list.asset?.asset_name }}</td>
                                         <td>{{break_down_list.break_down_type?.break_down_type_name}}</td>
                                         <td>{{break_down_list.job_no}}</td>
-                                        <td>{{break_down_list.job_date}}</td>
+                                        <td>{{convertDateFormat(break_down_list.job_date)}}</td>
                                         <!-- <td class="text-center">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'break_down_list' + break_down_list.break_down_list_id" :checked="break_down_list.status" :value="break_down_list.status" @change="deleteBreakDownList(break_down_list)" />
@@ -97,8 +97,8 @@
                                             </div>
                                         </td> -->
                                         <td class="text-center">
-                                            <a href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Edit" href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -115,7 +115,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,8 @@
 </template>
 
 <script>
-    import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
     export default {
         components: {
             Pagination,
@@ -134,7 +135,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "break_down_list_id",
                     per_page: 10,
                     totalRows: 0,
@@ -164,19 +165,22 @@
             this.index();
         },
 
-        methods: {
+    methods: {
+             convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD HH:mm");
+            },
             index() {
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch("post", {uri: "paginateBreakDownLists", data: vm.meta,})
+                let loader = vm.$loading.show();
+                vm.$store.dispatch("post", {uri: "paginateBreakDownLists", data: vm.meta,})
                     .then((response) => {
                         loader.hide();
-                        console.log("breakdown-response",response)
-                        this.break_down_lists = response.data.data;
-                        this.meta.totalRows = response.data.meta.total;
-                        this.meta.from = response.data.meta.from;
-                        this.meta.lastPage = response.data.meta.last_page;
-                        this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                        vm.break_down_lists = response.data.data;
+                        vm.meta.totalRows = response.data.meta.total;
+                        vm.meta.from = response.data.meta.from;
+                        vm.meta.lastPage = response.data.meta.last_page;
+                        vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -187,14 +191,14 @@
             },
 
             editBreakDownList(break_down_list) {
-            console.log("ddd---",break_down_list)
-                this.$store.commit("setCurrentPage", this.meta.page);
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page));
                 this.$router.push("/break_down_registers/" + break_down_list.break_down_list_id + "/edit");
             },
 
-            deleteBreakDownList(break_down_list) {
+        deleteBreakDownList(break_down_list) {
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+            if (confirmDelete) {
                 let vm = this;
-                alert('are you sure you want delete it!')
                 let loader = vm.$loading.show();
                 vm.$store
                     .dispatch("post", { uri: "deleteBreakDownList", data: break_down_list })
@@ -208,6 +212,7 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            }
             },
             onPageChange(page) {
                 this.meta.page = page;
@@ -220,6 +225,11 @@
             },
 
             search() {
+                let vm = this;
+                vm.meta.page = 1;
+                vm.index();
+            },
+                onPerPageChange() {
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();

@@ -62,7 +62,7 @@
                                             </span>
                                         </th> -->
                                         <th >
-                                            Asset Type.
+                                            Asset Type
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -131,7 +131,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "break_down_list_id",
                     per_page: 10,
                     totalRows: 0,
@@ -216,6 +216,11 @@
             },
 
             search() {
+                let vm = this;
+                vm.meta.page = 1;
+                vm.index();
+            },
+            onPerPageChange() {
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();

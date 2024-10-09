@@ -11,12 +11,9 @@ class UserService extends Model
 
     protected $fillable = [
         'plant_id',
-        'service_id',
         'user_id',
         'service_no',
-        'service_cost',
         'asset_id',
-        'asset_zone_id',
         'service_date',
         'next_service_date',
         'note',

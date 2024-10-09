@@ -6,14 +6,11 @@
                     <li class="breadcrumb-item" aria-current="page">
                         <router-link to="/dashboard">Dashboard</router-link>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Masters</a>
-                    </li>
                     <li class="breadcrumb-item active" aria-current="page">Assets</li>
                 </ol>
                 <h4 class="main-title mb-0">Assets</h4>
             </div>
-            <router-link v-can="'assets.create'" to="/asset/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD Asset</router-link>
+            <router-link v-can="'assets.create'" to="/asset/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ASSET</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -28,7 +25,7 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                        <th @click="sort('asset_type_id')">
+                                        <th @click="sort('asset_type_name')">
                                             Asset Type
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_type_name' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
@@ -109,14 +106,17 @@
                                             </div>
                                         </td>
                                         <td class="text-center" v-if="get_assetviews.length || get_asset.length">
-                                            <a v-can="'assets.update'" title="Edit" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a v-can="'assetviews.view'" title="View" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
+                                            <a v-can="'assets.update'" title="Edit Asset Attributes" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a v-can="'assetviews.view'" title="View Register Attributes" href="javascript:void(0)" class="text-primary me-2" v-if="asset.status"  @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                             <!-- <a href="javascript:void(0)" title="QR code" class="text-dark me-2" @click.prevent="getQRCode(asset)"><i class="ri-qr-code-line fs-18 lh-1"></i></a> -->
+                                            <a title="Asset Delete" v-can="'assets.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="forceDeleteAsset(asset)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                         <td class="text-center">
-                                            <a title="Activity Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/activity/create')"><i class="ri-stack-fill fs-18 lh-1"></i></a>
-                                            <a title="Service Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
-                                            <a title="Check Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a>
+                                            <a title="Activity Register" href="javascript:void(0)" class="text-info me-2" @click.prevent="viewRegister(asset, '/activity/create')"><i class="ri-stack-fill fs-18 lh-1"></i></a>
+                                            <a title="Service Register" href="javascript:void(0)" class="text-warning me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
+                                            <a title="Check Register" href="javascript:void(0)" class="text-teal me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a>
+                                            <a title="Asset Accessories" href="javascript:void(0)" class="text-secondary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-survey-line fs-18 lh-1"></i></a>
+
                                         </td>
                                     </tr>
                                     <tr v-if="assets.length==0">
@@ -137,7 +137,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "asset_id",
                     per_page: 10,
                     totalRows: 0,
@@ -173,15 +173,24 @@
                 status: true,
             };
         },
-        beforeRouteEnter(to, from, next) {
-            next((vm) => {
-                if(from.name != 'Assets.Edit' && from.name != 'Assets.View'){
-                    vm.$store.commit("setCurrentPage", vm.meta.page)
-                }else{
-                    vm.meta.page = vm.$store.getters.current_page
-                }
-            });
-        },
+    //     beforeRouteEnter(to, from, next) {
+    //         next((vm) => {
+    //             if(from.name != 'Assets.Edit' && from.name != 'Assets.View'){
+    //                 vm.$store.commit("setCurrentPage", vm.meta.page)
+    //             }else{
+    //                 vm.meta.page = vm.$store.getters.current_page
+    //             }
+    //         });
+    // },
+         beforeRouteEnter(to, from, next) {
+        next((vm) => {
+            if(from.name == 'Assets.Edit' && from.name == 'Assets.View'){
+                vm.meta.page = vm.$store.getters.current_page
+            }else{
+                vm.meta.page = 1
+            }
+        });
+    },
         mounted() {
             this.assetviews = this.$store.getters.permissions.filter(function (element) {
                 return element.ability.ability.includes("assetviews.view");
@@ -216,7 +225,7 @@
                     });
             },
             editAsset(asset) {
-                this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page))
                 this.$router.push("/asset/" + asset.asset_id + "/edit");
             },
             viewAsset(asset) {
@@ -225,6 +234,28 @@
 
                 this.$store.commit("setCurrentPage", this.meta.page)
                 this.$router.push("/asset/" + asset.asset_id + "/view");
+            },
+            forceDeleteAsset(asset) {
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", {
+                            uri: "forceDeleteAsset",
+                            data: asset,
+                        })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.index();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             viewRegister(asset, path){
                 this.$store.commit("setCurrentPage", this.meta.page)

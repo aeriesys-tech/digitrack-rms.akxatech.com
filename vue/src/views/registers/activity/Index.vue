@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Activities</h4>
             </div>
-            <router-link v-can="'userActivities.create'" to="/activity/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> Add Activity</router-link>
+            <router-link v-can="'userActivities.create'" to="/activity/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ACTIVITY</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -37,19 +37,19 @@
                                             </span>
                                         </th>
                                         <th>Activity Date & Time</th>
-                                        <th @click="sort('asset_id')">
+                                        <th @click="sort('asset_code')">
                                             Asset Code
                                             <span>
-                                                <i v-if="meta.keyword == 'asset_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'asset_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword == 'asset_code' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'asset_code' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('reason_id')">
+                                        <th @click="sort('reason_code')">
                                             Reason
                                             <span>
-                                                <i v-if="meta.keyword == 'reason_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'reason_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword == 'reason_code' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'reason_code' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
@@ -61,7 +61,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th class="text-center">Status</th>
+                                        <!-- <th class="text-center">Status</th> -->
                                         <th class="text-center" v-if="get_activity.length">Actions</th>
                                     </tr>
                                 </thead>
@@ -69,16 +69,16 @@
                                     <tr v-for="activity, key in activities" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{activity.activity_no}}</td>
-                                        <td>{{activity.activity_date}}</td>
+                                        <td>{{convertDateFormat( activity.activity_date)}}</td>
                                         <td>{{activity.asset?.asset_code}}</td>
                                         <td>{{activity.reason?.reason_code}}</td>
                                         <td>{{activity.cost}}</td>
-                                        <td>{{activity.activity_status}}</td>
+                                        <!-- <td>{{activity.activity_status}}</td> -->
                                         <td class="text-center" v-if="get_activity.length">
                                             <a title="Edit" v-can="'userActivities.update'" href="javascript:void(0)" class="text-success me-2" v-if="activity.status" @click="editActivity(activity)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
-                                            <a title="View" v-can="'userActivities.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'userActivities.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="activities.length==0">
@@ -98,7 +98,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,8 @@
     </div>
 </template>
 <script>
-    import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/Pagination.vue";
+import moment from "moment";
     export default {
         components: {
             Pagination,
@@ -116,7 +117,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "user_activity_id",
                     per_page: 10,
                     totalRows: 0,
@@ -171,29 +172,35 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD HH:mm");
+            },
             editActivity(activity) {
-                this.$store.commit("setCurrentPage", this.meta.page)
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page))
                 this.$router.push("/activity/" + activity.user_activity_id + "/edit");
             },
             deleteActivity(activity) {
-                let vm = this;
-                alert('are you sure you want delete it!')
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", {
-                        uri: "deleteUserActivity",
-                        data: activity,
-                    })
-                    .then((response) => {
-                        loader.hide();
-                        vm.$store.dispatch("success", response.data.message);
-                        vm.index();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                const confirmDelete = confirm("Are you sure you want to delete it ?");
+                if (confirmDelete) {
+                    let vm = this;
+                    let loader = vm.$loading.show();
+                    vm.$store
+                        .dispatch("post", {
+                            uri: "deleteUserActivity",
+                            data: activity,
+                        })
+                        .then((response) => {
+                            loader.hide();
+                            vm.$store.dispatch("success", response.data.message);
+                            vm.index();
+                        })
+                        .catch(function (error) {
+                            loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                }
             },
             search() {
                 let vm = this;

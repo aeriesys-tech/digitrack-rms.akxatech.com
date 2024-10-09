@@ -7,6 +7,10 @@ use App\Models\VariableAttribute;
 use App\Models\VariableAttributeType;
 use App\Http\Resources\VariableAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\VariableAttributeExport;
+use App\Exports\VariableAttributeHeadingsExport;
+use App\Imports\VariableAttributesImport;
 
 class VariableAttributeController extends Controller
 {
@@ -40,12 +44,12 @@ class VariableAttributeController extends Controller
         
         if($request->search!='')
         {
-            $query->where('field_name', 'like', "$request->search%")
-            ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
-            ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
+            $query->where('field_name', 'like', "%$request->search%")
+            ->orwhere('display_name', 'like', "%$request->search%")->orwhere('field_values', 'like', "%$request->search%")
+            ->orwhere('field_type', 'like', "%$request->search%")->orwhere('field_length', 'like', "%$request->search%")
             ->orwhereHas('VariableAttributeTypes', function($que) use($request){
                 $que->whereHas('VariableType', function($qu) use($request){
-                    $qu->where('variable_type_name', 'like', "$request->search%");
+                    $qu->where('variable_type_name', 'like', "%$request->search%");
                 });
             });    
         }
@@ -116,13 +120,28 @@ class VariableAttributeController extends Controller
         $variable_attribute = VariableAttribute::where('variable_attribute_id', $request->variable_attribute_id)->first();
         $variable_attribute->update($data);
 
-        VariableAttributeType::where('variable_attribute_id', $variable_attribute->variable_attribute_id)->delete();
+        if(isset($request->deleted_variable_attribute_types) > 0)
+        {
+            VariableAttributeType::whereIn('variable_attribute_type_id', $request->deleted_variable_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['variable_types'] as $variable_type_id) {
-            VariableAttributeType::create([
-                'variable_attribute_id' => $variable_attribute->variable_attribute_id,
-                'variable_type_id' => $variable_type_id
-            ]);
+        foreach ($data['variable_types'] as $variable_type_id) 
+        {
+            $variableType = VariableAttributeType::where('variable_attribute_id', $variable_attribute->variable_attribute_id)
+            ->where('variable_type_id', $variable_type_id)->first();
+
+            if($variableType)
+            {
+                $variableType->update([
+                    'variable_type_id' => $variable_type_id
+                ]);
+            }
+            else {
+                VariableAttributeType::create([
+                    'variable_attribute_id' => $variable_attribute->variable_attribute_id,
+                    'variable_type_id' => $variable_type_id
+                ]);
+            }
         }
         return new VariableAttributeResource($variable_attribute);
     }
@@ -149,5 +168,33 @@ class VariableAttributeController extends Controller
                 "message" => "VariableAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadVariableAttributes(Request $request)
+    {
+        $filename = "Variable Attributes.xlsx";
+
+        $excel = new VariableAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadVariableAttributeHeadings()
+    {
+        $filename = "Variable Attribute Headings.xlsx";
+        $excel = new VariableAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importVariableAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new VariableAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

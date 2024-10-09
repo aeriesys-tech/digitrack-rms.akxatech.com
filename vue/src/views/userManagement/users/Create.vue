@@ -14,8 +14,7 @@
                 </ol>
                 <h4 class="main-title mb-0">User</h4>
             </div>
-            <router-link to="/users" type="submit" class="btn btn-primary" style="float: right;"><i
-                    class="ri-list-check"></i> USERS</router-link>
+            <router-link to="/users" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> USERS</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -36,7 +35,7 @@
                                 <label class="form-label">Email</label><span class="text-danger"> *</span>
                                 <input type="email" placeholder="Email" class="form-control" :class="{'is-invalid':errors.email}" v-model="user.email" />
                                 <span v-if="errors.email" class="invalid-feedback">{{ errors.email[0] }}</span>
-                            </div> 
+                            </div>
                             <div class="col-md-4">
                                 <label class="form-label">Password</label><span class="text-danger"> *</span>
                                 <input type="password" :disabled="!status" placeholder="Password" class="form-control" :class="{'is-invalid':errors.password}" v-model="user.password" />
@@ -84,7 +83,7 @@ export default {
     name: "User.Create",
     data() {
         return {
-          
+
             user: {
                 user_id: '',
                 name: '',
@@ -158,11 +157,11 @@ export default {
 
         addUser(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addUser', data:this.user })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addUser', data:vm.user })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
+                    vm.$store.dispatch('success',response.data.message);
                     vm.$router.push("/users");
                 })
                 .catch(function (error) {
@@ -174,12 +173,12 @@ export default {
 
         updateUser(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateUser', data:this.user })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateUser', data:vm.user })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success',response.data.message);
-                    this.$router.push('/users');
+                    vm.$store.dispatch('success',response.data.message);
+                    vm.$router.push('/users');
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -190,11 +189,11 @@ export default {
 
         getUser(){
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'showUser', data:this.user })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'showUser', data:vm.user })
                 .then(response => {
                     loader.hide();
-                    this.user = response.data.data;
+                    vm.user = response.data.data;
                 })
                 .catch(function (error) {
                     loader.hide();

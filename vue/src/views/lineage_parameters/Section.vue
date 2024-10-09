@@ -66,13 +66,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('section_name')">Section Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='section_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='section_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                       
+
                                         <th class="text-center" v-can="'sections.delete'">Status</th>
                                         <th class="text-center" v-can="'sections.update'">Actions</th>
                                     </tr>
@@ -96,7 +96,7 @@
                                         </td>
                                     </tr>
                                     <tr v-if="sections.length == 0">
-                                        <td colspan="5" class="text-warning text-center">No Records to display!</td>
+                                        <td colspan="5" class=" text-center">No Records to display</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -231,13 +231,13 @@ export default {
 
         updateSection() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateSection', data: this.section })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateSection', data: vm.section })
                 .then(response => {
                     loader.hide();
-                    this.update = false;
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.update = false;
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

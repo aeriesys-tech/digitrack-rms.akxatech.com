@@ -51,6 +51,7 @@ use App\Http\Controllers\SpareAttributeValueController;
 use App\Http\Controllers\ListParameterController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\UserVariableController;
+use App\Http\Controllers\ActivityAttributeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -145,6 +146,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateCheck',[CheckController::class, 'updateCheck']);
     Route::post('deleteCheck',[CheckController::class, 'deleteCheck']);
     Route::post('getAssetTypeChecks',[CheckController::class, 'getAssetTypeChecks']);
+    Route::post('downloadChecks',[CheckController::class, 'downloadChecks']);
+    Route::post('downloadCheckHeadings',[CheckController::class, 'downloadCheckHeadings']);
+    Route::post('importCheck',[CheckController::class, 'importCheck']);
 
     //Module 
     Route::post('/paginateModules', [ModuleController::class, 'paginateModules']);
@@ -181,6 +185,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteSpare',[SpareController::class, 'deleteSpare']);
     Route::post('getAssetTypeSpares',[SpareController::class, 'getAssetTypeSpares']);
     Route::post('getSpareData',[SpareController::class, 'getSpareData']);
+    Route::post('downloadSpares',[SpareController::class, 'downloadSpares']);
+    Route::post('downloadSpareHeadings',[SpareController::class, 'downloadSpareHeadings']);
+    Route::post('importSpare',[SpareController::class, 'importSpare']);
 
     Route::post('paginateServices',[ServiceController::class, 'paginateServices']);
     Route::post('getServices',[ServiceController::class, 'getServices']);
@@ -190,6 +197,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteService',[ServiceController::class, 'deleteService']);
     Route::post('getAssetTypeServices',[ServiceController::class, 'getAssetTypeServices']);
     Route::post('getServiceData',[ServiceController::class, 'getServiceData']);
+    Route::post('downloadServices',[ServiceController::class, 'downloadServices']);
+    Route::post('downloadServiceHeadings',[ServiceController::class, 'downloadServiceHeadings']);
+    Route::post('importService',[ServiceController::class, 'importService']);
 
     Route::post('paginateAssets',[AssetController::class, 'paginateAssets']);
     Route::post('addAsset',[AssetController::class, 'addAsset']);
@@ -202,6 +212,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetCode',[AssetController::class, 'getAssetCode']);
     Route::post('getAssetdata',[AssetController::class, 'getAssetdata']);
     Route::post('getAssetZones',[AssetController::class, 'getAssetZones']);
+    Route::post('forceDeleteAsset',[AssetController::class, 'forceDeleteAsset']);
 
     Route::post('paginateAssetSpares',[AssetSpareController::class, 'paginateAssetSpares']);
     Route::post('addAssetSpare',[AssetSpareController::class, 'addAssetSpare']);
@@ -211,6 +222,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetSpare',[AssetSpareController::class, 'deleteAssetSpare']);
     Route::post('forceDeleteAssetSpare',[AssetSpareController::class, 'forceDeleteAssetSpare']);
     Route::post('getAssetServiceSpares',[AssetSpareController::class, 'getAssetServiceSpares']);
+    Route::post('assetSpareAttributeValues',[AssetSpareController::class, 'assetSpareAttributeValues']);
 
     Route::post('paginateAssetServices',[AssetServiceController::class, 'paginateAssetServices']);
     Route::post('addAssetService',[AssetServiceController::class, 'addAssetService']);
@@ -220,6 +232,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetService',[AssetServiceController::class, 'deleteAssetService']);
     Route::post('forceDeleteAssetService',[AssetServiceController::class, 'forceDeleteAssetService']);
     Route::post('getAssetsServices',[AssetServiceController::class, 'getAssetsServices']);
+    Route::post('assetServiceAttributeValues',[AssetServiceController::class, 'assetServiceAttributeValues']);
     
     Route::post('paginateAssetChecks',[AssetCheckController::class, 'paginateAssetChecks']);
     Route::post('addAssetCheck',[AssetCheckController::class, 'addAssetCheck']);
@@ -239,6 +252,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteAssetVariable',[AssetVariableController::class, 'deleteAssetVariable']);
     Route::post('getAssetTypeVariables',[AssetVariableController::class, 'getAssetTypeVariables']);
     Route::post('getAssetRegisterVariables',[AssetVariableController::class, 'getAssetRegisterVariables']);
+    Route::post('assetVariableAttributeValues',[AssetVariableController::class, 'assetVariableAttributeValues']);
 
     Route::post('paginateAssetDataSources',[AssetDataSourceController::class, 'paginateAssetDataSources']);
     Route::post('getAssetDataSources',[AssetDataSourceController::class, 'getAssetDataSources']);
@@ -247,6 +261,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateAssetDataSource',[AssetDataSourceController::class, 'updateAssetDataSource']);
     Route::post('deleteAssetDataSource',[AssetDataSourceController::class, 'deleteAssetDataSource']);
     Route::post('getAssetTypeDataSources',[AssetDataSourceController::class, 'getAssetTypeDataSources']);
+    Route::post('assetDataSourceScripts',[AssetDataSourceController::class, 'assetDataSourceScripts']);
+    Route::post('assetDataSourceAttributeValues',[AssetDataSourceController::class, 'assetDataSourceAttributeValues']);
 
     Route::post('paginateAssetAccessories',[AssetAccessoryController::class, 'paginateAssetAccessories']);
     Route::post('getAssetAccessories',[AssetAccessoryController::class, 'getAssetAccessories']);
@@ -267,6 +283,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateUserActivity',[UserActivityController::class, 'updateUserActivity']);
     Route::post('deleteUserActivity',[UserActivityController::class, 'deleteUserActivity']);
     Route::post('getUserActivity',[UserActivityController::class, 'getUserActivity']);
+    Route::post('getActivitiesDropdown',[UserActivityController::class, 'getActivitiesDropdown']);
 
     //Dashboard
     Route::post('getDashboardContent',[DashboardController::class, 'getDashboardContent']);
@@ -293,6 +310,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetAttribute',[AssetAttributeController::class, 'getAssetAttribute']);
     Route::post('getAssetAttributes',[AssetAttributeController::class, 'getAssetAttributes']);
     Route::post('deleteAssetAttribute',[AssetAttributeController::class, 'deleteAssetAttribute']);
+    Route::post('importAssetAttribute',[AssetAttributeController::class, 'importAssetAttribute']);
+    Route::post('downloadAssetAttributes',[AssetAttributeController::class, 'downloadAssetAttributes']);
+    Route::post('downloadAssetAttributeHeadings',[AssetAttributeController::class, 'downloadAssetAttributeHeadings']);
 
     Route::post('paginateFrequencies',[FrequencyController::class, 'paginateFrequencies']);
     Route::post('addFrequency',[FrequencyController::class, 'addFrequency']);
@@ -349,6 +369,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getSpareAttribute',[SpareAttributeController::class, 'getSpareAttribute']);
     Route::post('getSpareAttributes',[SpareAttributeController::class, 'getSpareAttributes']);
     Route::post('deleteSpareAttribute',[SpareAttributeController::class, 'deleteSpareAttribute']);
+    Route::post('importSpareAttribute',[SpareAttributeController::class, 'importSpareAttribute']);
+    Route::post('downloadSpareAttributes',[SpareAttributeController::class, 'downloadSpareAttributes']);
+    Route::post('downloadSpareAttributeHeadings',[SpareAttributeController::class, 'downloadSpareAttributeHeadings']);
 
     Route::post('getSparesDropdown',[SpareAttributeValueController::class, 'getSparesDropdown']);
 
@@ -358,6 +381,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getDataSourceAttribute',[DataSourceAttributeController::class, 'getDataSourceAttribute']);
     Route::post('getDataSourceAttributes',[DataSourceAttributeController::class, 'getDataSourceAttributes']);
     Route::post('deleteDataSourceAttribute',[DataSourceAttributeController::class, 'deleteDataSourceAttribute']);
+    Route::post('importDataSourceAttribute',[DataSourceAttributeController::class, 'importDataSourceAttribute']);
+    Route::post('downloadDataSourceAttributes',[DataSourceAttributeController::class, 'downloadDataSourceAttributes']);
+    Route::post('downloadDataSourceAttributeHeadings',[DataSourceAttributeController::class, 'downloadDataSourceAttributeHeadings']);
 
     Route::post('paginateVariableAttributes',[VariableAttributeController::class, 'paginateVariableAttributes']);
     Route::post('addVariableAttribute',[VariableAttributeController::class, 'addVariableAttribute']);
@@ -365,6 +391,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getVariableAttribute',[VariableAttributeController::class, 'getVariableAttribute']);
     Route::post('getVariableAttributes',[VariableAttributeController::class, 'getVariableAttributes']);
     Route::post('deleteVariableAttribute',[VariableAttributeController::class, 'deleteVariableAttribute']);
+    Route::post('importVariableAttribute',[VariableAttributeController::class, 'importVariableAttribute']);
+    Route::post('downloadVariableAttributes',[VariableAttributeController::class, 'downloadVariableAttributes']);
+    Route::post('downloadVariableAttributeHeadings',[VariableAttributeController::class, 'downloadVariableAttributeHeadings']);
 
     Route::post('paginateServiceAttributes',[ServiceAttributeController::class, 'paginateServiceAttributes']);
     Route::post('addServiceAttribute',[ServiceAttributeController::class, 'addServiceAttribute']);
@@ -372,7 +401,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getServiceAttribute',[ServiceAttributeController::class, 'getServiceAttribute']);
     Route::post('getServiceAttributes',[ServiceAttributeController::class, 'getServiceAttributes']);
     Route::post('deleteServiceAttribute',[ServiceAttributeController::class, 'deleteServiceAttribute']);
-    
+    Route::post('importServiceAttribute',[ServiceAttributeController::class, 'importServiceAttribute']);
+    Route::post('downloadServiceAttributes',[ServiceAttributeController::class, 'downloadServiceAttributes']);
+    Route::post('downloadServiceAttributeHeadings',[ServiceAttributeController::class, 'downloadServiceAttributeHeadings']);
 
     Route::post('getServicesDropdown',[ServiceAttributeValueController::class, 'getServicesDropdown']);
 
@@ -382,6 +413,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getBreakDownAttribute',[BreakDownAttributeController::class, 'getBreakDownAttribute']);
     Route::post('getBreakDownAttributes',[BreakDownAttributeController::class, 'getBreakDownAttributes']);
     Route::post('deleteBreakDownAttribute',[BreakDownAttributeController::class, 'deleteBreakDownAttribute']);
+    Route::post('importBreakDownAttribute',[BreakDownAttributeController::class, 'importBreakDownAttribute']);
+    Route::post('downloadBreakDownAttributes',[BreakDownAttributeController::class, 'downloadBreakDownAttributes']);
+    Route::post('downloadBreakDownAttributeHeadings',[BreakDownAttributeController::class, 'downloadBreakDownAttributeHeadings']);
 
     Route::post('paginateVariables',[VariableController::class, 'paginateVariables']);
     Route::post('getVariables',[VariableController::class, 'getVariables']);
@@ -392,6 +426,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetTypeVariables',[VariableController::class, 'getAssetTypeVariables']);
     Route::post('getVariableData',[VariableController::class, 'getVariableData']);
     Route::post('getVariablesDropdown',[VariableController::class, 'getVariablesDropdown']);
+    Route::post('downloadVariables',[VariableController::class, 'downloadVariables']);
+    Route::post('downloadVariableHeadings',[VariableController::class, 'downloadVariableHeadings']);
+    Route::post('importVariable',[VariableController::class, 'importVariable']);
 
     Route::post('paginateDataSources',[DataSourceController::class, 'paginateDataSources']);
     Route::post('getDataSources',[DataSourceController::class, 'getDataSources']);
@@ -402,6 +439,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetTypeDataSources',[DataSourceController::class, 'getAssetTypeDataSources']);
     Route::post('getDataSourceData',[DataSourceController::class, 'getDataSourceData']);
     Route::post('getDataSourcesDropdown',[DataSourceController::class, 'getDataSourcesDropdown']);
+    Route::post('downloadDataSources',[DataSourceController::class, 'downloadDataSources']);
+    Route::post('downloadDataSourceHeadings',[DataSourceController::class, 'downloadDataSourceHeadings']);
+    Route::post('importDataSource',[DataSourceController::class, 'importDataSource']);
 
     Route::post('paginateBreakDownLists',[BreakDownListController::class, 'paginateBreakDownLists']);
     Route::post('getBreakDownLists',[BreakDownListController::class, 'getBreakDownLists']);
@@ -431,4 +471,14 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateUserVariable',[UserVariableController::class, 'updateUserVariable']);
     Route::post('getUserVariable',[UserVariableController::class, 'getUserVariable']);
     Route::post('deleteUserVariable',[UserVariableController::class, 'deleteUserVariable']);
+
+    Route::post('paginateActivityAttributes',[ActivityAttributeController::class, 'paginateActivityAttributes']);
+    Route::post('addActivityAttribute',[ActivityAttributeController::class, 'addActivityAttribute']);
+    Route::post('getActivityAttributes',[ActivityAttributeController::class, 'getActivityAttributes']);
+    Route::post('getActivityAttribute',[ActivityAttributeController::class, 'getActivityAttribute']);
+    Route::post('updateActivityAttribute',[ActivityAttributeController::class, 'updateActivityAttribute']);
+    Route::post('deleteActivityAttribute',[ActivityAttributeController::class, 'deleteActivityAttribute']);
+    Route::post('importActivityAttribute',[ActivityAttributeController::class, 'importActivityAttribute']);
+    Route::post('downloadActivityAttributes',[ActivityAttributeController::class, 'downloadActivityAttributes']);
+    Route::post('downloadActivityAttributeHeadings',[ActivityAttributeController::class, 'downloadActivityAttributeHeadings']);
 });

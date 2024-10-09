@@ -23,7 +23,8 @@ class AssetServiceResource extends JsonResource
             'plant' => new PlantResource($this->Plant),
             'service_type_id' => $this->service_type_id,
             'service_type' => new ServiceTypeResource($this->ServiceType),
-            'status' => $this->deleted_at?false:true
+            'status' => $this->deleted_at?false:true,
+            'asset_service_attributes' => AssetServiceValueResource::collection($this->AssetServiceValue)
         ];
     }
 }

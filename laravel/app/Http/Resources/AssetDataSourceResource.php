@@ -24,6 +24,8 @@ class AssetDataSourceResource extends JsonResource
             'data_source_id' => $this->data_source_id,
             'data_source' => new DataSourceResource($this->DataSource),
             'data_source_type_id' => $this->data_source_type_id,
+            'script' => $this->script ?? null,
+            'asset_datasource_attributes' => AssetDataSourceValueResource::collection($this->AssetDataSourceValue)
         ];
     }
 }

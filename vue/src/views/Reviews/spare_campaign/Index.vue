@@ -195,11 +195,6 @@ import moment from 'moment';
 
         methods: {
             submit() {
-                console.log("asset--", this.spare.asset_id)
-                console.log("spare--", this.spare.spare_id)
-                console.log("from_date--", this.spare.from_date)
-                console.log("to_date--", this.spare.to_date)
-                console.log("asset--", this.spare.asset_id)
                 if (this.spare.asset_id == "" || this.spare.spare_id == "" || this.spare.from_date == "" || this.spare.to_date == "") {
                     if (this.spare.asset_id == "") {
                         this.errors.asset_id = ["Asset field cannot be empty"];
@@ -216,7 +211,6 @@ import moment from 'moment';
                 }
                  else {
                     this.errors = [];
-                    console.log("eeee",this.spare.spare_id)
                     if (this.spare.spare_id == "Wall Contour") {
                         this.wall = true;
                         this.bottom = false;

@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Accessory Types</li>
             </ol>
             <h4 class="main-title mb-2">Accessory Types</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" >
                 <form @submit.prevent="submitForm()">
@@ -63,13 +63,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('accessory_type_name')">Accessory Type Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='accessory_type_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='accessory_type_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                       
+
                                         <th class="text-center">Status</th>
                                         <th class="text-center" >Actions</th>
                                     </tr>
@@ -125,7 +125,7 @@ export default {
             column:'col-8',
             meta: {
                 search: "",
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "accessory_type_id",
                 per_page: 10,
                 totalRows: 0,
@@ -171,15 +171,15 @@ export default {
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateAccessoryTypes' , data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginateAccessoryTypes' , data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.accessory_types = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.accessory_types = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -190,13 +190,13 @@ export default {
 
         addAccessoryType() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addAccessoryType', data: vm.accessory_type })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addAccessoryType', data: vm.accessory_type })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
-                    this.index();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
+                    vm.index();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -228,13 +228,13 @@ export default {
 
         updateAccessoryType() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateAccessoryType', data: this.accessory_type })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateAccessoryType', data: vm.accessory_type })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
-                    this.index();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
+                    vm.index();
                 })
                 .catch(function (error) {
                     loader.hide();

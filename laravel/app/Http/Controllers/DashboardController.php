@@ -18,16 +18,17 @@ class DashboardController extends Controller
         $authPlantId = Auth::User()->plant_id;
 
         $user = User::where('plant_id', $authPlantId)->count();
-        $asset = Asset::where('plant_id', $authPlantId)->count();
+        $asset = Asset::count();
         $equipment = Equipment::where('plant_id', $authPlantId)->count();
         $service_type = ServiceType::count();
-        $deviations = UserAssetCheck::whereHas('UserCheck', function($query) use ($authPlantId) {
-                $query->where('plant_id', $authPlantId);
-            })->whereColumn('default_value', '!=', 'value')->count();
+        $deviations = UserAssetCheck::where('field_type', 'Number')->whereRaw('value < lcl OR value > ucl')
+        ->orwhere('field_type', '!=', 'Number')->whereHas('UserCheck', function ($query) use ($authPlantId) {
+              $query->where('plant_id', $authPlantId);
+          })->whereColumn('default_value', '!=', 'value')->count();
 
-        $pending_services = UserService::where('plant_id', $authPlantId)->where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->count();
+        $pending_services = UserService::where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->count();
 
-        $upcoming_jobs = UserService::where('plant_id', $authPlantId)->where('next_service_date', '>=', Carbon::now())
+        $upcoming_jobs = UserService::where('next_service_date', '>=', Carbon::now())
             ->where('is_latest', true)->count();
 
         return response()->json([

@@ -15,7 +15,8 @@ class AssetDataSource extends Model
         'plant_id',
         'area_id',
         'asset_zone_id',
-        'data_source_type_id'
+        'data_source_type_id',
+        'script'
     ];
 
     protected $primaryKey = 'asset_data_source_id';
@@ -48,5 +49,10 @@ class AssetDataSource extends Model
     public function DataSourceType()
     {
         return $this->belongsTo(DataSourceType::class, 'data_source_type_id');
+    }
+
+    public function AssetDataSourceValue()
+    {
+        return $this->hasMany(AssetDataSourceValue::class, 'asset_data_source_id', 'asset_data_source_id');
     }
 }

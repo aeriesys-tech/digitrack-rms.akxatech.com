@@ -29,7 +29,7 @@ class VariableAttributeResource extends JsonResource
             'status' => $this->deleted_at?false:true,
             'variable_types' => $variable_types,
             'variable_attribute_value' => [
-                "field_value" => null
+                "field_value" => ''
             ]
         ];
     }

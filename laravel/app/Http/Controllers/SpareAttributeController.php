@@ -7,6 +7,10 @@ use App\Models\SpareAttribute;
 use App\Models\SpareAttributeType;
 use App\Http\Resources\SpareAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SpareAttributeExport;
+use App\Exports\SpareAttributeHeadingsExport;
+use App\Imports\SpareAttributesImport;
 
 class SpareAttributeController extends Controller
 {
@@ -40,12 +44,12 @@ class SpareAttributeController extends Controller
         
         if($request->search!='')
         {
-            $query->where('field_name', 'like', "$request->search%")
-            ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
-            ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
+            $query->where('field_name', 'like', "%$request->search%")
+            ->orwhere('display_name', 'like', "%$request->search%")->orwhere('field_values', 'like', "%$request->search%")
+            ->orwhere('field_type', 'like', "%$request->search%")->orwhere('field_length', 'like', "%$request->search%")
             ->orwhereHas('SpareAttributeTypes', function($que) use($request){
                 $que->whereHas('SpareType', function($qu) use($request){
-                    $qu->where('spare_type_name', 'like', "$request->search%");
+                    $qu->where('spare_type_name', 'like', "%$request->search%");
                 });
             });    
         }
@@ -130,13 +134,26 @@ class SpareAttributeController extends Controller
         $spare_attribute = SpareAttribute::where('spare_attribute_id', $request->spare_attribute_id)->first();
         $spare_attribute->update($data);
 
-        SpareAttributeType::where('spare_attribute_id', $spare_attribute->spare_attribute_id)->delete();
+        if(isset($request->deleted_spare_attribute_types) > 0)
+        {
+            SpareAttributeType::whereIn('spare_attribute_type_id', $request->deleted_spare_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['spare_types'] as $spare_type_id) {
-            SpareAttributeType::create([
-                'spare_attribute_id' => $spare_attribute->spare_attribute_id,
-                'spare_type_id' => $spare_type_id
-            ]);
+        foreach ($data['spare_types'] as $spare_type_id) 
+        {
+            $spare_type = SpareAttributeType::where('spare_attribute_id', $spare_attribute->spare_attribute_id)->where('spare_type_id', $spare_type_id)->first();
+            if($spare_type)
+            {
+                $spare_type->update([
+                    'spare_type_id' => $spare_type_id
+                ]);
+            }
+            else{
+                SpareAttributeType::create([
+                    'spare_attribute_id' => $spare_attribute->spare_attribute_id,
+                    'spare_type_id' => $spare_type_id
+                ]);
+            }
         }
         return new SpareAttributeResource($spare_attribute);
     }
@@ -163,5 +180,33 @@ class SpareAttributeController extends Controller
                 "message" => "SpareAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadSpareAttributes(Request $request)
+    {
+        $filename = "Spare Attributes.xlsx";
+
+        $excel = new SpareAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadSpareAttributeHeadings()
+    {
+        $filename = "Spare Attribute Headings.xlsx";
+        $excel = new SpareAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importSpareAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new SpareAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

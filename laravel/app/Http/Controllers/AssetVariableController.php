@@ -10,6 +10,9 @@ use App\Http\Resources\VariableResource;
 use App\Models\Variable;
 use App\Models\AssetZone;
 use App\Models\Asset;
+use App\Models\VariableAttributeValue;
+use App\Http\Resources\VariableAttributeValueResource;
+use App\Models\AssetVariableValue;
 
 class AssetVariableController extends Controller
 {
@@ -131,6 +134,18 @@ class AssetVariableController extends Controller
 
                 $assetVariable = AssetVariable::create($variableData);
                 $createdVariables[] = new AssetVariableResource($assetVariable);
+
+                foreach($request->asset_variable_attributes as $attribute)
+                {
+                    AssetVariableValue::create([
+                        'asset_variable_id' => $assetVariable->asset_variable_id,
+                        'asset_id' => $assetVariable->asset_id,
+                        'variable_id' => $variable->variable_id,
+                        'asset_zone_id' => $assetVariable->asset_zone_id,
+                        'variable_attribute_id' => $attribute['variable_attribute_id'],
+                        'field_value' => $attribute['field_value'] ?? ''
+                    ]);
+                }
             }
         } 
         else 
@@ -140,6 +155,17 @@ class AssetVariableController extends Controller
 
             $assetVariable = AssetVariable::create($variableData);
             $createdVariables[] = new AssetVariableResource($assetVariable);
+            foreach($request->asset_variable_attributes as $attribute)
+            {
+                AssetVariableValue::create([
+                    'asset_variable_id' => $assetVariable->asset_variable_id,
+                    'asset_id' => $assetVariable->asset_id,
+                    'variable_id' => $variable->variable_id,
+                    'asset_zone_id' => $assetVariable->asset_zone_id,
+                    'variable_attribute_id' => $attribute['variable_attribute_id'],
+                    'field_value' => $attribute['field_value'] ?? ''
+                ]);
+            }
         }
 
         return response()->json([$createdVariables, "message" => "AssetVariable Created Successfully"]);
@@ -199,6 +225,31 @@ class AssetVariableController extends Controller
 
         $asset_variable = AssetVariable::where('asset_variable_id', $request->asset_variable_id)->first();
         $asset_variable->update($data);
+
+        if(isset($request->deleted_asset_variable_values)>0)
+        {
+            AssetVariableValue::whereIn('asset_variable_value_id', $request->deleted_asset_variable_values)->forceDelete();
+        }
+
+        foreach ($request->asset_variable_attributes as $attribute) 
+        {
+            $fieldValue = $attribute['field_value'] ?? '';
+
+            if ($fieldValue !== null) {
+                AssetVariableValue::updateOrCreate(
+                    [
+                        'asset_variable_id' => $asset_variable->asset_variable_id,
+                        'asset_zone_id' => $asset_variable->asset_zone_id,
+                        'variable_id' => $variable->variable_id,
+                        'asset_id' =>  $asset_variable->asset_id,
+                        'variable_attribute_id' => $attribute['variable_attribute_id'],
+                    ],
+                    [
+                        'field_value' => $fieldValue,
+                    ]
+                );
+            }
+        }
         return response()->json([
             "message" => "AssetVariable Updated Successfully",
             new AssetVariableResource($asset_variable)
@@ -231,22 +282,62 @@ class AssetVariableController extends Controller
     }
 
 
+    // public function getAssetRegisterVariables(Request $request)
+    // {
+    //     $request->validate([
+    //         'asset_id' => 'required|exists:assets,asset_id',
+    //         // 'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id'
+    //     ]);
+
+    //     $asset = Asset::where('asset_id', $request->asset_id)->with('Zones')->first();
+
+    //     $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
+    //     $query = AssetVariable::where('asset_id', $request->asset_id)->whereIn('asset_zone_id', $asset_zone_ids);
+
+    //     $asset_variable_ids =  $query->pluck('variable_id')->toArray();
+    //     $asset_variable = Variable::whereIn('variable_id', $asset_variable_ids)->get();
+
+    //     return $asset_variable;
+    // }
+
     public function getAssetRegisterVariables(Request $request)
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id'
+        ]);
+    
+        // Fetch the asset and its associated zones
+        $asset = Asset::where('asset_id', $request->asset_id)->with('Zones')->first();
+        
+        if (!$asset || $asset->Zones->isEmpty()) {
+            return response()->json(['message' => 'No asset zones found for this asset.'], 200);
+        }
+    
+        $asset_zone_ids = $asset->Zones->pluck('asset_zone_id')->toArray();
+       
+        $variable_ids = collect();
+        foreach ($asset_zone_ids as $zone_id) 
+        {            
+            $variable_collection = collect();
+            $asset_variables = AssetVariable::where('asset_zone_id', $zone_id)->pluck('variable_id')->toArray();
+
+            foreach($asset_variables as $variable_id)
+            {
+                $variables = Variable::where('variable_id', $variable_id)->get();
+                $variable_collection = $variable_collection->merge($variables);
+            }
+            $variable_ids = $variable_ids->push($variable_collection);
+        }
+        return response()->json($variable_ids);
+    }    
+
+    public function assetVariableAttributeValues(Request $request)
+    {
+        $request->validate([
+            'variable_id' => 'required|exists:variables,variable_id'
         ]);
 
-        $query = AssetVariable::where('asset_id', $request->asset_id);
-        if (isset($request->asset_zone_id)) 
-        {
-            $query->where('asset_zone_id', $request->asset_zone_id);
-        }
-
-        $asset_variable_ids =  $query->pluck('variable_id')->toArray();
-        $asset_variable = Variable::whereIn('variable_id', $asset_variable_ids)->get();
-
-        return $asset_variable;
+        $variable_attribute_values = VariableAttributeValue::where('variable_id', $request->variable_id)->get();
+        return VariableAttributeValueResource::collection($variable_attribute_values);
     }
 }

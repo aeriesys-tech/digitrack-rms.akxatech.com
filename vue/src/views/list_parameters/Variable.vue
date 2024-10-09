@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Variables</li>
             </ol>
             <h4 class="main-title mb-2">Variables</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" >
                 <form @submit.prevent="submitForm()">
@@ -104,7 +104,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('variable_name')">Variable Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='variable_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='variable_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -112,14 +112,14 @@
                                             </span>
                                         </th>
                                         <th @click="sort('asset_type_id')">
-                                            Asset Type.
+                                            Asset Type
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                       
+
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -136,7 +136,7 @@
                                         <td>
                                             <span v-for="asset_type, key in variable.variable_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>
-                        
+
                                         <td class="text-center">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'variable' + variable.variable_id" :checked="variable.status" :value="variable.status" @change="deleteVariable(variable)" />
@@ -363,6 +363,11 @@ export default {
             vm.meta.page = 1;
             vm.index();
         },
+        onPerPageChange() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
     }
 }
 </script>
@@ -396,4 +401,3 @@ export default {
     right: 0;
 }
 </style>
-

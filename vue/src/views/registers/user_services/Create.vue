@@ -37,6 +37,7 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Asset</label><span class="text-danger"> *</span>
                                     <search
+                                    :disabled="!status"
                                         :class="{ 'is-invalid': errors.asset_id }"
                                         :customClass="{ 'is-invalid': errors.asset_id }"
                                         :initialize="user_service.asset_id"
@@ -48,25 +49,17 @@
                                         @input=" asset => user_service.asset_id = asset"
                                     >
                                     </search>
-                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Service Date</label><span class="text-danger"> *</span>
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        placeholder="Enter Service Date"
-                                        :class="{'is-invalid': errors.service_date}"
-                                        :value="convertDateFormat(user_service.service_date)"
-                                        v-model="user_service.service_date"
-                                        ref="service_date"
-                                    />
+                                    <label class="form-label">Service Date & Time</label><span class="text-danger"> *</span>
+                                    <input type="datetime-local" class="form-control" :class="{'is-invalid': errors.service_date}" :value="convertDateFormat(user_service.service_date)" v-model="user_service.service_date" ref="service_date"/>
                                     <span v-if="errors.service_date" class="invalid-feedback">{{ errors.service_date[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Next Service Date</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Next Service Date & Time</label><span class="text-danger"> *</span>
                                     <input
-                                        type="date"
+                                        type="datetime-local"
                                         class="form-control"
                                         placeholder="Enter Next Service Date"
                                         :class="{'is-invalid': errors.next_service_date}"
@@ -83,16 +76,167 @@
                                 </div>
                             </div>
 
-                            <div class="row g-2">
+                            <!-- try -->
+                            <!-- <div class="col-md-12 mb-3" v-for="asset_zone,key in asset_zones" :key="key"> -->
+                                <!-- <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Overall</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Spare</th>
+                                                        <th>Service</th>
+                                                        <th>Service Cost</th>
+                                                        <th>Quantity</th>
+                                                        <th>Spare Cost</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare1</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                     <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare2</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                      <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare3</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Zone1</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Spare</th>
+                                                        <th>Service</th>
+                                                        <th>Service Cost</th>
+                                                        <th>Quantity</th>
+                                                        <th>Spare Cost</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare2</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                     <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare4</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                 <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Zone3</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Spare</th>
+                                                        <th>Service</th>
+                                                        <th>Service Cost</th>
+                                                        <th>Quantity</th>
+                                                        <th>Spare Cost</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align: center; align-content: center;">Spare2</td>
+                                                        <td><select class="form-control">
+                                                                <option value="">Select Service</option>
+                                                                <option value="1">Service 1</option>
+                                                                <option value="0">Service 2</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" class="form-control" placeholder="Service Cost"></td>
+                                                        <td><input type="text" class="form-control" placeholder="Quantity"></td>
+                                                        <td><input type="number" class="form-control" placeholder="Spare Cost"></td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+
+                            <!-- ends -->
+
+
+
+
+                         <div class="row g-2">
                                 <div class="">
                                     <table class="table table-responsive table-responsive-sm table-sm text-nowrap table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Asset Zone</th>
+                                                <th>Asset Zone <span class="text-danger"> *</span></th>
                                                 <th>Service <span class="text-danger"> *</span></th>
                                                 <th>Service Cost <span class="text-danger"> *</span></th>
-                                                <th>Spare <span class="text-danger"> *</span></th>
-                                                <th>Spare Cost <span class="text-danger"> *</span></th>
+                                                <th>Spare</th>
+                                                <th>Quantity</th>
+                                                <th>Spare Cost</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
@@ -133,28 +277,34 @@
                                                 <input type="number" placeholder="Enter Service Cost" min="0" oninput="validity.valid||(value='');" class="form-control" :class="{'is-invalid':errors.service_cost}" v-model="user_spare.service_cost" />
                                                 <span v-if="errors.service_cost" class="invalid-feedback">{{ errors.service_cost[0] }}</span>
                                             </td>
-                                                <td>
-                                                    <search
-                                                        :class="{ 'is-invalid': errors.spare_id }"
-                                                        :customClass="{ 'is-invalid': errors.spare_id }"
-                                                        aria-describedby="basic-addon2"
-                                                        aria-label="Select Spare"
-                                                        :initialize="user_spare.spare_id"
-                                                        id="spare_id"
-                                                        label="spare_name"
-                                                        label2="spare_code"
-                                                        placeholder="Select Spare"
-                                                        :data="spares"
-                                                        @input=" spare1 => user_spare.spare_id = spare1"
-                                                        @selectsearch="getValue(user_spare.spare_id)"
-                                                    >
-                                                    </search>
-                                                    <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
-                                                </td>
-                                                <td>
-                                                    <input type="number" class="form-control" placeholder="Enter Spare Cost" min="0" :class="{ 'is-invalid': errors.spare_cost }" v-model="user_spare.spare_cost" />
-                                                    <span v-if="errors.spare_cost" class="invalid-feedback">{{ errors.spare_cost[0] }}</span>
-                                                </td>
+                                            <td>
+                                                <search
+                                                    :class="{ 'is-invalid': errors.spare_id }"
+                                                    :customClass="{ 'is-invalid': errors.spare_id }"
+                                                    aria-describedby="basic-addon2"
+                                                    aria-label="Select Spare"
+                                                    :initialize="user_spare.spare_id"
+                                                    id="spare_id"
+                                                    label="spare_name"
+                                                    label2="spare_code"
+                                                    placeholder="Select Spare"
+                                                    :data="spares"
+                                                    @input=" spare1 => user_spare.spare_id = spare1"
+                                                    @selectsearch="getValue(user_spare)"
+                                                >
+                                                </search>
+                                                <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
+                                            </td>
+                                            <td>
+                                                <input type="number" placeholder="Enter Quantity" min="0" class="form-control"
+                                                    :class="{'is-invalid':errors.quantity}" v-model="user_spare.quantity"
+                                                    :max="user_spare.max_quantity" @input="enforceMinMax($event, user_spare)"/>
+                                                <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" placeholder="Enter Spare Cost" min="0" :class="{ 'is-invalid': errors.spare_cost }" v-model="user_spare.spare_cost" />
+                                                <span v-if="errors.spare_cost" class="invalid-feedback">{{ errors.spare_cost[0] }}</span>
+                                            </td>
                                                 <td class="text-center">
                                                     <button v-if="user_spare.status" class="btn btn-outline-success mx-1" @click.prevent="addRow()"><i class="ri-add-line fs-18 lh-1"></i></button>
                                                     <button v-else class="btn btn-outline-success mx-1" @click.prevent="updateRow(user_spare)"><i class="ri-save-line fs-18 lh-1"></i></button>
@@ -167,10 +317,11 @@
                                         </tbody>
                                         <tbody>
                                             <tr v-for="spare, index in user_service.user_spares" :key="index">
-                                            <td>{{ spare?.asset_zone?.zone_name}}</td>
-                                            <td>{{ spare?.service?.service_name }}</td>
-                                            <td>{{ spare?.service_cost }}</td>
+                                                <td>{{ spare?.asset_zone?.zone_name}}</td>
+                                                <td>{{ spare?.service?.service_name }}</td>
+                                                <td>{{ spare?.service_cost }}</td>
                                                 <td>{{ spare?.spare?.spare_name }}</td>
+                                                <td>{{ spare?.quantity }}</td>
                                                 <td>{{ spare?.spare_cost }}</td>
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-outline-primary mx-2" @click.prevent="editSpare(spare,index)"><i class="ri-pencil-line fs-18 lh-1"></i></button>
@@ -233,8 +384,8 @@
                         service_name:"",
                     },
                     service_cost: "",
-
-
+                    quantity:'',
+                    max_quantity:'',
                     spare_cost: "",
                     status: true,
                 },
@@ -282,13 +433,13 @@
             });
         },
         mounted() {
-            this.user_service.service_date = moment().format("yyyy-MM-DD");
-            this.user_service.next_service_date = moment().format("yyyy-MM-DD");
+            this.user_service.service_date = moment().format("yyyy-MM-DD HH:mm");
+            this.user_service.next_service_date = moment().add(1, 'days').format("yyyy-MM-DD HH:mm");
         },
         methods: {
             convertDateFormat(date) {
                 let vm = this;
-                return moment(date).format("yyyy-MM-DD");
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
             submitForm() {
                 let vm = this;
@@ -298,12 +449,24 @@
                     vm.updateUserService();
                 }
             },
+            enforceMinMax(event, user_spare) {
+                const input = event.target;
+                let value = parseInt(input.value, 10);
+
+                // Enforce the min and max manually
+                if (value < parseInt(input.min, 10)) {
+                    input.value = input.min;
+                }
+                if (value > input.max) {
+                    input.value = input.max;  // Use dynamic max
+                }
+                user_spare.quantity = input.value
+            },
              getAssetZoneValue(value) {
                 let vm = this;
                 let asset_zone = vm.asset_zones?.filter(function (ele) {
                     return ele.asset_zone_id == value;
                 });
-                console.log("aaa--",asset_zone,value)
                  if (asset_zone.length) {
                     vm.user_service.asset_zone_id = asset_zone[0].asset_zone_id
                     vm.user_spare.asset_zone.zone_name = asset_zone[0].zone_name;
@@ -312,11 +475,24 @@
             getValue(value) {
                 let vm = this;
                 let spare = vm.spares?.filter(function (ele) {
-                    return ele.spare_id == value;
+                    return ele.spare_id == value.spare_id;
                 });
-                if (spare.length) {
-                    vm.user_spare.spare.spare_name = spare[0].spare_name;
-                }
+                // if (spare.length) {
+                //     vm.user_spare.spare.spare_name = spare[0].spare_name;
+                //     let spr = spare[0]?.asset_spare?.filter(function (ele) {
+                //         return ele.asset_zone_id == value.asset_zone_id;
+                //     });
+                // }
+                // value.quantity = spare[0].asset_spare[0].quantity;
+                // value.max_quantity = spare[0].asset_spare[0].quantity;
+
+                vm.user_spare.spare.spare_name = spare[0].spare_name;
+                let spr = spare[0]?.asset_spare?.filter(function (ele) {
+                    return ele.asset_zone_id == value.asset_zone_id;
+                });
+                value.quantity = spr[0].quantity;
+                value.max_quantity = spr[0].quantity;
+
             },
             getServiceValue(value) {
                 let vm = this;
@@ -395,6 +571,14 @@
             addUserService() {
                 let vm = this;
                 let loader = vm.$loading.show();
+                 vm.errors = {};
+
+                if (!vm.user_service.asset_id) {
+                    loader.hide();
+                    vm.errors.asset_id = "Asset is required";
+                    vm.$store.dispatch("error", "Asset is required.");
+                    return;
+                }
                 // Check if user_spares is empty
                 if (vm.user_service.user_spares.length === 0) {
                     loader.hide();
@@ -448,18 +632,15 @@
             addRow() {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                if (vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                    if (vm.user_spare.asset_zone_id == "") {
+                        vm.errors.asset_zone_id = ["Asset zone cannot be empty"];
+                    }
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
                     if (vm.user_spare.service_cost == "") {
                         vm.errors.service_cost = ["Service Cost cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_id == "") {
-                        vm.errors.spare_id = ["Spare field cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_cost == "") {
-                        vm.errors.spare_cost = ["Spare Cost cannot be empty"];
                     }
                 } else {
                     vm.user_service.user_spares.push({
@@ -475,9 +656,10 @@
                         service_cost: vm.user_spare.service_cost,
                         spare_id: vm.user_spare.spare_id,
                         spare: {
-                            spare_name: vm.user_spare.spare.spare_name,
+                            spare_name: vm.user_spare?.spare?.spare_name,
                         },
                         spare_cost: vm.user_spare.spare_cost,
+                        quantity: vm.user_spare.quantity,
                     });
                     vm.discardNewRow();
                 }
@@ -492,6 +674,7 @@
                 vm.user_spare.spare_cost = "";
                 vm.user_spare.spare.spare_name = "";
                 vm.user_spare.status = true;
+                vm.user_spare.quantity="";
                 vm.errors = [];
             },
             editSpare(spare, key) {
@@ -503,8 +686,9 @@
                 vm.user_spare.service_cost = spare.service_cost;
                 vm.user_spare.user_spare_id = spare.user_spare_id;
                 vm.user_spare.spare_id = spare.spare_id;
-                vm.user_spare.spare.spare_name = spare.spare.spare_name;
-                vm.user_spare.spare_cost = spare.spare_cost;
+                vm.user_spare.spare.spare_name = spare?.spare?.spare_name;
+                vm.user_spare.spare_cost = spare?.spare_cost;
+                vm.user_spare.quantity = spare?.quantity;
                 vm.user_spare.status = false;
                 vm.user_spare.key = key;
                 vm.errors = [];
@@ -512,18 +696,15 @@
             updateRow(spare) {
                 let vm = this;
                 vm.errors = [];
-                if (vm.user_spare.spare_id == "" || vm.user_spare.spare_cost == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                if (vm.user_spare.asset_zone_id == "" || vm.user_spare.service_id == "" || vm.user_spare.service_cost == "") {
+                    if (vm.user_spare.asset_zone_id == "") {
+                        vm.errors.asset_zone_id = ["Asset zone cannot be empty"];
+                    }
                     if (vm.user_spare.service_id == "") {
                         vm.errors.service_id = ["Service cannot be empty"];
                     }
                     if (vm.user_spare.service_cost == "") {
                         vm.errors.service_cost = ["Service Cost cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_id == "") {
-                        vm.errors.spare_id = ["Spare field cannot be empty"];
-                    }
-                    if (vm.user_spare.spare_cost == "") {
-                        vm.errors.spare_cost = ["Spare Cost cannot be empty"];
                     }
                 } else {
                     let spare_data = vm.user_service.user_spares.filter(function (element) {
@@ -531,7 +712,6 @@
                     });
                     vm.user_service.user_spares[spare_data.key] = spare_data;
                     vm.user_service.user_spares.splice(vm.user_spare.key, 1);
-                    console.log("push",vm.user_spare)
                     vm.user_service.user_spares.push({
                         asset_zone_id: vm.user_spare.asset_zone_id,
                          asset_zone: {
@@ -545,9 +725,10 @@
                         user_spare_id: vm.user_spare.user_spare_id,
                         spare_id: vm.user_spare.spare_id,
                         spare: {
-                            spare_name: vm.user_spare.spare.spare_name,
+                            spare_name: vm.user_spare?.spare?.spare_name,
                         },
                         spare_cost: vm.user_spare.spare_cost,
+                        quantity: vm.user_spare.quantity,
                     });
                     vm.discardNewRow();
                 }

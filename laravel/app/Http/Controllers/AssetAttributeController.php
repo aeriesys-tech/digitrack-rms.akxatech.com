@@ -7,6 +7,10 @@ use App\Models\AssetAttribute;
 use App\Models\AssetAttributeType;
 use App\Http\Resources\AssetAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AssetAttributeExport;
+use App\Exports\AssetAttributeHeadingsExport;
+use App\Imports\AssetAttributesImport;
 
 class AssetAttributeController extends Controller
 {
@@ -40,12 +44,12 @@ class AssetAttributeController extends Controller
         
         if($request->search!='')
         {
-            $query->where('field_name', 'like', "$request->search%")
-            ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
-            ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
+            $query->where('field_name', 'like', "%$request->search%")
+            ->orwhere('display_name', 'like', "%$request->search%")->orwhere('field_values', 'like', "%$request->search%")
+            ->orwhere('field_type', 'like', "%$request->search%")->orwhere('field_length', 'like', "%$request->search%")
             ->orwhereHas('AssetAttributeTypes', function($que) use($request){
                 $que->whereHas('AssetType', function($qu) use($request){
-                    $qu->where('asset_type_name', 'like', "$request->search%");
+                    $qu->where('asset_type_name', 'like', "%$request->search%");
                 });
             });
         }
@@ -99,13 +103,28 @@ class AssetAttributeController extends Controller
         $asset_attribute = AssetAttribute::where('asset_attribute_id', $request->asset_attribute_id)->first();
         $asset_attribute->update($data);
 
-        AssetAttributeType::where('asset_attribute_id', $asset_attribute->asset_attribute_id)->delete();
+        if(isset($request->deleted_asset_attribute_types) > 0)
+        {
+            AssetAttributeType::whereIn('asset_attribute_type_id', $request->deleted_asset_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type_id) {
-            AssetAttributeType::create([
-                'asset_attribute_id' => $asset_attribute->asset_attribute_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+        foreach ($data['asset_types'] as $asset_type_id) 
+        {
+            $assetType = AssetAttributeType::where('asset_attribute_id', $asset_attribute->asset_attribute_id)
+                ->where('asset_type_id', $asset_type_id)->first();
+            
+            if($assetType)
+            {
+                $assetType->update([
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
+            else{
+                AssetAttributeType::create([
+                    'asset_attribute_id' => $asset_attribute->asset_attribute_id,
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
         }
 
         return new AssetAttributeResource($asset_attribute);
@@ -150,5 +169,33 @@ class AssetAttributeController extends Controller
                 "message" =>"AssetAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadAssetAttributes(Request $request)
+    {
+        $filename = "Asset Attributes.xlsx";
+
+        $excel = new AssetAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadAssetAttributeHeadings()
+    {
+        $filename = "Asset Attribute Headings.xlsx";
+        $excel = new AssetAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importAssetAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new AssetAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

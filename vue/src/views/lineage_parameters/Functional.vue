@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Functional</li>
             </ol>
             <h4 class="main-title mb-2">Functional</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4">
                 <form @submit.prevent="submitForm()">
@@ -63,13 +63,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('functional_name')">Area Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='functional_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='functional_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                       
+
                                         <th class="text-center" >Status</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -190,12 +190,12 @@ export default {
 
         addFunctional() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addFunctional', data: vm.functional })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addFunctional', data: vm.functional })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -227,12 +227,12 @@ export default {
 
         updateFunctional() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updateFunctional', data: this.functional })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updateFunctional', data: vm.functional })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

@@ -40,12 +40,22 @@ class CampaignController extends Controller
     
         if($request->search!='')
         {
-            $query->where('datasource', 'like', "$request->search%")
+            $query->where('datasource', 'like', "%$request->search%")->orwhere('job_no', 'like', "%$request->search%")->orwhere('job_date_time', 'like', "%$request->search%")
+            ->orwhere('datasource', 'like', "%$request->search%")->orwhere('script', 'like', "%$request->search%")
                 ->orwhereHas('Asset', function($que) use($request){
-                    $que->where('asset_name', 'like', "$request->search%");
+                    $que->where('asset_name', 'like', "%$request->search%");
                 });
         }
-        $campaign = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'asset_name') {
+            $query->join('assets', 'campaigns.asset_id', '=', 'assets.asset_id')->select('campaigns.*') 
+                  ->orderBy('assets.asset_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $campaign = $query->withTrashed()->paginate($request->per_page); 
         return CampaignResource::collection($campaign);
     }
 
@@ -55,7 +65,11 @@ class CampaignController extends Controller
             'asset_id' => 'required|exists:assets,asset_id',
             'datasource' => 'required',
             'file' => 'required|file|mimes:pdf',
+            'job_date_time' => 'required',
+            'script' => 'required'
         ]);
+
+        $data['job_no'] = $this->generateCampaignNo();
 
         if ($request->hasFile('file')) 
         {
@@ -105,12 +119,20 @@ class CampaignController extends Controller
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'location' => 'required',
-            'from_date' => 'required|date',
-            'to_date' => 'required|date'
+            'from_date' => 'nullable|date',
+            'to_date' => 'required|date',
+            'datasource' => 'required'
         ]);
 
-        $compaign_result = CampaignResult::where('asset_id', $request->asset_id)->where('location', $request->location)
-                ->whereBetween('date', [$request->from_date, $request->to_date])->get();
+        $fromDate = $request->from_date ? $request->from_date . ' 00:00:00' : '1970-01-01 00:00:00';
+        $toDate = $request->to_date . ' 23:59:59';
+
+        $compaign_result_query = CampaignResult::join('campaigns', 'campaigns.campaign_id', '=', 'campaign_results.campaign_id')
+            ->whereBetween('campaigns.job_date_time', [$fromDate, $toDate])->where('campaigns.datasource', $request->datasource)
+            ->where('campaign_results.asset_id', $request->asset_id)->where('campaign_results.location', $request->location)->orderBy('campaigns.job_date_time')
+            ->select('campaign_results.*');
+
+        $compaign_result = $compaign_result_query->get();
         return CampaignResultResource::collection($compaign_result);
     }
 
@@ -124,7 +146,28 @@ class CampaignController extends Controller
         Campaign::where('campaign_id', $request->campaign_id)->forceDelete();
 
         return response()->json([
-            'message' => 'HealthCheck Deleted Successfully'
+            'message' => 'Health Check Register Deleted Successfully'
         ]);
+    }
+
+    public function generateCampaignNo()
+    {
+        $campaign = Campaign::latest()->first();
+        $nextActivityNumber = 1; 
+        
+        if ($campaign) {
+            $lastActivityNumber = (int) substr($campaign->job_no, 9); 
+            $nextActivityNumber = $lastActivityNumber + 1;
+        }
+        
+        $formattedNextActivityNumber = str_pad($nextActivityNumber, 4, '0', STR_PAD_LEFT);
+        $job_no = 'Campaign_' . $formattedNextActivityNumber;
+        
+        while (Campaign::where('job_no', $job_no)->exists()) {
+            $nextActivityNumber++;
+            $formattedNextActivityNumber = str_pad($nextActivityNumber, 4, '0', STR_PAD_LEFT);
+            $job_no = 'Campaign_' . $formattedNextActivityNumber;
+        }
+        return $job_no;
     }
 }

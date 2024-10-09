@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Data Source Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleDataSourceTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleDataSourceTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.data_source_types}">
                                                 <option value="">Select Data Source Type</option>
@@ -40,12 +40,15 @@
                                         <div class="multiselect" v-if="data_source_type_status">
                                             <ul>
                                                 <li class="" v-for="(data_source_type, index) in data_source_types" :key="index">
-                                                    <input type="checkbox" :value="data_source_type.data_source_type_id" v-model="data_source_attribute.data_source_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="data_source_type.data_source_type_id" v-model="data_source_attribute.data_source_types" style="padding: 2px;" @click="updateActivityType($event, data_source_attribute)" />
                                                     <label style="margin-left: 5px;">{{ data_source_type.data_source_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
-                                        
+                                        </div> -->
+                                        <MultiSelect v-model="data_source_attribute.data_source_types_obj"  filter optionLabel="data_source_type_name" 
+                                            :options="data_source_types"  placeholder="Select Data Source Type" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.data_source_types ? error_style : ''"/>
+                                        <span v-if="errors?.data_source_types"><small class="text-danger">{{ errors?.data_source_types[0] }}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +75,7 @@
                                         <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
-                                </div> 
+                                </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
                                     <select class="form-control" v-model="data_source_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
@@ -81,14 +84,14 @@
                                     </select>
                                     <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Field Value</label><span v-if="data_source_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
+                                <div class="col-md-4" v-if="data_source_attribute.field_type==='Dropdown'">
+                                    <label class="form-label">Field Value</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="data_source_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="number" placeholder="Field Length" class="form-control" v-model="data_source_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
+                                    <input type="number" placeholder="Maximum Length" class="form-control" v-model="data_source_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
                                     <span v-if="errors.field_length" class="invalid-feedback">{{ errors.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -101,7 +104,7 @@
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>
 
-                               
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -119,8 +122,10 @@
     </template>
     <script>
 //      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "DataSourceAttributes.Create",
         data() {
@@ -133,9 +138,12 @@
                     field_length: '',
                     is_required: "",
                     data_source_type_id: '',
+                    data_source_types_obj:[],
                     data_source_types:[],
-                    list_parameter_id:'',
+                    list_parameter_id: '',
+                    deleted_data_source_attribute_types:[],
                 },
+                deleted_data_source_attribute_types:[],
                 data_source_types: [],
                 data_source_attributes:[],
                 list_parameters:[],
@@ -143,6 +151,14 @@
                 errors: [],
                 status:true,
                 data_source_type_status:false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -163,15 +179,22 @@
                     } else {
                         vm.status = false;
                         let uri = { uri: "getDataSourceAttribute", data: { data_source_attribute_id: to.params.data_source_attribute_id } };
-                        vm.$store
-                            .dispatch("post", uri)
-                            .then(function (response) {
-                                vm.data_source_attribute = response.data.data;
+                        vm.$store.dispatch("post", uri)
+                        .then(function (response) {
+                            vm.data_source_attribute = response.data.data;
+                            vm.data_source_attribute.deleted_data_source_attribute_types = []
+                            vm.data_source_attribute.data_source_types_obj = []
+
+                            vm.data_source_attribute.data_source_attribute_types.map(function(ele){
+                                vm.data_source_attribute.data_source_types_obj.push({data_source_type_code: ele.data_source_type.data_source_type_code, 
+                                    data_source_type_id: ele.data_source_type.data_source_type_id, status: ele.data_source_type.status,
+                                    data_source_type_name: ele.data_source_type.data_source_type_name})
                             })
-                            .catch(function (error) {
-                                vm.errors = error.response.data.errors;
-                                vm.$store.dispatch("error", error.response.data.message);
-                            });
+                        })
+                        .catch(function (error) {
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
                     }
                 });
             },
@@ -186,7 +209,31 @@
             }
         },
         methods: {
-            toggleDataSourceTypeStatus(){
+              updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let data_source_attribute_type = activity_type?.data_source_attribute_types?.filter(function (element) {
+                    console.log("ele--",element)
+                    return element.data_source_type_id == event.target.value
+                })
+                if (data_source_attribute_type?.length) {
+                    let data_source_attribute_type_id = data_source_attribute_type[0].data_source_attribute_type_id
+                    if (isChecked) {
+                        if (vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
+                            let deleted_data_source_attribute_types = this.data_source_attribute.deleted_data_source_attribute_types.filter(function (element) {
+                                return element != data_source_attribute_type_id
+                            })
+                            vm.data_source_attribute.deleted_data_source_attribute_types = deleted_data_source_attribute_types
+                        }
+                    } else {
+                        if (!vm.data_source_attribute.deleted_data_source_attribute_types.includes(data_source_attribute_type_id)) {
+                            vm.data_source_attribute.deleted_data_source_attribute_types.push(data_source_attribute_type_id)
+                        }
+                    }
+                }
+            },
+
+            toggleDataSourceTypeStatus() {
                 this.data_source_type_status = !this.data_source_type_status
             },
                 submitForm() {
@@ -204,7 +251,6 @@
                     .then(response => {
                         loader.hide();
                         vm.data_source_types = response.data.data;
-                        console.log(vm.data_source_types)
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -212,10 +258,15 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addDataSourceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
+
+                vm.data_source_attribute.data_source_types_obj.map(function(ele){
+                    vm.data_source_attribute.data_source_types.push(ele.data_source_type_id)
+                })
+
                 this.$store.dispatch('post', { uri: 'addDataSourceAttribute', data:this.data_source_attribute })
                     .then(response => {
                         loader.hide();
@@ -228,11 +279,17 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             updateDataSourceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateDataSourceAttribute', data:this.data_source_attribute })
+                
+                vm.data_source_attribute.deleted_data_source_attribute_types = vm.data_source_attribute?.data_source_attribute_types.filter(
+                    item1 => !vm.data_source_attribute.data_source_types_obj.some(item2 => item1.data_source_type_id === item2.data_source_type_id));
+                vm.data_source_attribute.data_source_types = vm.data_source_attribute.data_source_types_obj.map(item => item.data_source_type_id);
+                vm.data_source_attribute.deleted_data_source_attribute_types = vm.data_source_attribute.deleted_data_source_attribute_types.map(item => item.data_source_attribute_type_id);
+
+                this.$store.dispatch('post', { uri: 'updateDataSourceAttribute', data:vm.data_source_attribute })
                     .then(response => {
                         loader.hide();
                         this.$store.dispatch('success',"Data Source Attribute updated successfully");
@@ -244,7 +301,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getDataSourceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -289,7 +346,7 @@
                     vm.errors = [];
                     vm.status = true;
                 },
-             
+
         }
     }
     </script>
@@ -323,4 +380,3 @@
     right: 0;
 }
 </style>
-    

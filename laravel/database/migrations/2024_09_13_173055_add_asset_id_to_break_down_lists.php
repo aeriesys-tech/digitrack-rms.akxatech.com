@@ -14,7 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('asset_id')->nullable()->after('break_down_type_id');
             $table->foreign('asset_id')->references('asset_id')->on('assets');
             $table->string('job_no', 255)->after('asset_id'); 
-            $table->date('job_date')->nullable()->after('job_no'); 
+            $table->timestamp('job_date')->nullable()->after('job_no'); 
             $table->text('note')->nullable()->after('job_date'); 
         });
     }

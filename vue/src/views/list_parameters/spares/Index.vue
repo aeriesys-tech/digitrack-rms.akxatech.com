@@ -28,11 +28,11 @@
                                 <thead>
                                     <tr class="" style="background-color: #9b9b9b; color: white;">
                                         <th class="text-center">#</th>
-                                        <th @click="sort('spare_type_id')">
+                                        <th @click="sort('spare_type_name')">
                                             Spare Type
                                             <span>
-                                                <i v-if="meta.keyword=='spare_type_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='spare_type_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='spare_type_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='spare_type_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
@@ -54,7 +54,7 @@
                                             </span>
                                         </th>
                                         <th >
-                                            Asset Type.
+                                            Asset Type
                                             <span>
                                                 <i v-if="meta.keyword == 'asset_type_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword == 'asset_type_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
@@ -106,7 +106,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "spare_id",
                     per_page: 10,
                     totalRows: 0,
@@ -158,19 +158,19 @@
         methods: {
             index() {
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store
+                let loader = vm.$loading.show();
+                vm.$store
                     .dispatch("post", {
                         uri: "paginateSpares",
                         data: vm.meta,
                     })
                     .then((response) => {
                         loader.hide();
-                        this.spares = response.data.data;
-                        this.meta.totalRows = response.data.meta.total;
-                        this.meta.from = response.data.meta.from;
-                        this.meta.lastPage = response.data.meta.last_page;
-                        this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                        vm.spares = response.data.data;
+                        vm.meta.totalRows = response.data.meta.total;
+                        vm.meta.from = response.data.meta.from;
+                        vm.meta.lastPage = response.data.meta.last_page;
+                        vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -180,7 +180,7 @@
             },
 
             editSpare(spare) {
-                this.$store.commit("setCurrentPage", this.meta.page);
+                this.$store.commit("setCurrentPage", parseInt(this.meta.page));
                 this.$router.push("/spares/" + spare.spare_id + "/edit");
             },
 
@@ -211,6 +211,11 @@
             },
 
             search() {
+                let vm = this;
+                vm.meta.page = 1;
+                vm.index();
+            },
+            onPerPageChange() {
                 let vm = this;
                 vm.meta.page = 1;
                 vm.index();

@@ -7,6 +7,10 @@ use App\Models\BreakDownAttribute;
 use App\Models\BreakDownAttributeType;
 use App\Http\Resources\BreakDownAttributeResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BreakDownAttributeExport;
+use App\Exports\BreakDownAttributeHeadingsExport;
+use App\Imports\BreakDownAttributesImport;
 
 class BreakDownAttributeController extends Controller
 {
@@ -40,12 +44,12 @@ class BreakDownAttributeController extends Controller
         
         if($request->search!='')
         {
-            $query->where('field_name', 'like', "$request->search%")
-            ->orwhere('display_name', 'like', "$request->search%")->orwhere('field_values', 'like', "$request->search%")
-            ->orwhere('field_type', 'like', "$request->search%")->orwhere('field_length', 'like', "$request->search%")
+            $query->where('field_name', 'like', "%$request->search%")
+            ->orwhere('display_name', 'like', "%$request->search%")->orwhere('field_values', 'like', "%$request->search%")
+            ->orwhere('field_type', 'like', "%$request->search%")->orwhere('field_length', 'like', "%$request->search%")
             ->orwhereHas('BreakDownAttributeTypes', function($que) use($request){
                 $que->whereHas('BreakDownType', function($qu) use($request){
-                    $qu->where('break_down_type_name', 'like', "$request->search%");
+                    $qu->where('break_down_type_name', 'like', "%$request->search%");
                 });
             });    
         }
@@ -115,13 +119,28 @@ class BreakDownAttributeController extends Controller
         $break_down_attribute = BreakDownAttribute::where('break_down_attribute_id', $request->break_down_attribute_id)->first();
         $break_down_attribute->update($data);
 
-        BreakDownAttributeType::where('break_down_attribute_id', $break_down_attribute->break_down_attribute_id)->delete();
+        if(isset($request->deleted_break_down_attribute_types) > 0)
+        {
+            BreakDownAttributeType::whereIn('break_down_attribute_type_id', $request->deleted_break_down_attribute_types)->forceDelete();
+        }
 
-        foreach ($data['break_down_types'] as $break_down_type_id) {
-            BreakDownAttributeType::create([
-                'break_down_attribute_id' => $break_down_attribute->break_down_attribute_id,
-                'break_down_type_id' => $break_down_type_id
-            ]);
+        foreach ($data['break_down_types'] as $break_down_type_id) 
+        {
+            $breakdownType = BreakDownAttributeType::where('break_down_attribute_id', $break_down_attribute->break_down_attribute_id)
+            ->where('break_down_type_id', $break_down_type_id)->first();
+
+            if($breakdownType)
+            {
+                $breakdownType->update([
+                    'break_down_type_id' => $break_down_type_id
+                ]);
+            }
+            else{
+                BreakDownAttributeType::create([
+                    'break_down_attribute_id' => $break_down_attribute->break_down_attribute_id,
+                    'break_down_type_id' => $break_down_type_id
+                ]);
+            }
         }
         return new BreakDownAttributeResource($break_down_attribute);
     }
@@ -148,5 +167,33 @@ class BreakDownAttributeController extends Controller
                 "message" => "BreakDownAttribute Deactivated successfully"
             ], 200); 
         }
+    }
+
+    public function downloadBreakDownAttributes(Request $request)
+    {
+        $filename = "BreakDown Attributes.xlsx";
+
+        $excel = new BreakDownAttributeExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadBreakDownAttributeHeadings()
+    {
+        $filename = "BreakDown Attribute Headings.xlsx";
+        $excel = new BreakDownAttributeHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importBreakDownAttribute(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new BreakDownAttributesImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

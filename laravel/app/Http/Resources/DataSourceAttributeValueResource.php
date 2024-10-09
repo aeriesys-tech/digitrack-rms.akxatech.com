@@ -12,7 +12,7 @@ class DataSourceAttributeValueResource extends JsonResource
         return [
             'data_source_attribute_value_id' => $this->data_source_attribute_value_id,
             'data_source_attribute_id' => $this->data_source_attribute_id,
-            'data_source_attributes' => $this->DataSourceAttribute,
+            'data_source_attributes' => DataSourceAttributeResource::collection($this->DataSourceAttribute),
             'data_source_id' => $this->data_source_id,
             'field_value' => $this->field_value,
             'status' => $this->deleted_at?false:true

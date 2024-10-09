@@ -9,6 +9,10 @@ use App\Http\Resources\ServiceResource;
 use Auth;
 use App\Models\ServiceAttribute;
 use App\Models\ServiceAttributeValue;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ServiceExport;
+use App\Exports\ServiceHeadingsExport;
+use App\Imports\ServiceImport;
 
 class ServiceController extends Controller
 {
@@ -34,9 +38,25 @@ class ServiceController extends Controller
         if($request->search!='')
         {
             $query->where('service_code', 'like', "%$request->search%")
-                ->orWhere('service_name', 'like', "$request->search%");
+                ->orWhere('service_name', 'like', "%$request->search%")
+                ->orwhereHas('ServiceType', function($qu) use($request){
+                    $qu->where('service_type_name','like', "%$request->search%");
+                })->orwhereHas('ServiceAssetTypes', function($qu) use($request){
+                    $qu->whereHas('AssetType', function($que) use($request){
+                        $que->where('asset_type_name','like', "%$request->search%");
+                    });
+                });
         }
-        $service = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+        
+        if ($request->keyword == 'service_type_name') {
+            $query->join('service_type', 'services.service_type_id', '=', 'service_type.service_type_id')->select('services.*') 
+                  ->orderBy('service_type.service_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $service = $query->withTrashed()->paginate($request->per_page); 
         return ServiceResource::collection($service);
     }
 
@@ -135,13 +155,26 @@ class ServiceController extends Controller
         $service = Service::where('service_id', $request->service_id)->first();
         $service->update($data);
 
-        ServiceAssetType::where('service_id', $service->service_id)->delete();
+        if(isset($request->deleted_service_asset_types) > 0)
+        {
+            ServiceAssetType::whereIn('service_asset_type_id', $request->deleted_service_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type) {
-            ServiceAssetType::create([
-                'service_id' => $service->service_id,
-                'asset_type_id' => $asset_type,
-            ]);
+        foreach ($data['asset_types'] as $asset_type) 
+        {
+            $serviceType = ServiceAssetType::where('service_id', $service->service_id)->where('asset_type_id', $asset_type)->first();
+            if($serviceType)
+            {
+                $serviceType->update([
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
+            else {
+                ServiceAssetType::create([
+                    'service_id' => $service->service_id,
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
         }
 
         if($request->deleted_service_attribute_values > 0)
@@ -190,5 +223,30 @@ class ServiceController extends Controller
             ], 200); 
         }
     }
-}
 
+    public function downloadServices(Request $request)
+    {
+        $excel = new ServiceExport();
+
+        return Excel::download($excel, 'Service.xlsx');
+    }
+
+    public function downloadServiceHeadings(Request $request)
+    {
+        $filename = "Service Headings.xlsx";
+        $excel = new ServiceHeadingsExport($request->service_type_ids);
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importService(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new ServiceImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
+    }
+}

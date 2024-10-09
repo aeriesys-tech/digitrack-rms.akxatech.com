@@ -11,6 +11,10 @@ use App\Models\DataSourceAttribute;
 use App\Http\Resources\DataSourceAttributeResource;
 use Auth;
 use App\Models\DataSourceAttributeValue;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DataSourceExport;
+use App\Exports\DataSourceHeadingsExport;
+use App\Imports\DataSourceImport;
 
 class DataSourceController extends Controller
 {
@@ -36,16 +40,25 @@ class DataSourceController extends Controller
         if($request->search!='')
         {
             $query->where('data_source_code', 'like', "%$request->search%")
-                ->orWhere('data_source_name', 'like', "$request->search%")
+                ->orWhere('data_source_name', 'like', "%$request->search%")
                 ->orwhereHas('DataSourceType', function($que) use($request){
-                    $que->where('data_source_type_name', 'like', "$request->search%");
+                    $que->where('data_source_type_name', 'like', "%$request->search%");
                 })->orwhereHas('DataSourceAssetTypes', function($que) use($request){
                     $que->whereHas('AssetType', function($qu) use($request){
-                        $qu->where('asset_type_name', 'like', "$request->search%");
+                        $qu->where('asset_type_name', 'like', "%$request->search%");
                     });
                 });
         }
-        $data_source = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'data_source_type_name') {
+            $query->join('data_source_types', 'data_sources.data_source_type_id', '=', 'data_source_types.data_source_type_id')->select('data_sources.*') 
+                  ->orderBy('data_source_types.data_source_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $data_source = $query->withTrashed()->paginate($request->per_page); 
         return DataSourceResource::collection($data_source);
     }
 
@@ -145,13 +158,26 @@ class DataSourceController extends Controller
         $data_source = DataSource::where('data_source_id', $request->data_source_id)->first();
         $data_source->update($data);
 
-        DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->delete();
+        if(isset($request->deleted_data_source_asset_types) > 0)
+        {
+            DataSourceAssetType::whereIn('data_source_asset_type_id', $request->deleted_data_source_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type_id) {
-            DataSourceAssetType::create([
-                'data_source_id' => $data_source->data_source_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+        foreach ($data['asset_types'] as $asset_type_id) 
+        {
+            $dataSourceType = DataSourceAssetType::where('data_source_id', $data_source->data_source_id)->where('asset_type_id', $asset_type_id)->first();
+            if($dataSourceType)
+            {
+                $dataSourceType->update([
+                    'asset_type_id' => $asset_type_id,
+                ]);
+            }
+            else {
+                DataSourceAssetType::create([
+                    'data_source_id' => $data_source->data_source_id,
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
         }
 
         if($request->deleted_data_source_attribute_values > 0)
@@ -212,5 +238,33 @@ class DataSourceController extends Controller
         })->get();
 
         return DataSourceAttributeResource::collection($data_source_type);
+    }
+
+    public function downloadDataSources(Request $request)
+    {
+        $filename = "DataSource.xlsx";
+
+        $excel = new DataSourceExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadDataSourceHeadings(Request $request)
+    {
+        $filename = "DataSource Headings.xlsx";
+        $excel = new DataSourceHeadingsExport($request->data_source_type_ids);
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importDataSource(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        Excel::import(new DataSourceImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

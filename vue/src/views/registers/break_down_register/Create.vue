@@ -81,8 +81,8 @@
                                     <span v-if="errors.break_down_type_id"><small class="text-danger">{{ errors.break_down_type_id[0] }}</small></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Job Date</label><span class="text-danger"> *</span>
-                                    <input type="date" placeholder="Break Down List Code" class="form-control" :class="{ 'is-invalid': errors.job_date }" v-model="break_down.job_date"/>
+                                    <label class="form-label">Job Date & Time</label><span class="text-danger"> *</span>
+                                    <input type="datetime-local" step="any" placeholder="Break Down List Code" class="form-control" :class="{ 'is-invalid': errors.job_date }" v-model="break_down.job_date" />
                                     <span v-if="errors.job_date" class="invalid-feedback">{{ errors.job_date[0] }}</span>
                                 </div>
 
@@ -121,7 +121,7 @@
                                             :placeholder="'Enter ' + field.display_name"
                                             :class="{'is-invalid': errors[field.display_name]}"
                                             v-model="field.break_down_attribute_value.field_value"
-                                            step="1"
+                                            step="any"
                                         />
                                         <span v-if="errors[field.display_name]" class="invalid-feedback">
                                             {{ errors[field.display_name][0] }}
@@ -175,6 +175,7 @@
 <script>
 import Pagination from "@/components/Pagination.vue";
 import Search from "@/components/Search.vue";
+import moment from "moment";
 export default {
     components: {
         Pagination, Search
@@ -210,11 +211,13 @@ export default {
                     // vm.$refs.asset_id.focus();
                 } else {
                     vm.status = false;
+
                     let uri = { uri: "getBreakDownData", data: { break_down_list_id: to.params.break_down_list_id } };
                     vm.$store
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.break_down = response.data.data;
+                            vm.break_down.job_date = moment(vm.break_down.job_date).format("yyyy-MM-DDTHH:mm");
                             vm.break_down.break_down_attributes.map(function (element) {
                                 vm.deleted_break_down_attribute_values.push(element.break_down_attribute_value.break_down_attribute_value_id);
                             });
@@ -228,7 +231,10 @@ export default {
                         });
                 }
             });
-        },
+    },
+        mounted() {
+        this.break_down.job_date = moment().format("yyyy-MM-DDTHH:mm");
+    },
 
     methods: {
         toggleAssetTypeStatus(){
@@ -303,6 +309,9 @@ export default {
                 });
         },
         updateBreakDown() {
+              if (!this.validateFields()) {
+                    return;
+                }
             let vm = this;
             let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'updateBreakDownList', data: vm.break_down })

@@ -7,6 +7,10 @@ use App\Models\Check;
 use App\Models\CheckAssetType;
 use App\Http\Resources\CheckResource;
 use App\Models\Asset;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CheckExport;
+use App\Exports\CheckHeadingsExport;
+use App\Imports\CheckImport;
 
 class CheckController extends Controller
 {
@@ -37,14 +41,36 @@ class CheckController extends Controller
         {
             $query->where('default_value',$request->default_value);
         }
+
+        // if(isset($request->department_id))
+        // {
+        //     $query->whereHas('Department',function($que) {
+        // });
+        // }
         
         if($request->search!='')
         {
             $query->where('field_name', 'like', "%$request->search%")
-                 ->orWhere('field_type', 'like', "$request->search%")
-                 ->orWhere('default_value', 'like', "$request->search%");
+                ->orWhere('field_type', 'like', "$request->search%")
+                ->orWhere('default_value', 'like', "$request->search%")
+                ->orwhereHas('Department', function($que) use($request){
+                    $que->where('department_name', 'like', "$request->search%");
+                })->orwhereHas('CheckAssetTypes', function($que) use($request){
+                    $que->whereHas('AssetType', function($qu) use($request){
+                        $qu->where('asset_type_name', 'like', "$request->search%");
+                    });
+                });
         }
-        $check = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'department_name') {
+            $query->join('departments', 'checks.department_id', '=', 'departments.department_id')->select('checks.*') 
+                  ->orderBy('departments.department_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $check = $query->withTrashed()->paginate($request->per_page); 
         return CheckResource::collection($check);
     }
 
@@ -137,15 +163,27 @@ class CheckController extends Controller
         $check = Check::where('check_id', $request->check_id)->first();
         $check->update($data);
 
-        CheckAssetType::where('check_id', $check->check_id)->delete();
-
-        foreach ($data['asset_types'] as $asset_type_id) {
-            CheckAssetType::create([
-                'check_id' => $check->check_id,
-                'asset_type_id' => $asset_type_id
-            ]);
+        if(isset($request->deleted_check_asset_types) > 0)
+        {
+            CheckAssetType::whereIn('check_asset_type_id', $request->deleted_check_asset_types)->forceDelete();
         }
 
+        foreach ($data['asset_types'] as $asset_type_id) 
+        {
+            $checkType = CheckAssetType::where('check_id', $check->check_id)->where('asset_type_id', $asset_type_id)->first();
+            if($checkType)
+            {
+                $checkType->update([
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
+            else {
+                CheckAssetType::create([
+                    'check_id' => $check->check_id,
+                    'asset_type_id' => $asset_type_id
+                ]);
+            }
+        }
         return response()->json(["message" => "Check Updated Successfully"]);  
     }
     
@@ -170,5 +208,33 @@ class CheckController extends Controller
                 "message" =>"Check Deactivated successfully"
             ], 200);
         }
+    }
+
+    public function downloadChecks(Request $request)
+    {
+        $filename = "Check.xlsx";
+
+        $excel = new CheckExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadCheckHeadings()
+    {
+        $filename = "Check Headings.xlsx";
+        $excel = new CheckHeadingsExport();
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importCheck(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new CheckImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

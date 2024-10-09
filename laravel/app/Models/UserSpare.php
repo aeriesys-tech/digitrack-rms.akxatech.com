@@ -15,7 +15,8 @@ class UserSpare extends Model
         'spare_cost',
         'asset_zone_id',
         'service_id',
-        'service_cost'
+        'service_cost',
+        'quantity'
     ];
 
     protected $primaryKey = 'user_spare_id';

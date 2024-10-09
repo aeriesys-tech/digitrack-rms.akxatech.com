@@ -35,7 +35,15 @@ class PlantController extends Controller
                     $quer->where('area_name', 'like', "%$request->search%");
                 });
         }
-        $plant = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'area_name') {
+            $query->join('areas', 'plants.area_id', '=', 'areas.area_id')->select('plants.*') 
+                  ->orderBy('areas.area_name', $request->order_by);
+        } else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+        
+        $plant = $query->withTrashed()->paginate($request->per_page); 
         return PlantResource::collection($plant);
     }
 

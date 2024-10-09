@@ -33,17 +33,27 @@ class BreakDownListController extends Controller
               
         if($request->search!='')
         {
-            $query->where('break_down_list_code', 'like', "%$request->search%")
-                ->orWhere('break_down_list_name', 'like', "$request->search%")
-                ->orwhereHas('BreakDownType', function($que) use($request){
-                    $que->where('break_down_type_name', 'like', "$request->search%");
-                })->orwhereHas('BreakDownListAssetTypes', function($que) use($request){
-                    $que->whereHas('AssetType', function($qu) use($request){
-                        $qu->where('asset_type_name', 'like', "$request->search%");
-                    });
-                });
+            $query->where('job_no', 'like', "%$request->search%")
+            ->orwhereHas('BreakDownType', function($que) use($request){
+                $que->where('break_down_type_name', 'like', "%$request->search%");
+            })->orwhereHas('Asset', function($que) use($request){
+                $que->where('asset_name', 'like', "%$request->search%");
+            });
         }
-        $break_down_list = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'asset_name') {
+            $query->join('assets', 'break_down_lists.asset_id', '=', 'assets.asset_id')->select('break_down_lists.*') 
+                  ->orderBy('assets.asset_name', $request->order_by);
+        }
+        elseif ($request->keyword == 'break_down_type_name') {
+            $query->join('break_down_types', 'break_down_lists.break_down_type_id', '=', 'break_down_types.break_down_type_id')->select('break_down_lists.*') 
+                  ->orderBy('break_down_types.break_down_type_name', $request->order_by);
+        }  
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $break_down_list = $query->withTrashed()->paginate($request->per_page); 
         return BreakDownListResource::collection($break_down_list);
     }
 
@@ -162,7 +172,7 @@ class BreakDownListController extends Controller
         BreakDownList::where('break_down_list_id', $request->break_down_list_id)->forceDelete();
 
         return response()->json([
-            "message" => "BreakDownRegister Deleted successfully"
+            "message" => "Break Down Register Deleted successfully"
         ], 200);
     }
 
@@ -195,7 +205,7 @@ class BreakDownListController extends Controller
         while (BreakDownList::where('job_no', $job_no)->exists()) {
             $nextServiceNumber++;
             $formattedNextServiceNumber = str_pad($nextServiceNumber, 4, '0', STR_PAD_LEFT);
-            $job_no = 'Service_' . $formattedNextServiceNumber;
+            $job_no = 'BreakDown_' . $formattedNextServiceNumber;
         }
         return $job_no;
     }

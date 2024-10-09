@@ -25,7 +25,8 @@
                             placeholder="Type keyword and press enter key" v-model="meta.search" @keypress.enter="search()" />
                         <div class="table-responsive table-responsive-sm">
                             <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                <tr style="background-color:#9b9b9b;color:white;">
+                                <thead>
+                                    <tr style="background-color:#9b9b9b;color:white;">
                                         <th class="text-center">#</th>
                                         <th @click="sort('name')">
                                             Name
@@ -43,22 +44,15 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('role_id')">
+                                        <th @click="sort('role')">
                                             Role
                                             <span>
-                                                <i v-if="meta.keyword == 'role_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'role_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword == 'role' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'role' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('plant_id')">
-                                            Plant
-                                            <span>
-                                                <i v-if="meta.keyword == 'plant_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'plant_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                <i v-else class="fas fa-sort"></i>
-                                            </span>
-                                        </th>
+                                        <th >Plant</th>
                                         <th @click="sort('mobile_no')">
                                             Mobile No.
                                             <span>
@@ -70,7 +64,11 @@
                                         <th class="text-center" v-can="'users.delete'">Status</th>
                                         <th class="text-center" v-can="'users.update'">Actions</th>
                                     </tr>
+                                </thead>
                                 <tbody>
+                                     <tr v-if="users.length==0">
+                                        <td colspan="8" class="text-center">No records found</td>
+                                    </tr>
                                     <tr v-for="user, key in users" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{user.name}}</td>
@@ -103,7 +101,7 @@
                                 <option>30</option>
                             </select>
                             <span>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.totalRows }} entries</span>
-                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="meta.page" @pagechanged="onPageChange" />
+                            <Pagination :maxPage="meta.maxPage" :totalPages="meta.lastPage" :currentPage="parseInt(meta.page)" @pagechanged="onPageChange" />
                         </div>
                     </div>
                 </div>
@@ -139,29 +137,38 @@ export default {
     },
     beforeRouteEnter(to, from, next) {
         next((vm) => {
-            if(from.name != 'Users.Edit'){
-                vm.$store.commit("setCurrentPage", vm.meta.page)
-            }else{
+                console.log("from spare----",from.name)
+            if(from.name == 'Users.Edit'){
                 vm.meta.page = vm.$store.getters.current_page
+            }else{
+                vm.meta.page = 1
             }
+
         });
     },
     mounted() {
+        //  if (this.$store.getters.current_page) {
+        //      this.meta.page = this.$store.getters.current_page
+        // }
+        // else {
+        //     this.meta.page = 1;
+        // }
         this.index();
     },
 
     methods: {
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginateUsers', data: vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginateUsers', data: vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.users = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.users = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.to = response.data.meta.to;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -170,7 +177,7 @@ export default {
                 });
         },
         editUser(user) {
-            this.$store.commit("setCurrentPage", this.meta.page)
+            this.$store.commit("setCurrentPage", parseInt(this.meta.page))
             this.$router.push("/users/" + user.user_id + "/edit");
         },
         deleteUser(user) {
@@ -197,7 +204,7 @@ export default {
             vm.meta.page = 1;
             vm.index();
         },
-        
+
         onPageChange(page) {
             this.meta.page = page;
             this.index();
@@ -207,7 +214,12 @@ export default {
             this.meta.order_by = this.meta.order_by == "asc" ? "desc" : "asc";
             this.index();
         },
-        
+        onPerPageChange() {
+            let vm = this;
+            vm.meta.page = 1;
+            vm.index();
+        },
+
     }
 }
 </script>

@@ -15,7 +15,9 @@ import CreateAsset from "@/views/masters/assets/Create.vue";
 import EditAsset from "@/views/masters/assets/Edit.vue";
 import Assets from "@/views/masters/assets/Index.vue";
 import AssetView from "@/views/masters/assets/ViewAsset.vue";
+import DynamicAssets from "@/views/masters/assets/ViewDynamicAssets.vue";
 import GenerateQR from "@/views/masters/assets/GenerateQRCode.vue"
+import AssetAccessories from "@/views/masters/assets/AssetAccessories.vue";
 
 //Registers
 import Activities from "@/views/registers/activity/Index.vue";
@@ -84,6 +86,7 @@ import AssetActivityVue from "@/views/assets/AssetActivity.vue";
 import ServiceVue from "@/views/assets/Service.vue";
 import InhouseServiceVue from "@/views/assets/InhouseService.vue";
 
+
 // Type parameters
 import EquipmentTypeVue from "@/views/type_parameters/EquipmentType.vue";
 import AssetTypeVue from "@/views/type_parameters/AssetType.vue";
@@ -123,6 +126,9 @@ import ServiceAttributes from "@/views/attributes/service_attributes/Index.vue";
 import CreateBreakDownAttribute from "@/views/attributes/breakdown_attributes/Create.vue"
 import BreakDownAttributes from "@/views/attributes/breakdown_attributes/Index.vue";
 
+import CreateActivityAttribute from "@/views/attributes/activity_attributes/Create.vue"
+import ActivityAttributes from "@/views/attributes/activity_attributes/Index.vue";
+
 
 // Registers
 import ViewProcessRegister from "@/views/registers/process_registers/View.vue";
@@ -134,7 +140,12 @@ import BreakDownRegisters from "@/views/registers/break_down_register/Index.vue"
 
 
 import Test from "@/views/Test.vue";
+
+//Reviews
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
+import AssetDetails from "@/views/Reviews/AssetDetails.vue"
+import Geometric from "@/views/masters/assets/Geometric.vue"
+
 
 const routes = [
   {
@@ -176,7 +187,7 @@ const routes = [
 
   // lists
   {
-    path: "/lists",
+    path: "/list_parameters",
     name: "Lists",
     component: Lists,
   },
@@ -279,11 +290,11 @@ const routes = [
     name: "Assets.Create",
     component: CreateAsset,
   },
-  // {
-  //   path: "/asset/:asset_id/edit",
-  //   name: "Assets.Edit",
-  //   component: EditAsset,
-  // },
+  {
+    path: "/asset/accessories/:asset_id",
+    name: "Assets.accessories",
+    component: AssetAccessories,
+  },
   {
     path: "/asset/:asset_id/edit",
     name: "Assets.Edit",
@@ -293,6 +304,11 @@ const routes = [
     path: "/asset/:asset_id/view",
     name: "Assets.View",
     component: AssetView,
+  },
+  {
+    path: "/asset/:assets",
+    name: "Assets.DynamicAssets",
+    component: DynamicAssets,
   },
   {
     path: "/QR_code/:asset_id/get",
@@ -589,6 +605,25 @@ const routes = [
     component: CreateBreakDownAttribute,
   },
 
+  // activity attribute
+  {
+    path: "/activity_attributes",
+    name: "ActivityAttributes.Index",
+    component: ActivityAttributes,
+  },
+  {
+    path: "/activity_attributes/create",
+    name: "ActivityAttributes.Create",
+    component: CreateActivityAttribute,
+  },
+
+  {
+    path: "/activity_attributes/:activity_attribute_id/edit",
+    name: "ActivityAttributes.Edit",
+    component: CreateActivityAttribute,
+  },
+
+
 
   //Deviation
   {
@@ -758,7 +793,12 @@ const routes = [
   {
     path: "/asset_details",
     name: "AssetDetails",
-    component: Test,
+    component: AssetDetails,
+  },
+  {
+    path: "/geometric/:asset_id",
+    name: "Geometric",
+    component: Geometric,
   },
 
   // spare campaign

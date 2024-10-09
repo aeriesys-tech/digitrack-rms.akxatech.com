@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Break Down Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleBreakDownTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleBreakDownTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.break_down_types}">
                                                 <option value="">Select Break Down Type</option>
@@ -40,12 +40,15 @@
                                         <div class="multiselect" v-if="break_down_type_status">
                                             <ul>
                                                 <li class="" v-for="(break_down_type, index) in break_down_types" :key="index">
-                                                    <input type="checkbox" :value="break_down_type.break_down_type_id" v-model="break_down_attribute.break_down_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="break_down_type.break_down_type_id" v-model="break_down_attribute.break_down_types" style="padding: 2px;" @click="updateActivityType($event, break_down_attribute)"/>
                                                     <label style="margin-left: 5px;">{{ break_down_type.break_down_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
-                                        
+                                        </div> -->
+                                        <MultiSelect v-model="break_down_attribute.break_down_types_obj"  filter optionLabel="break_down_type_name"
+                                            :options="break_down_types"  placeholder="Select Break Down Type" :maxSelectedLabels="3"
+                                            style="width: 100%;; height: 37px;" :style="errors?.break_down_types ? error_style : ''"/>
+                                        <span v-if="errors?.break_down_types"><small class="text-danger">{{ errors?.break_down_types[0] }}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +75,7 @@
                                         <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
-                                </div> 
+                                </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
                                     <select class="form-control" v-model="break_down_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
@@ -81,14 +84,14 @@
                                     </select>
                                     <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Field Value</label><span v-if="break_down_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
+                                <div class="col-md-4" v-if="break_down_attribute.field_type==='Dropdown'">
+                                    <label class="form-label">Field Value</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="break_down_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="number" placeholder="Field Length" class="form-control" v-model="break_down_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
+                                    <input type="number" placeholder="Maximum Length" class="form-control" v-model="break_down_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
                                     <span v-if="errors.field_length" class="invalid-feedback">{{ errors.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -109,7 +112,7 @@
                                     <span v-if="errors.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                 </div> -->
 
-                               
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -126,9 +129,10 @@
         </div>
     </template>
     <script>
-//      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "BreakDownAttributes.Create",
         data() {
@@ -141,9 +145,12 @@
                     field_length: '',
                     is_required: "",
                     break_down_type_id: '',
+                    break_down_types_obj:[],
                     break_down_types:[],
-                    list_parameter_id:'',
+                    list_parameter_id: '',
+                    deleted_break_down_attribute_types:[],
                 },
+                deleted_break_down_attribute_types:[],
                 break_down_types: [],
                 break_down_attributes:[],
                 list_parameters:[],
@@ -151,6 +158,14 @@
                 errors: [],
                 status:true,
                 break_down_type_status:false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -175,6 +190,14 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.break_down_attribute = response.data.data;
+                                vm.break_down_attribute.deleted_break_down_attribute_types = []
+                                vm.break_down_attribute.break_down_types_obj = []
+
+                                vm.break_down_attribute.break_down_attribute_types.map(function(ele){
+                                    vm.break_down_attribute.break_down_types_obj.push({break_down_type_code: ele.break_down_type.break_down_type_code,
+                                        break_down_type_id: ele.break_down_type.break_down_type_id, status: ele.break_down_type.status,
+                                        break_down_type_name: ele.break_down_type.break_down_type_name})
+                                })
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -194,6 +217,28 @@
             }
         },
         methods: {
+              updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let break_down_attribute_type = activity_type?.break_down_attribute_types?.filter(function (element) {
+                    return element.break_down_type_id == event.target.value
+                })
+                if (break_down_attribute_type?.length) {
+                    let break_down_attribute_type_id = break_down_attribute_type[0].break_down_attribute_type_id
+                    if (isChecked) {
+                        if (vm.break_down_attribute.deleted_break_down_attribute_types.includes(break_down_attribute_type_id)) {
+                            let deleted_break_down_attribute_types = this.break_down_attribute.deleted_break_down_attribute_types.filter(function (element) {
+                                return element != break_down_attribute_type_id
+                            })
+                            vm.break_down_attribute.deleted_break_down_attribute_types = deleted_break_down_attribute_types
+                        }
+                    } else {
+                        if (!vm.break_down_attribute.deleted_break_down_attribute_types.includes(break_down_attribute_type_id)) {
+                            vm.break_down_attribute.deleted_break_down_attribute_types.push(break_down_attribute_type_id)
+                        }
+                    }
+                }
+            },
             toggleBreakDownTypeStatus(){
                 this.break_down_type_status = !this.break_down_type_status
             },
@@ -220,14 +265,19 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addBreakDownAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addBreakDownAttribute', data:this.break_down_attribute })
+                let loader = vm.$loading.show();
+
+                vm.break_down_attribute.break_down_types_obj.map(function(ele){
+                    vm.break_down_attribute.break_down_types.push(ele.break_down_type_id)
+                })
+
+                vm.$store.dispatch('post', { uri: 'addBreakDownAttribute', data:vm.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Break Down Attribute created successfully");
+                        vm.$store.dispatch('success',"Break Down Attribute created successfully");
                         vm.$router.push("/break_down_attributes");
                     })
                     .catch(function (error) {
@@ -236,15 +286,19 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             updateBreakDownAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateBreakDownAttribute', data:this.break_down_attribute })
+                let loader = vm.$loading.show();
+                vm.break_down_attribute.deleted_break_down_attribute_types = vm.break_down_attribute?.break_down_attribute_types.filter(
+                item1 => !vm.break_down_attribute.break_down_types_obj.some(item2 => item1.break_down_type_id === item2.break_down_type_id));
+                vm.break_down_attribute.break_down_types = vm.break_down_attribute.break_down_types_obj.map(item => item.break_down_type_id);
+                vm.break_down_attribute.deleted_break_down_attribute_types = vm.break_down_attribute.deleted_break_down_attribute_types.map(item => item.break_down_attribute_type_id);
+                vm.$store.dispatch('post', { uri: 'updateBreakDownAttribute', data:vm.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Break Down Attribute updated successfully");
-                        this.$router.push('/break_down_attributes');
+                        vm.$store.dispatch('success',"Break Down Attribute updated successfully");
+                        vm.$router.push('/break_down_attributes');
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -252,7 +306,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getListParameters(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -266,7 +320,6 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
-
             },
             getBreakDownAttribute(){
                 let vm = this;
@@ -283,21 +336,21 @@
                     });
             },
             discard() {
-                    let vm = this;
-                    vm.break_down_attribute.field_name = "";
-                    vm.break_down_attribute.field_type = "";
-                    vm.break_down_attribute.display_name = "";
-                    vm.break_down_attribute.field_values = "";
-                    vm.break_down_attribute.field_length = "";
-                    vm.break_down_attribute.is_required = "";
-                    vm.break_down_attribute.break_down_type_id = "";
-                    vm.break_down_attribute.list_parameter_id = "";
-                    // vm.$refs.field_name.focus();
-                    vm.break_down_attribute.break_down_types = [],
-                    vm.errors = [];
-                    vm.status = true;
-                },
-             
+                let vm = this;
+                vm.break_down_attribute.field_name = "";
+                vm.break_down_attribute.field_type = "";
+                vm.break_down_attribute.display_name = "";
+                vm.break_down_attribute.field_values = "";
+                vm.break_down_attribute.field_length = "";
+                vm.break_down_attribute.is_required = "";
+                vm.break_down_attribute.break_down_type_id = "";
+                vm.break_down_attribute.list_parameter_id = "";
+                // vm.$refs.field_name.focus();
+                vm.break_down_attribute.break_down_types = [],
+                vm.errors = [];
+                vm.status = true;
+            },
+
         }
     }
     </script>
@@ -331,4 +384,3 @@
     right: 0;
 }
 </style>
-    

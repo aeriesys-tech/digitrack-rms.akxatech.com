@@ -49,4 +49,9 @@ class AssetVariable extends Model
     {
         return $this->belongsTo(VariableType::class, 'variable_type_id');
     }
+
+    public function AssetVariableValue()
+    {
+        return $this->hasMany(AssetVariableValue::class, 'asset_variable_id', 'asset_variable_id');
+    }
 }

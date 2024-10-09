@@ -29,13 +29,6 @@
                     </li>
                 </ul>
             </div>
-            <div class="nav-group show">
-                <ul class="nav nav-sidebar">
-                    <li class="nav-item">
-                        <router-link to="/lists" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>Lists</span></router-link>
-                    </li>
-                </ul>
-            </div>
             <div class="nav-group" :class="{show:showLinage}" @click="showTab('LineageParameters')" v-if="permission('LineageParameters')">
                 <a href="javascript:void(0)" :style="{color:color}" class="nav-label"><i class="ri-equalizer-line icn"></i> Lineage parameters</a>
                 <ul class="nav nav-sidebar">
@@ -59,7 +52,13 @@
                     </li>
                 </ul>
             </div>
-
+             <div class="nav-group show">
+                <ul class="nav nav-sidebar">
+                    <li class="nav-item">
+                        <router-link to="/list_parameters" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>List Parameters</span></router-link>
+                    </li>
+                </ul>
+            </div>
             <div class="nav-group" :class="{show:showType}" @click="showTab('TypeParameters')" v-if="permission('TypeParameters')">
                 <a href="javascript:void(0)" :style="{color:typeParameterColor}" class="nav-label"><i class="ri-corner-up-right-double-line icn"></i> Type Parameters</a>
                 <ul class="nav nav-sidebar">
@@ -120,6 +119,9 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' || $route.name === 'BreakDownAttributes.Create' || $route.path === 'BreakDownAttributes.Edit'}" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Breakdown Attribute</span></router-link>
+                    </li>
+                      <li class="nav-item">
+                        <router-link to="/activity_attributes" v-bind:class="{ active: $route.path === '/activity_attributes' || $route.name === 'ActivityAttributes.Create' || $route.path === 'ActivityAttributes.Edit'}" class="nav-link"><i class="ri-color-filter-line"></i> <span>Activity Attribute</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -195,15 +197,15 @@
                         </router-link>
                     </li>
                     <li class="nav-item" v-can="'userChecks.view'">
-                        <router-link v-bind:class="{ active: $route.path === '/user_checks' || $route.name === 'UserChecks.Create' || $route.path === 'UserChecks.Edit'}" to="/user_checks" class="nav-link">
+                        <router-link v-bind:class="{ active: $route.path === '/user_checks' || $route.name === 'UserChecks.Create' || $route.name === 'UserChecks.Edit'}" to="/user_checks" class="nav-link">
                             <i class="ri-survey-line"></i><span>Check Register</span>
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/process_registers" v-bind:class="{ active: $route.path === '/process_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Process Register</span></router-link>
+                        <router-link to="/process_registers" v-bind:class="{ active: $route.path === '/process_registers' || $route.name === 'CreateProcessRegister.Create' || $route.name === 'CreateProcessRegister.Edit' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Process Register</span></router-link>
                     </li>
                      <li class="nav-item">
-                        <router-link to="/break_down_registers" v-bind:class="{ active: $route.path === '/break_down_registers' }" class="nav-link"><i class="ri-bubble-chart-line"></i><span>Break Down Register</span></router-link>
+                        <router-link to="/break_down_registers" v-bind:class="{ active: $route.path === '/break_down_registers' || $route.name === 'BreakDownRegister.Create' || $route.name === 'BreakDownRegister.Edit' }" class="nav-link"><i class="ri-bubble-chart-line"></i><span>Break Down Register</span></router-link>
                     </li>
                     <!-- <li class="nav-item">
                         <router-link to="/spare_registers" v-bind:class="{ active: $route.path === '/spare_registers' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Spare Register</span></router-link>
@@ -224,22 +226,22 @@
             </div>  -->
 
             <div class="nav-group" :class="{show:showReview}" @click="showTab('Review')">
-                <a href="javascript:void(0)" class="nav-label" :style="{color:ReviewColor}"><i class="ri-stack-fill icn"></i> Review</a>
+                <a href="javascript:void(0)" class="nav-label" :style="{color:ReviewColor}"><i class="ri-file-search-line icn"></i> Review</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
-                        <router-link to="/asset_details" v-bind:class="{ active: $route.path === '/asset_details' }" class="nav-link"><i class="ri-focus-line"></i> <span>Asset Details</span></router-link>
+                        <router-link to="/asset_details" v-bind:class="{ active: $route.path === '/asset_details' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Details</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/spare_campaigns" v-bind:class="{ active: $route.path === '/spare_campaigns' }" class="nav-link"><i class="ri-focus-line"></i> <span>Spare Campaign</span></router-link>
+                        <router-link to="/spare_campaigns" v-bind:class="{ active: $route.path === '/spare_campaigns' }" class="nav-link"><i class="ri-align-left   "></i> <span>Spare Campaign</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/compliance" v-bind:class="{ active: $route.path === '/compliance' }" class="nav-link"><i class="ri-focus-line"></i> <span>Compliance</span></router-link>
+                        <router-link to="/compliance" v-bind:class="{ active: $route.path === '/compliance' }" class="nav-link"><i class="ri-article-line"></i> <span>Compliance</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/deviations_review" v-bind:class="{ active: $route.path === '/deviations_review' }" class="nav-link"><i class="ri-focus-line"></i> <span>Deviations</span></router-link>
+                        <router-link to="/deviations_review" v-bind:class="{ active: $route.path === '/deviations_review' }" class="nav-link"><i class="ri-direction-line"></i> <span>Deviations</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/alerts" v-bind:class="{ active: $route.path === '/alerts' }" class="nav-link"><i class="ri-focus-line"></i> <span>Alerts</span></router-link>
+                        <router-link to="/alerts" v-bind:class="{ active: $route.path === '/alerts' }" class="nav-link"><i class="ri-alarm-warning-line"></i> <span>Alerts</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -259,13 +261,13 @@
                 </ul>
             </div>
             <div class="nav-group" :class="{show:showPredictions}" @click="showTab('Predictions')">
-                <a href="javascript:void(0)" class="nav-label" :style="{color:PredictionColor}"><i class="ri-stack-fill icn"></i> Predictions</a>
+                <a href="javascript:void(0)" class="nav-label" :style="{color:PredictionColor}"><i class="ri-copper-coin-line icn"></i> Predictions</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
-                        <router-link to="/asset_life" v-bind:class="{ active: $route.path === '/asset_life' }" class="nav-link"><i class="ri-focus-line"></i> <span>Asset Life</span></router-link>
+                        <router-link to="/asset_life" v-bind:class="{ active: $route.path === '/asset_life' }" class="nav-link"><i class="ri-expand-width-fill"></i> <span>Asset Life</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/upcoming_repairs" v-bind:class="{ active: $route.path === '/upcoming_repairs' }" class="nav-link"><i class="ri-focus-line"></i> <span>Upcoming Repiars</span></router-link>
+                        <router-link to="/upcoming_repairs" v-bind:class="{ active: $route.path === '/upcoming_repairs' }" class="nav-link"><i class="ri-skip-up-fill"></i> <span>Upcoming Repiars</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -417,17 +419,27 @@
                     tab == "/health_checks" ||
                     name == "HealthChecks.Create" ||
                     name == "HealthChecks.Edit" ||
+
                     tab == "/activities" ||
                     name == "Activity.Create" ||
                     name == "Activity.Edit" ||
+
                     tab == "/user_services" ||
                     name == "UserServices.Create" ||
                     name == "UserServices.Edit" ||
+
                     tab == "/user_checks" ||
                     name == "UserChecks.Create" ||
                     name == "UserChecks.Edit" ||
+
                     tab == "/process_registers" ||
-                     tab == "/break_down_registers" ||
+                    name == "/CreateProcessRegister.Create" ||
+                    name == "/CreateProcessRegister.Edit" ||
+
+                    tab == "/break_down_registers" ||
+                    name == "/BreakDownRegister.Create" ||
+                    name == "/BreakDownRegister.Edit" ||
+
                     tab == "/spare_registers" ||
                     tab == "/qc_registers"
                 ) {
@@ -440,7 +452,7 @@
                     this.dashboardActive = "white !important";
                 } else if (tab == "/assets" || name == "Assets.Create" || name == "Assets.Edit" || name == "Assets.View") {
                     this.assetActive = "white !important";
-                } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes") {
+                } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes" || tab == "/activity_attributes") {
                     this.AttributesColor = "white !important";
                     this.showAttributes = !this.showAttributes;
                 } else if (tab == "/asset_details" || tab == "/spare_campaigns" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {
@@ -450,7 +462,7 @@
                     this.PredictionColor = "white !important";
                     this.showPredictions = !this.showPredictions;
                 }
-                else if (tab == "/lists") {
+                else if (tab == "/list_parameters") {
                     this.listActive = "white !important";
                 }
 

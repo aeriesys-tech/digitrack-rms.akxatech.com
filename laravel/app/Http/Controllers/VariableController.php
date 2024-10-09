@@ -10,6 +10,10 @@ use Auth;
 use App\Models\VariableAttributeValue;
 use App\Models\VariableAttribute;
 use App\Http\Resources\VariableAttributeResource;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\VariableExport;
+use App\Exports\VariableHeadingsExport;
+use App\Imports\VariableImport;
 
 class VariableController extends Controller
 {
@@ -35,9 +39,25 @@ class VariableController extends Controller
         if($request->search!='')
         {
             $query->where('variable_code', 'like', "%$request->search%")
-                ->orWhere('variable_name', 'like', "$request->search%");
+                ->orWhere('variable_name', 'like', "%$request->search%")
+                ->orwhereHas('VariableType', function($qu) use($request) {
+                    $qu->where('variable_type_name','like', "%$request->search%");
+                })->orwhereHas('VariableAssetTypes', function($qu) use($request){
+                    $qu->whereHas('AssetType', function($que) use($request) {
+                        $que->where('asset_type_name','like', "%$request->search%");
+                    });
+                });
         }
-        $variable = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+
+        if ($request->keyword == 'variable_type_name') {
+            $query->join('variable_types', 'variables.variable_type_id', '=', 'variable_types.variable_type_id')->select('variables.*') 
+                  ->orderBy('variable_types.variable_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+
+        $variable = $query->withTrashed()->paginate($request->per_page); 
         return VariableResource::collection($variable);
     }
 
@@ -136,13 +156,26 @@ class VariableController extends Controller
         $variable = Variable::where('variable_id', $request->variable_id)->first();
         $variable->update($data);
 
-        VariableAssetType::where('variable_id', $variable->variable_id)->delete();
+        if(isset($request->deleted_variable_asset_types) > 0)
+        {
+            VariableAssetType::whereIn('variable_asset_type_id', $request->deleted_variable_asset_types)->forceDelete();
+        }
 
-        foreach ($data['asset_types'] as $asset_type) {
-            VariableAssetType::create([
-                'variable_id' => $variable->variable_id,
-                'asset_type_id' => $asset_type,
-            ]);
+        foreach ($data['asset_types'] as $asset_type) 
+        {
+            $variableType = VariableAssetType::where('variable_id', $variable->variable_id)->where('asset_type_id', $asset_type)->first();
+            if($variableType)
+            {
+                $variableType->update([
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
+            else {
+                VariableAssetType::create([
+                    'variable_id' => $variable->variable_id,
+                    'asset_type_id' => $asset_type,
+                ]);
+            }
         }
 
         if($request->deleted_variable_attribute_values > 0)
@@ -203,5 +236,33 @@ class VariableController extends Controller
         })->get();
 
         return VariableAttributeResource::collection($variable_type);
+    }
+
+    public function downloadVariables(Request $request)
+    {
+        $filename = "Variable.xlsx";
+
+        $excel = new VariableExport();
+
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadVariableHeadings(Request $request)
+    {
+        $filename = "Variable Headings.xlsx";
+        $excel = new VariableHeadingsExport($request->variable_type_ids);
+        
+        return Excel::download($excel, $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importVariable(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new VariableImport, $request->file('file'));
+
+        return response()->json(['success' => 'Data imported successfully!']);
     }
 }

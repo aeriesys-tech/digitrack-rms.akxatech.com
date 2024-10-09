@@ -30,7 +30,7 @@
                                 <div class="col-md-3">
                                     <div class="form-label">
                                         <label class="form-label">Variable Type</label><span class="text-danger"> *</span>
-                                        <div class="dropdown" @click="toggleVariableTypeStatus()">
+                                        <!-- <div class="dropdown" @click="toggleVariableTypeStatus()">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.variable_types}">
                                                 <option value="">Select Variable Type</option>
@@ -40,12 +40,15 @@
                                         <div class="multiselect" v-if="variable_type_status">
                                             <ul>
                                                 <li class="" v-for="(variable_type, index) in variable_types" :key="index">
-                                                    <input type="checkbox" :value="variable_type.variable_type_id" v-model="variable_attribute.variable_types" style="padding: 2px;" />
+                                                    <input type="checkbox" :value="variable_type.variable_type_id" v-model="variable_attribute.variable_types" style="padding: 2px;" @click="updateActivityType($event, variable_attribute)"/>
                                                     <label style="margin-left: 5px;">{{ variable_type.variable_type_name }}</label>
                                                 </li>
                                             </ul>
-                                        </div>
-                                        
+                                        </div> -->
+                                        <MultiSelect v-model="variable_attribute.variable_types_obj"  filter optionLabel="variable_type_name" 
+                                            :options="variable_types"  placeholder="Select Data Source Type" :maxSelectedLabels="3"  
+                                            style="width: 100%;; height: 37px;" :style="errors?.variable_types ? error_style : ''"/>
+                                            <span v-if="errors?.variable_types"><small class="text-danger">{{ errors?.variable_types[0] }}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +75,7 @@
                                         <option value="List">List</option>
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
-                                </div> 
+                                </div>
                                 <div class="col-md-4" v-if="list_parameters.length">
                                     <label class="form-label">List</label><span class="text-danger"> *</span>
                                     <select class="form-control" v-model="variable_attribute.list_parameter_id" :class="{ 'is-invalid': errors.list_parameter_id }">
@@ -81,14 +84,14 @@
                                     </select>
                                     <span v-if="errors.list_parameter_id" class="invalid-feedback">{{ errors.list_parameter_id[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Field Value</label><span v-if="variable_attribute.field_type==='Dropdown'" class="text-danger"> *</span>
+                                <div class="col-md-4" v-if="variable_attribute.field_type==='Dropdown'">
+                                    <label class="form-label">Field Value</label><span class="text-danger"> *</span>
                                     <input type="text" placeholder="Field Value" class="form-control" :class="{'is-invalid':errors.field_values}" v-model="variable_attribute.field_values" />
                                     <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Field Length</label><span class="text-danger"> *</span>
-                                    <input type="number" placeholder="Field Length" class="form-control" v-model="variable_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
+                                    <input type="number" placeholder="Maximum Length" class="form-control" v-model="variable_attribute.field_length" :class="{'is-invalid':errors.field_length}" />
                                     <span v-if="errors.field_length" class="invalid-feedback">{{ errors.field_length[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -101,7 +104,7 @@
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>
 
-                               
+
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -119,8 +122,10 @@
     </template>
     <script>
 //      import Search from "@/components/Search.vue";
+    import MultiSelect from 'primevue/multiselect';
     export default {
         components: {
+            MultiSelect
             },
         name: "VariableAttributes.Create",
         data() {
@@ -133,9 +138,12 @@
                     field_length: '',
                     is_required: "",
                     variable_type_id: '',
+                    variable_types_obj:[],
                     variable_types:[],
-                    list_parameter_id:'',
+                    list_parameter_id: '',
+                    deleted_variable_attribute_types:[],
                 },
+                deleted_variable_attribute_types:[],
                 variable_types: [],
                 variable_attributes:[],
                 list_parameters:[],
@@ -143,6 +151,14 @@
                 errors: [],
                 status:true,
                 variable_type_status:false,
+                error_style: {
+                    'border-color': '#dc3545',
+                    'padding-right': 'calc(1.5em + 0.812rem)',
+                    'background-image': `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e")`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'right calc(0.375em + 0.203rem) center',
+                    'background-size': 'calc(0.75em + 0.406rem) calc(0.75em + 0.406rem)'
+                }
             }
         },
         // beforeRouteEnter(to, from, next) {
@@ -167,6 +183,15 @@
                             .dispatch("post", uri)
                             .then(function (response) {
                                 vm.variable_attribute = response.data.data;
+                                vm.variable_attribute.deleted_variable_attribute_types = []
+                                vm.variable_attribute.variable_types_obj = []
+
+                                vm.variable_attribute.variable_attribute_types.map(function(ele){
+                                    vm.variable_attribute.variable_types_obj.push({variable_type_code: ele.variable_type.variable_type_code, 
+                                        variable_type_id: ele.variable_type.variable_type_id, status: ele.variable_type.status,
+                                        variable_type_name: ele.variable_type.variable_type_name})
+                                })
+                                
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -186,6 +211,29 @@
             }
         },
         methods: {
+             updateActivityType(event, activity_type) {
+                let vm = this
+                const isChecked = event.target.checked;
+                let variable_attribute_type = activity_type?.variable_attribute_types?.filter(function (element) {
+                    return element.variable_type_id == event.target.value
+                })
+                if (variable_attribute_type?.length) {
+                    let variable_attribute_type_id = variable_attribute_type[0].variable_attribute_type_id
+                    if (isChecked) {
+                        if (vm.variable_attribute.deleted_variable_attribute_types.includes(variable_attribute_type_id)) {
+                            let deleted_variable_attribute_types = this.variable_attribute.deleted_variable_attribute_types.filter(function (element) {
+                                return element != variable_attribute_type_id
+                            })
+                            vm.variable_attribute.deleted_variable_attribute_types = deleted_variable_attribute_types
+                        }
+                    } else {
+                        if (!vm.variable_attribute.deleted_variable_attribute_types.includes(variable_attribute_type_id)) {
+                            vm.variable_attribute.deleted_variable_attribute_types.push(variable_attribute_type_id)
+                        }
+                    }
+                }
+            },
+
             toggleVariableTypeStatus(){
                 this.variable_type_status = !this.variable_type_status
             },
@@ -204,7 +252,6 @@
                     .then(response => {
                         loader.hide();
                         vm.variable_types = response.data.data;
-                        console.log(vm.variable_types)
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -212,14 +259,19 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addVariableAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'addVariableAttribute', data:this.variable_attribute })
+                let loader = vm.$loading.show();
+
+                vm.variable_attribute.variable_types_obj.map(function(ele){
+                    vm.variable_attribute.variable_types.push(ele.variable_type_id)
+                })
+
+                vm.$store.dispatch('post', { uri: 'addVariableAttribute', data:vm.variable_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Variable Attribute created successfully");
+                        vm.$store.dispatch('success',"Variable Attribute created successfully");
                         vm.$router.push("/variable_attributes");
                     })
                     .catch(function (error) {
@@ -228,15 +280,21 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             updateVariableAttribute(){
                 let vm = this;
-                let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'updateVariableAttribute', data:this.variable_attribute })
+                let loader = vm.$loading.show();
+
+                vm.variable_attribute.deleted_variable_attribute_types = vm.variable_attribute?.variable_attribute_types.filter(
+                    item1 => !vm.variable_attribute.variable_types_obj.some(item2 => item1.variable_type_id === item2.variable_type_id));
+                vm.variable_attribute.variable_types = vm.variable_attribute.variable_types_obj.map(item => item.variable_type_id);
+                vm.variable_attribute.deleted_variable_attribute_types = vm.variable_attribute.deleted_variable_attribute_types.map(item => item.variable_attribute_type_id);
+
+                vm.$store.dispatch('post', { uri: 'updateVariableAttribute', data:vm.variable_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Variable Attribute updated successfully");
-                        this.$router.push('/variable_attributes');
+                        vm.$store.dispatch('success',"Variable Attribute updated successfully");
+                        vm.$router.push('/variable_attributes');
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -244,7 +302,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getVariableAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
@@ -289,7 +347,7 @@
                     vm.errors = [];
                     vm.status = true;
                 },
-             
+
         }
     }
     </script>
@@ -323,4 +381,3 @@
     right: 0;
 }
 </style>
-    

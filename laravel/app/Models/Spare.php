@@ -19,6 +19,11 @@ class Spare extends Model
 
     protected $primaryKey = 'spare_id';
 
+    public function AssetSpare()
+    {
+        return $this->hasMany(AssetSpare::class, 'spare_id', 'spare_id');
+    }
+
     public function SpareType()
     {
         return $this->belongsTo(SpareType::class, 'spare_type_id');
@@ -27,5 +32,16 @@ class Spare extends Model
     public function SpareAssetTypes()
     {
         return $this->hasMany(SpareAssetType::class, 'spare_id', 'spare_id');
+    }
+
+    public function SpareAttributes()
+    {
+        return $this->hasMany(SpareAttribute::class, 'spare_id', 'spare_id');
+    }
+    
+    public function getSpareValues($spare_id)
+    {
+        $sparevalue = SpareAttributeValue::where('spare_id', $spare_id)->get();
+        return $sparevalue;
     }
 }

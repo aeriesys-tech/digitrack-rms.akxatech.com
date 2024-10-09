@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Shops</li>
             </ol>
             <h4 class="main-title mb-2">Shops</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" v-can="'plants.create'">
                 <form @submit.prevent="submitForm()">
@@ -93,13 +93,13 @@
                         <div class="table-responsive table-responsive-sm">
                             <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
                                 <thead>
-                                    <tr class="text-center" style="background-color: #9b9b9b; color: white;">
+                                    <tr style="background-color: #9b9b9b; color: white;">
                                         <th>#</th>
-                                        <th @click="sort('area_id')">
+                                        <th @click="sort('area_name')">
                                             Area
                                             <span>
-                                                <i v-if="meta.keyword=='area_id' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword=='area_id' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-if="meta.keyword=='area_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='area_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
@@ -110,7 +110,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('plant_name')">Shop Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='plant_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='plant_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -119,7 +119,7 @@
                                         </th>
 
                                         <th @click="sort('plant_name')">Latitude
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='latitude' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='latitude' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -128,7 +128,7 @@
                                         </th>
 
                                         <th @click="sort('plant_name')">Longitude
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='longitude' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='longitude' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -137,16 +137,16 @@
                                         </th>
 
                                         <th @click="sort('plant_name')">Radius
-                                        
+
                                         <span>
                                             <i v-if="meta.keyword=='radius' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                             <i v-else-if="meta.keyword=='radius' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                             <i v-else class="fas fa-sort"></i>
                                         </span>
                                     </th>
-                                       
-                                        <th v-can="'plants.delete'">Status</th>
-                                        <th v-can="'plants.update'">Actions</th>
+
+                                        <th class="text-center" v-can="'plants.delete'">Status</th>
+                                        <th class="text-center" v-can="'plants.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -254,15 +254,15 @@ export default {
         },
         index() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'paginatePlants', data:vm.meta })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'paginatePlants', data:vm.meta })
                 .then(response => {
                     loader.hide();
-                    this.plants = response.data.data;
-                    this.meta.totalRows = response.data.meta.total;
-                    this.meta.from = response.data.meta.from;
-                    this.meta.lastPage = response.data.meta.last_page;
-                    this.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    vm.plants = response.data.data;
+                    vm.meta.totalRows = response.data.meta.total;
+                    vm.meta.from = response.data.meta.from;
+                    vm.meta.lastPage = response.data.meta.last_page;
+                    vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
                 })
                 .catch(function (error) {
                     loader.hide();
@@ -273,12 +273,12 @@ export default {
 
         addPlant() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'addPlant', data: this.plant })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'addPlant', data: vm.plant })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                     // this.index();
                 })
                 .catch(function (error) {
@@ -310,12 +310,12 @@ export default {
 
         updatePlant() {
             let vm = this;
-            let loader = this.$loading.show();
-            this.$store.dispatch('post', { uri: 'updatePlant', data: this.plant })
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'updatePlant', data: vm.plant })
                 .then(response => {
                     loader.hide();
-                    this.$store.dispatch('success', response.data.message);
-                    this.discard();
+                    vm.$store.dispatch('success', response.data.message);
+                    vm.discard();
                 })
                 .catch(function (error) {
                     loader.hide();

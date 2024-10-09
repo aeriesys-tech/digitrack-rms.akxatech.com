@@ -19,7 +19,8 @@ class UserSpareResource extends JsonResource
             'asset_zone' => new AssetZoneResource($this->AssetZone),
             'service_id' => $this->service_id,
             'service' => new ServiceResource($this->Service),
-            'service_cost' => $this->service_cost
+            'service_cost' => $this->service_cost,
+            'quantity' => $this->quantity
         ];
     }
 }

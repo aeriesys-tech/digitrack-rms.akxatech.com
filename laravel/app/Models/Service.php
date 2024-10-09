@@ -33,4 +33,10 @@ class Service extends Model
     {
         return $this->hasMany(ServiceAttribute::class, 'service_id', 'service_id');
     }
-}
+    
+    public function getServiceValues($service_id)
+    {
+        $servicevalue = ServiceAttributeValue::where('service_id', $service_id)->get();
+        return $servicevalue;
+    }
+} 
