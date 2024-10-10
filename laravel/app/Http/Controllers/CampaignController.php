@@ -64,7 +64,7 @@ class CampaignController extends Controller
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'datasource' => 'required',
-            'file' => 'required|file|mimes:pdf',
+            'file' => 'required|file|mimes:pdf,jpeg,jpg,png',
             'job_date_time' => 'required',
             'script' => 'required'
         ]);
@@ -90,6 +90,25 @@ class CampaignController extends Controller
                 ]
             ]
         );
+
+        // //Ladle Scanner
+        // if ($request->script == "Ladle Scanner") 
+        // {
+        //     $response = $client->post('http://127.0.0.1:5000/runCampain', [
+        //         'json' => [
+        //             'image_file' => $fullFilePath 
+        //         ]
+        //     ]);
+        // } 
+        // //Torpedo Scanner
+        // elseif ($request->script == "Torpedo Scanner") 
+        // {
+        //     $response = $client->post('http://127.0.0.1:5000/runTorpedo', [
+        //         'json' => [
+        //             'pdf_file' => $fullFilePath 
+        //         ]
+        //     ]);
+        // }
 
         $responseContent = $response->getBody()->getContents();
         $responseDatas = json_decode($responseContent, true);

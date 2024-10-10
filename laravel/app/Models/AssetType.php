@@ -13,7 +13,8 @@ class AssetType extends Model
     protected $table = 'asset_type';
     protected $fillable = [
         'asset_type_code',
-        'asset_type_name'
+        'asset_type_name',
+        'geometry_type'
     ];
 
     protected $primaryKey = 'asset_type_id';

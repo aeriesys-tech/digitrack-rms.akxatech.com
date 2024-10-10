@@ -4,17 +4,15 @@ namespace App\Imports;
 
 use App\Models\DataSource;
 use App\Models\DataSourceAssetType;
-Use App\Models\DataSourceAttributeValue;
-Use App\Models\DataSourceAttributeType;
-Use App\Models\DataSourceAttribute;
-Use App\Models\AssetType;
+use App\Models\DataSourceAttributeValue;
+use App\Models\DataSourceAttributeType;
+use App\Models\DataSourceAttribute;
+use App\Models\AssetType;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class DataSourceImport implements ToCollection, WithHeadingRow
 {
@@ -36,25 +34,28 @@ class DataSourceImport implements ToCollection, WithHeadingRow
 
         foreach ($rows as $row) 
         {
-            if (!isset($row['data_source_code']) || !isset($row['data_source_name']) || !isset($row['data_source_type'])) 
+            // Log::info('Processing row: ', $row->toArray());
+
+            if (!isset($row['datasource_code']) || !isset($row['datasource_name']) || !isset($row['datasource_type'])) 
             {
                 $errorRows[] = $row; 
                 continue; 
             }
 
-            $dataSourceTypeId = $dataSourceTypes->get(trim($row['data_source_type'])) ? 
-                $dataSourceTypes->get(trim($row['data_source_type']))->data_source_type_id : null;
+            $dataSourceTypeId = $dataSourceTypes->get(trim($row['datasource_type'])) 
+                ? $dataSourceTypes->get(trim($row['datasource_type']))->data_source_type_id 
+                : null;
 
             $data = [
                 'data_source_type_id' => $dataSourceTypeId,
-                'data_source_code' => trim($row['data_source_code']),
-                'data_source_name' => trim($row['data_source_name']),
+                'data_source_code' => trim($row['datasource_code']),
+                'data_source_name' => trim($row['datasource_name']),
             ];
-
+            // Log::info('Inserting Data Source: ', $data);
             $dataSource = DataSource::create($data);
 
-            // asset types
-            if (isset($row['asset_type'])) 
+            // Handling asset types
+            if (isset($row['asset_type']) && !empty($row['asset_type'])) 
             {
                 $assetTypeNames = explode(',', $row['asset_type']);
                 $assetTypeNames = array_map('trim', $assetTypeNames);
@@ -63,22 +64,21 @@ class DataSourceImport implements ToCollection, WithHeadingRow
             
                 if ($assetTypes->isNotEmpty()) {
                     foreach ($assetTypes as $assetType) {
-                        $assetTypeId = $assetType->asset_type_id;
-            
                         DataSourceAssetType::create([
                             'data_source_id' => $dataSource->data_source_id,
-                            'asset_type_id' => $assetTypeId,
+                            'asset_type_id' => $assetType->asset_type_id,
                         ]);
+                        Log::info('Asset Type linked: ' . $assetType->asset_type_name);
                     }
                 } 
             }
-            // Log::info($row);
+
+            // Handling dynamic attributes
             foreach ($row as $key => $value) 
             {
                 $normalizedKey = $this->normalizeKey($key);
 
-                // Skip the known keys like spare_type, spare_code, spare_name, and asset_type
-                if (!in_array($normalizedKey, ['data_source_type', 'data_source_code', 'data_source_name', 'asset_type']) && !empty($value)) 
+                if (!in_array($normalizedKey, ['datasource_type', 'datasource_code', 'datasource_name', 'asset_type']) && !empty($value)) 
                 {
                     $dataSourceAttribute = $DataSourceAttributes->get($normalizedKey); 
                     if (!$dataSourceAttribute) 
@@ -99,7 +99,7 @@ class DataSourceImport implements ToCollection, WithHeadingRow
                             'data_source_attribute_id' => $dataSourceAttribute->data_source_attribute_id,
                             'field_value' => $fieldValue,
                         ]);
-                    }
+                    } 
                 }
             }
         }
@@ -124,4 +124,3 @@ class DataSourceImport implements ToCollection, WithHeadingRow
         }
     }
 }
-

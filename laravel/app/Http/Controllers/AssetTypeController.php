@@ -46,7 +46,8 @@ class AssetTypeController extends Controller
     {
         $data = $request->validate([
             'asset_type_code' => 'required|string|unique:asset_type,asset_type_code',
-            'asset_type_name' => 'required|string|unique:asset_type,asset_type_name'
+            'asset_type_name' => 'required|string|unique:asset_type,asset_type_name',
+            'geometry_type' => 'nullable'
         ]);
         
         $asset_type = AssetType::create($data);
@@ -68,7 +69,8 @@ class AssetTypeController extends Controller
         $data = $request->validate([ 
             'asset_type_id' => 'required|exists:asset_type,asset_type_id',
             'asset_type_code' => 'required|string|unique:asset_type,asset_type_code,'.$request->asset_type_id.',asset_type_id',
-            'asset_type_name' => 'required|string|unique:asset_type,asset_type_name,'.$request->asset_type_id.',asset_type_id'
+            'asset_type_name' => 'required|string|unique:asset_type,asset_type_name,'.$request->asset_type_id.',asset_type_id',
+            'geometry_type' => 'nullable'
         ]);
 
         $asset_type = AssetType::where('asset_type_id', $request->asset_type_id)->first();
