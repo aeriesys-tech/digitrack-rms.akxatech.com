@@ -32,6 +32,18 @@
                                     <input type="text" placeholder="Enter Asset Type name" class="form-control" :class="{ 'is-invalid': errors.asset_type_name }" v-model="asset_type.asset_type_name"/>
                                     <span v-if="errors.asset_type_name" class="invalid-feedback">{{ errors.asset_type_name[0] }}</span>
                                 </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Geometry Type</label>
+                                    <select class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset_type.geometry_type">
+                                        <option value="">Select Geometry Type</option>
+                                        <option value="Cylindrical">Cylindrical </option>
+                                        <option value="Cubical">Cubical</option>
+                                        <option value="Conical">Conical</option>
+                                        <option value="Trapezoidal">Trapezoidal</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                    <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer text-end">
@@ -70,6 +82,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
 
+                                            <th @click="sort('geometry_type')">Geometry Type
+                                            <span>
+                                                <i v-if="meta.keyword=='geometry_type' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='geometry_type' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span></th>
+
                                         <th class="text-center" v-can="'asset_types.delete'">Status</th>
                                         <th class="text-center" v-can="'asset_types.update'">Actions</th>
                                     </tr>
@@ -82,6 +101,7 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{asset_type.asset_type_code}}</td>
                                         <td>{{ asset_type.asset_type_name }}</td>
+                                        <td>{{ asset_type?.geometry_type }}</td>
                                         <td class="text-center" v-can="'asset_types.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'asset_type' + asset_type.asset_type_id" :checked="asset_type.status" :value="asset_type.status" @change="deleteAssetType(asset_type)" />
@@ -140,6 +160,7 @@ export default {
                 asset_type_id: '',
                 asset_type_code: '',
                 asset_type_name: '',
+                geometry_type:'',
                 status: '',
             },
             status: true,
@@ -221,6 +242,7 @@ export default {
         },
 
         editAssetType(asset_type) {
+            console.log(asset_type)
             this.asset_type = asset_type;
             this.update = true;
             this.status = false;
@@ -257,6 +279,7 @@ export default {
             let vm = this;
             vm.asset_type.asset_type_code = "";
             vm.asset_type.asset_type_name = "";
+            vm.asset_type.geometry_type = "";
             vm.$refs.asset_type_code.focus();
             vm.errors = [];
             vm.status = true;

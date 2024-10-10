@@ -190,57 +190,7 @@
                                              <span v-if="errors?.diameter" class="invalid-feedback">{{ errors.diameter[0] }}</span>
                                             <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('diameter'))" class="invalid-feedback">{{ errors.zone_name[0] }}</span>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">No Of Zones </label><span class="text-danger"> *</span>
-                                            <input
-                                                type="number"
-                                                placeholder="Enter No Of Zones "
-                                                class="form-control"
-                                                :class="{ 'is-invalid': errors?.no_of_zones }"
-                                                v-model="asset.no_of_zones"
-                                                min="1"
-                                                @input="checkZoneValue($event, asset)"
-                                            />
-                                            <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
-                                        </div>
-                                        <!-- <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4">
-                                            <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                            <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index===0" />
-                                            <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
 
-                                            <div class="row g-2">
-                                                <div class="col pt-2">
-                                                    <label class="form-label">Height (in m)</label><span class="text-danger"> *</span>
-                                                    <input type="number" step="any" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
-                                                    <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
-                                                </div>
-                                                <div class="col pt-2">
-                                                    <label class="form-label">Diameter (in m)</label><span class="text-danger"> *</span>
-                                                    <input type="number" step="any" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
-                                                    <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
-                                                </div>
-                                            </div>
-                                        </div> -->
-
-                                          <div class="row zone-border g-2" v-for="(zone, index) in asset.zone_name" :key="index" >
-                                            <div class="col-md-4 mt-0">
-                                                <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                                <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index===0" />
-                                                <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
-                                            </div>
-
-                                            <div class="col-md-4 mt-0">
-                                                <label class="form-label">Height (in m)</label><span v-if="asset.geometry_type=='Cylindrical'" class="text-danger"> *</span>
-                                                <input type="number" step="any" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
-                                                <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
-                                            </div>
-
-                                            <div class="col-md-4 mt-0">
-                                                <label class="form-label">Diameter (in m)</label><span v-if="asset.geometry_type=='Cylindrical'" class="text-danger"> *</span>
-                                                <input type="number" step="any" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
-                                                <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
-                                            </div>
-                                        </div>
                                         <div class="row g-2 " >
                                             <div class="col-md-4">
                                                 <label class="form-label">Latitude</label>
@@ -376,7 +326,6 @@
                     asset_type_id: "",
                     latitude: "",
                     longitude: "",
-                    no_of_zones: 1,
                     status: "",
                     asset_attributes: [],
                     department_id: "",
@@ -388,11 +337,10 @@
                     area_id: "",
                     area_name: null,
                     radius: "",
-                    zone_name: [],
                     deleted_asset_attribute_values: [],
                     area_name: "",
                     deleted_asset_departments: [],
-                    deleted_asset_zones: [],
+
                     geometry_type: "",
                     height: "",
                     diameter: "",
@@ -401,9 +349,6 @@
                 voltage: {
                     color: "#ffffff",
                     voltage_code: "",
-                },
-                errors: {
-                    no_of_zones: [],
                 },
 
                 device_code: "",
@@ -421,9 +366,7 @@
                 errors: [],
                 status: true,
                 zones: [],
-                initial_zone_no: null,
-                new_zone_names: [],
-                prev_zone_names: [],
+
                 error_style: {
                     "border-color": "#dc3545",
                     "padding-right": "calc(1.5em + 0.812rem)",
@@ -440,9 +383,7 @@
                 vm.getAssetsDropdown();
                 if (to.name == "Assets.Create") {
                     // vm.$refs.asset_code.focus();
-                    vm.asset.zone_name.push({
-                        zone_name: "Overall",
-                    });
+
                 } else {
                     vm.status = false;
                     let uri = { uri: "getAssetdata", data: { asset_id: to.params.asset_id } };
@@ -450,14 +391,12 @@
                         .dispatch("post", uri)
                         .then(function (response) {
                             vm.asset = response.data.data;
-                            vm.initial_zone_no = vm.asset.no_of_zones;
-                            vm.prev_zone_names = vm.asset.zone_name;
                             vm.show_assets = response.data.data?.asset_attributes;
                             vm.asset.area_id = vm.asset.area.area_id;
                             vm.asset.area_name = vm.asset.area.area_name;
                             // vm.asset_departments =
                             vm.asset.deleted_asset_departments = [];
-                            vm.asset.deleted_asset_zones = [];
+
                             vm.asset.asset_attributes.map(function (element) {
                                 vm.deleted_asset_attribute_values.push(element.asset_attribute_value.asset_attribute_value_id);
                             });
@@ -481,65 +420,18 @@
                 }
             });
         },
-
-        watch: {
-            "asset.no_of_zones": function (newVal) {
-                let vm = this;
-                vm.asset.zone_name = [];
-                if (vm.asset.no_of_zones <= 0) {
-                    vm.asset.no_of_zones = 1;
-                    vm.asset.zone_name.push({
-                        zone_name: "Overall",
-                        height: null, // Add height field
-                        diameter: null, // Add diameter field
-                    });
-                }
-                if (vm.status) {
-                    for (let i = 0; i < vm.asset.no_of_zones; i++) {
-                        vm.asset.zone_name.push({
-                            zone_name: i === 0 ? "Overall" : null,
-                        });
-                    }
-                } else {
-                    vm.prev_zone_names.map(function (pre_element) {
-                        vm.asset.zone_name.push(pre_element);
-                    });
-                    if (vm.asset.no_of_zones && vm.asset.no_of_zones < vm.prev_zone_names.length) {
-                        vm.asset.no_of_zones = vm.prev_zone_names.length;
-                    }
-                    if (vm.asset.no_of_zones && vm.asset.no_of_zones > vm.prev_zone_names.length) {
-                        let number = vm.asset.no_of_zones - vm.prev_zone_names.length;
-                        vm.new_zone_names = [];
-                        for (let i = 0; i < number; i++) {
-                            vm.new_zone_names.push({
-                                zone_name: null,
-                            });
-                        }
-                        vm.new_zone_names.map(function (element) {
-                            vm.asset.zone_name.push(element);
-                        });
-                    }
-                }
-                console.log("vm.asset.zone_name:----", vm.asset.zone_name);
-            },
-        },
-
-        computed: {
-            // selectedColorDisplay() {
-            //     return this.selectedColorName ? `${this.selectedColorName} (${this.selectedColor})` : 'Select Color';
-            // },
-            getComponentCode() {
-                // this.device_code = [this.voltage.voltage_code[0], this.watt_rating[0], this.frame.substring(0, 5), this.mounting[0], this.section[0], this.make[0], this.speed[0], this.asset.serial_no.substring(0, 5)]
-                this.device_code = [this.voltage.voltage_code, this.watt_rating, this.frame, this.mounting, this.section, this.make, this.speed, this.asset.serial_no];
-                return this.device_code.join("");
-                // if(this.voltage.voltage_code[0]){
-                //     return this.device_code.join('');
-                // }else{
-                //     return this.device_code.join('-');
-                // }
-            },
-        },
     methods: {
+            geometryTypeByAssetTypeId() 
+            {
+                if(this.asset.asset_attributes.length){
+                    const assetType = this.asset.asset_attributes[0]?.asset_attribute_types.find(type => type.asset_type.asset_type_id === this.asset.asset_type_id);
+                    if (assetType && assetType.asset_type.geometry_type) {
+                        this.asset.geometry_type = assetType.asset_type.geometry_type;
+                    }
+                }else{
+                    this.asset.geometry_type = ''
+                }
+            },
             validateNumberLength(field) {
                 if (field.asset_attribute_value.field_value) {
                     const valueStr = String(field.asset_attribute_value.field_value);
@@ -551,47 +443,6 @@
                     }
                 }
             },
-            getZoneNameError(index) {
-                let zone_names = Object.entries(this.errors);
-                let err = zone_names.filter(function (element) {
-                    return element[0].includes("zone_name") && element[0].includes(index);
-                });
-                console.log(err);
-                if (err.length) {
-                    return "Zone name field is required";
-                }
-            },
-            checkZoneValue(event, asset) {
-                if (this.asset.no_of_zones <= 0) {
-                    this.asset.no_of_zones = 1; // Reset to minimum allowed value
-                    this.asset.zone_name.push({
-                        zone_name: "Overall",
-                    });
-                }
-
-                let value = event?.target?.value?.replace(/[^0-9]/g, "");
-
-                if (value >= 1) {
-                    let popped_data = asset.no_of_zones - value;
-                    for (let i = 0; i < popped_data; i++) {
-                        let del_asset_zone = asset.zone_name.pop();
-                        this.asset.deleted_asset_zones.push(del_asset_zone.asset_zone_id);
-                        this.prev_zone_names.pop();
-                    }
-                }
-                asset.no_of_zones = asset.zone_name.length;
-            },
-
-            // selectColor(colorValue, colorName, field) {
-            //     this.selectedColor = colorValue;
-            //     this.selectedColorName = colorName;
-            //     this.dropdownVisible = false;
-            //     field.field_value = colorValue;
-            //     this.updateAssetParameters(field);
-            // },
-            // toggleDropdown() {
-            //     this.dropdownVisible = !this.dropdownVisible;
-            // },
             updateAssetParameters(field) {
                 let apid = this.asset.asset_attributes.filter(function (element) {
                     return element.asset_attribute_id == field.asset_attribute_id;
@@ -646,7 +497,6 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-
             updateDepartemnts(event, asset_departments) {
                 let vm = this;
                 const isChecked = event.target.checked;
@@ -761,18 +611,7 @@
                 //     this.errors.area_id = ["Area id is required"];
                 //     isValid = false;
                 // }
-                if (!this.asset.no_of_zones) {
-                    this.errors.no_of_zones = ["No. of zones id is required"];
-                    isValid = false;
-                } else {
-                    // Validate dynamic zone fields
-                    this.asset.zone_name.forEach((zone, index) => {
-                        if (!zone.zone_name) {
-                            this.errors[`zone_name_${index}`] = [`Zone ${index + 1} is required`];
-                            isValid = false;
-                        }
-                    });
-                }
+
                 for (const field of Object.values(this.asset.asset_attributes)) {
                     if (field.is_required && !field.asset_attribute_value.field_value) {
                         if (field.field_type === "Color") {
@@ -881,9 +720,7 @@
                 vm.show_assets = [];
                 vm.asset.asset_attributes = [];
                 vm.asset.asset_type_id = "";
-                let discard_zone = vm.asset.zone_name.filter(function (element) {
-                    element.zone_name = "";
-                });
+
                 // vm.$refs.asset_code.focus();
             },
             reset() {
@@ -905,10 +742,12 @@
                         // loader.hide();
                         vm.show_assets = response.data.data;
                         vm.asset.asset_attributes = response.data.data;
+                        vm.geometryTypeByAssetTypeId();
                     })
                     .catch(function (error) {
                         // loader.hide();
-                        vm.errors = error.response.data.errors;
+                        console.log('error ---', error)
+                        // vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },

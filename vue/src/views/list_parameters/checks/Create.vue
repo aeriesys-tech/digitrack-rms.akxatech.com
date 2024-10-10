@@ -203,7 +203,7 @@
                             vm.check.check_asset_types.map(function(ele){
                                 vm.check.asset_types_obj.push({asset_type_code: ele.asset_types.asset_type_code, 
                                     asset_type_id: ele.asset_types.asset_type_id, status: ele.asset_types.status,
-                                    asset_type_name: ele.asset_types.asset_type_name})
+                                    asset_type_name: ele.asset_types.asset_type_name, geometry_type: ele.asset_types.geometry_type})
                             })
                         })
                         .catch(function (error) {
