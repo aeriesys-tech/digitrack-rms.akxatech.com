@@ -23,45 +23,66 @@
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label">Asset</label><span class="text-danger"> *</span>
-                                <select class="form-control" :class="{ 'is-invalid': errors.asset_id }" v-model="spare.asset_id">
+                                <select class="form-control" :class="{ 'is-invalid': errors.asset_id }"
+                                    v-model="spare.asset_id" @change="getScripts">
                                     <option value="">Select Asset</option>
-                                    <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">{{asset.asset_name}}</option>
+                                    <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">
+                                        {{ asset.asset_name }}</option>
                                 </select>
                                 <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">Analysis</label><span class="text-danger"> *</span>
-                                <select class="form-control" :class="{ 'is-invalid': errors.location }" v-model="spare.location">
-                                    <option value="">Select Analysis</option>
-                                    <option v-for="location, key in locations" :key="key" :value="location.location">{{location.location}}</option>
+                                <label class="form-label">Script</label><span class="text-danger"> *</span>
+                                <select class="form-control" :class="{ 'is-invalid': errors.script }"
+                                    v-model="spare.script" @change="getAnalysis">
+                                    <option value="">Select Script</option>
+                                    <option v-for="scr, key in scripts" :value="scr" :key="key">{{ scr }}</option>
                                 </select>
-                                <span v-if="errors.location" class="invalid-feedback">{{ errors.location[0] }}</span>
+                                <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0]
+                                    }}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Analysis</label>
+                                <select class="form-control" :class="{ 'is-invalid': errors.location }"
+                                    v-model="spare.location">
+                                    <option value="">Select Analysis</option>
+                                    <option v-for="location, key in locations" :key="key" :value="location.location">
+                                        {{ location.location }}</option>
+                                </select>
+                                <span v-if="errors.location" class="invalid-feedback">{{ errors.location[0]
+                                    }}</span>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Data Source</label><span class="text-danger"> *</span>
-                                <select class="form-control" :class="{ 'is-invalid': errors.datasource }" v-model="spare.datasource">
+                                <select class="form-control" :class="{ 'is-invalid': errors.datasource }"
+                                    v-model="spare.datasource">
                                     <option value="">Select Data Source</option>
                                     <option value="File">File</option>
                                 </select>
-                                <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0] }}</span>
+                                <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0]
+                                    }}</span>
                             </div>
 
                             <div class="col-md-2">
                                 <label class="form-label">From Date</label><span class="text-danger"> *</span>
-                                <input type="date" class="form-control" :class="{ 'is-invalid': errors.from_date }" v-model="spare.from_date" />
-                                <span v-if="errors.from_date" class="invalid-feedback">{{ errors.from_date[0] }}</span>
+                                <input type="date" class="form-control" :class="{ 'is-invalid': errors.from_date }"
+                                    v-model="spare.from_date" />
+                                <span v-if="errors.from_date" class="invalid-feedback">{{ errors.from_date[0]
+                                    }}</span>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">To Date</label><span class="text-danger"> *</span>
-                                <input type="date" class="form-control" :class="{ 'is-invalid': errors.to_date }" v-model="spare.to_date" />
+                                <input type="date" class="form-control" :class="{ 'is-invalid': errors.to_date }"
+                                    v-model="spare.to_date" />
                                 <span v-if="errors.to_date" class="invalid-feedback">{{ errors.to_date[0] }}</span>
                             </div>
-                            <div class="col-md-1 mt-auto">
+                            <div class="col-md-12 mt-3 text-end">
                                 <button class="btn btn-primary" @click="search">Search</button>
                             </div>
                         </div>
+
 
                         <div class="table-responsive">
                             <table class="table table-bordered mb-0">
@@ -69,15 +90,19 @@
                                     <tr v-for="(item, index) in groupedResults" :key="index">
 
                                         <td class="text-center" v-if="item[0]">
-                                            <h6>{{ dateFormat(item[0]?.campaign?.job_date_time)  || '' }}</h6>
-                                            <img :src="item[0]?.file" height="180" />
+                                            <h6>{{ dateFormat(item[0]?.campaign?.job_date_time) || '' }}</h6>
+                                            <img class="mb-2" :src="item[0]?.file" height="180" />
+                                            <h6 v-if="item[0]?.torpedo_values">Torpedo Values: {{
+                                                item[0]?.torpedo_values }} </h6>
                                         </td>
                                         <td class="text-center" v-if="item[1]">
                                             <h6>{{ dateFormat(item[1]?.campaign?.job_date_time) || '' }}</h6>
-                                            <img :src="item[1]?.file" height="180" />
+                                            <img class="mb-2" :src="item[1]?.file" height="180" />
+                                            <h6 v-if="item[1]?.torpedo_values">Torpedo Values: {{
+                                                item[1]?.torpedo_values }}</h6>
                                         </td>
                                     </tr>
-                                    <tr v-if="groupedResults.length==0">
+                                    <tr v-if="groupedResults.length == 0">
                                         <td colspan="3" class="text-center text-danger">No records found</td>
                                     </tr>
                                 </tbody>
@@ -91,101 +116,118 @@
 </template>
 
 <script>
-    import moment from "moment";
-    export default {
-        components: {},
-        data() {
-            return {
-                spare: {
-                    asset_id: "",
-                    location: "",
-                    from_date: "",
-                    to_date: "",
-                    datasource:"",
-                },
+import moment from "moment";
+export default {
+    components: {},
+    data() {
+        return {
+            spare: {
+                asset_id: "",
+                script: '',
+                location: "",
+                from_date: "",
+                to_date: "",
+                datasource: "",
+            },
 
-                assets: [],
-                locations: [],
-                campaign_results: [],
+            assets: [],
+            scripts: [],
+            locations: [],
+            campaign_results: [],
 
 
-                wall: false,
-                bottom: false,
-                errors: [],
-            };
+            wall: false,
+            bottom: false,
+            errors: [],
+        };
+    },
+
+    mounted() {
+        this.getAssets();
+        // this.spare.from_date = moment().format("yyyy-MM-DD");
+        // this.spare.to_date = moment().add(1, "day").format("yyyy-MM-DD");
+        this.spare.from_date = moment().subtract(1, 'day').format("YYYY-MM-DD");
+        this.spare.to_date = moment().format("yyyy-MM-DD");
+    },
+    computed: {
+        groupedResults() {
+            const results = this.campaign_results;
+            const grouped = [];
+
+            for (let i = 0; i < results.length; i += 2) {
+                grouped.push(results.slice(i, i + 2));
+            }
+
+            return grouped;
+        },
+    },
+    methods: {
+        getAssets() {
+            let vm = this;
+            let loader = vm.$loading.show();
+            vm.$store
+                .dispatch("post", { uri: "getAssets" })
+                .then((response) => {
+                    loader.hide();
+                    vm.assets = response.data.data;
+
+                })
+                .catch(function (error) {
+                    loader.hide();
+                    vm.errors = error.response.data.errors;
+                    vm.$store.dispatch("error", error.response.data.message);
+                });
+        },
+        getScripts() {
+            let vm = this;
+            let loader = vm.$loading.show();
+            vm.$store
+                .dispatch("post", { uri: "getScripts", data: vm.spare })
+                .then((response) => {
+                    loader.hide();
+                    vm.scripts = response.data;
+                })
+                .catch(function (error) {
+                    loader.hide();
+                    vm.errors = error.response.data.errors;
+                    vm.$store.dispatch("error", error.response.data.message);
+                });
+        },
+        getAnalysis() {
+            let vm = this;
+            let loader = vm.$loading.show();
+            vm.$store
+                .dispatch("post", { uri: "getLocations", data: vm.spare })
+                .then((response) => {
+                    loader.hide();
+                    vm.locations = response.data;
+                })
+                .catch(function (error) {
+                    loader.hide();
+                    vm.errors = error.response.data.errors;
+                    vm.$store.dispatch("error", error.response.data.message);
+                });
+        },
+        search() {
+            let vm = this;
+            let loader = vm.$loading.show();
+            vm.$store
+                .dispatch("post", { uri: "campaignResultImages", data: vm.spare })
+                .then((response) => {
+                    loader.hide();
+                    vm.campaign_results = response.data.data;
+                    vm.errors = [];
+                })
+                .catch(function (error) {
+                    loader.hide();
+                    vm.errors = error.response.data.errors;
+                    vm.$store.dispatch("error", error.response.data.message);
+                });
         },
 
-        mounted() {
-            this.getAssets();
-            // this.spare.from_date = moment().format("yyyy-MM-DD");
-            // this.spare.to_date = moment().add(1, "day").format("yyyy-MM-DD");
-            this.spare.from_date = moment().subtract(1, 'day').format("YYYY-MM-DD");
-            this.spare.to_date = moment().format("yyyy-MM-DD");
+        dateFormat(value) {
+            return moment(value).format("DD-MM-yyyy HH:mm");
         },
-        computed: {
-            groupedResults() {
-                const results = this.campaign_results;
-                const grouped = [];
-
-                for (let i = 0; i < results.length; i += 2) {
-                    grouped.push(results.slice(i, i + 2));
-                }
-
-                return grouped;
-            },
-        },
-        methods: {
-            getAssets() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssets" })
-                    .then((response) => {
-                        loader.hide();
-                        vm.assets = response.data.data;
-                        vm.getAnalysis();
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            getAnalysis() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getLocations" })
-                    .then((response) => {
-                        loader.hide();
-                        vm.locations = response.data;
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-            search() {
-                let vm = this;
-                let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "campaignResultImages", data: vm.spare })
-                    .then((response) => {
-                        loader.hide();
-                        vm.campaign_results = response.data.data;
-                        vm.errors = [];
-                    })
-                    .catch(function (error) {
-                        loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
-            },
-
-            dateFormat(value) {
-                return moment(value).format("DD-MM-yyyy HH:mm");
-            },
-        },
-    };
+    },
+};
 </script>
