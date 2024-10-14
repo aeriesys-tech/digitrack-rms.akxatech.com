@@ -15,7 +15,8 @@ class CampaignResult extends Model
         'asset_id',
         'location',
         'date',
-        'file'
+        'file',
+        'torpedo_values'
     ];
 
     protected $primaryKey = 'campaign_result_id';

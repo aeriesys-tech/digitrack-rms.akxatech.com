@@ -9,13 +9,26 @@ use App\Models\Campaign;
 use GuzzleHttp\Client;
 use App\Http\Resources\CampaignResource;
 use App\Http\Resources\CampaignResultResource;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Models\AssetDataSource;
 
 class CampaignController extends Controller
 {
-    public function getLocations()
+    public function getLocations(Request $request)
     {
-        $locations = CampaignResult::select('location')->distinct()->get();
+        $locations = CampaignResult::whereHas('Campaign', function($que) use($request){
+            $que->where('script', $request->script);
+        })->select('location')->distinct()->get();
+
         return $locations;
+    }
+
+    public function getScripts(Request $request)
+    {
+        $scripts = AssetDataSource::where('asset_id', $request->asset_id)->distinct()->pluck('script'); 
+        return response()->json($scripts);
     }
 
     public function paginateCampaigns(Request $request)
@@ -83,45 +96,50 @@ class CampaignController extends Controller
         //CampaignResult 
         $client = new Client();
         $fullFilePath = $filePath . '/' . $fileName;
-        
-        $response = $client->post('http://127.0.0.1:5000/runCampain', [
-            'json' => [
+
+        //Ladle Scanner
+        if ($request->script == "Ladle Scanner") 
+        {
+            $response = $client->post('http://127.0.0.1:5000/runCampain', [
+                'json' => [
                     'pdf_file' => $fullFilePath 
                 ]
-            ]
-        );
+            ]);
 
-        // //Ladle Scanner
-        // if ($request->script == "Ladle Scanner") 
-        // {
-        //     $response = $client->post('http://127.0.0.1:5000/runCampain', [
-        //         'json' => [
-        //             'image_file' => $fullFilePath 
-        //         ]
-        //     ]);
-        // } 
-        // //Torpedo Scanner
-        // elseif ($request->script == "Torpedo Scanner") 
-        // {
-        //     $response = $client->post('http://127.0.0.1:5000/runTorpedo', [
-        //         'json' => [
-        //             'pdf_file' => $fullFilePath 
-        //         ]
-        //     ]);
-        // }
-
-        $responseContent = $response->getBody()->getContents();
-        $responseDatas = json_decode($responseContent, true);
-
-        foreach($responseDatas['result'] as $responseData)
+            $responseContent = $response->getBody()->getContents();
+            $responseDatas = json_decode($responseContent, true);
+    
+            foreach($responseDatas['result'] as $responseData)
+            {
+                $compaign_Result = CampaignResult::create([
+                    'campaign_id' => $campaign->campaign_id,
+                    'asset_id' => $campaign->asset_id,
+                    'location' => $responseData['location'],
+                    'file' => $responseData['file'],
+                    'date' => $responseData['date']
+                ]);   
+            }
+        }
+         
+        //Torpedo Scanner
+        if ($request->script == "Torpedo Scanner") 
         {
-            $compaign_Result = CampaignResult::create([
+            $response = $client->post('http://127.0.0.1:5000/runTorpedo', [
+                'json' => [
+                    'pdf_file' => $fullFilePath
+                ]
+            ]);
+            $responseContent = $response->getBody()->getContents();
+            $responseDatas = json_decode($responseContent, true);
+    
+            // return $responseDatas['result']['torpedo_values'];
+            CampaignResult::create([
                 'campaign_id' => $campaign->campaign_id,
                 'asset_id' => $campaign->asset_id,
-                'location' => $responseData['location'],
-                'file' => $responseData['file'],
-                'date' => $responseData['date']
-            ]);   
+                'file' => $campaign->file,
+                'date' => Carbon::now(),
+                'torpedo_values' => implode(',', $responseDatas['result']['torpedo_values'])
+            ]);
         }
 
         //Images
@@ -137,17 +155,18 @@ class CampaignController extends Controller
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            'location' => 'required',
+            'location' => 'nullable|sometimes',
             'from_date' => 'nullable|date',
             'to_date' => 'required|date',
-            'datasource' => 'required'
+            'datasource' => 'required',
+            'script' => 'required'
         ]);
 
         $fromDate = $request->from_date ? $request->from_date . ' 00:00:00' : '1970-01-01 00:00:00';
         $toDate = $request->to_date . ' 23:59:59';
 
         $compaign_result_query = CampaignResult::join('campaigns', 'campaigns.campaign_id', '=', 'campaign_results.campaign_id')
-            ->whereBetween('campaigns.job_date_time', [$fromDate, $toDate])->where('campaigns.datasource', $request->datasource)
+            ->whereBetween('campaigns.job_date_time', [$fromDate, $toDate])->where('campaigns.datasource', $request->datasource)->where('campaigns.script', $request->script)
             ->where('campaign_results.asset_id', $request->asset_id)->where('campaign_results.location', $request->location)->orderBy('campaigns.job_date_time')
             ->select('campaign_results.*');
 

@@ -20,7 +20,8 @@ class CampaignResultResource extends JsonResource
             'location' => $this->location,
             'date' => $this->date,
             'file' => $this->file ? config('app.asset_url').'files/'.$this->file : null,
-            'status' => $this->deleted_at?false:true
+            'status' => $this->deleted_at?false:true,
+            'torpedo_values' => $this->torpedo_values ?? Null
         ];
     }
 }

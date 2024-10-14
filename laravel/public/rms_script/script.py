@@ -149,7 +149,7 @@ def pdf_converter(filepath):
 # Get the filename from path provided by the user
 def temp_scanner(filepath):
     file_nm = os.path.split(filepath)[1]
-    # print(file_nm)
+    print('file_nm:-----', file_nm, os.path.split(filepath)[0])
            
     # Read and convert the image to grayscale
     image1 = cv2.imread(file_nm)
@@ -165,7 +165,7 @@ def temp_scanner(filepath):
     #cv2.destroyAllWindows()
     
     
-    img_path = os.path.join('.','white_text_gray' + '.jpg')
+    img_path = os.path.join(os.path.split(filepath)[0],'white_text_gray' + '.jpg')
     img_path
 
     result = ocr.ocr(img_path)
@@ -205,8 +205,7 @@ def temp_scanner(filepath):
     # print(int_lst_unq[0:10])
     
     top_temp = int_lst_unq[0:10]
-    
-    os.remove('white_text_gray.jpg')
+    os.remove(os.path.join(os.path.split(filepath)[0],'white_text_gray' + '.jpg'))
     
     return image1,top_temp
 
@@ -233,15 +232,10 @@ def runCampain():
 @app.route('/runTorpedo', methods=['POST'])
 def runTorpedo():
     data = request.get_json()
-    image_file = data['image_file']
-    # print('image_file:----', image_file)
+    image_file = data['pdf_file']
+    # print('image_file:------', image_file)
     result = temp_scanner(image_file)
-    send_result = result[1]
-    print('result:-----', result[1])
-    # for i in result:
-    #     spl = i.split('_')
-    #     send_result.append({'name': spl[0], 'location': spl[1], 'date': spl[2].split('.')[0], 'file': i})
-    
+    send_result = {'torpedo_values': result[1].tolist()}
     return jsonify({'status': 'success', 'message': 'Files Generated Successfully', 'result': send_result }), 200
 
 
