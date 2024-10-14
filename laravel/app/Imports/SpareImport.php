@@ -75,14 +75,11 @@ class SpareImport implements ToCollection, WithHeadingRow
             {
                 $normalizedKey = $this->normalizeKey($key);
 
-                // Skip the known keys like spare_type, spare_code, spare_name, and asset_type
                 if (!in_array($normalizedKey, ['spare_type', 'spare_code', 'spare_name', 'asset_type']) && !empty($value)) 
                 {
-                    // Fetch spare attribute using normalized key
                     $spareAttribute = $spareAttributes->get($normalizedKey); 
                     if (!$spareAttribute) 
                     {
-                        // Attempt to find the attribute using a different normalization method (e.g., title casing)
                         $spareAttribute = $spareAttributes->get(ucwords(str_replace('_', ' ', $normalizedKey)));
                     }
 
@@ -91,12 +88,14 @@ class SpareImport implements ToCollection, WithHeadingRow
                         $fieldValue = trim($value);
 
                         // Process the field value for number or date types
+                        $fieldValue = $this->convertToHexIfColor($fieldValue);
+                        
                         if (is_numeric($fieldValue)) {
                             $fieldValue = $fieldValue;
                         }
 
                         if ($this->isDate($fieldValue)) {
-                            $fieldValue = Carbon::parse($fieldValue);
+                            $fieldValue = Carbon::createFromFormat('d/m/Y', $fieldValue)->format('Y-m-d');
                         }
 
                         //SpareAttributeValue
@@ -129,5 +128,41 @@ class SpareImport implements ToCollection, WithHeadingRow
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    private function convertToHexIfColor($value)
+    {
+        if ($this->isColorName($value)) {
+            return $this->convertColorToHex($value);
+        }
+
+        return $value;
+    }
+
+    private function isColorName($value)
+    {
+        $colors = [
+            'red', 'blue', 'green', 'yellow', 'black', 'white', 'gray', 'orange', 'pink', 'purple', 'brown'
+        ];
+
+        return in_array(strtolower($value), $colors);
+    }
+
+    private function convertColorToHex($colorName)
+    {
+        $colors = [
+            'red' => '#FF0000',
+            'blue' => '#0000FF',
+            'green' => '#008000',
+            'yellow' => '#FFFF00',
+            'black' => '#000000',
+            'white' => '#FFFFFF',
+            'gray' => '#808080',
+            'orange' => '#FFA500',
+            'pink' => '#FFC0CB',
+            'purple' => '#800080',
+            'brown' => '#A52A2A',
+        ];
+        return $colors[strtolower($colorName)] ?? $colorName;
     }
 }

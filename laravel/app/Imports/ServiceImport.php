@@ -89,6 +89,7 @@ class ServiceImport implements ToCollection, WithHeadingRow
                     {
                         $fieldValue = trim($value);
 
+                        $fieldValue = $this->convertToHexIfColor($fieldValue);
                         if ($this->isDate($fieldValue)) {
                             $fieldValue = Carbon::parse($fieldValue)->format('Y-m-d'); 
                         }
@@ -121,5 +122,41 @@ class ServiceImport implements ToCollection, WithHeadingRow
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    private function convertToHexIfColor($value)
+    {
+        if ($this->isColorName($value)) {
+            return $this->convertColorToHex($value);
+        }
+
+        return $value;
+    }
+
+    private function isColorName($value)
+    {
+        $colors = [
+            'red', 'blue', 'green', 'yellow', 'black', 'white', 'gray', 'orange', 'pink', 'purple', 'brown'
+        ];
+
+        return in_array(strtolower($value), $colors);
+    }
+
+    private function convertColorToHex($colorName)
+    {
+        $colors = [
+            'red' => '#FF0000',
+            'blue' => '#0000FF',
+            'green' => '#008000',
+            'yellow' => '#FFFF00',
+            'black' => '#000000',
+            'white' => '#FFFFFF',
+            'gray' => '#808080',
+            'orange' => '#FFA500',
+            'pink' => '#FFC0CB',
+            'purple' => '#800080',
+            'brown' => '#A52A2A',
+        ];
+        return $colors[strtolower($colorName)] ?? $colorName;
     }
 }

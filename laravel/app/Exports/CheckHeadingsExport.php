@@ -3,9 +3,10 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Illuminate\Contracts\View\View;
 
-class CheckHeadingsExport implements FromView
+class CheckHeadingsExport implements FromView, WithColumnWidths
 {
     public function view(): View
     {
@@ -16,14 +17,15 @@ class CheckHeadingsExport implements FromView
     {
         return [
             'A' => 14,
-            'B' => 35,
+            'B' => 14,
             'C' => 14,
             'D' => 14,
             'E' => 12,
             'F' => 14,
-            'G' => 12,
+            'G' => 25,
             'H' => 12,
-            'I' => 12
+            'I' => 18,
+            'J' => 30
         ];
     }
 }
