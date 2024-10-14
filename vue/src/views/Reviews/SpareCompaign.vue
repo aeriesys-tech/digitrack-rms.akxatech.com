@@ -92,13 +92,13 @@
                                         <td class="text-center" v-if="item[0]">
                                             <h6>{{ dateFormat(item[0]?.campaign?.job_date_time) || '' }}</h6>
                                             <img class="mb-2" :src="item[0]?.file" height="180" />
-                                            <h6 v-if="item[0]?.torpedo_values">Torpedo Values: {{
+                                            <h6 v-if="item[0]?.torpedo_values"><b>Top 10 Values:</b> {{
                                                 item[0]?.torpedo_values }} </h6>
                                         </td>
                                         <td class="text-center" v-if="item[1]">
                                             <h6>{{ dateFormat(item[1]?.campaign?.job_date_time) || '' }}</h6>
                                             <img class="mb-2" :src="item[1]?.file" height="180" />
-                                            <h6 v-if="item[1]?.torpedo_values">Torpedo Values: {{
+                                            <h6 v-if="item[1]?.torpedo_values"><b>Top 10 Values:</b> {{
                                                 item[1]?.torpedo_values }}</h6>
                                         </td>
                                     </tr>

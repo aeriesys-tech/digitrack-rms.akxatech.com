@@ -106,8 +106,10 @@
                                     <tr v-for="(item, index) in groupedResults" :key="index">
                                         <td class="text-center" v-if="item[0]">
                                             <h6>{{ item[0]?.location }}</h6>
-                                            <h6 v-if="item[0]?.torpedo_values">Torpedo Values: {{
-                                                item[0]?.torpedo_values }} </h6>
+                                            <h6 v-if="item[0]?.torpedo_values">
+                                                <b>Top 10 Values:</b> {{
+                                                    item[0]?.torpedo_values }}
+                                            </h6>
                                             <img :src="item[0]?.file" height="180" width="250" />
                                         </td>
                                         <td class="text-center" v-if="item[1]">
