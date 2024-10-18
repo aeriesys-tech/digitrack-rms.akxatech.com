@@ -6,6 +6,13 @@ from datetime import date
 import os
 from flask_cors import CORS
 from flask import Flask, request, jsonify
+import textwrap
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+from paddleocr import PaddleOCR, draw_ocr
+
+ocr = PaddleOCR(lang = 'en',use_angle_cls=True)
 
 # Get the filename without extension from path provided by the user
 def pdf_converter(filepath):
@@ -139,6 +146,71 @@ def pdf_converter(filepath):
 # print(filepath)
 # pdf_converter(filepath)
 
+# Get the filename from path provided by the user
+def temp_scanner(filepath):
+    file_nm = os.path.split(filepath)[1]
+    print('file_nm:-----', file_nm, os.path.split(filepath)[0])
+           
+    # Read and convert the image to grayscale
+    image1 = cv2.imread(filepath)
+    gray = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        
+        
+    #cv2.imshow('gray_image',gray)
+
+    # save grayscale image
+    cv2.imwrite(os.path.join(os.path.split(filepath)[0] , 'white_text_gray.jpg'), gray)
+    cv2.waitKey(0)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+    
+    
+    img_path = os.path.join(os.path.split(filepath)[0],'white_text_gray' + '.jpg')
+    img_path
+
+    result = ocr.ocr(img_path)
+    
+    # storing the results in a list
+    tb_data = [] 
+    for i in range(0,len(result[0])):
+        val = result[0][i][1][0]
+        tb_data.append(val)
+        
+    #Applying data filters
+    filtered_data = []
+    
+    #splitting the data if digits are more than 3 as max temp expected is 500
+    for i in tb_data:
+        if len(i)>3:
+            
+            new_dig = textwrap.wrap(i,3)
+            filtered_data.extend(new_dig)
+            
+        else:
+            
+            filtered_data.append(i)
+    
+    #Converting list to numpy array of type int
+    int_lst = np.array(filtered_data, dtype=int) 
+    int_lst_unq = np.unique(int_lst)
+    
+    #Filtering the list for min and max temp
+    [np.nan if (x<30 or x>500) else x for x in int_lst_unq ]
+    
+    ##<Arrya_name[::-1]>.sort() sorts the array in place, whereas np.sort(temp)[::-1] creates a new array
+    
+    int_lst_unq[::-1].sort() ## Sorting in descending order using [::-1]
+    
+    #Top 10 temperature
+    # print(int_lst_unq[0:10])
+    
+    top_temp = int_lst_unq[0:10]
+    os.remove(os.path.join(os.path.split(filepath)[0],'white_text_gray' + '.jpg'))
+    print('top_temp:----', top_temp)
+    return image1,top_temp
+
+#filepath = input("Enter File Path: ")
+#temp_scanner(filepath)
 
 app = Flask(__name__)
 CORS(app)
@@ -146,8 +218,8 @@ CORS(app)
 @app.route('/runCampain', methods=['POST'])
 def runCampain():
     data = request.get_json()
-    pdf_file = data.get('pdf_file')
-    print('pdf_file:----', pdf_file)
+    pdf_file = data['pdf_file']
+    # print('pdf_file:----', pdf_file)
     result = pdf_converter(pdf_file)
     send_result = []
     for i in result:
@@ -155,6 +227,17 @@ def runCampain():
         send_result.append({'name': spl[0], 'location': spl[1], 'date': spl[2].split('.')[0], 'file': i})
     
     return jsonify({'status': 'success', 'message': 'Files Generated Successfully', 'result': send_result }), 200
+
+
+@app.route('/runTorpedo', methods=['POST'])
+def runTorpedo():
+    data = request.get_json()
+    image_file = data['pdf_file']
+    # print('image_file:------', image_file)
+    result = temp_scanner(image_file)
+    send_result = {'torpedo_values': result[1].tolist()}
+    return jsonify({'status': 'success', 'message': 'Files Generated Successfully', 'result': send_result }), 200
+
 
 # Run the Flask application
 if __name__ == '__main__':
