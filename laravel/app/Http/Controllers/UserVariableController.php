@@ -20,10 +20,10 @@ class UserVariableController extends Controller
             'keyword' => 'required'
         ]);
 
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
         $query =  UserVariable::query();
 
-        $query->where('plant_id', $authPlantId);
+        // $query->where('plant_id', $authPlantId);
 
         if(isset($request->plant_id))
         {

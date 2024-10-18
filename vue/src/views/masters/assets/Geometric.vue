@@ -2,11 +2,15 @@
     <div class="card card-one" v-if="assets">
         <div class="card-header text-center">
             <h6 class="card-title">{{ assets.asset_name }}</h6>
+
         </div>
         <div class="card-body">
-            <h6 class="mb-3"><span class="text-primary">Note:</span> 1 meter=10px</h6>
+            <h6 class="mb-3"><span class="text-primary">Note:</span> 1 meter={{meter}}px</h6>
+            <div class="col-md-3 mb-4">
+                <input class="form-control" type="number" v-model="meter">
+            </div>
             <div class="row">
-                <div class="col-md-4 align-items-center justify-content-center">
+                <div class="col-md-6 align-items-center justify-content-center">
                     <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;margin-left:35px;`">Dia={{Number(assets.diameter)}} (m)</h6>
                     <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; margin-left:35px;` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
                     <div class="row">
@@ -19,7 +23,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4" v-if="display_asset_zone">
+                <div class="col-md-6" v-if="display_asset_zone">
                     <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter)}} (m)</h6>
                     <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; ` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
                     <div v-for="zone,key in assets.zone_name" :key="key" class="zone-container" :style="`height:${Number(zone.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:1px solid gray`">
@@ -44,7 +48,8 @@
                             :title="zone.zone_name"
                         >
                             <div class="zone-name-container2" style="color: #41505f;">
-                                <span class="text-nowrap">{{ Number(((spare.quantity / totalQuantity(zone.asset_spares)) * Number(zone.height)) * meter).toFixed(2)}} %</span>
+                                <span class="text-nowrap">
+                                {{ (Number((spare.quantity / totalQuantity(zone.asset_spares))) * 100).toFixed(2) }} %</span>
                             </div>
 
                             <span style="color: black;">{{ spare?.spare?.spare_name }} ({{ spare.quantity }})</span>

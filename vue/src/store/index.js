@@ -14,7 +14,7 @@ export default createStore({
     page: '',
     asset_id: '',
     assets: '',
-    meter: '10',
+    meter: '50',
   },
   getters: {
     user(state) {

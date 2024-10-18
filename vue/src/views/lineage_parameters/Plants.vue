@@ -155,7 +155,7 @@
                                     </tr>
                                     <tr v-for="plant, key in plants" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{plant.Area.area_name}}</td>
+                                        <td>{{plant?.Area?.area_name}}</td>
                                         <td>{{plant.plant_code}}</td>
                                         <td>{{plant.plant_name }}</td>
                                         <td>{{plant.latitude }}</td>

@@ -17,7 +17,7 @@ class UserVariableResource extends JsonResource
                     'variable_id' => $variable->variable_id,
                     'variable' => new VariableResource($variable->Variable),
                     'asset_zone_id' => $variable->asset_zone_id,
-                    'asset_zone' => new AssetZoneResource($variable->AssetZone),
+                    // 'asset_zone' => new AssetZoneResource($variable->AssetZone),
                     'value' => $variable->value,
                 ];
             });
