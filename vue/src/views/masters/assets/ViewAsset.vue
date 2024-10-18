@@ -85,7 +85,7 @@
                                 <div class="row g-2">
                                     <div class="col-md-3" v-can="'assetSpares.create'">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
-                                        <label class="form-label">Spare</label>
+                                        <label class="form-label">Spare</label><span class="text-danger">*</span>
                                         <search
                                             :class="{ 'is-invalid': errors.spare_id }"
                                             :customClass="{ 'is-invalid': errors.spare_id }"
@@ -105,7 +105,7 @@
                                         <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
-                                        <label class="form-label">Max Quantity</label>
+                                        <label class="form-label">Max Quantity</label><span class="text-danger">*</span>
                                         <input type="number" class="form-control" placeholder="Enter Max Quantity" :class="{ 'is-invalid': errors.quantity }" v-model="spare.quantity" />
                                         <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
                                     </div>
