@@ -235,6 +235,9 @@
                         <router-link to="/spare_campaigns" v-bind:class="{ active: $route.path === '/spare_campaigns' }" class="nav-link"><i class="ri-align-left   "></i> <span>Spare Campaign</span></router-link>
                     </li>
                     <li class="nav-item">
+                        <router-link to="/process_trends" v-bind:class="{ active: $route.path === '/process_trends' }" class="nav-link"><i class="ri-alarm-warning-line"></i> <span>Process Trends</span></router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link to="/compliance" v-bind:class="{ active: $route.path === '/compliance' }" class="nav-link"><i class="ri-article-line"></i> <span>Compliance</span></router-link>
                     </li>
                     <li class="nav-item">
@@ -455,7 +458,7 @@
                 } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes" || tab == "/activity_attributes") {
                     this.AttributesColor = "white !important";
                     this.showAttributes = !this.showAttributes;
-                } else if (tab == "/asset_details" || tab == "/spare_campaigns" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts") {
+                } else if (tab == "/asset_details" || tab == "/spare_campaigns" || tab == "/compliance" || tab == "/deviations_review" || tab == "/alerts" || tab == "/process_trends") {
                     this.ReviewColor = "white !important";
                     this.showReview = !this.showReview;
                 } else if (tab == "/asset_life" || tab == "/upcoming_repairs") {
