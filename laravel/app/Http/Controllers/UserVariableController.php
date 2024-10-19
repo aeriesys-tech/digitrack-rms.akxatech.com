@@ -244,11 +244,12 @@ class UserVariableController extends Controller
             'asset_id' => 'required|exists:assets,asset_id'
         ]);
 
-        $user_variables = UserAssetVariable::whereHas('UserVariable', function($que) use($request){
-            $que->where('asset_id', $request->asset_id);
-        })->where('asset_zone_id', $request->asset_zone_id)->with('Variable')->get()->pluck('Variable');
+        $user_variables = UserAssetVariable::whereHas('UserVariable', function($query) use ($request) {
+            $query->where('asset_id', $request->asset_id);
+        })->where('asset_zone_id', $request->asset_zone_id)
+        ->with('Variable')->get()->pluck('Variable')->unique('variable_id'); 
     
-        return response()->json([$user_variables]);
+        return response()->json($user_variables);
     }
 
     public function getProcessTrendValues(Request $request)

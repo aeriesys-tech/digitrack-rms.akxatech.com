@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Models\AssetDataSource;
+use GuzzleHttp\Exception\ServerException;
 
 class CampaignController extends Controller
 {
@@ -163,8 +164,9 @@ class CampaignController extends Controller
 
         $data['job_no'] = $this->generateCampaignNo();
 
-        if ($request->hasFile('file')) 
-        {
+    
+        if ($request->hasFile('file')) {
+        
             $originalFileName = $request->file('file')->getClientOriginalName();
             $timestamp = now()->format('Ymd_His');
             $fileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '_' . $timestamp . '.' . $request->file('file')->getClientOriginalExtension();
@@ -172,66 +174,78 @@ class CampaignController extends Controller
             $request->file('file')->move($filePath, $fileName);
             $data['file'] = $fileName;
         }
-
+    
         $campaign = Campaign::create($data);
-
-        //CampaignResult 
+        
         $client = new Client();
-        $fullFilePath = $filePath . '/' . $fileName;
+        $fullFilePath = isset($filePath) ? $filePath . '/' . $fileName : null;
 
-        //Ladle Scanner
         if ($request->script == "Ladle Scanner") 
         {
-            $response = $client->post('http://127.0.0.1:5000/runCampain', [
-                'json' => [
-                    'pdf_file' => $fullFilePath 
-                ]
-            ]);
-
-            $responseContent = $response->getBody()->getContents();
-            $responseDatas = json_decode($responseContent, true);
-
-            foreach($responseDatas['result'] as $responseData)
-            {
-                $compaign_Result = CampaignResult::create([
-                    'campaign_id' => $campaign->campaign_id,
-                    'asset_id' => $campaign->asset_id,
-                    'location' => $responseData['location'],
-                    'file' => $responseData['file'],
-                    'date' => $responseData['date']
-                ]);   
+            try {
+                $response = $client->post('http://127.0.0.1:5000/runCampain', [
+                    'json' => [
+                        'pdf_file' => $fullFilePath
+                    ]
+                ]);
+    
+                $responseContent = $response->getBody()->getContents();
+                $responseDatas = json_decode($responseContent, true);
+    
+                if (isset($responseDatas['result']) && is_array($responseDatas['result'])) {
+                    foreach ($responseDatas['result'] as $responseData) {
+                        CampaignResult::create([
+                            'campaign_id' => $campaign->campaign_id,
+                            'asset_id' => $campaign->asset_id,
+                            'location' => $responseData['location'],
+                            'file' => $responseData['file'],
+                            'date' => $responseData['date']
+                        ]);
+                    }
+                } else {
+                    return response()->json(['message' => 'Ladle Scanner could not be processed'], 400);
+                }
+            } catch (ServerException $e) {
+                return response()->json(['message' => 'Ladle Scanner could not be processed'], 400);
             }
         }
-
-        //Torpedo Scanner
+    
+        // Torpedo Scanner
         if ($request->script == "Torpedo Scanner") 
         {
-            $response = $client->post('http://127.0.0.1:5000/runTorpedo', [
-                'json' => [
-                    'pdf_file' => $fullFilePath
-                ]
-            ]);
-            $responseContent = $response->getBody()->getContents();
-            $responseDatas = json_decode($responseContent, true);
-
-            CampaignResult::create([
-                'campaign_id' => $campaign->campaign_id,
-                'asset_id' => $campaign->asset_id,
-                'file' => $campaign->file,
-                'date' => Carbon::now(),
-                'torpedo_values' => implode(',', $responseDatas['result']['torpedo_values'])
-            ]);
+            try {
+                $response = $client->post('http://127.0.0.1:5000/runTorpedo', [
+                    'json' => [
+                        'pdf_file' => $fullFilePath
+                    ]
+                ]);
+    
+                $responseContent = $response->getBody()->getContents();
+                $responseDatas = json_decode($responseContent, true);
+    
+                if (isset($responseDatas['result']['torpedo_values']) && is_array($responseDatas['result']['torpedo_values'])) {
+                    CampaignResult::create([
+                        'campaign_id' => $campaign->campaign_id,
+                        'asset_id' => $campaign->asset_id,
+                        'file' => $campaign->file,
+                        'date' => Carbon::now(),
+                        'torpedo_values' => implode(',', $responseDatas['result']['torpedo_values'])
+                    ]);
+                } else {
+                    return response()->json(['message' => 'Torpedo Scanner could not be processed'], 400);
+                }
+            } catch (ServerException $e) {
+                return response()->json(['message' => 'Torpedo Scanner could not be processed'], 400);
+            }
         }
-
-        //Images
-        $compaign_images = CampaignResult::where('campaign_id', $campaign->campaign_id)->get();
-
+        
+        $campaign_images = CampaignResult::where('campaign_id', $campaign->campaign_id)->get();
         return response()->json([
             "message" => "HealthCheck Created Successfully",
-            CampaignResultResource::collection($compaign_images)
+            CampaignResultResource::collection($campaign_images)
         ]);
     }
-
+    
     public function campaignResultImages(Request $request)
     {
         $request->validate([
