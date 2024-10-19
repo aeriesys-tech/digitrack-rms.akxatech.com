@@ -472,6 +472,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('updateUserVariable',[UserVariableController::class, 'updateUserVariable']);
     Route::post('getUserVariable',[UserVariableController::class, 'getUserVariable']);
     Route::post('deleteUserVariable',[UserVariableController::class, 'deleteUserVariable']);
+    Route::post('getZoneUserVariables',[UserVariableController::class, 'getZoneUserVariables']);
+    Route::post('getProcessTrendValues',[UserVariableController::class, 'getProcessTrendValues']);
 
     Route::post('paginateActivityAttributes',[ActivityAttributeController::class, 'paginateActivityAttributes']);
     Route::post('addActivityAttribute',[ActivityAttributeController::class, 'addActivityAttribute']);

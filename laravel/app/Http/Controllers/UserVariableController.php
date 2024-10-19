@@ -6,6 +6,7 @@ use App\Models\AssetZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserVariableResource;
+use App\Http\Resources\ProcessTrendValueResource;
 use App\Models\UserAssetVariable;
 use App\Models\AssetVariable;
 use App\Models\Asset;
@@ -234,5 +235,39 @@ class UserVariableController extends Controller
             $job_no = 'Job_' . $formattedNextServiceNumber;
         }
         return $job_no;
+    }
+
+    public function getZoneUserVariables(Request $request)
+    {
+        $request->validate([
+            'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+            'asset_id' => 'required|exists:assets,asset_id'
+        ]);
+
+        $user_variables = UserAssetVariable::whereHas('UserVariable', function($que) use($request){
+            $que->where('asset_id', $request->asset_id);
+        })->where('asset_zone_id', $request->asset_zone_id)->with('Variable')->get()->pluck('Variable');
+    
+        return response()->json([$user_variables]);
+    }
+
+    public function getProcessTrendValues(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id',
+            'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+            'variable_id' => 'required|exists:variables,variable_id',
+            'from_date' => 'required|date',  
+            'to_date' => 'required|date'      
+        ]);
+    
+        $fromDate = $request->from_date . ' 00:00:00'; 
+        $toDate = $request->to_date . ' 23:59:59';     
+    
+        $user_variables = UserAssetVariable::whereHas('UserVariable', function($query) use($request, $fromDate, $toDate) {
+            $query->where('asset_id', $request->asset_id)->whereBetween('job_date', [$fromDate, $toDate]);
+        })->where('asset_zone_id', $request->asset_zone_id)->where('variable_id', $request->variable_id)->get();
+
+        return ProcessTrendValueResource::collection($user_variables);
     }
 }
