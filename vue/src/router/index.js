@@ -145,6 +145,7 @@ import Test from "@/views/Test.vue";
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
 import AssetDetails from "@/views/Reviews/AssetDetails.vue"
 import Geometric from "@/views/masters/assets/Geometric.vue"
+import ProcessTrends from "@/views/Reviews/ProcessTrends.vue"
 
 
 const routes = [
@@ -808,7 +809,11 @@ const routes = [
     component: SpareCompaingn,
   },
 
-
+  {
+    path: "/process_trends",
+    name: "ProcessTrends",
+    component: ProcessTrends,
+  },
 
 
 

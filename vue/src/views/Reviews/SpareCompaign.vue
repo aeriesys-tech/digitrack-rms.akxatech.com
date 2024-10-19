@@ -60,6 +60,8 @@
                                     v-model="spare.datasource">
                                     <option value="">Select Data Source</option>
                                     <option value="File">File</option>
+                                    <option value="Script">Script</option>
+                                    <option value="Auto">Auto</option>
                                 </select>
                                 <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0]
                                     }}</span>

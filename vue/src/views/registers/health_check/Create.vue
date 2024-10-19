@@ -31,33 +31,35 @@
                                     <option value="">Select Asset</option>
                                     <option value="Ladle">Ladle</option>
                                 </select> -->
-                                    <select class="form-control" :class="{ 'is-invalid': errors.asset_id }"
+                                    <select class="form-control" :class="{ 'is-invalid': errors?.asset_id }"
                                         v-model="campaign.asset_id" @change="getScripts">
                                         <option value="">Select Asset</option>
                                         <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">
                                             {{ asset.asset_name }}</option>
                                     </select>
-                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0]
+                                    <span v-if="errors?.asset_id" class="invalid-feedback">{{ errors.asset_id[0]
                                         }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Data Source</label><span class="text-danger"> *</span>
-                                    <select class="form-control" :class="{ 'is-invalid': errors.datasource }"
+                                    <select class="form-control" :class="{ 'is-invalid': errors?.datasource }"
                                         v-model="campaign.datasource_id">
                                         <option value="">Select Data Source</option>
                                         <option value="File">File</option>
+                                        <option value="Script">Script</option>
+                                        <option value="Auto">Auto</option>
                                     </select>
-                                    <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0]
+                                    <span v-if="errors?.datasource" class="invalid-feedback">{{ errors.datasource[0]
                                         }}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Script</label><span class="text-danger"> *</span>
-                                    <select class="form-control" :class="{ 'is-invalid': errors.script }"
+                                    <label class="form-label">Measurement Source</label><span class="text-danger"> *</span>
+                                    <select class="form-control" :class="{ 'is-invalid': errors?.script }"
                                         v-model="campaign.script">
-                                        <option value="">Select Script</option>
+                                        <option value="">Select Measurement Source</option>
                                         <option v-for="scr, key in scripts" :value="scr" :key="key">{{ scr }}</option>
                                     </select>
-                                    <span v-if="errors.datasource" class="invalid-feedback">{{ errors.datasource[0]
+                                    <span v-if="errors?.datasource" class="invalid-feedback">{{ errors.datasource[0]
                                         }}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -65,16 +67,16 @@
                                     <!-- <input type="datetime-local" class="form-control" id="job_date_time" name="job_date_time" v-model="campaign.job_date_time" :class="{ 'is-invalid': errors.job_date_time }" @change="convertDateFormat(campaign.job_date_time)"/> -->
                                     <input type="datetime-local" class="form-control" id="job_date_time"
                                         name="job_date_time" v-model="campaign.job_date_time"
-                                        :class="{ 'is-invalid': errors.job_date_time }"
+                                        :class="{ 'is-invalid': errors?.job_date_time }"
                                         @change="getCurrentDateTime(campaign.job_date_time)" />
-                                    <span v-if="errors.job_date_time" class="invalid-feedback">{{
+                                    <span v-if="errors?.job_date_time" class="invalid-feedback">{{
                                         errors.job_date_time[0] }}</span>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">File</label><span class="text-danger"> *</span>
                                     <input type="file" class="form-control" id="file" ref="file" name="file"
-                                        :class="{ 'is-invalid': errors.file }" />
-                                    <span v-if="errors.file" class="invalid-feedback">{{ errors.file[0] }}</span>
+                                        :class="{ 'is-invalid': errors?.file }" />
+                                    <span v-if="errors?.file" class="invalid-feedback">{{ errors.file[0] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -269,6 +271,7 @@ export default {
                     vm.discard();
                 })
                 .catch(function (error) {
+                    // console.log("Errrr----",error)
                     loader.hide();
                     vm.errors = error.response.data.errors;
                     vm.$store.dispatch("error", error.response.data.message);
