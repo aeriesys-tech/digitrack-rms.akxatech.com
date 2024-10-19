@@ -27,4 +27,9 @@ class UserAssetVariable extends Model
     {
         return $this->belongsTo(AssetZone::class, 'asset_zone_id');
     }
+
+    public function UserVariable()
+    {
+        return $this->belongsTo(UserVariable::class, 'user_variable_id');
+    }
 }

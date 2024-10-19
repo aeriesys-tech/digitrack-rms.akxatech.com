@@ -72,6 +72,85 @@ class CampaignController extends Controller
         return CampaignResource::collection($campaign);
     }
 
+    // public function addCampaign(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'asset_id' => 'required|exists:assets,asset_id',
+    //         'datasource' => 'required',
+    //         'file' => 'required|file|mimes:pdf,jpeg,jpg,png',
+    //         'job_date_time' => 'required',
+    //         'script' => 'required'
+    //     ]);
+
+    //     $data['job_no'] = $this->generateCampaignNo();
+
+    //     if ($request->hasFile('file')) 
+    //     {
+    //         $fileName = $request->file('file')->getClientOriginalName();
+    //         $filePath = public_path('storage/files'); 
+    //         $request->file('file')->move($filePath, $fileName);
+    //         $data['file'] = $fileName;
+    //     } 
+    //     $campaign = Campaign::create($data);
+
+    //     //CampaignResult 
+    //     $client = new Client();
+    //     $fullFilePath = $filePath . '/' . $fileName;
+
+    //     //Ladle Scanner
+    //     if ($request->script == "Ladle Scanner") 
+    //     {
+    //         $response = $client->post('http://127.0.0.1:5000/runCampain', [
+    //             'json' => [
+    //                 'pdf_file' => $fullFilePath 
+    //             ]
+    //         ]);
+
+    //         $responseContent = $response->getBody()->getContents();
+    //         $responseDatas = json_decode($responseContent, true);
+    
+    //         foreach($responseDatas['result'] as $responseData)
+    //         {
+    //             $compaign_Result = CampaignResult::create([
+    //                 'campaign_id' => $campaign->campaign_id,
+    //                 'asset_id' => $campaign->asset_id,
+    //                 'location' => $responseData['location'],
+    //                 'file' => $responseData['file'],
+    //                 'date' => $responseData['date']
+    //             ]);   
+    //         }
+    //     }
+         
+    //     //Torpedo Scanner
+    //     if ($request->script == "Torpedo Scanner") 
+    //     {
+    //         $response = $client->post('http://127.0.0.1:5000/runTorpedo', [
+    //             'json' => [
+    //                 'pdf_file' => $fullFilePath
+    //             ]
+    //         ]);
+    //         $responseContent = $response->getBody()->getContents();
+    //         $responseDatas = json_decode($responseContent, true);
+    
+    //         // return $responseDatas['result']['torpedo_values'];
+    //         CampaignResult::create([
+    //             'campaign_id' => $campaign->campaign_id,
+    //             'asset_id' => $campaign->asset_id,
+    //             'file' => $campaign->file,
+    //             'date' => Carbon::now(),
+    //             'torpedo_values' => implode(',', $responseDatas['result']['torpedo_values'])
+    //         ]);
+    //     }
+
+    //     //Images
+    //     $compaign_images = CampaignResult::where('campaign_id', $campaign->campaign_id)->get();
+
+    //     return response()->json([
+    //         "message" => "HealthCheck Created Successfully",
+    //         CampaignResultResource::collection($compaign_images)
+    //     ]); 
+    // }
+
     public function addCampaign(Request $request)
     {
         $data = $request->validate([
@@ -86,11 +165,14 @@ class CampaignController extends Controller
 
         if ($request->hasFile('file')) 
         {
-            $fileName = $request->file('file')->getClientOriginalName();
-            $filePath = public_path('storage/files'); 
+            $originalFileName = $request->file('file')->getClientOriginalName();
+            $timestamp = now()->format('Ymd_His');
+            $fileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '_' . $timestamp . '.' . $request->file('file')->getClientOriginalExtension();
+            $filePath = public_path('storage/files');
             $request->file('file')->move($filePath, $fileName);
             $data['file'] = $fileName;
-        } 
+        }
+
         $campaign = Campaign::create($data);
 
         //CampaignResult 
@@ -108,7 +190,7 @@ class CampaignController extends Controller
 
             $responseContent = $response->getBody()->getContents();
             $responseDatas = json_decode($responseContent, true);
-    
+
             foreach($responseDatas['result'] as $responseData)
             {
                 $compaign_Result = CampaignResult::create([
@@ -120,7 +202,7 @@ class CampaignController extends Controller
                 ]);   
             }
         }
-         
+
         //Torpedo Scanner
         if ($request->script == "Torpedo Scanner") 
         {
@@ -131,8 +213,7 @@ class CampaignController extends Controller
             ]);
             $responseContent = $response->getBody()->getContents();
             $responseDatas = json_decode($responseContent, true);
-    
-            // return $responseDatas['result']['torpedo_values'];
+
             CampaignResult::create([
                 'campaign_id' => $campaign->campaign_id,
                 'asset_id' => $campaign->asset_id,
@@ -148,7 +229,7 @@ class CampaignController extends Controller
         return response()->json([
             "message" => "HealthCheck Created Successfully",
             CampaignResultResource::collection($compaign_images)
-        ]); 
+        ]);
     }
 
     public function campaignResultImages(Request $request)
