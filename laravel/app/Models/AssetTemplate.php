@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Asset extends Model
+class AssetTemplate extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'area_id',
         'plant_id',
-        'asset_code',
-        'asset_name',
+        'template_code',
+        'template_name',
         'no_of_zones',
         'asset_type_id',
         'longitude',
@@ -24,11 +24,10 @@ class Asset extends Model
         'radius',
         'geometry_type',
         'height',
-        'diameter',
-        'asset_template_id'
+        'diameter'
     ];
 
-    protected $primaryKey = 'asset_id';
+    protected $primaryKey = 'asset_template_id';
 
     public function Plant()
     {
@@ -40,14 +39,14 @@ class Asset extends Model
         return $this->belongsTo(AssetType::class, 'asset_type_id');
     }
 
-    public function AssetParameters()
-    {
-        return $this->hasMany(AssetParameter::class, 'asset_type_id', 'asset_type_id');
-    }
+    // public function AssetParameters()
+    // {
+    //     return $this->hasMany(AssetParameter::class, 'asset_type_id', 'asset_type_id');
+    // }
 
-    public function AssetDepartment()
+    public function TemplateDepartment()
     {
-        return $this->hasMany(AssetDepartment::class, 'asset_id', 'asset_id');
+        return $this->hasMany(TemplateDepartment::class, 'asset_template_id', 'asset_template_id');
     }
 
     public function Section()
@@ -67,11 +66,11 @@ class Asset extends Model
 
     public function Zones()
     {
-        return $this->hasMany(AssetZone::class, 'asset_id', 'asset_id');
+        return $this->hasMany(TemplateZone::class, 'asset_template_id', 'asset_template_id');
     }
 
-    public function AssetTemplate()
+    public function TemplateAttributeValues()
     {
-        return $this->belongsTo(AssetTemplate::class, 'asset_template_id');
+        return $this->hasMany(TemplateAttributeValue::class, 'asset_template_id', 'asset_template_id');
     }
 }

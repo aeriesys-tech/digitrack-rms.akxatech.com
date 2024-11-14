@@ -52,6 +52,13 @@ use App\Http\Controllers\ListParameterController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\UserVariableController;
 use App\Http\Controllers\ActivityAttributeController;
+use App\Http\Controllers\AssetTemplateController;
+use App\Http\Controllers\AssetTemplateSpareController;
+use App\Http\Controllers\AssetTemplateCheckController;
+use App\Http\Controllers\AssetTemplateServiceController;
+use App\Http\Controllers\AssetTemplateVariableController;
+use App\Http\Controllers\AssetTemplateDataSourceController;
+use App\Http\Controllers\AssetTemplateAccessoryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -484,4 +491,49 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('importActivityAttribute',[ActivityAttributeController::class, 'importActivityAttribute']);
     Route::post('downloadActivityAttributes',[ActivityAttributeController::class, 'downloadActivityAttributes']);
     Route::post('downloadActivityAttributeHeadings',[ActivityAttributeController::class, 'downloadActivityAttributeHeadings']);
+
+    Route::post('paginateAssetTemplates',[AssetTemplateController::class, 'paginateAssetTemplates']);
+    Route::post('addAssetTemplate',[AssetTemplateController::class, 'addAssetTemplate']);
+    Route::post('getAssetTemplates',[AssetTemplateController::class, 'getAssetTemplates']);
+    Route::post('getAssetTemplate',[AssetTemplateController::class, 'getAssetTemplate']);
+    Route::post('updateAssetTemplate',[AssetTemplateController::class, 'updateAssetTemplate']);
+    Route::post('deleteAssetTemplate',[AssetTemplateController::class, 'deleteAssetTemplate']);
+    Route::post('getTemplateZones',[AssetTemplateController::class, 'getTemplateZones']);
+    Route::post('forceDeleteAssetTemplate',[AssetTemplateController::class, 'forceDeleteAssetTemplate']);
+    Route::post('getAssetTemplateDropDown',[AssetTemplateController::class, 'getAssetTemplateDropDown']);
+    Route::post('getAssetTemplateToAsset',[AssetTemplateController::class, 'getAssetTemplateToAsset']);
+
+    Route::post('paginateAssetTemplateSpares',[AssetTemplateSpareController::class, 'paginateAssetTemplateSpares']);
+    Route::post('addAssetTemplateSpare',[AssetTemplateSpareController::class, 'addAssetTemplateSpare']);
+    Route::post('updateAssetTemplateSpare',[AssetTemplateSpareController::class, 'updateAssetTemplateSpare']);
+    Route::post('forceDeleteAssetTemplateSpare',[AssetTemplateSpareController::class, 'forceDeleteAssetTemplateSpare']);
+
+    Route::post('paginateAssetTemplateChecks',[AssetTemplateCheckController::class, 'paginateAssetTemplateChecks']);
+    Route::post('addAssetTemplateCheck',[AssetTemplateCheckController::class, 'addAssetTemplateCheck']);
+    Route::post('getAssetTemplateCheck',[AssetTemplateCheckController::class, 'getAssetTemplateCheck']);
+    Route::post('getAssetTemplateChecks',[AssetTemplateCheckController::class, 'getAssetTemplateChecks']);
+    Route::post('updateAssetTemplateCheck',[AssetTemplateCheckController::class, 'updateAssetTemplateCheck']);
+    Route::post('forceDeleteAssetTemplateCheck',[AssetTemplateCheckController::class, 'forceDeleteAssetTemplateCheck']);
+
+    Route::post('paginateAssetTemplateServices',[AssetTemplateServiceController::class, 'paginateAssetTemplateServices']);
+    Route::post('addAssetTemplateService',[AssetTemplateServiceController::class, 'addAssetTemplateService']);
+    Route::post('getAssetTemplateService',[AssetTemplateServiceController::class, 'getAssetTemplateService']);
+    Route::post('updateAssetTemplateService',[AssetTemplateServiceController::class, 'updateAssetTemplateService']);
+    Route::post('forceDeleteAssetTemplateService',[AssetTemplateServiceController::class, 'forceDeleteAssetTemplateService']);
+    
+    Route::post('paginateAssetTemplateVariables',[AssetTemplateVariableController::class, 'paginateAssetTemplateVariables']);
+    Route::post('addAssetTemplateVariable',[AssetTemplateVariableController::class, 'addAssetTemplateVariable']);
+    Route::post('getAssetTemplateVariable',[AssetTemplateVariableController::class, 'getAssetTemplateVariable']);
+    Route::post('updateAssetTemplateVariable',[AssetTemplateVariableController::class, 'updateAssetTemplateVariable']);
+    Route::post('deleteAssetTemplateVariable',[AssetTemplateVariableController::class, 'deleteAssetTemplateVariable']);
+
+    Route::post('paginateAssetTemplateDataSources',[AssetTemplateDataSourceController::class, 'paginateAssetTemplateDataSources']);
+    Route::post('addAssetTemplateDataSource',[AssetTemplateDataSourceController::class, 'addAssetTemplateDataSource']);
+    Route::post('getAssetTemplateDataSource',[AssetTemplateDataSourceController::class, 'getAssetTemplateDataSource']);
+    Route::post('updateAssetTemplateDataSource',[AssetTemplateDataSourceController::class, 'updateAssetTemplateDataSource']);
+    Route::post('deleteAssetTemplateDataSource',[AssetTemplateDataSourceController::class, 'deleteAssetTemplateDataSource']);
+
+    Route::post('paginateAssetTemplateAccessories',[AssetTemplateAccessoryController::class, 'paginateAssetTemplateAccessories']);
+    Route::post('addAssetTemplateAccessory',[AssetTemplateAccessoryController::class, 'addAssetTemplateAccessory']);
+    Route::post('deleteAssetTemplateAccessory',[AssetTemplateAccessoryController::class, 'deleteAssetTemplateAccessory']);
 });
