@@ -85,15 +85,29 @@ class CheckController extends Controller
         $data = $request->validate([
             'field_name' => 'required|unique:checks,field_name',
             'field_type' => 'required',
-            'default_value' => 'required',
+            'default_value' => [
+                'nullable',
+                'required_if:field_type,Select',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->field_type === 'Select') {
+                        $fieldValuesArray = explode(',', $request->field_values);
+                        if (!in_array($value, $fieldValuesArray)) {
+                            $fail("The default value must be one of the options in field values: " . implode(', ', $fieldValuesArray));
+                        }
+                    }
+                }
+            ],
             'lcl' => 'required_if:field_type,Number',
             'ucl' => 'required_if:field_type,Number',
-            'field_values' => 'required_if:field_type,Select',
+            'field_values' => 'nullable|required_if:field_type,Select',
             'order' => 'required',
             'is_required' => 'required',
             'asset_types' => 'required|array',
 	        'asset_type_id.*' => 'required|exists:asset_types,asset_type_id',
             'department_id' => 'required|exists:departments,department_id'
+        ],[
+            'field_values.required_if' => 'The field values field is required when the field type is Dropdown.',
+            'default_value.required_if' => 'The default value field is required when field type is Dropdown.',
         ]);
         
         $check = Check::create($data);
@@ -149,7 +163,18 @@ class CheckController extends Controller
             'check_id' => 'required|exists:checks,check_id',
             'field_name' => 'required|unique:checks,field_name,'.$request->check_id.',check_id',
             'field_type' => 'required',
-            'default_value' => 'required',
+            'default_value' => [
+                'nullable',
+                'required_if:field_type,Select',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->field_type === 'Select') {
+                        $fieldValuesArray = explode(',', $request->field_values);
+                        if (!in_array($value, $fieldValuesArray)) {
+                            $fail("The default value must be one of the options in field values: " . implode(', ', $fieldValuesArray));
+                        }
+                    }
+                }
+            ],
             'lcl' => 'required_if:field_type,Number',
             'ucl' => 'required_if:field_type,Number',
             'field_values' => 'required_if:field_type,Select',

@@ -69,6 +69,7 @@ class AssetTemplateCheckController extends Controller
     public function addAssetTemplateCheck(Request $request)
     {
         $assetHasZones = TemplateZone::where('asset_template_id', $request->asset_template_id)->exists();
+        $checkdata = Check::where('check_id', $request->check_id)->first();
         $data = $request->validate([
             'check_id' => [
                 'required',
@@ -98,7 +99,22 @@ class AssetTemplateCheckController extends Controller
                 $assetHasZones ? 'required' : 'nullable', 
                 'array',
             ],
-            'template_zones.*' => 'nullable|exists:template_zones,template_zone_id'
+            'template_zones.*' => 'nullable|exists:template_zones,template_zone_id',
+            'lcl' => 'nullable|required_if:field_type,Number',
+            'ucl' => 'nullable|required_if:field_type,Number',
+            'default_value' => [
+                'nullable',
+                'required_if:field_type,Select',
+                function ($attribute, $value, $fail) use ($request, $checkdata) {
+                    if ($request->field_type === 'Select' && !empty($checkdata->field_values)) {
+                        $fieldValuesArray = array_map('strtolower', array_map('trim', explode(',', $checkdata->field_values)));
+                        if (!in_array(strtolower($value), $fieldValuesArray)) {
+                            $formattedOptions = implode(', ', array_map('ucwords', $fieldValuesArray));
+                            $fail("The default value must be one of the option in field values: " . $formattedOptions);
+                        }
+                    }
+                }
+            ],
         ]);
 
         $asset = AssetTemplate::where('asset_template_id', $request->asset_template_id)->first();
@@ -106,11 +122,11 @@ class AssetTemplateCheckController extends Controller
         $data['plant_id'] = $asset->plant_id;
         $data['area_id'] = $asset->area_id;
 
-        $check = Check::where('check_id', $request->check_id)->first();
+        // $check = Check::where('check_id', $request->check_id)->first();
 
-        $data['lcl'] = $request->input('lcl', $check->lcl);
-        $data['ucl'] = $request->input('ucl', $check->ucl);
-        $data['default_value'] = $request->input('default_value', $check->default_value);
+        // $data['lcl'] = $request->input('lcl', $check->lcl);
+        // $data['ucl'] = $request->input('ucl', $check->ucl);
+        // $data['default_value'] = $request->input('default_value', $check->default_value);
 
         $createdChecks = [];
 
@@ -164,6 +180,7 @@ class AssetTemplateCheckController extends Controller
     {
         $asset_check = AssetTemplateCheck::where('asset_template_check_id', $request->asset_template_check_id)->first();
         $assetHasZones = TemplateZone::where('asset_template_id', $request->asset_template_id)->exists();
+        $checkdata = Check::where('check_id', $request->check_id)->first();
         $data = $request->validate([
             'asset_template_check_id' => 'required|exists:asset_template_checks,asset_template_check_id',
             'asset_template_id' => 'required|exists:asset_templates,asset_template_id',
@@ -189,9 +206,21 @@ class AssetTemplateCheckController extends Controller
                     }
                 },
             ],
-            'lcl' => 'nullable|sometimes',
-            'ucl' => 'nullable|sometimes',
-            'default_value' =>'nullable|sometimes',
+            'lcl' => 'nullable|required_if:field_type,Number',
+            'ucl' => 'nullable|required_if:field_type,Number',
+            'default_value' => [
+                'nullable',
+                'required_if:field_type,Select',
+                function ($attribute, $value, $fail) use ($request, $checkdata) {
+                    if ($request->field_type === 'Select' && !empty($checkdata->field_values)) {
+                        $fieldValuesArray = array_map('strtolower', array_map('trim', explode(',', $checkdata->field_values)));
+                        if (!in_array(strtolower($value), $fieldValuesArray)) {
+                            $formattedOptions = implode(', ', array_map('ucwords', $fieldValuesArray));
+                            $fail("The default value must be one of the option in field values: " . $formattedOptions);
+                        }
+                    }
+                }
+            ],
             'template_zone_id' => [
                 $assetHasZones ? 'required' : 'nullable',
             ],
