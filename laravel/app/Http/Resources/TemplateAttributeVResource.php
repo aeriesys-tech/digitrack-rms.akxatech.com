@@ -4,22 +4,23 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\AssetAttributeValue;
+use App\Models\TemplateAttributeValue;
 
-class AssetAttributeVResource extends JsonResource
+class TemplateAttributeVResource extends JsonResource
 {
-    protected $assetId;
+    protected $assetTemplateId;
 
     public function __construct($resource)
     {
         parent::__construct($resource['resource']);
-        $this->assetId = $resource['asset_id'] ?? null;
+        $this->assetTemplateId = $resource['asset_template_id'] ?? null;
     }
 
     public function toArray(Request $request): array
     {
-        $asset_attribute_value = AssetAttributeValue::where('asset_id', $this->assetId)
-            ->where('asset_attribute_id', $this->asset_attribute_id)->first();
+        $asset_attribute_value = TemplateAttributeValue::where('asset_template_id', $this->assetTemplateId)
+            ->where('asset_attribute_id', $this->asset_attribute_id)
+            ->first();
 
         if(!$asset_attribute_value){
             $asset_attribute_value = [

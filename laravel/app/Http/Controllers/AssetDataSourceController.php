@@ -88,15 +88,15 @@ class AssetDataSourceController extends Controller
                     $exists = AssetDataSource::where('data_source_id', $value)
                         ->where('asset_id', $request->asset_id)
                         ->where(function ($query) use ($request, $assetHasZones) {
-                            if ($assetHasZones && $request->filled('variable_asset_zones')) {
-                                $query->whereIn('asset_zone_id', $request->variable_asset_zones);
+                            if ($assetHasZones && $request->filled('data_source_asset_zones')) {
+                                $query->whereIn('asset_zone_id', $request->data_source_asset_zones);
                             } else {
                                 $query->whereNull('asset_zone_id');
                             }
                         })->exists();
 
                     if ($exists) {
-                        if ($request->filled('variable_asset_zones') && $assetHasZones) {
+                        if ($request->filled('data_source_asset_zones') && $assetHasZones) {
                             $fail('The combination of DataSource and Asset Zone already exists.');
                         } else {
                             $fail('The combination of DataSource and Asset already exists.');

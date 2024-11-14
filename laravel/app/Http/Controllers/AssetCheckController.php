@@ -86,6 +86,7 @@ class AssetCheckController extends Controller
     public function addAssetCheck(Request $request)
     {
         $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        $checkdata = Check::where('check_id', $request->check_id)->first();
         $data = $request->validate([
             'check_id' => [
                 'required',
@@ -115,7 +116,22 @@ class AssetCheckController extends Controller
                 $assetHasZones ? 'required' : 'nullable', 
                 'array',
             ],
-            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id'
+            'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id',
+            'lcl' => 'nullable|required_if:field_type,Number',
+            'ucl' => 'nullable|required_if:field_type,Number',
+            'default_value' => [
+                'nullable',
+                'required_if:field_type,Select',
+                function ($attribute, $value, $fail) use ($request, $checkdata) {
+                    if ($request->field_type === 'Select' && !empty($checkdata->field_values)) {
+                        $fieldValuesArray = array_map('strtolower', array_map('trim', explode(',', $checkdata->field_values)));
+                        if (!in_array(strtolower($value), $fieldValuesArray)) {
+                            $formattedOptions = implode(', ', array_map('ucwords', $fieldValuesArray));
+                            $fail("The default value must be one of the option in field values: " . $formattedOptions);
+                        }
+                    }
+                }
+            ],
         ]);
 
         $asset = Asset::where('asset_id', $request->asset_id)->first();
@@ -123,11 +139,11 @@ class AssetCheckController extends Controller
         $data['plant_id'] = $asset->plant_id;
         $data['area_id'] = $asset->area_id;
 
-        $check = Check::where('check_id', $request->check_id)->first();
+        // $check = Check::where('check_id', $request->check_id)->first();
 
-        $data['lcl'] = $request->input('lcl', $check->lcl);
-        $data['ucl'] = $request->input('ucl', $check->ucl);
-        $data['default_value'] = $request->input('default_value', $check->default_value);
+        // $data['lcl'] = $request->input('lcl', $check->lcl);
+        // $data['ucl'] = $request->input('ucl', $check->ucl);
+        // $data['default_value'] = $request->input('default_value', $check->default_value);
 
         $createdChecks = [];
 
@@ -205,6 +221,7 @@ class AssetCheckController extends Controller
     {
         $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->first();
         $assetHasZones = AssetZone::where('asset_id', $request->asset_id)->exists();
+        $checkdata = Check::where('check_id', $request->check_id)->first();
         $data = $request->validate([
             'asset_check_id' => 'required|exists:asset_checks,asset_check_id',
             'asset_id' => 'required|exists:assets,asset_id',
@@ -230,9 +247,21 @@ class AssetCheckController extends Controller
                     }
                 },
             ],
-            'lcl' => 'nullable|sometimes',
-            'ucl' => 'nullable|sometimes',
-            'default_value' =>'nullable|sometimes',
+            'lcl' => 'nullable|required_if:field_type,Number',
+            'ucl' => 'nullable|required_if:field_type,Number',
+            'default_value' => [
+                'nullable',
+                'required_if:field_type,Select',
+                function ($attribute, $value, $fail) use ($request, $checkdata) {
+                    if ($request->field_type === 'Select' && !empty($checkdata->field_values)) {
+                        $fieldValuesArray = array_map('strtolower', array_map('trim', explode(',', $checkdata->field_values)));
+                        if (!in_array(strtolower($value), $fieldValuesArray)) {
+                            $formattedOptions = implode(', ', array_map('ucwords', $fieldValuesArray));
+                            $fail("The default value must be one of the option in field values: " . $formattedOptions);
+                        }
+                    }
+                }
+            ],
             'asset_zone_id' => [
                 $assetHasZones ? 'required' : 'nullable',
             ],

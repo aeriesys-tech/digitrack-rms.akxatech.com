@@ -6,17 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\PlantResource;
 use App\Http\Resources\AssetTypeResource;
-use App\Http\Resources\VoltageResource;
-use App\Http\Resources\WattRatingResource;
-use App\Http\Resources\FrameResource;
-use App\Http\Resources\MountingResource;
-use App\Http\Resources\SectionResource;
-use App\Http\Resources\MakeResource;
-use App\Http\Resources\SpeedResource;
 use App\Models\AssetAttribute;
-use App\Models\AssetDepartment;
+use App\Models\TemplateDepartment;
 
-class AssetResource extends JsonResource
+class AssetTemplateResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -24,22 +17,22 @@ class AssetResource extends JsonResource
             $que->where('asset_type_id', $this->asset_type_id);
         })->get();
         
-        $asset_department_id = AssetDepartment::where('asset_id', $this->asset_id)->pluck('department_id');
+        $asset_department_id = TemplateDepartment::where('asset_template_id', $this->asset_template_id)->pluck('department_id');
         return [
-            'asset_id' => $this->asset_id,
+            'asset_template_id' => $this->asset_template_id,
             'area_id' => $this->area_id,
             'area' => new AreaResource($this->Area),
             'plant_id' => $this->plant_id,
             'plant' => new PlantResource($this->Plant),
-            'asset_code' => $this->asset_code,
-            'asset_name' => $this->asset_name,
+            'template_code' => $this->template_code,
+            'template_name' => $this->template_name,
             'no_of_zones' => $this->no_of_zones,
             'asset_type_id' => $this->asset_type_id,
             'asset_type' => new AssetTypeResource($this->AssetType),
             // 'asset_parameter_values' => AssetParameterResource::collection($this->AssetParameters),
             'status' => $this->deleted_at?false:true,
-            'asset_attributes' => AssetAttributeVResource::collection($asset_attributes->map(function ($assetAttribute) {
-                return ['resource' => $assetAttribute, 'asset_id' => $this->asset_id];
+            'asset_attributes' => TemplateAttributeVResource::collection($asset_attributes->map(function ($templateAttribute) {
+                return ['resource' => $templateAttribute, 'asset_template_id' => $this->asset_template_id];
             })),
             // 'asset_parameters' => $asset_parameters,
             'longitude' => $this->longitude,
@@ -49,14 +42,12 @@ class AssetResource extends JsonResource
             'section_id' => $this->section_id,
             'section' => new SectionResource($this->Section),
             'radius' => $this->radius,
-            'zone_name' => AssetZoneResource::collection($this->Zones),
-            'asset_department_ids' => AssetDepartmentResource::collection($this->AssetDepartment),
+            'zone_name' => TemplateZoneResource::collection($this->Zones),
+            'asset_department_ids' => TemplateDepartmentResource::collection($this->TemplateDepartment),
             'asset_departments' => $asset_department_id,
             'geometry_type' => $this->geometry_type,
             'height' => $this->height,
-            'diameter' => $this->diameter,
-            'asset_template_id' => $this->asset_template_id,
-            'asset_template' => new AssetTemplateResource($this->AssetTemplate)
+            'diameter' => $this->diameter
         ];
     }
 }

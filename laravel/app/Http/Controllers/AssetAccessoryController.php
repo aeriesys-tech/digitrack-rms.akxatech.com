@@ -179,7 +179,16 @@ class AssetAccessoryController extends Controller
             'asset_accessory_id' => 'required|exists:asset_accessories,asset_accessory_id'
         ]);
 
-        AssetAccessory::where('asset_accessory_id', $request->asset_accessory_id)->delete();
+        $attachment = AssetAccessory::where('asset_accessory_id', $request->asset_accessory_id)->first();
+
+        if ($attachment && $attachment->attachment) {
+            $filePath = public_path('storage/assetAttachments/' . $attachment->attachment);
+            if (file_exists($filePath)) {
+                unlink($filePath); 
+            }
+        }
+
+        $attachment->delete();
 
         return response()->json([
             'message' => "AssetAccessory Deleted Successfully"
