@@ -28,7 +28,7 @@
                             <h6 class="card-title" v-else>Update Check</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row g-2">                                
+                            <div class="row g-2">
                                 <div class="col-md-4">
                                     <label class="form-label">Department</label><span class="text-danger"> *</span>
                                     <select class="form-control" :class="{ 'is-invalid': errors?.department_id }" v-model="check.department_id">
@@ -57,11 +57,12 @@
                                     </select>
                                     <span v-if="errors.field_type" class="invalid-feedback">{{ errors.field_type[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Default Value</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Default Value" class="form-control" :class="{ 'is-invalid': errors.default_value }" v-model="check.default_value" />
-                                    <span v-if="errors.default_value" class="invalid-feedback">{{ errors.default_value[0] }}</span>
+                                  <div class="col-md-4" v-if="check.field_type=='Select'">
+                                    <label class="form-label">Field Values</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values}" v-model="check.field_values" />
+                                    <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
                                 </div>
+
                                 <div class="col-md-4">
                                     <label class="form-label">Is Required</label><span class="text-danger"> *</span>
                                     <select class="form-control" :class="{'is-invalid':errors.is_required}" v-model="check.is_required">
@@ -71,20 +72,20 @@
                                     </select>
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4" v-if="check.field_type=='Number'">
                                     <label class="form-label">LCL</label><span v-if="check.field_type=='Number'" class="text-danger"> *</span>
                                     <input type="text" placeholder="LCL" class="form-control" :class="{ 'is-invalid': errors.lcl }" v-model="check.lcl" />
                                     <span v-if="errors.lcl" class="invalid-feedback">{{ errors.lcl[0] }}</span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4" v-if="check.field_type=='Number'">
                                     <label class="form-label">UCL</label><span v-if="check.field_type=='Number'" class="text-danger"> *</span>
                                     <input type="text" placeholder="UCL" class="form-control" :class="{ 'is-invalid': errors.ucl }" v-model="check.ucl" />
                                     <span v-if="errors.ucl" class="invalid-feedback">{{ errors.ucl[0] }}</span>
                                 </div>
-                                <div class="col-md-4" v-if="check.field_type=='Select'">
-                                    <label class="form-label">Field Values</label><span class="text-danger"> *</span>
-                                    <input type="text" placeholder="Field Values" class="form-control" :class="{ 'is-invalid': errors.field_values}" v-model="check.field_values" />
-                                    <span v-if="errors.field_values" class="invalid-feedback">{{ errors.field_values[0] }}</span>
+                              <div class="col-md-4" v-if="['Select'].includes(check.field_type)">
+                                    <label class="form-label">Default Value</label><span class="text-danger"> *</span>
+                                    <input type="text" placeholder="Default Value" class="form-control" :class="{ 'is-invalid': errors.default_value }" v-model="check.default_value" @input="validateDefaultValue()"/>
+                                    <span v-if="errors.default_value" class="invalid-feedback">{{ errors.default_value[0] }}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Order</label><span class="text-danger"> *</span>
@@ -110,8 +111,8 @@
                                             </ul>
                                         </div> -->
 
-                                        <MultiSelect v-model="check.asset_types_obj"  filter optionLabel="asset_type_name" 
-                                            :options="asset_types"  placeholder="Select Assign To" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="check.asset_types_obj"  filter optionLabel="asset_type_name"
+                                            :options="asset_types"  placeholder="Select Assign To" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.asset_types ? error_style : ''"/>
                                         <span v-if="errors?.asset_types"><small class="text-danger">{{ errors?.asset_types[0] }}</small></span>
                                     </div>
@@ -201,7 +202,7 @@
                             vm.check.asset_types_obj = []
 
                             vm.check.check_asset_types.map(function(ele){
-                                vm.check.asset_types_obj.push({asset_type_code: ele.asset_types.asset_type_code, 
+                                vm.check.asset_types_obj.push({asset_type_code: ele.asset_types.asset_type_code,
                                     asset_type_id: ele.asset_types.asset_type_id, status: ele.asset_types.status,
                                     asset_type_name: ele.asset_types.asset_type_name})
                             })
@@ -263,6 +264,15 @@
             //             vm.$store.dispatch("error", error.response.data.message);
             //         });
             // },
+             validateDefaultValue() {
+        // Ensure that default_value must be one of the values in field_values
+        const fieldValuesArray = this.check.field_values.split(',').map(value => value.trim());
+        if (!fieldValuesArray.includes(this.check.default_value)) {
+            this.errors.default_value = ['Default value must be one of the Field Values: ' + fieldValuesArray.join(', ') + '.'];
+        } else {
+            this.errors.default_value = null; // Reset error if valid
+        }
+    },
 
             addCheck() {
                 let vm = this;
@@ -350,7 +360,7 @@
                     item1 => !vm.check.asset_types_obj.some(item2 => item1.asset_type_id === item2.asset_type_id));
                 vm.check.asset_types = vm.check.asset_types_obj.map(item => item.asset_type_id);
                 vm.check.deleted_check_asset_types = vm.check.deleted_check_asset_types.map(item => item.check_asset_type_id);
-                
+
 
                 vm.$store
                     .dispatch("post", { uri: "updateCheck", data: vm.check })

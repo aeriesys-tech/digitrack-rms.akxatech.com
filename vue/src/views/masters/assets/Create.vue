@@ -31,7 +31,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row g-2">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="d-flex justify-content-between">
                                                 <div><label class="form-label">Asset Type</label><span class="text-danger"> *</span></div>
                                                 <a type="button" class="text-danger me-2" @click="reset()"><i class="ri-close-line fs-20 lh-1"></i></a>
@@ -48,16 +48,42 @@
                                                 :data="asset_attributes"
                                                 @input="asset_type => asset.asset_type_id = asset_type"
                                                 @selectsearch="getAssetType(asset.asset_type_id)"
+                                                :disabled="!status"
                                             >
                                             </search>
                                             <span v-if="errors?.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                         </div>
-                                        <div class="col-md-4">
+                                        <!-- try starts -->
+
+                                        <div class="col-md-3">
+                                            <div class="d-flex justify-content-between">
+                                                <div><label class="form-label">Asset Template</label></div>
+                                            </div>
+                                            <search
+                                                :class="{ 'is-invalid': errors.asset_template_id }"
+                                                :customClass="{ 'is-invalid': errors?.asset_template_id }"
+                                                :initialize="asset?.asset_template_id"
+                                                id="asset_template_id"
+                                                label="template_name"
+                                                label2="template_code"
+                                                placeholder="Select Asset Template"
+                                                :data="asset_templates"
+                                                @input="asset_template => asset.asset_template_id = asset_template"
+                                                @selectsearch="getAssetTemplateValues(asset.asset_template_id)"
+                                                :disabled="!status"
+                                            >
+                                            </search>
+                                            <span v-if="errors?.asset_template_id" class="invalid-feedback">{{ errors.asset_template_id[0] }}</span>
+                                        </div>
+
+                                        <!-- try ends -->
+
+                                        <div class="col-md-3">
                                             <label class="form-label">Asset Code</label><span class="text-danger"> *</span>
                                             <input type="text" placeholder="Enter Asset Code" class="form-control" :class="{ 'is-invalid': errors?.asset_code }" v-model="asset.asset_code" />
                                             <span v-if="errors?.asset_code" class="invalid-feedback">{{ errors.asset_code[0] }}</span>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Asset Name</label><span class="text-danger"> *</span>
                                             <input type="text" placeholder="Enter Asset Name" class="form-control" :class="{ 'is-invalid': errors?.asset_name }" v-model="asset.asset_name" />
                                             <span v-if="errors?.asset_name" class="invalid-feedback">{{ errors.asset_name[0] }}</span>
@@ -167,11 +193,11 @@
                                         <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
                                             <label class="form-label">Height (in m)</label><span class="text-danger"> *</span>
                                             <input
-                                                type="number" step="any"
+                                                type="number"
+                                                step="any"
                                                 placeholder="Enter Height "
                                                 class="form-control"
                                                 :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('height')) ||  errors?.height }"
-
                                                 v-model="asset.height"
                                             />
                                             <span v-if="errors?.height" class="invalid-feedback">{{ errors.height[0] }}</span>
@@ -181,13 +207,14 @@
                                         <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
                                             <label class="form-label">Diameter (in m)</label><span class="text-danger"> *</span>
                                             <input
-                                                type="number" step="any"
+                                                type="number"
+                                                step="any"
                                                 placeholder="Enter Diameter "
                                                 class="form-control"
                                                 :class="{ 'is-invalid': errors?.zone_name && errors.zone_name.some(error => error.includes('diameter')) ||  errors?.diameter }"
                                                 v-model="asset.diameter"
                                             />
-                                             <span v-if="errors?.diameter" class="invalid-feedback">{{ errors.diameter[0] }}</span>
+                                            <span v-if="errors?.diameter" class="invalid-feedback">{{ errors.diameter[0] }}</span>
                                             <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('diameter'))" class="invalid-feedback">{{ errors.zone_name[0] }}</span>
                                         </div>
                                         <div class="col-md-4">
@@ -221,11 +248,32 @@
                                                 </div>
                                             </div>
                                         </div> -->
+                                        <div class="row zone-border g-2" v-for="(zone, index) in asset.zone_name" :key="index">
+                                            <!-- <div class="col-md-4 mt-0">
+                                                <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
+                                                <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index === 0 || !!asset.asset_template_id"  />
+                                                <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
+                                            </div> -->
 
-                                          <div class="row zone-border g-2" v-for="(zone, index) in asset.zone_name" :key="index" >
                                             <div class="col-md-4 mt-0">
                                                 <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                                <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index===0" />
+                                                 <input
+                                                    v-if="!!asset.asset_id"
+                                                    type="text"
+                                                    v-model="zone.zone_name"
+                                                    class="form-control"
+                                                    :class="{ 'is-invalid': errors[`zone_name_${index}`] }"
+                                                    :disabled="index === 0"
+                                                />
+
+                                                <input
+                                                    v-else
+                                                    type="text"
+                                                    v-model="zone.zone_name"
+                                                    class="form-control"
+                                                    :class="{ 'is-invalid': errors[`zone_name_${index}`] }"
+                                                    :disabled="index === 0 || !!asset.asset_template_id"
+                                                />
                                                 <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
                                             </div>
 
@@ -234,14 +282,13 @@
                                                 <input type="number" step="any" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
                                                 <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
                                             </div>
-
                                             <div class="col-md-4 mt-0">
                                                 <label class="form-label">Diameter (in m)</label><span v-if="asset.geometry_type=='Cylindrical'" class="text-danger"> *</span>
                                                 <input type="number" step="any" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
                                                 <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
                                             </div>
                                         </div>
-                                        <div class="row g-2 " >
+                                        <div class="row g-2">
                                             <div class="col-md-4">
                                                 <label class="form-label">Latitude</label>
                                                 <input type="number" placeholder="Enter Latitude" class="form-control" :class="{ 'is-invalid': errors?.latitude }" v-model="asset.latitude" />
@@ -271,7 +318,14 @@
                                         <div class="col-md-4" v-for="field, key in asset.asset_attributes" :key="key">
                                             <div v-if="field.field_type == 'Text'">
                                                 <label class="form-label">{{ field.display_name }}</label><span v-if="field.is_required" class="text-danger">*</span>
-                                                <input type="text" class="form-control" :placeholder="'Enter ' + field.display_name"  :maxlength="field.field_length" :class="{ 'is-invalid': errors[field.display_name] }" v-model="field.asset_attribute_value.field_value" />
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    :placeholder="'Enter ' + field.display_name"
+                                                    :maxlength="field.field_length"
+                                                    :class="{ 'is-invalid': errors[field.display_name] }"
+                                                    v-model="field.asset_attribute_value.field_value"
+                                                />
 
                                                 <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                             </div>
@@ -286,7 +340,7 @@
                                                     :class="{ 'is-invalid': errors[field.display_name] }"
                                                     v-model="field.asset_attribute_value.field_value"
                                                 /> -->
-                                                 <input
+                                                <input
                                                     type="number"
                                                     class="form-control"
                                                     min="0"
@@ -396,7 +450,9 @@
                     geometry_type: "",
                     height: "",
                     diameter: "",
+                    asset_template_id: "",
                 },
+                asset_template: "",
 
                 voltage: {
                     color: "#ffffff",
@@ -424,6 +480,7 @@
                 initial_zone_no: null,
                 new_zone_names: [],
                 prev_zone_names: [],
+                asset_templates: [],
                 error_style: {
                     "border-color": "#dc3545",
                     "padding-right": "calc(1.5em + 0.812rem)",
@@ -472,6 +529,7 @@
                                     department_name: ele.department.department_name,
                                 });
                             });
+                            // vm.getAssetTemplates();
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -483,45 +541,111 @@
         },
 
         watch: {
+            "asset.asset_type_id": function () {
+                let vm = this;
+                vm.getAssetTemplates();
+            },
+            // "asset.no_of_zones": function (newVal) {
+            //     let vm = this;
+            //     if (vm.asset.asset_template_id == "" ) {
+            //         vm.asset.zone_name = [];
+            //         if (vm.asset.no_of_zones <= 0) {
+            //             vm.asset.no_of_zones = 1;
+            //             vm.asset.zone_name.push({
+            //                 zone_name: "Overall",
+            //                 height: null, // Add height field
+            //                 diameter: null, // Add diameter field
+            //             });
+            //         }
+            //         if (vm.status) {
+            //             for (let i = 0; i < vm.asset.no_of_zones; i++) {
+            //                 vm.asset.zone_name.push({
+            //                     zone_name: i === 0 ? "Overall" : null,
+            //                 });
+            //             }
+            //         } else {
+            //             vm.prev_zone_names.map(function (pre_element) {
+            //                 vm.asset.zone_name.push(pre_element);
+            //             });
+            //             if (vm.asset.no_of_zones && vm.asset.no_of_zones < vm.prev_zone_names.length) {
+            //                 vm.asset.no_of_zones = vm.prev_zone_names.length;
+            //             }
+            //             if (vm.asset.no_of_zones && vm.asset.no_of_zones > vm.prev_zone_names.length) {
+            //                 let number = vm.asset.no_of_zones - vm.prev_zone_names.length;
+            //                 vm.new_zone_names = [];
+            //                 for (let i = 0; i < number; i++) {
+            //                     vm.new_zone_names.push({
+            //                         zone_name: null,
+            //                     });
+            //                 }
+            //                 vm.new_zone_names.map(function (element) {
+            //                     vm.asset.zone_name.push(element);
+            //                 });
+            //             }
+            //         }
+            //     }
+            // },
+
             "asset.no_of_zones": function (newVal) {
                 let vm = this;
-                vm.asset.zone_name = [];
-                if (vm.asset.no_of_zones <= 0) {
-                    vm.asset.no_of_zones = 1;
-                    vm.asset.zone_name.push({
-                        zone_name: "Overall",
-                        height: null, // Add height field
-                        diameter: null, // Add diameter field
-                    });
-                }
-                if (vm.status) {
-                    for (let i = 0; i < vm.asset.no_of_zones; i++) {
+
+                if (!vm.asset.asset_template_id) { // If asset_template_id is empty, it's a new asset
+                    // Handle new asset zone creation
+                    vm.asset.zone_name = [];
+
+                    if (vm.asset.no_of_zones <= 0) {
+                        vm.asset.no_of_zones = 1;
                         vm.asset.zone_name.push({
-                            zone_name: i === 0 ? "Overall" : null,
+                            zone_name: "Overall",
+                            height: null, // Add height field
+                            diameter: null, // Add diameter field
                         });
                     }
-                } else {
-                    vm.prev_zone_names.map(function (pre_element) {
-                        vm.asset.zone_name.push(pre_element);
-                    });
-                    if (vm.asset.no_of_zones && vm.asset.no_of_zones < vm.prev_zone_names.length) {
-                        vm.asset.no_of_zones = vm.prev_zone_names.length;
+
+                    if (vm.status) {
+                        for (let i = 0; i < vm.asset.no_of_zones; i++) {
+                            vm.asset.zone_name.push({
+                                zone_name: i === 0 ? "Overall" : null,
+                            });
+                        }
+                    } else {
+                        vm.prev_zone_names.map(function (pre_element) {
+                            vm.asset.zone_name.push(pre_element);
+                        });
+
+                        if (vm.asset.no_of_zones < vm.prev_zone_names.length) {
+                            vm.asset.no_of_zones = vm.prev_zone_names.length;
+                        } else if (vm.asset.no_of_zones > vm.prev_zone_names.length) {
+                            let number = vm.asset.no_of_zones - vm.prev_zone_names.length;
+                            let newZones = [];
+                            for (let i = 0; i < number; i++) {
+                                newZones.push({
+                                    zone_name: null,
+                                });
+                            }
+                            vm.asset.zone_name.push(...newZones);
+                        }
                     }
-                    if (vm.asset.no_of_zones && vm.asset.no_of_zones > vm.prev_zone_names.length) {
-                        let number = vm.asset.no_of_zones - vm.prev_zone_names.length;
-                        vm.new_zone_names = [];
+                } else {
+                    if (newVal <= 0) {
+                        vm.asset.no_of_zones = 1;
+                    }
+
+                    // Prevent reduction of zones in edit mode
+                    if (newVal < vm.asset.zone_name.length) {
+                        vm.asset.no_of_zones = vm.asset.zone_name.length;
+                    } else if (newVal > vm.asset.zone_name.length) {
+                        let number = newVal - vm.asset.zone_name.length;
+                        let newZones = [];
                         for (let i = 0; i < number; i++) {
-                            vm.new_zone_names.push({
+                            newZones.push({
                                 zone_name: null,
                             });
                         }
-                        vm.new_zone_names.map(function (element) {
-                            vm.asset.zone_name.push(element);
-                        });
+                        vm.asset.zone_name.push(...newZones); // Add new zones if increasing number
                     }
                 }
-                console.log("vm.asset.zone_name:----", vm.asset.zone_name);
-            },
+            }
         },
 
         computed: {
@@ -539,7 +663,7 @@
                 // }
             },
         },
-    methods: {
+        methods: {
             validateNumberLength(field) {
                 if (field.asset_attribute_value.field_value) {
                     const valueStr = String(field.asset_attribute_value.field_value);
@@ -556,7 +680,6 @@
                 let err = zone_names.filter(function (element) {
                     return element[0].includes("zone_name") && element[0].includes(index);
                 });
-                console.log(err);
                 if (err.length) {
                     return "Zone name field is required";
                 }
@@ -664,7 +787,6 @@
                         }
                     } else {
                         if (!vm.asset.deleted_asset_departments.includes(department_id)) {
-                            console.log(department_id);
                             vm.asset.deleted_asset_departments.push(department_id);
                         }
                     }
@@ -790,7 +912,7 @@
 
             addAsset() {
                 let vm = this;
-                if (!this.validateFields()) {
+                if (!vm.validateFields()) {
                     return;
                 }
 
@@ -905,6 +1027,7 @@
                         // loader.hide();
                         vm.show_assets = response.data.data;
                         vm.asset.asset_attributes = response.data.data;
+                        // vm.getAssetTemplates(asset_type_id);
                     })
                     .catch(function (error) {
                         // loader.hide();
@@ -923,6 +1046,46 @@
                         vm.asset.area_name = area[0].Area?.area_name;
                     }
                 }
+            },
+            getAssetTemplates() {
+                let vm = this;
+                // let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getAssetTemplateDropDown", data: vm.asset })
+                    .then((response) => {
+                        // loader.hide();
+                        vm.asset_templates = response.data.data;
+                        console.log("asset templa---0", vm.asset_templates);
+                    })
+                    .catch(function (error) {
+                        // loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+            getAssetTemplateValues(asset_template_id) {
+                let vm = this;
+                let data = {
+                    asset_type_id: vm.asset.asset_type_id,
+                    asset_template_id: asset_template_id,
+                };
+                // let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "getAssetTemplateToAsset", data: data })
+                    .then((response) => {
+                        // loader.hide();
+                        vm.asset = response.data.data;
+                        // Use department IDs to find exact objects from `departments`
+                        if (vm.asset.asset_department_ids) {
+                            vm.asset.asset_departments_obj = vm.asset.asset_department_ids.map((dept) => vm.departments.find((d) => d.department_id === dept.department_id));
+                        }
+                    })
+                    .catch(function (error) {
+                        // loader.hide();
+                        console.log("template---zone", error);
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
             },
         },
     };

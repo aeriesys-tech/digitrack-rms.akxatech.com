@@ -26,6 +26,7 @@
                                     <span class="nav-link text-dark"><span>Asset Code</span> <span class="badge text-dark" style="text-wrap: balance;">{{asset.asset_code}}</span></span>
                                     <span class="nav-link text-dark"><span>Asset Name</span> <span class="badge text-dark">{{asset.asset_name}}</span></span>
                                     <span class="nav-link text-dark"><span>Asset Type</span> <span class="badge text-dark">{{asset.asset_type?.asset_type_name}}</span></span>
+                                    <span class="nav-link text-dark"><span>Asset Template</span> <span class="badge text-dark">{{asset.asset_template?.template_name}}</span></span>
                                     <span class="nav-link text-dark"><span>Latitude</span> <span class="badge text-dark">{{asset.latitude}}</span></span>
                                     <span class="nav-link text-dark"><span>Longitude</span> <span class="badge text-dark">{{asset.longitude}}</span></span>
                                     <span class="nav-link text-dark"><span>Radius</span> <span class="badge text-dark">{{asset.radius}}</span></span>
@@ -383,13 +384,14 @@
                                                 </li>
                                             </ul>
                                         </div> -->
+                                        <label class="form-label">Asset Zone</label>
                                         <MultiSelect v-model="check.check_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
-                                            style="width: 100%;; height: 37px;" :style="errors?.check_asset_zones ? error_style : ''" :disabled="check.check_zone_read_only"/>
+                                            style="width: 100%; height: 37px;" :style="errors?.check_asset_zones ? error_style : ''" :disabled="check.check_zone_read_only"/>
                                         <span v-if="errors?.check_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.check_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-8" v-can="'assetChecks.create'">
-                                        <!-- <label>Check</label> -->
+                                        <label class="form-label">Check</label>
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetChecks.create'"> -->
 
                                         <search
@@ -404,23 +406,29 @@
                                             placeholder="Select Check"
                                             :data="checks"
                                             @input=" check1 => check.check_id = check1"
+                                            @selectsearch="checkstatus()"
                                         >
                                         </search>
                                         <span v-if="errors.check_id" class="invalid-feedback">{{ errors.check_id[0] }}</span>
                                     </div>
                                     <div class="col-md-12" v-can="'assetChecks.create'">
                                         <div class="row align-items-center g-2">
-                                            <div class="col-md-3">
-                                                <!-- <label>Lcl</label> -->
+                                            <div class="col-md-3" v-if="check.field_type === 'Number'">
+                                                <label class="form-label">Lcl</label>
                                                 <input type="text" class="form-control" placeholder="Lcl" v-model="check.lcl" />
                                             </div>
-                                            <div class="col-md-3">
-                                                <!-- <label>Ucl</label> -->
+                                            <div class="col-md-3" v-if="check.field_type === 'Number'">
+                                                <label class="form-label">Ucl</label>
                                                 <input type="text" class="form-control" placeholder="Ucl" v-model="check.ucl" />
                                             </div>
-                                            <div class="col-md-3">
-                                                <!-- <label>Default Value</label> -->
-                                                <input type="text" class="form-control" placeholder="Default Value" v-model="check.default_value" />
+                                              <div class="col-md-3" v-if="check.field_type === 'Select'">
+                                                <label class="form-label">Field Value</label>
+                                                <input type="text" disabled="disabled" class="form-control" placeholder="Field Value" v-model="check.field_values" />
+                                            </div>
+                                            <div class="col-md-3" v-if="check.field_type === 'Select'">
+                                                <label class="form-label">Default Value</label>
+                                                <input :class="{ 'is-invalid': errors.default_value }" type="text" class="form-control" placeholder="Default Value" v-model="check.default_value" />
+                                                <span v-if="errors.default_value" class="invalid-feedback">{{ errors.default_value[0] }}</span>
                                             </div>
                                             <div class="col-md-3 d-flex justify-content-end">
                                                 <button v-if="check.asset_check_id" class="btn btn-outline-success me-2" @click="updateCheck()"><i class="ri-add-circle-line icon-hgt"></i> Update</button>
@@ -1949,6 +1957,7 @@
                     check_asset_zones_obj: [],
                     check_asset_zones: [],
                     check_zone_read_only: false,
+                    template_check_status:false,
                 },
                 service: {
                     service_id: "",
@@ -2053,7 +2062,25 @@
         assets1() {
         this.assets1 = this.$store.getters.assets;
         // You can also add any additional logic here if needed
-    }
+        },
+        'check.check_id': function () {
+            let vm = this
+            let check_temp = vm.checks.filter((element) => {
+                return element.check_id == vm.check.check_id;
+            });
+            console.log("vm.check.template_check_status",vm.check.template_check_status)
+            if (check_temp.length && !vm.check.template_check_status) {
+                vm.check.lcl = check_temp[0].lcl
+                vm.check.ucl = check_temp[0].ucl
+                vm.check.default_value = check_temp[0].default_value
+                vm.check.field_type = check_temp[0].field_type
+                vm.check.field_values = check_temp[0].field_values
+            }
+            if(vm.check.template_check_status) {
+                vm.check.field_type = check_temp[0].field_type
+                vm.check.field_values = check_temp[0].field_values
+            }
+        }
     },
 
 
@@ -2207,6 +2234,7 @@
                 // console.log('spare.asset_spare_attributes:----', spare?.asset_spare_attributes)
             },
             editCheck(check) {
+                this.check.template_check_status = true;
                 this.check.asset_id = check.asset_id;
                 this.check.asset_check_id = check.asset_check_id;
                 this.check.check_id = check.check_id;
@@ -2224,6 +2252,9 @@
 
                 });
                 this.check.check_zone_read_only = true;
+            },
+            checkstatus(){
+                this.check.template_check_status = false;
             },
             editService(service) {
                 this.service.service_id = service.service_id;
@@ -2511,7 +2542,8 @@
                 if (validation_type == "Spares") {
                     for (const field of Object.values(this.spare.asset_spare_attributes)) {
                         if (field.spare_attributes[0].is_required && !field.field_value) {
-                            if (field.spare_attributes[0].field_type === "Color") {
+                            console.log('field.spare_attributes[0]?.field_type:--', field.spare_attributes[0]?.field_type)
+                            if (field.spare_attributes[0]?.field_type === "Color") {
                                 // Set default color if not provided
                                 field.field_value = "#000000"; // Default to black
                             } else {
@@ -2521,6 +2553,7 @@
                         }
                     }
                 }
+
                 if (validation_type == "Services") {
                     for (const field of Object.values(this.service.asset_service_attributes)) {
                         if (field.service_attributes[0].is_required && !field.field_value) {
@@ -2571,7 +2604,7 @@
                 })
 
                 let loader = vm.$loading.show();
-                vm.validateFields();
+                vm.validateFields('Spares');
                 if (vm.isValid) {
                     vm.$store
                         .dispatch("post", { uri: "addAssetSpare", data: vm.spare })
@@ -2602,7 +2635,7 @@
             updateSpare() {
                 let vm = this;
                 let loader = vm.$loading.show();
-
+                vm.validateFields('Spares');
                 if (vm.spare.spare_id != vm.spare.initial_spare_id) {
                     vm.spare.initial_asset_spare_attributes.map(function (ele) {
                         vm.spare.deleted_asset_spare_values.push(ele.asset_spare_value_id);
@@ -2651,6 +2684,7 @@
                     vm.check.lcl = "";
                     vm.check.ucl = "";
                     vm.check.default_value = "";
+                    vm.check.field_type = '';
                     vm.errors = [];
                     vm.check.asset_zone_id = [];
                     vm.check.check_asset_zones_obj = [];
@@ -2673,15 +2707,18 @@
                 .then(function (response) {
                     loader.hide();
                     vm.$store.dispatch("success", response.data.message);
+                    vm.check.template_check_status = false;
                     vm.check.check_id = "";
                     vm.check.lcl = "";
                     vm.check.ucl = "";
                     vm.check.default_value = "";
+                    vm.check.field_type = '';
                     vm.check.asset_check_id = "";
                     vm.check.check_asset_zones_obj = [];
                     vm.check.check_asset_zones = [];
                     vm.asset_zone_status_checks = false;
                     vm.check.check_zone_read_only = false;
+                    vm.errors = [];
                     vm.getAssetChecks();
                 })
                 .catch(function (error) {
@@ -2699,6 +2736,7 @@
                     vm.service.service_asset_zones.push(ele.asset_zone_id)
                 })
                 let loader = vm.$loading.show();
+                vm.validateFields('Services');
                 vm.$store.dispatch("post", { uri: "addAssetService", data: vm.service })
                 .then((response) => {
                     loader.hide();
@@ -2728,12 +2766,12 @@
             updateService() {
                 let vm = this;
                 let loader = vm.$loading.show();
+                vm.validateFields('Services');
                 if (vm.service.service_id != vm.service.initial_service_id) {
                     vm.service.initial_asset_service_attributes.map(function (ele) {
                         vm.service.deleted_asset_service_values.push(ele.asset_service_value_id);
                     });
                 }
-
                 let uri = { uri: "updateAssetService", data: vm.service };
                 vm.$store.dispatch("post", uri)
                 .then(function (response) {
@@ -2771,6 +2809,7 @@
                     vm.variable.variable_asset_zones.push(ele.asset_zone_id)
                 })
                 let loader = vm.$loading.show();
+                vm.validateFields('Variables');
                 vm.$store.dispatch("post", { uri: "addAssetVariable", data: vm.variable })
                 .then((response) => {
                     loader.hide();
@@ -2801,7 +2840,7 @@
             updateVariable() {
                 let vm = this;
                 let loader = vm.$loading.show();
-
+                vm.validateFields('Variables');
                 if (vm.variable.variable_id != vm.variable.initial_variable_id) {
                     vm.variable.initial_asset_variable_attributes.map(function (ele) {
                         vm.variable.deleted_asset_variable_values.push(ele.asset_variable_value_id);
@@ -2843,6 +2882,7 @@
                     vm.datasource.data_source_asset_zones.push(ele.asset_zone_id)
                 })
                 let loader = vm.$loading.show();
+                vm.validateFields('Data Sources');
                 vm.$store.dispatch("post", { uri: "addAssetDataSource", data: vm.datasource })
                 .then((response) => {
                     loader.hide();
@@ -2872,7 +2912,7 @@
             updateDataSource() {
                 let vm = this;
                 let loader = vm.$loading.show();
-
+                vm.validateFields('Data Sources');
                 if (vm.datasource.data_source_id != vm.datasource.initial_data_source_id) {
                     vm.datasource.initial_asset_datasource_attributes.map(function (ele) {
                         vm.datasource.deleted_asset_datasource_values.push(ele.asset_data_source_value_id);

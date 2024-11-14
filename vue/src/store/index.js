@@ -7,6 +7,7 @@ export default createStore({
   state: {
     // apiUrl:"https://digitrack-rms.akxatech.com/api/",
     apiUrl: "http://192.168.0.213/digitrack-rms.akxatech.com/laravel/public/api/",
+    // apiUrl: "http://172.28.224.1/digitrack-rms.akxatech.com/laravel/public/api/",
     user: null,
     token: '',
     permissions: [],
@@ -15,6 +16,8 @@ export default createStore({
     asset_id: '',
     assets: '',
     meter: '50',
+    asset_templates: '',
+    asset_template_id: '',
   },
   getters: {
     user(state) {
@@ -40,6 +43,12 @@ export default createStore({
     },
     meter(state) {
       return state.meter;
+    },
+    asset_template_id(state) {
+      return state.asset_template_id;
+    },
+    asset_templates(state) {
+      return state.asset_templates;
     },
   },
   mutations: {
@@ -67,6 +76,12 @@ export default createStore({
     setMeter(state, meter) {
       state.meter = meter;
     },
+    setAssetTemplateId(state, asset_template_id) {
+      state.asset_template_id = asset_template_id;
+    },
+    setAssetTemplates(state, asset_templates) {
+      state.asset_templates = asset_templates;
+    },
   },
   actions: {
     async setUser(context, payload) {
@@ -92,6 +107,12 @@ export default createStore({
     },
     async setMeter(context, payload) {
       await context.commit('setMeter', payload);
+    },
+    async setAssetTemplateId(context, payload) {
+      await context.commit('SetAssetTemplateID', payload);
+    },
+    async setAssetTemplates(context, payload) {
+      await context.commit('setAssetTemplates', payload);
     },
     async logout(context) {
       await context.commit('setUser', null);

@@ -19,6 +19,12 @@ import DynamicAssets from "@/views/masters/assets/ViewDynamicAssets.vue";
 import GenerateQR from "@/views/masters/assets/GenerateQRCode.vue"
 import AssetAccessories from "@/views/masters/assets/AssetAccessories.vue";
 
+
+// asset template
+import AssetTemplates from "@/views/masters/assetTemplates/Index.vue";
+import CreateAssetTemplate from "@/views/masters/assetTemplates/Create.vue";
+import AssetTemplateView from "@/views/masters/assetTemplates/ViewAssetTemplate.vue";
+
 //Registers
 import Activities from "@/views/registers/activity/Index.vue";
 import CreateActivity from "@/views/registers/activity/Create.vue";
@@ -321,6 +327,29 @@ const routes = [
   //   name: "Asset.Spare",
   //   component: SpareVue,
   // },
+
+
+  // asset template
+  {
+    path: "/asset_templates",
+    name: "AssetTemplates",
+    component: AssetTemplates,
+  },
+  {
+    path: "/asset_templates/create",
+    name: "AssetTemplates.Create",
+    component: CreateAssetTemplate,
+  },
+  {
+    path: "/asset_template/:asset_template_id/edit",
+    name: "AssetTemplates.Edit",
+    component: CreateAssetTemplate,
+  },
+  {
+    path: "/asset_template/:asset_template_id/view",
+    name: "AssetTemplates.View",
+    component: AssetTemplateView,
+  },
 
   //registers
   {

@@ -163,6 +163,21 @@
                     </li>
                 </ul>
             </div> -->
+             <div class="nav-group show">
+                <ul class="nav nav-sidebar">
+                    <li class="nav-item">
+                        <router-link
+                            to="/asset_templates"
+                            :style="{color:assetTemplateActive}"
+                            @click="showTab('AssetTemplate')"
+                            v-bind:class="{ active: $route.path === '/asset_templates' || $route.path === '/asset_template/create' || $route.name === 'AssetTemplates.Edit' || $route.name === 'AssetTemplates.View' }"
+                            class="nav-link"
+                        >
+                            <i class="ri-archive-drawer-line"></i><span>Asset Templates</span>
+                        </router-link>
+                    </li>
+                </ul>
+            </div>
             <div class="nav-group show">
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
@@ -178,6 +193,7 @@
                     </li>
                 </ul>
             </div>
+
             <div class="nav-group" v-if="permission('Registers')" :class="{show:showRegister}" @click="showTab('Registers')">
                 <a href="javascript:void(0)" :style="{color:registerColor}" class="nav-label"><i class="ri-links-fill icn"></i> Registers</a>
                 <ul class="nav nav-sidebar">
@@ -328,6 +344,7 @@
                 reportsColor: "rgba(255, 255, 255, .6) !important",
                 AssetParametersColor: "rgba(255, 255, 255, .6) !important",
                 AttributesColor: "rgba(255, 255, 255, .6) !important",
+                assetTemplateActive: "white !important",
                 assetActive: "white !important",
                 listsActive: "white !important",
                 showLinage: false,
@@ -380,6 +397,7 @@
                 this.userManagementColor = "rgba(255, 255, 255, .6) !important";
                 this.reportsColor = "rgba(255, 255, 255, .6) !important";
                 this.AssetParametersColor = "rgba(255, 255, 255, .6) !important";
+                this.assetTemplateActive = "rgba(255, 255, 255, .6) !important";
                 this.assetActive = "rgba(255, 255, 255, .6) !important";
                 this.AttributesColor = "rgba(255, 255, 255, .6) !important";
                 this.ReviewColor = "rgba(255, 255, 255, .6) !important";
@@ -453,7 +471,10 @@
                     this.showUser = !this.showUser;
                 } else if (tab == "/dashboard") {
                     this.dashboardActive = "white !important";
-                } else if (tab == "/assets" || name == "Assets.Create" || name == "Assets.Edit" || name == "Assets.View") {
+                }  else if (tab == "/asset_templates" || name == "AssetTemplates.Create" || name == "AssetTemplates.Edit" || name == "AssetTemplates.View") {
+                    this.assetTemplateActive = "white !important";
+                }
+                else if (tab == "/assets" || name == "Assets.Create" || name == "Assets.Edit" || name == "Assets.View") {
                     this.assetActive = "white !important";
                 } else if (tab == "/asset_attributes" || tab == "/spare_attributes" || tab == "/data_source_attributes" || tab == "/variable_attributes" || tab == "/service_attributes" || tab == "/break_down_attributes" || tab == "/activity_attributes") {
                     this.AttributesColor = "white !important";
@@ -508,6 +529,9 @@
                     case "UserManagement":
                         this.userManagementColor = "white !important";
                         this.showUser = !this.showUser;
+                        break;
+                    case "Asset":
+                        this.assetTemplateActive = "white !important";
                         break;
                     case "Asset":
                         this.assetActive = "white !important";
