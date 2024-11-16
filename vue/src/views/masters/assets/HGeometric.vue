@@ -62,10 +62,10 @@
                             v-for="(spare, key1) in zone.asset_spares"
                             :key="key1"
                             :style="{
-                                    width: `${Number((spare.quantity / totalQuantity(zone.asset_spares)) * zone.height * h_meter)}px`, 
-                                    height: `${Number(assets.diameter * h_meter)}px`, 
-                                    backgroundColor: spareColorCode(spare), 
-                                    textAlign: 'center', 
+                                    width: `${Number((spare.quantity / totalQuantity(zone.asset_spares)) * zone.height * h_meter)}px`,
+                                    height: `${Number(assets.diameter * h_meter)}px`,
+                                    backgroundColor: spareColorCode(spare),
+                                    textAlign: 'center',
                                     color: 'white',
                                     borderTop: key1 % 2 === 0 ? '1px solid gray' : '',
                                     borderBottom: key1 % 2 !== 0 ? '1px solid gray' : '',
@@ -92,7 +92,7 @@
 
 
 
-    
+
 </template>
 
 <script>
@@ -236,27 +236,27 @@
     }
 
     .arrow-top {
-        border-width: 0 4px 6px 4px; 
+        border-width: 0 4px 6px 4px;
         border-color: transparent transparent black transparent;
-        top: -6px; 
+        top: -6px;
         margin-left: -3px;
     }
 
     .arrow-bottom {
-        border-width: 6px 4px 0 4px; 
+        border-width: 6px 4px 0 4px;
         border-color: black transparent transparent transparent;
-        bottom: -6px; 
+        bottom: -6px;
         margin-left: -3px;
     }
 
     .arrow-left {
-        border-width: 4px 6px 4px 0; 
+        border-width: 4px 6px 4px 0;
         border-color: transparent black transparent transparent;
-        left: 0px; 
+        left: 0px;
     }
 
     .arrow-right {
-        border-width: 4px 0 4px 6px; 
+        border-width: 4px 0 4px 6px;
         border-color: transparent transparent transparent black;
         right: 0px;
     }
