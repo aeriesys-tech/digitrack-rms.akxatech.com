@@ -151,6 +151,7 @@ import Test from "@/views/Test.vue";
 import SpareCompaingn from "@/views/Reviews/SpareCompaign.vue"
 import AssetDetails from "@/views/Reviews/AssetDetails.vue"
 import Geometric from "@/views/masters/assets/Geometric.vue"
+import HorizontalGeometric from "@/views/masters/assets/HGeometric.vue"
 import ProcessTrends from "@/views/Reviews/ProcessTrends.vue"
 
 
@@ -829,6 +830,11 @@ const routes = [
     path: "/geometric/:asset_id",
     name: "Geometric",
     component: Geometric,
+  },
+  {
+    path: "/horizontal_geometric/:asset_id",
+    name: "Horizontal_Geometric",
+    component: HorizontalGeometric,
   },
 
   // spare campaign

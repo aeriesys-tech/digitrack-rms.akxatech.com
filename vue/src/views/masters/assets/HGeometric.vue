@@ -1,0 +1,156 @@
+<template>
+        <div class="card card-one" v-if="assets">
+            <div class="card-header text-center">
+                <h6 class="card-title">{{ assets.asset_name }}</h6>
+            </div>
+            <div class="card-body">
+                <h6 class="mb-3"><span class="text-primary">Note:</span> 1 meter={{h_meter}}px</h6>
+                <div class="col-md-3 mb-4">
+                    <input class="form-control" type="number" v-model="h_meter" />
+                </div>
+                <div class="row">
+                    <div class="col-md-12 d-flex align-items-center" style="justify-content: center;">
+                        <h6 class="text-center">Dia={{Number(assets.diameter)}} (m)</h6>
+                        <div :style="`height:${Number(assets.diameter * h_meter)}px;`"><span class="arrow-top"></span><span class="arrow-bottom"></span></div>
+                        <div class="d-flex flex-column align-items-center">
+                            <div :title="assets.asset_name" :style="`height:${Number(assets.diameter * h_meter)}px; width:${Number(assets.height * h_meter)}px; border:2px solid gray`" @click="showAssetZones()"></div>
+                            <h6 class="text-center mt-2">Height={{Number(assets.height)}} (m)</h6>
+                        </div>
+                    </div>
+                    <br />
+                    <hr style="border: none; height: 2px; background-color: white;" />
+                    <hr style="border: none; height: 2px; background-color: white;" />
+                    <br />
+                    <div class="col-md-12 d-flex flex-wrap" style="justify-content: center;" v-if="display_asset_zone">
+                        <h6 class="text-center mt-5">Dia={{Number(assets.diameter)}} (m)</h6>
+                        <div
+                            v-for="zone, key in assets.zone_name"
+                            :key="key"
+                            class="zone-container d-flex flex-row"
+                            :style="`width:${Number(zone.height * h_meter)}px; height:${Number(assets.diameter * h_meter)}px; border:1px solid gray; position: relative;`">
+                           
+                            <div class="zone-name-container" :style="`width:${Number(zone.height * h_meter)}px;`">
+                                <span class="zone-text" style="font-weight: bold;">{{ zone.zone_name }}</span>
+                            </div>
+    
+                            <div
+                                v-for="(spare, key1) in zone.asset_spares"
+                                :key="key1"
+                                :style="{
+                                        width: `${Number((spare.quantity / totalQuantity(zone.asset_spares)) * zone.height * h_meter)}px`, 
+                                        height: `${Number(assets.diameter * h_meter)}px`, 
+                                        backgroundColor: spareColorCode(spare), 
+                                        textAlign: 'center', 
+                                        color: 'white',
+                                        borderTop: key1 % 2 === 0 ? '1px solid gray' : '',
+                                        borderBottom: key1 % 2 !== 0 ? '1px solid gray' : '',
+                                        position: 'relative'
+                                    }"
+                                :title="zone.zone_name"
+                            >
+                                <span style="color: black;">{{ spare?.spare?.spare_name }} ({{ spare.quantity }})</span>
+    
+                                <div class="spare-percentage">
+                                    {{ (Number((spare.quantity / totalQuantity(zone.asset_spares))) * 100).toFixed(2) }} %
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 v-if="display_asset_zone" class="text-center mt-2">Height={{Number(assets.height)}} (m)</h6>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <script>
+        export default {
+            name: "Geometric",
+            data() {
+                return {
+                    asset: {
+                        asset_id: "",
+                    },
+                    assets: "",
+                    h_meter: null,
+                    display_asset_zone: false,
+                };
+            },
+            mounted() {
+                this.h_meter = this.$store.state.h_meter;
+            },
+    
+            beforeRouteEnter(to, from, next) {
+                next((vm) => {
+                    let uri = { uri: "getAsset", data: { asset_id: to.params.asset_id } };
+                    vm.$store
+                        .dispatch("post", uri)
+                        .then(function (response) {
+                            vm.assets = response.data.asset;
+                        })
+                        .catch(function (error) {
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
+                });
+            },
+            methods: {
+                showAssetZones() {
+                    this.display_asset_zone = !this.display_asset_zone;
+                },
+                totalQuantity(spare) {
+                    return spare.reduce((sum, item) => sum + item.quantity, 0);
+                },
+                spareColorCode(spare) {
+                    for (let i = 0; i < spare.asset_spare_value.length; i++) {
+                        if (spare.asset_spare_value[i].field_value.includes("#")) {
+                            return spare.asset_spare_value[i].field_value;
+                        }
+                    }
+                },
+            },
+        };
+    </script>
+    
+    <style scoped>
+        .zone-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* align-items: center; */
+            justify-content: center;
+        }
+    
+        .zone-name-container {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2px 5px;
+            border-radius: 5px;
+            z-index: 1;
+            border-bottom: 2px solid black;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    
+        .spare-percentage {
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .zone-text {
+            text-align: center;
+            color: #292525;
+            margin-top: 5px;
+        }
+    </style>
+    

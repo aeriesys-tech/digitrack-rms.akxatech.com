@@ -75,8 +75,8 @@ class AssetTemplateController extends Controller
             'plant_id' => 'required|exists:plants,plant_id',
             'area_id' => 'nullable|exists:areas,area_id',
             'geometry_type' => 'nullable',
-            'height' => 'nullable|required_if:geometry_type,Cylindrical',
-            'diameter' => 'nullable|required_if:geometry_type,Cylindrical'
+            'height' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical',
+            'diameter' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical'
         ]);
      
         $request->validate([
@@ -189,8 +189,8 @@ class AssetTemplateController extends Controller
             'plant_id' => 'required|exists:plants,plant_id' ,
             'area_id' => 'nullable|exists:areas,area_id',
             'geometry_type' => 'nullable',
-            'height' => 'nullable|required_if:geometry_type,Cylindrical',
-            'diameter' => 'nullable|required_if:geometry_type,Cylindrical'
+            'height' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical',
+            'diameter' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical'
         ]);
 
         $request->validate([

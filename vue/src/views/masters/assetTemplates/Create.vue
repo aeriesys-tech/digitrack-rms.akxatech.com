@@ -156,7 +156,8 @@
                                             <!-- <input type="text" placeholder="Enter Geometry Type" class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type" /> -->
                                             <select class="form-control" :class="{ 'is-invalid': errors?.geometry_type }" v-model="asset.geometry_type">
                                                 <option value="">Select Geometry Type</option>
-                                                <option value="Cylindrical">Cylindrical </option>
+                                                <option value="V-Cylindrical">V-Cylindrical (Vertical) </option>
+                                                <option value="H-Cylindrical">H-Cylindrical (Horizontal) </option>
                                                 <option value="Cubical">Cubical</option>
                                                 <option value="Conical">Conical</option>
                                                 <option value="Trapezoidal">Trapezoidal</option>
@@ -164,7 +165,7 @@
                                             </select>
                                             <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
                                         </div>
-                                        <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
+                                        <div class="col-md-4" v-if="['V-Cylindrical', 'H-Cylindrical'].includes(asset.geometry_type)">
                                             <label class="form-label">Height (in m)</label><span class="text-danger"> *</span>
                                             <input
                                                 type="number" step="any"
@@ -178,7 +179,7 @@
                                             <!-- <span v-if="errors?.zone_name && errors.zone_name.includes('Height')" class="invalid-feedback">{{ errors.zone_name[0] }}</span> -->
                                             <span v-if="errors?.zone_name && errors.zone_name.some(error => error.includes('height')) " class="invalid-feedback">{{ errors.zone_name[0] }}</span>
                                         </div>
-                                        <div class="col-md-4" v-if="asset.geometry_type=='Cylindrical'">
+                                        <div class="col-md-4" v-if="['V-Cylindrical', 'H-Cylindrical'].includes(asset.geometry_type)">
                                             <label class="form-label">Diameter (in m)</label><span class="text-danger"> *</span>
                                             <input
                                                 type="number" step="any"
