@@ -9,9 +9,8 @@
                 <input class="form-control" type="number" v-model="h_meter" />
             </div>
             <div class="row">
-                <div class="col-md-12 mb-4 d-flex align-items-center">
+                <div class="col-md-12 mb-4 d-flex justify-content-center align-items-center"> <!-- Center align the row -->
                     <div class="d-flex align-items-center" style="margin-bottom: auto;">
-                        <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
                         <h6 class="text-center ms-2">{{ Number(assets.diameter) }} (m)</h6>
                         <div class="dimensions-y" :style="`height:${Math.min(Number(assets.diameter * h_meter), 400)}px;`">
                             <span class="arrow-top"></span>
@@ -29,11 +28,13 @@
                         <h6 class="text-center mt-1">{{ Number(assets.height) }} (m)</h6>
                     </div>
                 </div>
+
                 <br />
                 <hr style="border: none; height: 1px; background-color: white;" />
                 <hr style="border: none; height: 1px; background-color: white;" />
                 <br />
-                <div class="col-md-12 d-flex flex-wrap" style="justify-content: center;" v-if="display_asset_zone">
+
+                <div class="col-md-12 d-flex flex-wrap1 justify-content-center" v-if="display_asset_zone">
                     <h6 class="text-center mt-5">{{ Number(assets.diameter) }} (m)</h6>
 
                     <div class="dimensions-y mt-1" :style="`height:${Number(assets.diameter * h_meter)}px;`">
@@ -80,7 +81,9 @@
                         </div>
                     </div>
                 </div>
+
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                 <div v-if="display_asset_zone" class="dimensions-x mb-3" :style="`width: ${Number(assets.height * h_meter)}px; margin-top: 10px;`">
                     <span class="arrow-left"></span>
                     <span class="arrow-right"></span>
@@ -89,10 +92,6 @@
             </div>
         </div>
     </div>
-
-
-
-    
 </template>
 
 <script>
@@ -145,7 +144,7 @@
 </script>
 
 <style scoped>
-    .zone-container {
+    .zone-container {   
         position: relative;
         display: flex;
         flex-direction: column;
@@ -157,12 +156,9 @@
         top: -40px;
         left: 50%;
         transform: translateX(-50%);
-
         background: rgba(255, 255, 255, 0.7);
         padding: 80px 60xpx;
-        /* border-radius: 5px; */
         z-index: 1;
-        /* border-bottom: 2px solid black; */
         margin-bottom: 10px;
         text-align: center;
     }
@@ -172,7 +168,7 @@
         color: #333;
         font-weight: bold;
         position: absolute;
-        top: 50%;
+        top: 80%;
         left: 50%;
         transform: translate(-50%, -50%);
         display: flex;
@@ -260,10 +256,4 @@
         border-color: transparent transparent transparent black;
         right: 0px;
     }
-
-
-
-
-
-
 </style>
