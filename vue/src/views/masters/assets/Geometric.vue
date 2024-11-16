@@ -20,9 +20,6 @@
                         </div>
                         <div class="col-11">
                             <div :title="assets.asset_name" class="" :style="`height:${Number(assets.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:2px solid gray`" @click="showAssetZones()"></div>
-                            <div class="text-center"> 
-                                <h6 style="margin-left: 70px;">Since there was no <strong>geometric type </strong> no records were found.</h6>
-                            </div>
                         </div>
                     </div>
                 </div>
