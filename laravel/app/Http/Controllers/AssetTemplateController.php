@@ -147,7 +147,7 @@ class AssetTemplateController extends Controller
             );
         }
 
-        return response()->json(["message" => "Asset created successfully"], 200);
+        return response()->json(["message" => "AssetTemplate created successfully"], 200);
     }
 
     public function getAssetTemplates(Request $request)
@@ -303,7 +303,7 @@ class AssetTemplateController extends Controller
             }
         }
     
-        return response()->json(["message" => "Asset Updated Successfully"]);
+        return response()->json(["message" => "AssetTemplate Updated Successfully"]);
     }    
 
     public function deleteAssetTemplate(Request $request)
@@ -317,14 +317,14 @@ class AssetTemplateController extends Controller
         {
             $template->restore();
             return response()->json([
-                "message" =>"Asset Template Activated successfully"
+                "message" =>"AssetTemplate Activated successfully"
             ],200);
         }
         else
         {
             $template->delete();
             return response()->json([
-                "message" =>"Asset Template Deactivated successfully"
+                "message" =>"AssetTemplate Deactivated successfully"
             ], 200); 
         }
     }
@@ -357,7 +357,7 @@ class AssetTemplateController extends Controller
         AssetTemplate::where('asset_template_id', $request->asset_template_id)->forceDelete();
 
         return response()->json([
-            "message" => "Asset Template Deleted Sucessfully"
+            "message" => "AssetTemplate Deleted Sucessfully"
         ]);
     }
 

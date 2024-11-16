@@ -16,7 +16,7 @@ export default createStore({
     asset_id: '',
     assets: '',
     meter: '50',
-    h_meter: '25',
+    h_meter: '20',
     asset_templates: '',
     asset_template_id: '',
   },

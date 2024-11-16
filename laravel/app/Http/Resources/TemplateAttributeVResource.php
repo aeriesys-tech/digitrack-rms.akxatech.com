@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\TemplateAttributeValue;
+use App\Models\AssetAttribute;
+use App\Models\ListParameter;
 
 class TemplateAttributeVResource extends JsonResource
 {
@@ -28,6 +30,11 @@ class TemplateAttributeVResource extends JsonResource
             ];
         }
 
+        $assetAttribute = AssetAttribute::where('field_type', $this->field_type)->where('asset_attribute_id',$this->asset_attribute_id)->whereHas('ListParameter', function($query) {
+            $query->where('field_type', 'List');
+        })->first();
+        $lists = $assetAttribute ? $assetAttribute->ListParameter : null;
+
         return [
             'asset_attribute_id' => $this->asset_attribute_id,
         	'field_name' => $this->field_name,
@@ -38,7 +45,8 @@ class TemplateAttributeVResource extends JsonResource
 	        'is_required' => $this->is_required? 1 :0,
 	        'user_id' => $this->user_id,
             'status' => $this->deleted_at?false:true,
-            'asset_attribute_value' => $asset_attribute_value
+            'asset_attribute_value' => $asset_attribute_value,
+            'list_parameter' => $lists
         ];
     }
 }
