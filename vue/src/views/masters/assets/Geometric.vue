@@ -10,7 +10,7 @@
                 <input class="form-control" type="number" v-model="meter">
             </div>
             <div class="row">
-                <div class="col-md-6 align-items-center justify-content-center">
+                <div class="col-md-12  mb-4 ss align-items-center justify-content-center">
                     <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;margin-left:35px;`">Dia={{Number(assets.diameter)}} (m)</h6>
                     <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; margin-left:35px;` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
                     <div class="row">
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6" v-if="display_asset_zone">
+                <div class="col-md-12 ss" v-if="display_asset_zone">
                     <h6 class="text-center" :style="`width:${Number(assets.diameter*meter)}px;`">Dia={{Number(assets.diameter)}} (m)</h6>
                     <div class="dimensions-x mb-3" :style="`width:${Number(assets.diameter*meter)}px; ` "><span class="arrow-left"></span><span class="arrow-right"></span></div>
                     <div v-for="zone,key in assets.zone_name" :key="key" class="zone-container" :style="`height:${Number(zone.height*meter)}px; width:${Number(assets.diameter*meter)}px; border:1px solid gray`">
@@ -250,4 +250,19 @@
         color: orange;
         text-align: center;
     }
+
+
+
+
+
+    .ss {
+    box-sizing: border-box;
+    margin: 0 auto; /* Center horizontally */
+    padding: 0;
+    width: 100%; /* Ensure full-width */
+    display: flex;
+    flex-direction: column; /* Stack child elements */
+    align-items: center;
+    justify-content: center;
+}
 </style>

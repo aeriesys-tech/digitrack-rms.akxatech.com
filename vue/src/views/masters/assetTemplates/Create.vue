@@ -335,7 +335,17 @@
                                                 </select>
                                                 <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                             </div>
-
+                                            <div v-if="field.field_type=='List'">
+                                                <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                                <select class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.asset_attribute_value.field_value">
+                                                    <option :value="field.asset_attribute_value?.field_value" v-if="field.asset_attribute_value?.field_value">
+                                                        {{field.asset_attribute_value?.field_value}}
+                                                    </option>
+                                                    <option :value="field.asset_attribute_value?.field_value" v-else>Select {{field.display_name}}</option>
+                                                    <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
+                                                </select>
+                                                <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
+                                            </div>
                                             <div v-if="field.field_type == 'Color'">
                                                 <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
                                                 <input type="color" class="form-control" v-model="field.asset_attribute_value.field_value" style="height: 2.2rem;" />
