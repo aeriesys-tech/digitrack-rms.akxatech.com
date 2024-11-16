@@ -34,10 +34,25 @@
                                         <div class="col-md-3">
                                             <div class="d-flex justify-content-between">
                                                 <div><label class="form-label">Asset Type</label><span class="text-danger"> *</span></div>
-                                                <a type="button" class="text-danger me-2" @click="reset()"><i class="ri-close-line fs-20 lh-1"></i></a>
+                                                <a v-if="status" type="button" class="text-danger me-2" @click="reset()"><i class="ri-close-line fs-20 lh-1"></i></a>
                                             </div>
                                             <!-- <label class="form-label">Asset Type</label><span class="text-danger"> *</span> -->
-                                            <search
+                                            <!-- <search
+                                                :class="{ 'is-invalid': errors.asset_type_id }"
+                                                :customClass="{ 'is-invalid': errors?.asset_type_id }"
+                                                :initialize="asset?.asset_type_id"
+                                                id="asset_type_id"
+                                                label="asset_type_name"
+                                                label2="asset_type_code"
+                                                placeholder="Select Asset Type"
+                                                :data="asset_attributes"
+                                                @input="asset_type => asset.asset_type_id = asset_type"
+                                                @selectsearch="getAssetType(asset.asset_type_id)"
+                                                :disabled="!status"
+                                            >
+                                            </search> -->
+
+                                                <search
                                                 :class="{ 'is-invalid': errors.asset_type_id }"
                                                 :customClass="{ 'is-invalid': errors?.asset_type_id }"
                                                 :initialize="asset?.asset_type_id"
@@ -53,9 +68,10 @@
                                             </search>
                                             <span v-if="errors?.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
                                         </div>
+
                                         <!-- try starts -->
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-3" v-if="status">
                                             <div class="d-flex justify-content-between">
                                                 <div><label class="form-label">Asset Template</label></div>
                                             </div>
@@ -73,6 +89,13 @@
                                                 :disabled="!status"
                                             >
                                             </search>
+                                            <span v-if="errors?.asset_template_id" class="invalid-feedback">{{ errors.asset_template_id[0] }}</span>
+                                        </div>
+                                          <div class="col-md-3" v-else>
+                                            <div class="d-flex justify-content-between">
+                                                <div><label class="form-label">Asset Template</label></div>
+                                            </div>
+                                            <input type="text" class="form-control" disabled :value="asset?.asset_template?.template_code + '::' + asset?.asset_template?.template_name " />
                                             <span v-if="errors?.asset_template_id" class="invalid-feedback">{{ errors.asset_template_id[0] }}</span>
                                         </div>
 
@@ -390,6 +413,20 @@
                                                 <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
                                             </div>
 
+
+                                            <div v-if="field.field_type=='List'">
+                                                <label class="form-label">{{field.display_name}}</label><span v-if="field.is_required" class="text-danger">*</span>
+                                                <select class="form-control" :class="{'is-invalid': errors[field.display_name]}" v-model="field.asset_attribute_value.field_value">
+                                                    <option :value="field.asset_attribute_value?.field_value" v-if="field.asset_attribute_value?.field_value">
+                                                        {{field.asset_attribute_value?.field_value}}
+                                                    </option>
+                                                    <option :value="field.asset_attribute_value?.field_value" v-else>Select {{field.display_name}}</option>
+                                                    <option v-for="value, key in field.list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
+                                                </select>
+                                                <span v-if="errors[field.display_name]" class="invalid-feedback">{{ errors[field.display_name][0] }}</span>
+                                            </div>
+
+
                                             <div v-if="field.field_type == 'Color'">
                                                 <label class="form-label">{{ field.display_name }}<span v-if="field.is_required" class="text-danger">*</span></label>
                                                 <input type="color" class="form-control" v-model="field.asset_attribute_value.field_value" style="height: 2.2rem;" />
@@ -507,6 +544,7 @@
                     vm.$store
                         .dispatch("post", uri)
                         .then(function (response) {
+                            console.log("AAsset",response.data.data)
                             vm.asset = response.data.data;
                             vm.initial_zone_no = vm.asset.no_of_zones;
                             vm.prev_zone_names = vm.asset.zone_name;
@@ -542,10 +580,10 @@
         },
 
         watch: {
-            "asset.asset_type_id": function () {
-                let vm = this;
-                vm.getAssetTemplates();
-            },
+            // "asset.asset_type_id": function () {
+            //     let vm = this;
+            //     vm.getAssetTemplates();
+            // },
             // "asset.no_of_zones": function (newVal) {
             //     let vm = this;
             //     if (vm.asset.asset_template_id == "" ) {
@@ -1028,7 +1066,7 @@
                         // loader.hide();
                         vm.show_assets = response.data.data;
                         vm.asset.asset_attributes = response.data.data;
-                        // vm.getAssetTemplates(asset_type_id);
+                        vm.getAssetTemplates(asset_type_id);
                     })
                     .catch(function (error) {
                         // loader.hide();
@@ -1048,21 +1086,21 @@
                     }
                 }
             },
-            getAssetTemplates() {
+            getAssetTemplates(asset_type_id) {
                 let vm = this;
                 // let loader = vm.$loading.show();
-                vm.$store
-                    .dispatch("post", { uri: "getAssetTemplateDropDown", data: vm.asset })
-                    .then((response) => {
-                        // loader.hide();
-                        vm.asset_templates = response.data.data;
-                        console.log("asset templa---0", vm.asset_templates);
-                    })
-                    .catch(function (error) {
-                        // loader.hide();
-                        vm.errors = error.response.data.errors;
-                        vm.$store.dispatch("error", error.response.data.message);
-                    });
+                    vm.$store
+                        .dispatch("post", { uri: "getAssetTemplateDropDown", data: vm.asset })
+                        .then((response) => {
+                            // loader.hide();
+                            vm.asset_templates = response.data.data;
+                            console.log("asset templa---0", vm.asset_templates);
+                        })
+                        .catch(function (error) {
+                            // loader.hide();
+                            vm.errors = error.response.data.errors;
+                            vm.$store.dispatch("error", error.response.data.message);
+                        });
             },
             getAssetTemplateValues(asset_template_id) {
                 let vm = this;
