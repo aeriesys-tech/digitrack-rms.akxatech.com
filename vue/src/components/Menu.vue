@@ -265,7 +265,7 @@
                 </ul>
             </div>
 
-            <div class="nav-group show">
+            <!-- <div class="nav-group show">
                 <a href="javascript:void(0)" style="color: inherit;" class="nav-label" @click="toggleReports"> <i class="ri-file-chart-line icn"></i>&nbsp; Reports </a>
                 <ul class="nav nav-sidebar" v-show="showReports">
                     <li class="nav-item">
@@ -278,7 +278,38 @@
                         <a href="javascript:void(0)" class="nav-link"> <i class="ri-store-3-fill"></i> <span>Activity Report</span> </a>
                     </li>
                 </ul>
+            </div> -->
+
+            <div class="nav-group show">
+                <a href="javascript:void(0)" style="color: inherit;" class="nav-label" @click="toggleReports">
+                <i class="ri-file-chart-line icn"></i>&nbsp; Reports
+                </a>
+                <ul class="nav nav-sidebar" v-show="showReports">
+                <li class="nav-item">
+                    <span class="nav-link">
+                        <i class="ri-file-chart-2-line"></i> <span>Asset Report</span>
+                    </span>
+                </li>
+
+                <li class="nav-item">
+                    <router-link to="/pending_jobs" class="nav-link">
+                    <i class="ri-pass-pending-line"></i> <span>Job Pending Report</span>
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link to="/deviation_reports" class="nav-link">
+                    <i class="ri-store-3-fill"></i> <span>Deviation Report</span>
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                        <span class="nav-link">
+                            <i class="ri-file-chart-2-line"></i> <span>BreakDown Report</span>
+                        </span>
+                    </li>
+                </ul>
             </div>
+
+
             <div class="nav-group" :class="{show:showPredictions}" @click="showTab('Predictions')">
                 <a href="javascript:void(0)" class="nav-label" :style="{color:PredictionColor}"><i class="ri-copper-coin-line icn"></i> Predictions</a>
                 <ul class="nav nav-sidebar">
@@ -287,6 +318,13 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="/upcoming_repairs" v-bind:class="{ active: $route.path === '/upcoming_repairs' }" class="nav-link"><i class="ri-skip-up-fill"></i> <span>Upcoming Repiars</span></router-link>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-group show">
+                <ul class="nav nav-sidebar">
+                    <li class="nav-item">
+                        <router-link to="/downloaded_reports" :style="{color:DownloadedReportsColor}" @click="showTab('DownloadedReports')" class="nav-link"><i class="ri-stack-fill"></i> <span>Downloaded Reports</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -325,6 +363,7 @@
                     <a href="javascript:void(0)" @click="logout()"><i class="ri-logout-box-r-line"></i> Log Out</a>
                 </nav>
             </div> -->
+            
         </div>
     </div>
 </template>
@@ -344,6 +383,7 @@
                 reportsColor: "rgba(255, 255, 255, .6) !important",
                 AssetParametersColor: "rgba(255, 255, 255, .6) !important",
                 AttributesColor: "rgba(255, 255, 255, .6) !important",
+                DownloadedReportsColor: 'rgba(255, 255, 255, .6) !important',
                 assetTemplateActive: "white !important",
                 assetActive: "white !important",
                 listsActive: "white !important",
@@ -359,6 +399,7 @@
                 showReports: false,
                 showReview: false,
                 showPredictions: false,
+                DownloadedReportsActive:false,
             };
         },
         watch: {
@@ -403,6 +444,7 @@
                 this.ReviewColor = "rgba(255, 255, 255, .6) !important";
                 this.PredictionColor = "rgba(255, 255, 255, .6) !important";
                 this.listActive = "rgba(255, 255, 255, .6) !important";
+                this.DownloadedReportsColor= 'rgba(255, 255, 255, .6) !important'
 
                 if (tab == "/areas" || tab == "/plants" || tab == "/section" || tab == "/frequency" || tab == "/department" || tab == "/functional") {
                     this.color = "white !important";
@@ -488,6 +530,10 @@
                 }
                 else if (tab == "/list_parameters") {
                     this.listActive = "white !important";
+                }
+                else if(tab == '/downloaded_reports'){
+                    this.DownloadedReportsColor='white !important';
+                    this.DownloadedReportsActive = !this.DownloadedReportsActive
                 }
 
                 switch (tab) {

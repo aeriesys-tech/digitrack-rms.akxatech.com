@@ -74,4 +74,9 @@ class Asset extends Model
     {
         return $this->belongsTo(AssetTemplate::class, 'asset_template_id');
     }
+
+    public function Department()
+    {
+        return $this->belongsToMany(Department::class, 'asset_departments', 'asset_id', 'department_id');
+    }
 }

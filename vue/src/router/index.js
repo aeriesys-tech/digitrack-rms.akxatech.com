@@ -85,6 +85,9 @@ import Deviations from "@/views/reports/Deviations.vue";
 import Pendings from "@/views/reports/Pendings.vue";
 import UpcomingJobs from "@/views/reports/UpcomingJobs.vue";
 
+import PendingJobs from "@/views/reports/PendingJobs.vue";
+import DeviationReport from "@/views/reports/DeviationReport.vue";
+
 //Asset management
 import Components from "@/views/assets/Index.vue";
 import ComponentCreate from "@/views/assets/Create.vue";
@@ -154,7 +157,7 @@ import Geometric from "@/views/masters/assets/Geometric.vue"
 import HorizontalGeometric from "@/views/masters/assets/HGeometric.vue"
 import ProcessTrends from "@/views/Reviews/ProcessTrends.vue"
 
-
+import DownloadedReports from "@/views/DownloadedReports.vue"
 const routes = [
   {
     path: "/",
@@ -675,6 +678,12 @@ const routes = [
     component: UpcomingJobs,
   },
 
+  {
+    path: "/downloaded_reports",
+    name: "DownloadedReports",
+    component: DownloadedReports,
+  },
+
 
   // masteres
 
@@ -878,6 +887,17 @@ const routes = [
     component: Test,
   },
 
+  //Reports
+  {
+    path: "/pending_jobs",
+    name: "PendingJobs.Index",
+    component: PendingJobs,
+  },
+  {
+    path: "/deviation_reports",
+    name: "DeviationReport.Index",
+    component: DeviationReport,
+  },
 
 ]
 

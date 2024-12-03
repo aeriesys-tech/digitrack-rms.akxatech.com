@@ -59,6 +59,7 @@ use App\Http\Controllers\AssetTemplateServiceController;
 use App\Http\Controllers\AssetTemplateVariableController;
 use App\Http\Controllers\AssetTemplateDataSourceController;
 use App\Http\Controllers\AssetTemplateAccessoryController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -536,4 +537,13 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('paginateAssetTemplateAccessories',[AssetTemplateAccessoryController::class, 'paginateAssetTemplateAccessories']);
     Route::post('addAssetTemplateAccessory',[AssetTemplateAccessoryController::class, 'addAssetTemplateAccessory']);
     Route::post('deleteAssetTemplateAccessory',[AssetTemplateAccessoryController::class, 'deleteAssetTemplateAccessory']);
+
+    Route::post('getAssetTypeAssets',[ReportController::class, 'getAssetTypeAssets']);
+    Route::post('paginatePendingJobs',[ReportController::class, 'paginatePendingJobs']);
+    Route::post('downloadPendingJobs',[ReportController::class, 'downloadPendingJobs']);
+    Route::post('paginateDeviations',[ReportController::class, 'paginateDeviations']);
+    Route::post('downloadDeviations',[ReportController::class, 'downloadDeviations']);
+    Route::post('paginateDownloadReports',[ReportController::class, 'paginateDownloadReports']);
+    Route::post('deleteDownloadReport',[ReportController::class, 'deleteDownloadReport']);
+    Route::post('paginateAllRegisters',[ReportController::class, 'paginateAllRegisters']);
 });
