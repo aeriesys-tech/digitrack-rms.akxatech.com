@@ -24,30 +24,35 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-2">
+                                    <label class="form-label">Asset Type</label>
                                     <select class="form-control mb-3" v-model="meta.asset_type_id" @change="getAsset()">
                                         <option value="">Select Asset Type</option>
                                         <option v-for="asset_type, key in asset_types" :key="key" :value="asset_type.asset_type_id">{{ asset_type.asset_type_name }}</option>
                                     </select>
                                 </div>
                                 <div class="col-2">
+                                    <label class="form-label">Asset</label>
                                     <select class="form-control mb-3" v-model="meta.asset_id" @change="getDepartments()">
                                         <option value="">Select Asset </option>
                                         <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">{{ asset.asset_code}}::{{ asset.asset_name }}</option>
                                     </select>
                                 </div>
                                  <div class="col-2">
+                                    <label class="form-label">Department</label>
                                     <select class="form-control mb-3" v-model="meta.department_id" >
                                         <option value="">Select Department</option>
                                         <option v-for="department, key in departments" :key="key" :value="department.department_id">{{ department.department_name }}</option>
                                     </select>
                                 </div>
                                 <div class="col-2">
+                                    <label class="form-label">From Date</label>
                                    <input class="form-control mb-3" type="date" v-model="meta.from_date">
                                 </div>
                                 <div class="col-2">
+                                    <label class="form-label">To Date</label>
                                    <input class="form-control mb-3" type="date" v-model="meta.to_date">
                                 </div>
-                                <div class="col-2">
+                                <div class="col-2 mt-auto">
                                     <button class="btn mb-3 btn-primary me-2" @click="search">Search</button>
                                      <button class="btn mb-3 btn-danger" @click="reset">Reset</button>
                                 </div>
@@ -59,7 +64,8 @@
 
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                    <tr style="background-color:#9b9b9b;color:white;">
+                                    <thead>
+                                        <tr style="background-color:#9b9b9b;color:white;">
                                             <th class="text-center">#</th>
                                             <th>
                                                 Department
@@ -130,6 +136,7 @@
                                             <!-- <th class="text-center" v-can="'users.delete'">Status</th>
                                             <th class="text-center" v-can="'users.update'">Actions</th> -->
                                         </tr>
+                                    </thead>
                                     <tbody>
                                         <tr v-if="user_services.length==0">
                                             <td colspan="10" class="text-center">No records found</td>

@@ -30,7 +30,8 @@
 
                             <div class="table-responsive table-responsive-sm">
                                 <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                    <tr style="background-color:#9b9b9b;color:white;">
+                                    <thead>
+                                        <tr style="background-color:#9b9b9b;color:white;">
                                             <th class="text-center">#</th>
                                             <th @click="sort('user_id')">
                                                 Name
@@ -58,6 +59,7 @@
                                             </th>
                                             <th class="text-center">Action</th>
                                         </tr>
+                                    </thead>
                                     <tbody>
                                         <tr v-if="downloaded_reports.length==0">
                                             <td colspan="10" class="text-center">No records found</td>

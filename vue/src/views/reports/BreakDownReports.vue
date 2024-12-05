@@ -6,16 +6,16 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <router-link to="/dashboard">Dashboard</router-link></li>
                             <li class="breadcrumb-item" aria-current="page">
-                                <a href="javascript:void(0)">Deviation Reports</a></li>
+                                <a href="javascript:void(0)">Breakdown Reports</a></li>
                     </ol>
-                    <h4 class="main-title mb-0">Deviation Reports</h4>
+                    <h4 class="main-title mb-0">Breakdown Reports</h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
-                            <h6 class="card-title">Deviation Reports</h6>
+                            <h6 class="card-title">Breakdown Reports</h6>
                             <button class="btn btn-success" @click="downloadExcel()"><i class="ri-file-excel-line"></i> Download</button>
                         </div>
                         <div class="card-body">
@@ -73,118 +73,57 @@
                             </div>
 
                             <div class="table-responsive table-responsive-sm">
-                                <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                    <thead>
-                                        <tr style="background-color:#9b9b9b;color:white;">
-                                            <th class="text-center">#</th>
-                                            <th>
-                                                Department
-                                                <span>
-                                                    <i v-if="meta.keyword == 'department_name' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'department_name' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <th>
-                                                Asset
-                                                <span>
-                                                    <i v-if="meta.keyword == 'asset_name' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'asset_name' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <th>
-                                                Asset Type
-                                                <span>
-                                                    <i v-if="meta.keyword == 'asset_type_name' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'asset_type_name' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <th>
-                                                Check Date
-                                                <span>
-                                                    <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'reference_date' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <th @click="sort('field_name')">
-                                                Check
-                                                <span>
-                                                    <i v-if="meta.keyword == 'field_name' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'field_name' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <th @click="sort('lcl')">
-                                                Lcl
-                                                <span>
-                                                    <i v-if="meta.keyword == 'lcl' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'lcl' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <th @click="sort('ucl')">
-                                                Ucl
-                                                <span>
-                                                    <i v-if="meta.keyword == 'ucl' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'ucl' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <th @click="sort('default_value')">
-                                                Default Value
-                                                <span>
-                                                    <i v-if="meta.keyword == 'default_value' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'default_value' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-
-                                            <th @click="sort('value')">
-                                                 Value
-                                                <span>
-                                                    <i v-if="meta.keyword == 'value' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
-                                                    <i v-else-if="meta.keyword == 'value' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
-                                                    <i v-else class="fas fa-sort"></i>
-                                                </span>
-                                            </th>
-                                            <!-- <th class="text-center" v-can="'users.delete'">Status</th>
-                                            <th class="text-center" v-can="'users.update'">Actions</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-if="user_assets.length==0">
-                                            <td colspan="10" class="text-center">No records found</td>
-                                        </tr>
-                                        <tr v-for="deviation, key in user_assets" :key="key">
-                                            <td class="text-center">{{ meta.from + key }}</td>
-                                            <!-- <td>{{ deviation.department?.department_name }}</td> -->
-                                            <td>
-                                                {{ deviation?.asset?.asset_department_ids.map(department => department.department?.department_name).join(', ') }}
-                                            </td>
-                                            <td>{{deviation?.asset?.asset_name}}</td>
-                                            <td>{{deviation.asset_type?.asset_type_name}}</td>
-                                            <td>{{ deviation.user_check?.reference_date}}</td>
-                                            <td>{{ deviation.check?.field_name}}</td>
-                                            <td>{{ deviation?.lcl }}</td>
-                                            <td>{{ deviation?.ucl }}</td>
-                                            <td>{{ deviation.default_value }}</td>
-                                            <td>{{ deviation.value }}</td>
-                                            <!-- <td class="text-center" v-can="'users.delete'">
-                                                <div class="form-switch" >
-                                                    <input class="form-check-input"  type="checkbox" role="switch" :id="'user' + user.user_id" :checked="user.status" :value="user.status" @change="deleteUser(user)" />
-                                                    <label class="custom-control-label" :for="'user' + user.user_id"></label>
-                                                </div>
-                                            </td>
-                                            <td class="text-center" v-can="'users.update'">
-                                                <a href="javascript:void(0)" class="text-success" v-if="user.status"
-                                                    @click="editUser(user)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            </td> -->
-                                        </tr>
-                                    </tbody>
-                                </table>
+                               <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
+                                <thead>
+                                    <tr class="" style="background-color: #9b9b9b; color: white;">
+                                        <th class="text-center">#</th>
+                                         <th @click="sort('asset_name')">
+                                            Asset
+                                            <span>
+                                                <i v-if="meta.keyword=='asset_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='asset_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
+                                        <th @click="sort('break_down_type_name')">
+                                            Break Down Type
+                                            <span>
+                                                <i v-if="meta.keyword=='break_down_type_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='break_down_type_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
+                                        <th @click="sort('job_no')">
+                                            Job No.
+                                            <span>
+                                                <i v-if="meta.keyword=='job_no' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='job_no' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
+                                        <th @click="sort('job_date')">
+                                            Job Date & Time
+                                            <span>
+                                                <i v-if="meta.keyword=='job_date' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword=='job_date' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-if="breakdown_reports.length==0">
+                                        <td colspan="7" class="text-center">No records found</td>
+                                    </tr>
+                                    <tr v-for="breakdown_report, key in breakdown_reports" :key="key">
+                                        <td class="text-center">{{ meta.from + key }}</td>
+                                        <td>{{ breakdown_report.asset?.asset_name }}</td>
+                                        <td>{{breakdown_report.break_down_type?.break_down_type_name}}</td>
+                                        <td>{{breakdown_report.job_no}}</td>
+                                        <td>{{convertDateFormat(breakdown_report.job_date)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -207,6 +146,7 @@
     </template>
     <script>
     import Pagination from "@/components/Pagination.vue";
+    import moment from "moment";
     export default {
         components: {
             Pagination
@@ -216,7 +156,7 @@
                 meta: {
                     search: '',
                     order_by: "asc",
-                    keyword: "user_check_id",
+                    keyword: "break_down_list_id",
                     per_page: 10,
                     totalRows: 0,
                     page: 1,
@@ -232,7 +172,7 @@
                     to_date: '',
                     download:"excel",
                 },
-                user_assets: [],
+                breakdown_reports: [],
                 errors: [],
                 asset_types: [],
                 assets:[],
@@ -241,15 +181,6 @@
                 downloaded_excel:[],
             }
         },
-        // beforeRouteEnter(to, from, next) {
-        //     next((vm) => {
-        //         if(from.name != 'Users.Edit'){
-        //             vm.$store.commit("setCurrentPage", vm.meta.page)
-        //         }else{
-        //             vm.meta.page = vm.$store.getters.current_page
-        //         }
-        //     });
-        // },
         mounted() {
             this.index();
             this.getAssetTypes();
@@ -259,10 +190,10 @@
             index() {
                 let vm = this;
                 let loader = this.$loading.show();
-                this.$store.dispatch('post', { uri: 'paginateDeviations', data: vm.meta })
+                this.$store.dispatch('post', { uri: 'paginateBreakDownLists', data: vm.meta })
                     .then(response => {
                         loader.hide();
-                        vm.user_assets = response.data.data;
+                        vm.breakdown_reports = response.data.data;
                         vm.meta.totalRows = response.data.meta.total;
                         vm.meta.from = response.data.meta.from;
                         const end = vm.meta.from + Number(vm.meta.per_page) - 1;
@@ -275,6 +206,10 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            },
+             convertDateFormat(date) {
+                let vm = this;
+                return moment(date).format("yyyy-MM-DD HH:mm");
             },
              getAssetTypes() {
             let vm = this;
@@ -325,7 +260,7 @@
          downloadExcel() {
                 let vm = this;
                 let loader = vm.$loading.show();
-                vm.$store.dispatch('post', { uri: 'downloadDeviations',data:vm.meta})
+                vm.$store.dispatch('post', { uri: 'downloadBreakDownRegister',data:vm.meta})
                 .then(response => {
                     loader.hide();
                     vm.$store.dispatch("success", response.data.message);

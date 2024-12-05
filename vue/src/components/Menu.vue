@@ -286,9 +286,9 @@
                 </a>
                 <ul class="nav nav-sidebar" v-show="showReports">
                 <li class="nav-item">
-                    <span class="nav-link">
+                    <router-link to="/asset_reports" class="nav-link">
                         <i class="ri-file-chart-2-line"></i> <span>Asset Report</span>
-                    </span>
+                    </router-link>
                 </li>
 
                 <li class="nav-item">
@@ -302,9 +302,9 @@
                     </router-link>
                 </li>
                 <li class="nav-item">
-                        <span class="nav-link">
+                        <router-link to="/breakdown_reports" class="nav-link">
                             <i class="ri-file-chart-2-line"></i> <span>BreakDown Report</span>
-                        </span>
+                        </router-link>
                     </li>
                 </ul>
             </div>
@@ -363,7 +363,7 @@
                     <a href="javascript:void(0)" @click="logout()"><i class="ri-logout-box-r-line"></i> Log Out</a>
                 </nav>
             </div> -->
-            
+
         </div>
     </div>
 </template>
