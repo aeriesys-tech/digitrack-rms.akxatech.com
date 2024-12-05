@@ -9,6 +9,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\ExportPendingJobs;
 use App\Jobs\ExportDeviations;
+use App\Jobs\ExportRegistersJob;
+use App\Jobs\ExportActivityRegistersJob;
+use App\Jobs\ExportServiceRegistersJob;
+use App\Jobs\ExportCheckRegistersJob;
+use App\Jobs\ExportProcessRegistersJob;
+use App\Jobs\ExportBreakDownRegistersJob;
 use App\Http\Resources\UserServicePendingResource;
 use App\Models\UserAssetCheck;
 use App\Http\Resources\UserAssetCheckDeviationResource;
@@ -287,84 +293,82 @@ class ReportController extends Controller
         ]);
     }
 
-    public function paginateAllRegisters(Request $request)
+    public function downloadAllRegisters(Request $request)
     {
         $request->validate([
-            'order_by' => 'required',
-            'per_page' => 'required',
-            'keyword' => 'required'
+            'asset_id' => 'nullable|sometimes',
+            'department_id' => 'nullable|sometimes',
+            'register' => 'nullable|sometimes',
+            'from_date' => 'nullable|sometimes',
+            'to_date' => 'nullable|sometimes',
         ]);
-    
 
-        // $authPlantId = Auth::User()->plant_id;
+        if($request->register == "all_registers")
+        {
+            $user = Auth::user();
+            ExportRegistersJob::dispatch($request->all(), Auth::id());
 
-        //UserActivity
-        $activityQuery = UserActivity::query();
-        // $activityQuery->where('plant_id', $authPlantId);
-
-        if (isset($request->asset_id)) {
-            $activityQuery->where('asset_id', $request->asset_id);
+            return response()->json([
+                'message' => 'Registers Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.',
+            ]);
         }
 
-        if (isset($request->department_id)) {
-            $activityQuery->whereHas('Asset', function($quer) use ($request) {
-                $quer->where('department_id', $request->department_id);
-            });
+        if($request->register == "activity_register")
+        {
+            $user = Auth::user();
+            ExportActivityRegistersJob::dispatch($request->all(), Auth::id());
+
+            return response()->json([
+                'message' => 'Activity Registers Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.',
+            ]);
         }
 
-        if (!empty($request->from_date) && !empty($request->to_date)) {
-            $fromDate = $request->from_date;
-            $toDate = $request->to_date . ' 23:59:59';
-            $activityQuery->whereBetween('activity_date', [$fromDate, $toDate]);
-        }
-        $user_activities = $activityQuery->orderBy($request->keyword, $request->order_by)->paginate($request->per_page);
+        if($request->register == "service_register")
+        {
+            $user = Auth::user();
+            ExportServiceRegistersJob::dispatch($request->all(), Auth::id());
 
-        //UserService
-        $serviceQuery = UserService::query();
-        $serviceQuery->where('plant_id', $authPlantId);
-
-        if (isset($request->asset_id)) {
-            $serviceQuery->where('asset_id', $request->asset_id);
+            return response()->json([
+                'message' => 'Service Register Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.',
+            ]);
         }
 
-        if (isset($request->department_id)) {
-            $serviceQuery->whereHas('Asset', function($quer) use ($request) {
-                $quer->where('department_id', $request->department_id);
-            });
+        if($request->register == "check_register")
+        {
+            $user = Auth::user();
+            ExportCheckRegistersJob::dispatch($request->all(), Auth::id());
+
+            return response()->json([
+                'message' => 'Check Register Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.',
+            ]);
         }
 
-        if (!empty($request->from_date) && !empty($request->to_date)) {
-            $fromDate = $request->from_date;
-            $toDate = $request->to_date . ' 23:59:59';
-            $serviceQuery->whereBetween('service_date', [$fromDate, $toDate]);
-        }
-        $user_services = $serviceQuery->orderBy($request->keyword, $request->order_by)->paginate($request->per_page);
+        if($request->register == "process_register")
+        {
+            $user = Auth::user();
+            ExportProcessRegistersJob::dispatch($request->all(), Auth::id());
 
-        //UserCheck 
-        $checkQuery = UserCheck::query();
-        $checkQuery->where('plant_id', $authPlantId);
-
-        if (isset($request->asset_id)) {
-            $checkQuery->where('asset_id', $request->asset_id);
+            return response()->json([
+                'message' => 'Process Register Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.',
+            ]);
         }
+    }   
 
-        if (isset($request->department_id)) {
-            $checkQuery->whereHas('Asset', function($quer) use ($request) {
-                $quer->where('department_id', $request->department_id);
-            });
-        }
+    public function downloadBreakDownRegister(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'nullable|sometimes',
+            'department_id' => 'nullable|sometimes',
+            'register' => 'nullable|sometimes',
+            'from_date' => 'nullable|sometimes',
+            'to_date' => 'nullable|sometimes',
+        ]);
 
-        if (!empty($request->from_date) && !empty($request->to_date)) {
-            $fromDate = $request->from_date;
-            $toDate = $request->to_date . ' 23:59:59';
-            $checkQuery->whereBetween('reference_date', [$fromDate, $toDate]);
-        }
-        $user_checks = $checkQuery->orderBy($request->keyword, $request->order_by)->paginate($request->per_page);
+        $user = Auth::user();
+        ExportBreakDownRegistersJob::dispatch($request->all(), Auth::id());
 
         return response()->json([
-            'user_activities' => UserActivityResource::collection($user_activities),
-            'user_services' => UserServiceResource::collection($user_services),
-            'user_checks' => UserCheckResource::collection($user_checks),
+            'message' => 'BreakDown Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.',
         ]);
-    }    
+    }
 }

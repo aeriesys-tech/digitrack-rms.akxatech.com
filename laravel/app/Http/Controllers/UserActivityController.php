@@ -46,6 +46,18 @@ class UserActivityController extends Controller
         {
             $query->where('status',$request->status);
         }
+        if (isset($request->department_id)) {
+            $query->whereHas('Asset', function($quer) use ($request) {
+                $quer->whereHas('AssetDepartment', function($que) use($request){
+                    $que->where('department_id', $request->department_id);
+                });
+            });
+        }
+        if (!empty($request->from_date) && !empty($request->to_date)) {
+            $fromDate = $request->from_date;
+            $toDate = $request->to_date . ' 23:59:59';
+            $query->whereBetween('activity_date', [$fromDate, $toDate]);
+        }
         
         if($request->search!='')
         {
