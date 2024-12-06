@@ -15,16 +15,25 @@ class DashboardController extends Controller
 {
     public function getDashboardContent(Request $request)
     {
-        $authPlantId = Auth::User()->plant_id;
+        // $authPlantId = Auth::User()->plant_id;
 
-        $user = User::where('plant_id', $authPlantId)->count();
+        $user = User::count();
         $asset = Asset::count();
-        $equipment = Equipment::where('plant_id', $authPlantId)->count();
+        $equipment = Equipment::count();
         $service_type = ServiceType::count();
-        $deviations = UserAssetCheck::where('field_type', 'Number')->whereRaw('value < lcl OR value > ucl')
-        ->orwhere('field_type', '!=', 'Number')->whereHas('UserCheck', function ($query) use ($authPlantId) {
-              $query->where('plant_id', $authPlantId);
-          })->whereColumn('default_value', '!=', 'value')->count();
+        // $deviations = UserAssetCheck::where('field_type', 'Number')->whereRaw('value < lcl OR value > ucl')
+        // ->orwhere('field_type', '!=', 'Number')->whereColumn('default_value', '!=', 'value')->where('remark_status', false)->count();
+        $deviations = UserAssetCheck::where('remark_status', false)->where(function ($q) {
+            $q->where(function ($q) {
+                $q->where('field_type', 'Number')
+                  ->whereRaw('value < lcl OR value > ucl');
+            })->orWhere(function ($q) {
+                $q->where('field_type', '!=', 'Number')->where('field_type', '!=', 'Date')->where('field_type', '!=', 'Date & Time')
+                  ->where('field_type', '!=', 'Text')->where('field_type', '!=', 'Text Area')
+                  ->where('field_type', 'Select')
+                  ->whereColumn('default_value', '!=', 'value');
+            });
+        })->count();
 
         $pending_services = UserService::where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->count();
 

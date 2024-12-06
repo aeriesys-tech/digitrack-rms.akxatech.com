@@ -150,7 +150,7 @@ class ReportController extends Controller
             'to_date' => 'nullable|date|after_or_equal:from_date'
         ]);
     
-        $query = UserAssetCheck::query();
+        $query = UserAssetCheck::query()->where('remark_status', false);
     
         // $query->whereHas('UserCheck', function ($query) use ($authPlantId) {
         //     $query->where('plant_id', $authPlantId);
@@ -204,7 +204,7 @@ class ReportController extends Controller
             'to_date' => 'nullable|date|after_or_equal:from_date'
         ]);
     
-        $query = UserAssetCheck::query();
+        $query = UserAssetCheck::query()->where('remark_status', false);
     
         // $query->whereHas('UserCheck', function ($query) use ($authPlantId) {
         //     $query->where('plant_id', $authPlantId);

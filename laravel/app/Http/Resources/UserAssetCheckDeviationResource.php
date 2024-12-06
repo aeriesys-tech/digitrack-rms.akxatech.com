@@ -39,7 +39,11 @@ class UserAssetCheckDeviationResource extends JsonResource
             'field_values' => $this->field_values,
             'order' => $this->order,
             'value' => $this->value,
-            'department' => $department 
+            'department' => $department,
+            'remark_user_id' => $this->remark_user_id,
+            'remark_user' => $this->RemarkUser,
+            'remark_status' => $this->remark_status?true:false,
+            'remarks' => $this->remarks 
         ];
     }
 }

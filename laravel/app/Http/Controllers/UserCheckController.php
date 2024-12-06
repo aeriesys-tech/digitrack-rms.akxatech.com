@@ -255,4 +255,22 @@ class UserCheckController extends Controller
         
         return $asset_departments;
     }
+
+    public function updateDeviation(Request $request)
+    {
+        $data = $request->validate([
+            'user_asset_check_id' => 'required|exists:user_asset_checks,user_asset_check_id',
+            'remarks' => 'required'
+        ]);
+
+        $data['remark_status'] = true;
+        $data['remark_user_id'] = Auth::id();
+
+        $asset_check = UserAssetCheck::where('user_asset_check_id', $request->user_asset_check_id)->first();
+        $asset_check->update($data);
+
+        return response()->json([
+            "message" => "Deviation Updated Successfully"
+        ]);
+    }
 }

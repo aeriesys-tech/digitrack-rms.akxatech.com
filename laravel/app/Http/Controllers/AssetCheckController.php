@@ -337,6 +337,93 @@ class AssetCheckController extends Controller
         }
     }
 
+    // public function deviationAssetChecks(Request $request)
+    // {
+    //     $request->validate([
+    //         'order_by' => 'required',
+    //         'per_page' => 'required',
+    //         'keyword' => 'required'
+    //     ]);
+
+    //     // $authPlantId = Auth::User()->plant_id;
+    //     $query = UserAssetCheck::query()->where('remark_status', false);
+
+        // if (isset($request->department_id)) 
+        // {
+        //     $query->whereHas('UserCheck', function ($qu) use ($request) {
+        //         $qu->whereHas('Asset', function ($que) use ($request) {
+        //                 $que->whereHas('AssetDepartment', function($quer) use($request){
+        //                     $quer->where('department_id', $request->department_id);
+        //                 });
+        //         });
+        //     });
+        // }     
+
+        // if (isset($request->asset_id)) 
+        // {
+        //     $query->whereHas('UserCheck', function ($qu) use ($request) {
+        //         $qu->where('asset_id', $request->asset_id);
+        //     });
+        // }     
+
+        // if($request->search!='')
+        // {
+        //     $query->where(function($query) use ($request) {
+        //         $query->where('default_value', 'like', "%$request->search%")->orWhere('value', 'like', "%$request->search%")
+        //             ->orwhere('field_type', 'like', "%$request->search%")
+        //             ->orWhereHas('Check', function($que) use ($request) {
+        //             $que->where('field_name', 'like', "%$request->search%");
+        //         })->orWhereHas('UserCheck', function($qu) use ($request) {
+        //             $qu->whereHas('Asset', function($que) use ($request) {
+        //                 $que->where('asset_name', 'like', "%$request->search%");
+        //             });
+        //         })->orwhereHas('UserCheck', function($quer) use($request){
+        //             $quer->whereHas('Asset', function($que) use($request){
+        //                 $que->whereHas('AssetType', function($qu) use($request){
+        //                     $qu->where('asset_type_name', 'like', "%$request->search%");
+        //                 });
+        //             });
+        //         })->orwhereHas('UserCheck', function($que) use($request){
+        //             $que->whereHas('Asset',function($q) use($request){
+        //                 $q->whereHas('AssetDepartment', function($qu) use($request){
+        //                     $qu->whereHas('Department', function($qr) use($request){
+        //                         $qr->where('department_name', 'like', "%$request->search%");
+        //                     });
+        //                 });
+        //             });
+        //         })->orwhereHas('UserCheck', function($que) use($request){
+        //             $que->where('reference_no', 'like', "%$request->search%");
+        //         });
+        //     });
+        // }
+        
+    //     $query->where(function($q) 
+    //     {
+    //         $q->where('field_type', 'Number')
+    //         ->where(function($subQuery) 
+    //         {
+    //             $subQuery->whereRaw('CAST(value AS DECIMAL) < CAST(lcl AS DECIMAL)')
+    //                     ->orWhereRaw('CAST(value AS DECIMAL) > CAST(ucl AS DECIMAL)');
+    //         });
+    //     })->orWhere(function($q) use ($authPlantId) {
+    //         $q->where('field_type', '!=', 'Number')
+    //           ->whereHas('UserCheck', function ($subQuery) use ($authPlantId) {
+    //               $subQuery->where('plant_id', $authPlantId);
+    //           })
+    //           ->whereColumn('default_value', '!=', 'value');
+    //     });      
+    
+    //     // Sort by related table columns
+    //     if ($request->keyword == 'field_name') {
+    //         $query->whereHas('Check', function($q) use ($request) {
+    //             $q->orderBy('field_name', $request->order_by);
+    //         });
+    //     }
+
+    //     $asset_check = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
+    //     return UserAssetCheckDeviationResource::collection($asset_check);
+    // }
+
     public function deviationAssetChecks(Request $request)
     {
         $request->validate([
@@ -346,7 +433,19 @@ class AssetCheckController extends Controller
         ]);
 
         $authPlantId = Auth::User()->plant_id;
-        $query = UserAssetCheck::query();
+        $query = UserAssetCheck::query()->where('remark_status', false);
+    
+        $query->where(function ($query) {
+            $query->where(function ($q) {
+                $q->where('field_type', 'Number')
+                ->where(function ($subQuery) {
+                    $subQuery->whereColumn('value', '<', 'lcl')->orWhereColumn('value', '>', 'ucl');
+                });
+            })->orWhere(function ($q) {
+                $q->where('field_type', 'Select')
+                ->whereColumn('default_value', '!=', 'value');
+            });
+        });
 
         if (isset($request->department_id)) 
         {
@@ -357,15 +456,15 @@ class AssetCheckController extends Controller
                         });
                 });
             });
-        }     
-
+        }   
+        
         if (isset($request->asset_id)) 
         {
             $query->whereHas('UserCheck', function ($qu) use ($request) {
                 $qu->where('asset_id', $request->asset_id);
             });
-        }     
-
+        }    
+    
         if($request->search!='')
         {
             $query->where(function($query) use ($request) {
@@ -396,30 +495,81 @@ class AssetCheckController extends Controller
                 });
             });
         }
-        
-        $query->where(function($q) 
-        {
-            $q->where('field_type', 'Number')
-            ->where(function($subQuery) 
-            {
-                $subQuery->whereRaw('CAST(value AS DECIMAL) < CAST(lcl AS DECIMAL)')
-                        ->orWhereRaw('CAST(value AS DECIMAL) > CAST(ucl AS DECIMAL)');
-            });
-        })->orWhere(function($q) use ($authPlantId) {
-            $q->where('field_type', '!=', 'Number')
-              ->whereHas('UserCheck', function ($subQuery) use ($authPlantId) {
-                  $subQuery->where('plant_id', $authPlantId);
-              })
-              ->whereColumn('default_value', '!=', 'value');
-        });      
+        $asset_check = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
+        return UserAssetCheckDeviationResource::collection($asset_check);
+    }
+
+    public function completedDeviationChecks(Request $request)
+    {
+        $request->validate([
+            'order_by' => 'required',
+            'per_page' => 'required',
+            'keyword' => 'required'
+        ]);
+
+        $authPlantId = Auth::User()->plant_id;
+        $query = UserAssetCheck::query()->where('remark_status', true);
     
-        // Sort by related table columns
-        if ($request->keyword == 'field_name') {
-            $query->whereHas('Check', function($q) use ($request) {
-                $q->orderBy('field_name', $request->order_by);
+        $query->where(function ($query) {
+            $query->where(function ($q) {
+                $q->where('field_type', 'Number')
+                ->where(function ($subQuery) {
+                    $subQuery->whereColumn('value', '<', 'lcl')->orWhereColumn('value', '>', 'ucl');
+                });
+            })->orWhere(function ($q) {
+                $q->where('field_type', 'Select')
+                ->whereColumn('default_value', '!=', 'value');
+            });
+        });
+
+        if (isset($request->department_id)) 
+        {
+            $query->whereHas('UserCheck', function ($qu) use ($request) {
+                $qu->whereHas('Asset', function ($que) use ($request) {
+                        $que->whereHas('AssetDepartment', function($quer) use($request){
+                            $quer->where('department_id', $request->department_id);
+                        });
+                });
+            });
+        }   
+        
+        if (isset($request->asset_id)) 
+        {
+            $query->whereHas('UserCheck', function ($qu) use ($request) {
+                $qu->where('asset_id', $request->asset_id);
+            });
+        }    
+    
+        if($request->search!='')
+        {
+            $query->where(function($query) use ($request) {
+                $query->where('default_value', 'like', "%$request->search%")->orWhere('value', 'like', "%$request->search%")
+                    ->orwhere('field_type', 'like', "%$request->search%")
+                    ->orWhereHas('Check', function($que) use ($request) {
+                    $que->where('field_name', 'like', "%$request->search%");
+                })->orWhereHas('UserCheck', function($qu) use ($request) {
+                    $qu->whereHas('Asset', function($que) use ($request) {
+                        $que->where('asset_name', 'like', "%$request->search%");
+                    });
+                })->orwhereHas('UserCheck', function($quer) use($request){
+                    $quer->whereHas('Asset', function($que) use($request){
+                        $que->whereHas('AssetType', function($qu) use($request){
+                            $qu->where('asset_type_name', 'like', "%$request->search%");
+                        });
+                    });
+                })->orwhereHas('UserCheck', function($que) use($request){
+                    $que->whereHas('Asset',function($q) use($request){
+                        $q->whereHas('AssetDepartment', function($qu) use($request){
+                            $qu->whereHas('Department', function($qr) use($request){
+                                $qr->where('department_name', 'like', "%$request->search%");
+                            });
+                        });
+                    });
+                })->orwhereHas('UserCheck', function($que) use($request){
+                    $que->where('reference_no', 'like', "%$request->search%");
+                });
             });
         }
-
         $asset_check = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
         return UserAssetCheckDeviationResource::collection($asset_check);
     }
