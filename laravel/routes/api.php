@@ -545,5 +545,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('downloadDeviations',[ReportController::class, 'downloadDeviations']);
     Route::post('paginateDownloadReports',[ReportController::class, 'paginateDownloadReports']);
     Route::post('deleteDownloadReport',[ReportController::class, 'deleteDownloadReport']);
-    Route::post('paginateAllRegisters',[ReportController::class, 'paginateAllRegisters']);
+    Route::post('downloadAllRegisters',[ReportController::class, 'downloadAllRegisters']);
+    Route::post('downloadBreakDownRegister',[ReportController::class, 'downloadBreakDownRegister']);
+
 });
