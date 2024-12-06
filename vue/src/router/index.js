@@ -83,6 +83,7 @@ import Permissions from "@/views/userManagement/Permissions.vue";
 //Reports
 import AssetReports from "@/views/reports/AssetReports.vue";
 import Deviations from "@/views/reports/Deviations.vue";
+import CompletedDeviations from "@/views/reports/CompletedDeviations.vue";
 import Pendings from "@/views/reports/Pendings.vue";
 import UpcomingJobs from "@/views/reports/UpcomingJobs.vue";
 import BreakDownReports from "@/views/reports/BreakDownReports.vue";
@@ -666,6 +667,11 @@ const routes = [
     path: "/deviations",
     name: "Deviations.Index",
     component: Deviations,
+  },
+  {
+    path: "/completed_deviations",
+    name: "CompletedDeviations",
+    component: CompletedDeviations,
   },
   {
     path: "/breakdown_reports",

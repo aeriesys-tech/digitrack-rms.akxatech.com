@@ -207,6 +207,16 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+            reset() {
+                let vm = this;
+                vm.meta.asset_type_id = "";
+                vm.meta.asset_id = "";
+                vm.meta.department_id = "";
+                vm.meta.from_date = "";
+                vm.meta.to_date = "";
+                vm.errors = [];
+                vm.index();
+            },
              convertDateFormat(date) {
                 let vm = this;
                 return moment(date).format("yyyy-MM-DD HH:mm");
