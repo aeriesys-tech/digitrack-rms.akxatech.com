@@ -11,6 +11,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Deviations</h4>
                 </div>
+                <router-link to="/completed_deviations" class="btn btn-primary"> Completed Deviations</router-link>
                 <!-- <router-link v-can="'users.create'" to="/user/create" class="btn btn-primary" style="float: right;"><i
                         class="ri-list-check"></i> ADD USER</router-link> -->
             </div>
@@ -141,6 +142,7 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
+                                            <th class="text-center">Action</th>
                                             <!-- <th class="text-center" v-can="'users.delete'">Status</th>
                                             <th class="text-center" v-can="'users.update'">Actions</th> -->
                                         </tr>
@@ -164,6 +166,9 @@
                                             <td>{{ deviation?.ucl }}</td>
                                             <td>{{ deviation?.default_value }}</td>
                                             <td>{{ deviation?.value }}</td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="update(deviation)"><i class="ri-add-line fs-18 lh-1"></i></button>
+                                            </td>
                                             <!-- <td class="text-center" v-can="'users.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'user' + user.user_id" :checked="user.status" :value="user.status" @change="deleteUser(user)" />
@@ -196,6 +201,27 @@
                 </div>
             </div>
         </div>
+         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="deviationModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Upadte Deviation</h5>
+                        <button type="button" id="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label class="form-label">Remarks</label><span class="text-danger"> *</span>
+                            <textarea rows="2" class="form-control" type="text" placeholder="Remarks" :class="{'is-invalid':errors.remarks}" v-model="user_check.remarks"></textarea>
+                            <span v-if="errors.remarks" class="invalid-feedback">{{ errors.remarks[0] }}</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="updateDeviation">Update changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
     <script>
     import Pagination from "@/components/Pagination.vue";
@@ -219,6 +245,10 @@
                     trashed: false,
                     department_id:'',
                     asset_id:'',
+                },
+                user_check: {
+                    user_asset_check_id: "",
+                    remarks: "",
                 },
                 user_assets: [],
                 errors: [],
@@ -254,6 +284,29 @@
                         vm.meta.from = response.data.meta.from;
                         vm.meta.lastPage = response.data.meta.last_page;
                         vm.meta.maxPage = vm.meta.lastPage >= 3 ? 3 : vm.meta.lastPage;
+                    })
+                    .catch(function (error) {
+                        loader.hide();
+                        vm.errors = error.response.data.errors;
+                        vm.$store.dispatch("error", error.response.data.message);
+                    });
+            },
+              update(deviation) {
+                let vm = this;
+                vm.user_check.user_asset_check_id = deviation.user_asset_check_id;
+            },
+            updateDeviation() {
+                let vm = this;
+                let loader = vm.$loading.show();
+                vm.$store
+                    .dispatch("post", { uri: "updateDeviation", data: vm.user_check })
+                    .then((response) => {
+                        loader.hide();
+                        vm.$store.dispatch("success", response.data.message);
+                        let modal = vm.$refs.deviationModal;
+                        modal.style.display = "none";
+                        document.getElementById("close").click();
+                        vm.index();
                     })
                     .catch(function (error) {
                         loader.hide();
