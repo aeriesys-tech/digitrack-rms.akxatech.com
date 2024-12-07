@@ -306,6 +306,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteUserSpare',[UserServiceController::class, 'deleteUserSpare']);
     Route::post('getPendingServices',[UserServiceController::class, 'getPendingServices']);
     Route::post('getUpcomingServices',[UserServiceController::class, 'getUpcomingServices']);
+    Route::post('sendUpcomingServiceMails',[UserServiceController::class, 'sendUpcomingServiceMails']);
 
     Route::post('paginateUserChecks',[UserCheckController::class, 'paginateUserChecks']);
     Route::post('addUserCheck',[UserCheckController::class, 'addUserCheck']);

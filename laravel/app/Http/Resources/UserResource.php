@@ -20,7 +20,9 @@ class UserResource extends JsonResource
             'address' => $this->address,
             'avatar' => $this->avatar ? config('app.asset_url').'users/'.$this->avatar : null,
             'status' => $this->deleted_at?false:true,
-            'consent' => $this->Consent 
+            'consent' => $this->Consent,
+            'department_id' => $this->department_id,
+            'department' => new DepartmentResource($this->Department)
         ];
     }
 }

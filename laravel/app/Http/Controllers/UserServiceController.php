@@ -12,6 +12,9 @@ use Carbon\Carbon;
 use App\Models\AssetZone;
 use App\Models\Asset;
 use App\Models\AssetSpare;
+use App\Models\User;
+use App\Mail\ServiceReminderMarkdownMail;
+use Illuminate\Support\Facades\Mail;
 
 class UserServiceController extends Controller
 {
@@ -299,7 +302,7 @@ class UserServiceController extends Controller
         $query = UserService::query();
 
         // $query->where('plant_id', $authPlantId)
-        $query->where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->get();
+        $query->where('next_service_date', '<', Carbon::today())->where('is_latest', true)->get();
 
         if (isset($request->department_id)) 
         {
@@ -363,7 +366,7 @@ class UserServiceController extends Controller
         
         $query = UserService::query();
         // $query->where('plant_id', $authPlantId)
-          $query->where('next_service_date', '>=', Carbon::now())->where('is_latest', true)->get();
+          $query->whereBetween('next_service_date', [Carbon::today(), Carbon::today()->addDays(6)])->where('is_latest', true)->get();
 
         if (isset($request->department_id)) 
         {
@@ -413,5 +416,42 @@ class UserServiceController extends Controller
 
         $user_service = $query->orderBy($request->keyword, $request->order_by)->paginate($request->per_page);
         return UserServicePendingResource::collection($user_service);
+    }
+
+    public function sendUpcomingServiceMails(Request $request)
+    {
+        $userServices = UserService::whereDate('next_service_date', Carbon::now()->toDateString())
+            ->where('is_latest', true)->whereHas('Asset.Department', function ($query) {
+                $query->whereNotNull('asset_departments.department_id');
+            })->with('Asset', 'Asset.Department', 'User', 'User.Plant')->get();
+
+        foreach ($userServices as $service) 
+        {
+            $departments = $service->Asset->Department;
+            foreach ($departments as $department) 
+            {
+                $departmentUsers = User::where('department_id', $department->department_id)->get();
+                $serviceDetails = [
+                    'asset_name' => $service->Asset->asset_name ?? '',
+                    'service_date' => $service->service_date,
+                    'next_service_date' => $service->next_service_date,
+                    'service_name' => $service->UserSpare->map(function ($userSpare) {
+                        return $userSpare->Service->service_name ?? '';
+                    })->filter()->implode(', ')
+                ];
+
+                foreach ($departmentUsers as $user) 
+                {
+                    if ($user) {
+                        Mail::to($user->email)->send(new ServiceReminderMarkdownMail($user->name, [$serviceDetails]));
+                    }
+                    else{
+                        return response()->json(["message" => "User Not Found"]);
+                    }
+                }
+            }
+        }
+
+        return response()->json(['message' => 'Upcoming Jobs mail sent successfully']);
     }
 }

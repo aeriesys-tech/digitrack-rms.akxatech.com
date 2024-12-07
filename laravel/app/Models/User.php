@@ -21,7 +21,8 @@ class User extends Authenticatable
         'role_id',
         'address',
         'avatar',
-        'plant_id'
+        'plant_id',
+        'department_id'
     ];
 
     protected $primaryKey = 'user_id';
@@ -52,5 +53,10 @@ class User extends Authenticatable
     public function Consent()
     {
         return $this->belongsTo(Consent::class, 'user_id', 'user_id')->where('consent', true);
+    }
+
+    public function Department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 }

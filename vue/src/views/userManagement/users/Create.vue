@@ -36,17 +36,25 @@
                                 <input type="email" placeholder="Email" class="form-control" :class="{'is-invalid':errors.email}" v-model="user.email" />
                                 <span v-if="errors.email" class="invalid-feedback">{{ errors.email[0] }}</span>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">Password</label><span class="text-danger"> *</span>
                                 <input type="password" :disabled="!status" placeholder="Password" class="form-control" :class="{'is-invalid':errors.password}" v-model="user.password" />
                                 <span v-if="errors.password" class="invalid-feedback">{{ errors.password[0] }}</span>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">Mobile No.</label><span class="text-danger"> *</span>
                                 <input type="text" placeholder="Mobile No." class="form-control" v-model="user.mobile_no" :class="{'is-invalid':errors.mobile_no}" />
                                 <span v-if="errors.mobile_no" class="invalid-feedback">{{ errors.mobile_no[0] }}</span>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <label class="form-label">Department</label><span class="text-danger"> *</span>
+                                <select class="form-control" v-model="user.department_id" :class="{ 'is-invalid': errors.department_id }">
+                                    <option value="">Select Department</option>
+                                    <option v-for="department, key in departments" :key="key" :value="department.department_id">{{ department.department_name}}</option>
+                                </select>
+                                <span v-if="errors.department_id" class="invalid-feedback">{{ errors.department_id[0] }}</span>
+                            </div>
+                            <div class="col-md-3">
                                 <label class="form-label">Role</label><span class="text-danger"> *</span>
                                 <select class="form-control" v-model="user.role_id" :class="{ 'is-invalid': errors.role_id }">
                                     <option value="">Select Role</option>
@@ -98,6 +106,7 @@ export default {
             plants:[],
             // user_update: false,
             errors: [],
+            departments:[],
             status:true,
         }
     },
@@ -113,6 +122,7 @@ export default {
     // },
     beforeRouteEnter(to, from, next) {
             next((vm) => {
+                vm.getDepartments();
                 vm.getRoles();
                 if (to.name == "Users.Create") {
                     vm.$refs.name.focus();
@@ -147,6 +157,21 @@ export default {
                 .then(response => {
                     loader.hide();
                     vm.roles = response.data.data;
+                })
+                .catch(function (error) {
+                    loader.hide();
+                    vm.errors = error.response.data.errors;
+                    vm.$store.dispatch("error", error.response.data.message);
+                });
+        },
+        getDepartments() {
+            let vm = this;
+            let loader = vm.$loading.show();
+            vm.$store.dispatch('post', { uri: 'getDepartments' })
+                .then(response => {
+                    loader.hide();
+                    vm.departments = response.data.data;
+                    vm.getRoles();
                 })
                 .catch(function (error) {
                     loader.hide();

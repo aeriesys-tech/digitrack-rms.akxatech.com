@@ -44,6 +44,14 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
+                                        <th @click="sort('department_id')">
+                                            Department
+                                            <span>
+                                                <i v-if="meta.keyword == 'department_id' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                <i v-else-if="meta.keyword == 'department_id' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                <i v-else class="fas fa-sort"></i>
+                                            </span>
+                                        </th>
                                         <th @click="sort('role')">
                                             Role
                                             <span>
@@ -73,6 +81,7 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{user.name}}</td>
                                         <td>{{user.email}}</td>
+                                        <td>{{ user?.department?.department_name}}</td>
                                         <td>{{ user.role.role}}</td>
                                         <td>{{ user.plant?.plant_name }}</td>
                                         <td>{{ user.mobile_no }}</td>

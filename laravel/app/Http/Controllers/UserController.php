@@ -72,7 +72,8 @@ class UserController extends Controller
             'password' => 'required|string',
             'mobile_no' => 'required|regex:/^\+?[6-9]\d{9}$/',
             'role_id' => 'required|exists:roles,role_id',
-            'address' => 'nullable'
+            'address' => 'nullable',
+            'department_id' => 'required|exists:departments,department_id'
         ]);
 
         $data['password'] = Hash::make($request->password);
@@ -99,7 +100,8 @@ class UserController extends Controller
             'email' => 'required|email|max:100|regex:/^[a-z0-9]+([._][a-z0-9]+)*@[a-z0-9]+([.-][a-z0-9]+)*\.[a-z]{2,}$/|unique:users,email,'.$request->user_id.',user_id',
             'mobile_no' => 'required|regex:/^\+?[6-9]\d{9}$/',
             'role_id' => 'required|exists:roles,role_id',
-            'address' => 'nullable'
+            'address' => 'nullable',
+            'department_id' => 'required|exists:departments,department_id'
         ]);
 
         $data['plant_id'] = Auth::User()->plant_id;

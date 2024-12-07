@@ -35,10 +35,9 @@ class DashboardController extends Controller
             });
         })->count();
 
-        $pending_services = UserService::where('next_service_date', '<=', Carbon::now())->where('is_latest', true)->count();
+        $pending_services = UserService::where('next_service_date', '<', Carbon::today())->where('is_latest', true)->count();
 
-        $upcoming_jobs = UserService::where('next_service_date', '>=', Carbon::now())
-            ->where('is_latest', true)->count();
+        $upcoming_jobs = UserService::whereBetween('next_service_date', [Carbon::today(), Carbon::today()->addDays(6)])->where('is_latest', true)->count();
 
         return response()->json([
             'user' => $user,
