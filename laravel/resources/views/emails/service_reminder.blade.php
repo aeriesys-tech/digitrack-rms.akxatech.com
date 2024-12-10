@@ -7,7 +7,7 @@ The following services are due today:
 | Asset        | Service Date       | Next Service Date  | Service            |
 |--------------|--------------------|--------------------|--------------------|
 @foreach($services as $service)
-| {{ $service['asset_name'] }} | {{ \Carbon\Carbon::parse($service['service_date'])->format('Y-m-d') }} | {{ \Carbon\Carbon::parse($service['next_service_date'])->format('Y-m-d') }} | {{ $service['service_name'] }} |
+| {{ $service['asset_code'] }} | {{ \Carbon\Carbon::parse($service['service_date'])->format('Y-m-d') }} | {{ \Carbon\Carbon::parse($service['next_service_date'])->format('Y-m-d') }} | {{ $service['service_name'] }} |
 @endforeach
 @endcomponent
 

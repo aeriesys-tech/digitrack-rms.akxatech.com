@@ -432,7 +432,7 @@ class UserServiceController extends Controller
             {
                 $departmentUsers = User::where('department_id', $department->department_id)->get();
                 $serviceDetails = [
-                    'asset_name' => $service->Asset->asset_name ?? '',
+                    'asset_code' => $service->Asset->asset_code ?? '',
                     'service_date' => $service->service_date,
                     'next_service_date' => $service->next_service_date,
                     'service_name' => $service->UserSpare->map(function ($userSpare) {
