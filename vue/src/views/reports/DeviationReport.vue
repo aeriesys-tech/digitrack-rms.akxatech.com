@@ -33,36 +33,45 @@
                                         <option v-for="department, key in departments" :key="key" :value="department.department_id">{{ department.department_name }}</option>
                                     </select>
                                 </div> -->
-                                 <div class="col-2">
+                                 <div class="col-auto">
                                     <label class="form-label">Asset Type</label>
                                     <select class="form-control mb-3" v-model="meta.asset_type_id" @change="getAsset()">
                                         <option value="">Select Asset Type</option>
                                         <option v-for="asset_type, key in asset_types" :key="key" :value="asset_type.asset_type_id">{{ asset_type.asset_type_name }}</option>
                                     </select>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-auto">
                                     <label class="form-label">Asset</label>
                                     <select class="form-control mb-3" v-model="meta.asset_id" @change="getDepartments()">
                                         <option value="">Select Asset </option>
                                         <option v-for="asset, key in assets" :key="key" :value="asset.asset_id">{{ asset.asset_code}}::{{ asset.asset_name }}</option>
                                     </select>
                                 </div>
-                                 <div class="col-2">
+                                 <div class="col-auto">
                                     <label class="form-label">Department</label>
                                     <select class="form-control mb-3" v-model="meta.department_id" >
                                         <option value="">Select Department</option>
                                         <option v-for="department, key in departments" :key="key" :value="department.department_id">{{ department.department_name }}</option>
                                     </select>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-auto">
+                                    <label class="form-label">Remark Status</label>
+                                    <select class="form-control mb-3" v-model="meta.remark_status">
+                                        <option value="">Select Remark Status </option>
+                                        <option value="All">All</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Closed">Closed</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
                                     <label class="form-label">From Date</label>
                                    <input class="form-control mb-3" type="date" v-model="meta.from_date">
                                 </div>
-                                <div class="col-2">
+                                <div class="col-auto">
                                     <label class="form-label">To Date</label>
                                    <input class="form-control mb-3" type="date" v-model="meta.to_date">
                                 </div>
-                                <div class="col-2 d-flex mt-auto">
+                                <div class="col-auto text-end mt-auto">
                                     <button class="btn mb-3 btn-primary me-2" @click="search">Search</button>
                                      <button class="btn mb-3 btn-danger" @click="reset">Reset</button>
                                 </div>
@@ -150,6 +159,16 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
+                                            <th class="text-center" @click="sort('remark_status')">
+                                                Remark Status
+                                                <span>
+                                                    <i v-if="meta.keyword == 'remark_status' && meta.order_by == 'asc'"
+                                                        class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'remark_status' && meta.order_by == 'desc'"
+                                                        class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
                                             <!-- <th class="text-center" v-can="'users.delete'">Status</th>
                                             <th class="text-center" v-can="'users.update'">Actions</th> -->
                                         </tr>
@@ -172,6 +191,10 @@
                                             <td>{{ deviation?.ucl }}</td>
                                             <td>{{ deviation.default_value }}</td>
                                             <td>{{ deviation.value }}</td>
+                                            <td class="text-center"
+                                                :class="deviation.remark_status ? 'text-success' : 'text-danger'">
+                                                {{ deviation.remark_status ? 'Closed' : 'Active' }}
+                                            </td>
                                             <!-- <td class="text-center" v-can="'users.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'user' + user.user_id" :checked="user.status" :value="user.status" @change="deleteUser(user)" />
@@ -231,6 +254,7 @@
                     from_date: '',
                     to_date: '',
                     download:"excel",
+                    remark_status: 'All',
                 },
                 user_assets: [],
                 errors: [],

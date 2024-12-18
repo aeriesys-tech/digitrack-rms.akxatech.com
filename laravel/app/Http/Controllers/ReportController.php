@@ -150,7 +150,7 @@ class ReportController extends Controller
             'to_date' => 'nullable|date|after_or_equal:from_date'
         ]);
     
-        $query = UserAssetCheck::query()->where('remark_status', false);
+        $query = UserAssetCheck::query();
     
         // $query->whereHas('UserCheck', function ($query) use ($authPlantId) {
         //     $query->where('plant_id', $authPlantId);
@@ -173,6 +173,17 @@ class ReportController extends Controller
             $query->whereHas('UserCheck.Asset', function ($query) use ($request) {
                 $query->where('department_id', $request->department_id);
             });
+        }
+
+        if ($request->remark_status !== null) {
+            if ($request->remark_status === 'All') {
+            } 
+            elseif($request->remark_status === 'Active') {
+                $query->where('remark_status', false);
+            }
+            elseif($request->remark_status === 'Closed') {
+                $query->where('remark_status', true);
+            }
         }
     
         if (!empty($request->asset_id)) {
@@ -204,7 +215,7 @@ class ReportController extends Controller
             'to_date' => 'nullable|date|after_or_equal:from_date'
         ]);
     
-        $query = UserAssetCheck::query()->where('remark_status', false);
+        $query = UserAssetCheck::query();
     
         // $query->whereHas('UserCheck', function ($query) use ($authPlantId) {
         //     $query->where('plant_id', $authPlantId);
@@ -228,6 +239,18 @@ class ReportController extends Controller
             });
         }
     
+        if ($request->remark_status !== null) 
+        {
+            if ($request->remark_status === 'All') {
+            } 
+            elseif($request->remark_status === 'Active') {
+                $query->where('remark_status', false);
+            }
+            elseif($request->remark_status === 'Closed') {
+                $query->where('remark_status', true);
+            }
+        }
+
         if (!empty($request->asset_id)) {
             $query->whereHas('UserCheck', function ($query) use ($request) {
                 $query->where('asset_id', $request->asset_id);

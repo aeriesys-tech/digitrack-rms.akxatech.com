@@ -7,6 +7,8 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class DeviationReportExport implements FromCollection, WithHeadings, WithColumnWidths, WithStyles
 {
@@ -33,7 +35,8 @@ class DeviationReportExport implements FromCollection, WithHeadings, WithColumnW
                 'lcl' => $item->lcl ?? '',
                 'ucl' => $item->ucl ?? '',
                 'default value' => $item->default_value ?? '',
-                'value' => $item->value ?? ''
+                'value' => $item->value ?? '',
+                'remark_status' => $item->remark_status? 'Closed' : 'Active'
             ];
         });
     }
@@ -50,7 +53,8 @@ class DeviationReportExport implements FromCollection, WithHeadings, WithColumnW
             'Lcl',
             'Ucl',
             'Default Value',
-            'Value'
+            'Value',
+            'Remark Status'
         ];
     }
 
@@ -66,18 +70,32 @@ class DeviationReportExport implements FromCollection, WithHeadings, WithColumnW
             'G' => 20,
             'H' => 10,
             'I' => 20,
-            'J' => 10
+            'J' => 18,
+            'K' => 18
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [
-                'font' => [
-                    'bold' => true
-                ]
-            ]
-        ];
+        $sheet->getStyle('A1:K1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:K1')->getFont()->getColor()->setARGB(Color::COLOR_WHITE); 
+        $sheet->getStyle('A1:K1')->getFill()->setFillType(Fill::FILL_SOLID);
+        $sheet->getStyle('A1:K1')->getFill()->getStartColor()->setARGB('0000FF'); 
+
+        $row = 2;
+
+        foreach ($this->data as $item) {
+            $remarkStatus = $item->remark_status ? 'Closed' : 'Active';
+            $remarkStatusCell = 'K' . $row;
+
+            if ($remarkStatus === 'Closed') {
+                $sheet->getStyle($remarkStatusCell)->getFont()->getColor()->setARGB(Color::COLOR_GREEN);
+            } else {
+                $sheet->getStyle($remarkStatusCell)->getFont()->getColor()->setARGB(Color::COLOR_RED); 
+            }
+
+            $row++;
+        }
+        return [];
     }
 }
