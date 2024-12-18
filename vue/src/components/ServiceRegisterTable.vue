@@ -47,7 +47,7 @@
                                 <tbody>
                                     <tr v-for="service, key in user_services" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{service.service_no}}</td>
+                                        <td @click="showService(service, 'service')"><a href="javascript:void(0)">{{service.service_no}}</a></td>
                                         <td>{{convertDateFormat(service.service_date)}}</td>
                                         <td>{{convertDateFormat(service.next_service_date)}}</td>
                                         <td>{{service.asset?.asset_code}}</td>
@@ -148,6 +148,11 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
+              showService(service, type) {
+            let vm = this;
+            this.$store.commit("setCurrentPage", this.meta.page)
+            this.$router.push("/asset_reports/" + type + '/' + service.user_service_id + "/view");
+        },
             search() {
                 let vm = this;
                 vm.meta.page = 1;

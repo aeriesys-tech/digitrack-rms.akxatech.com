@@ -159,6 +159,7 @@ import AssetDetails from "@/views/Reviews/AssetDetails.vue"
 import Geometric from "@/views/masters/assets/Geometric.vue"
 import HorizontalGeometric from "@/views/masters/assets/HGeometric.vue"
 import ProcessTrends from "@/views/Reviews/ProcessTrends.vue"
+import ViewAssetReport from "@/views/reports/ViewAssetReport.vue";
 
 import DownloadedReports from "@/views/DownloadedReports.vue"
 const routes = [
@@ -700,6 +701,12 @@ const routes = [
     name: "AssetReports.Index",
     component: AssetReports,
   },
+  {
+    path: "/asset_reports/:type/:id/view",
+    name: "ViewAssetReport",
+    component: ViewAssetReport,
+  },
+
 
   // masteres
 

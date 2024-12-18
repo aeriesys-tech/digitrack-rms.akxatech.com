@@ -47,7 +47,7 @@
                                 <tbody>
                                     <tr v-for="user_check, key in user_checks" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{user_check.asset?.asset_code}}</td>
+                                        <td @click="showCheck(user_check, 'user_check')"><a href="javascript:void(0)">{{user_check.asset?.asset_code}}</a></td>
                                         <td>{{user_check.reference_no}}</td>
                                         <td>{{convertDateFormat(user_check.reference_date)}}</td>
                                         <td>{{user_check?.asset_zone?.zone_name}}</td>
@@ -145,6 +145,11 @@ export default {
                 vm.errors = error.response.data.errors;
                 vm.$store.dispatch("error", error.response.data.message);
             });
+        },
+        showCheck(user_check, type) {
+            let vm = this;
+            this.$store.commit("setCurrentPage", this.meta.page)
+            this.$router.push("/asset_reports/" + type + '/' + user_check.user_check_id + "/view");
         },
         search() {
             let vm = this;

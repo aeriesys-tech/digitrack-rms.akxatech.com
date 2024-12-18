@@ -47,7 +47,7 @@
                                 <tbody>
                                     <tr v-for="user_variable, key in user_variables" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{ user_variable.asset?.asset_code }}</td>
+                                        <td @click="showProcess(user_variable, 'process')"><a href="javascript:void(0)">{{ user_variable.asset?.asset_code }}</a></td>
                                         <td>{{ user_variable.job_no }}</td>
                                         <td>{{convertDateFormat( user_variable.job_date) }}</td>
                                     </tr>
@@ -141,6 +141,12 @@ export default {
                     vm.errors = error.response.data.errors;
                     vm.$store.dispatch("error", error.response.data.message);
                 });
+        },
+        showProcess(user_variable, type) {
+            console.log("process",user_variable)
+            let vm = this;
+            this.$store.commit("setCurrentPage", this.meta.page)
+            this.$router.push("/asset_reports/" + type + '/' + user_variable.user_variable_id + "/view");
         },
         convertDateFormat(date) {
             let vm = this;
