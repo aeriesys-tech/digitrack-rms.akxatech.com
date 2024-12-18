@@ -82,6 +82,14 @@ class DeviationReportExport implements FromCollection, WithHeadings, WithColumnW
         $sheet->getStyle('A1:K1')->getFill()->setFillType(Fill::FILL_SOLID);
         $sheet->getStyle('A1:K1')->getFill()->getStartColor()->setARGB('0000FF'); 
 
+        $sheet->getStyle('A1:E' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        $sheet->getStyle('G1:K' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
         $row = 2;
 
         foreach ($this->data as $item) {

@@ -8,6 +8,8 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class PendingJobsExport implements FromCollection, WithHeadings, WithColumnWidths, WithStyles
 {
@@ -64,12 +66,15 @@ class PendingJobsExport implements FromCollection, WithHeadings, WithColumnWidth
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [
-                'font' => [
-                    'bold' => true
-                ]
-            ]
-        ];
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:H1')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+        $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A1:H1')->getFill()->getStartColor()->setARGB('0000FF');
+    
+        $sheet->getStyle('A1:G' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        return [];
     }
 }

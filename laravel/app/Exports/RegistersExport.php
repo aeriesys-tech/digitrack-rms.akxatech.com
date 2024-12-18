@@ -7,6 +7,8 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class RegistersExport implements WithMultipleSheets
 {
@@ -48,9 +50,10 @@ class ActivitiesSheet implements FromCollection, WithStyles, WithColumnWidths
         return collect([
             ['Activity Registers'], 
             [],                  
-            ['Activity No', 'Activity Date & Time', 'Asset Code', 'Reason', 'Cost', 'Status'], 
-        ])->merge($this->activities->map(function ($activity) {
+            ['Sl No', 'Activity No', 'Activity Date & Time', 'Asset Code', 'Reason', 'Cost', 'Status'], 
+        ])->merge($this->activities->map(function ($activity, $key) {
             return [
+                $key + 1,
                 $activity->activity_no,
                 $activity->activity_date,
                 $activity->Asset->asset_code,
@@ -63,24 +66,26 @@ class ActivitiesSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [ 
-                'font' => ['bold' => true, 'size' => 14],
-            ],
-            2 => [ 
-                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF'], 'size' => 12],
-                'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '0000FF']],
-            ],
-        ];
+        $sheet->getStyle('A2:G2')->getFont()->setBold(true);
+        $sheet->getStyle('A2:G2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+        $sheet->getStyle('A2:G2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A2:G2')->getFill()->getStartColor()->setARGB('0000FF');
+        
+        // Center align for all rows (excluding header row)
+        $sheet->getStyle('A3:G' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+            
+        return [];
     }
 
     public function columnWidths(): array
     {
         return [
-            'A' => 20,
-            'B' => 25,
-            'C' => 30,
-            'D' => 20,
+            'A' => 7,
+            'B' => 20,
+            'C' => 25,
+            'D' => 30,
             'E' => 20,
             'F' => 20,
             'G' => 20,
@@ -102,12 +107,13 @@ class ServicesSheet implements FromCollection, WithStyles, WithColumnWidths
         $data = collect([
             ['Service Registers'], 
             [], 
-            ['Service No.', 'Service Date', 'Next Service Date', 'Asset Code', 'Asset Zone', 'Service', 'Service Cost', 'Spare', 'Spare Cost'],
+            ['Sl No', 'Service No.', 'Service Date', 'Next Service Date', 'Asset Code', 'Asset Zone', 'Service', 'Service Cost', 'Spare', 'Spare Cost'],
         ]);
 
-        $this->services->each(function ($service) use (&$data) {
-            $service->UserSpare->each(function ($spare) use ($service, &$data) {
+        $this->services->each(function ($service, $key) use (&$data) {
+            $service->UserSpare->each(function ($spare) use ($service, &$data, $key) {
                 $data->push([
+                    $key + 1,
                     $service->service_no,
                     $service->service_date,
                     $service->next_service_date ?? '',
@@ -126,21 +132,22 @@ class ServicesSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [ 
-                'font' => ['bold' => true, 'size' => 14],
-            ],
-            2 => [ 
-                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF'], 'size' => 12],
-                'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '0000FF']],
-            ],
-        ];
+        $sheet->getStyle('A2:J2')->getFont()->setBold(true);
+        $sheet->getStyle('A2:J2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+        $sheet->getStyle('A2:J2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A2:J2')->getFill()->getStartColor()->setARGB('0000FF');
+    
+        $sheet->getStyle('A3:J' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        return [];
     }
 
     public function columnWidths(): array
     {
         return [
-            'A' => 20,
+            'A' => 7,
             'B' => 20,
             'C' => 20,
             'D' => 20,
@@ -148,7 +155,8 @@ class ServicesSheet implements FromCollection, WithStyles, WithColumnWidths
             'F' => 20,
             'G' => 20,
             'H' => 20,
-            'I' => 20
+            'I' => 20,
+            'J' => 20
         ];
     }
 }
@@ -168,14 +176,15 @@ class ChecksSheet implements FromCollection, WithStyles, WithColumnWidths
             ['Check Registers'], 
             [],                 
             [
-                'Asset', 'Reference No.', 'Reference Date', 'Check', 'Field Type', 
+                'Sl No', 'Asset', 'Reference No.', 'Reference Date', 'Check', 'Field Type', 
                 'Default Value', 'Field Values', 'LCL', 'UCL', 'Value'
             ], 
         ]);
 
-        $this->checks->each(function ($check) use (&$data) {
-            $check->UserAssetCheck->each(function ($assetCheck) use ($check, &$data) {
+        $this->checks->each(function ($check, $key) use (&$data) {
+            $check->UserAssetCheck->each(function ($assetCheck) use ($check, &$data, $key) {
                 $data->push([
+                    $key + 1,
                     $check->Asset->asset_name ?? '',
                     $check->reference_no,
                     $check->reference_date,
@@ -196,28 +205,29 @@ class ChecksSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [ 
-                'font' => ['bold' => true, 'size' => 14],
-            ],
-            2 => [
-                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF'], 'size' => 12],
-                'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '0000FF']],
-            ],
-        ];
+        $sheet->getStyle('A2:K2')->getFont()->setBold(true);
+        $sheet->getStyle('A2:K2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+        $sheet->getStyle('A2:K2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A2:K2')->getFill()->getStartColor()->setARGB('0000FF');
+    
+        $sheet->getStyle('A3:K' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        return [];
     }
 
     public function columnWidths(): array
     {
         return [
-            'A' => 35,
-            'B' => 20,
+            'A' => 7,
+            'B' => 35,
             'C' => 20,
-            'D' => 80,
-            'E' => 20,
+            'D' => 20,
+            'E' => 80,
             'F' => 20,
-            'G' => 40,
-            'H' => 20,
+            'G' => 20,
+            'H' => 40,
             'I' => 20,
             'J' => 20,
             'K' => 20,
@@ -240,13 +250,14 @@ class ProcessSheet implements FromCollection, WithStyles, WithColumnWidths
             ['Process Registers'], 
             [],                 
             [
-                'Asset', 'Job No', 'Job Date', 'Asset Zone', 'Variable', 'Value'
+                'Sl No', 'Asset', 'Job No', 'Job Date', 'Asset Zone', 'Variable', 'Value'
             ], 
         ]);
 
-        $this->processes->each(function ($variable) use (&$data) {
-            $variable->UserAssetVariable->each(function ($assetVariable) use ($variable, &$data) {
+        $this->processes->each(function ($variable, $key) use (&$data) {
+            $variable->UserAssetVariable->each(function ($assetVariable) use ($variable, &$data, $key) {
                 $data->push([
+                    $key + 1,
                     $variable->Asset->asset_name ?? '',
                     $variable->job_no,
                     $variable->job_date,
@@ -263,26 +274,27 @@ class ProcessSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [ 
-                'font' => ['bold' => true, 'size' => 14],
-            ],
-            2 => [
-                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF'], 'size' => 12],
-                'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '0000FF']],
-            ],
-        ];
+        $sheet->getStyle('A2:G2')->getFont()->setBold(true);
+        $sheet->getStyle('A2:G2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+        $sheet->getStyle('A2:G2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A2:G2')->getFill()->getStartColor()->setARGB('0000FF');
+    
+        $sheet->getStyle('A3:G' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        return [];
     }
 
     public function columnWidths(): array
     {
         return [
-            'A' => 35,
-            'B' => 20,
+            'A' => 7,
+            'B' => 35,
             'C' => 20,
             'D' => 20,
             'E' => 20,
-            'F' => 20,
+            'F' => 40,
             'G' => 20
         ];
     }

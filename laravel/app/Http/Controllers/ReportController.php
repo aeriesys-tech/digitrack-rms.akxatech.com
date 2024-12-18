@@ -152,10 +152,6 @@ class ReportController extends Controller
     
         $query = UserAssetCheck::query();
     
-        // $query->whereHas('UserCheck', function ($query) use ($authPlantId) {
-        //     $query->where('plant_id', $authPlantId);
-        // });
-    
         $query->where(function ($query) 
         {
             $query->where(function ($q) {
@@ -216,11 +212,7 @@ class ReportController extends Controller
         ]);
     
         $query = UserAssetCheck::query();
-    
-        // $query->whereHas('UserCheck', function ($query) use ($authPlantId) {
-        //     $query->where('plant_id', $authPlantId);
-        // });
-    
+
         $query->where(function ($query) {
             $query->where(function ($q) {
                 $q->where('field_type', 'Number')

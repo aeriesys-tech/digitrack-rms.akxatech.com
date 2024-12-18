@@ -21,14 +21,15 @@ class CheckRegistersExport implements FromCollection, WithStyles, WithColumnWidt
     {
         $data = collect([             
             [
-                'Asset', 'Reference No.', 'Reference Date', 'Check', 'Field Type', 
+                'Sl No', 'Asset', 'Reference No.', 'Reference Date', 'Check', 'Field Type', 
                 'Default Value', 'Field Values', 'LCL', 'UCL', 'Value'
             ], 
         ]);
 
-        $this->checks->each(function ($check) use (&$data) {
-            $check->UserAssetCheck->each(function ($assetCheck) use ($check, &$data) {
+        $this->checks->each(function ($check, $key) use (&$data) {
+            $check->UserAssetCheck->each(function ($assetCheck) use ($check, &$data, $key) {
                 $data->push([
+                    $key + 1,
                     $check->Asset->asset_name ?? '',
                     $check->reference_no,
                     $check->reference_date,
@@ -49,25 +50,29 @@ class CheckRegistersExport implements FromCollection, WithStyles, WithColumnWidt
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [
-                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF'], 'size' => 12],
-                'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '0000FF']],
-            ],
-        ];
+        $sheet->getStyle('A1:K1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:K1')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+        $sheet->getStyle('A1:K1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A1:K1')->getFill()->getStartColor()->setARGB('0000FF');
+        
+        $sheet->getStyle('A2:K' . ($sheet->getHighestRow()))
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        return [];
     }
 
     public function columnWidths(): array
     {
         return [
-            'A' => 35,
-            'B' => 20,
+            'A' => 7,
+            'B' => 35,
             'C' => 20,
-            'D' => 80,
-            'E' => 20,
+            'D' => 20,
+            'E' => 80,
             'F' => 20,
-            'G' => 40,
-            'H' => 20,
+            'G' => 20,
+            'H' => 40,
             'I' => 20,
             'J' => 20,
             'K' => 20,
