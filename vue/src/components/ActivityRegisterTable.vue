@@ -48,7 +48,7 @@
                                 <tbody>
                                     <tr v-for="activity, key in activities" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{activity.activity_no}}</td>
+                                        <td @click="showActivity(activity, 'activity')"><a href="javascript:void(0)">{{activity.activity_no}}</a></td>
                                         <td>{{convertDateFormat( activity.activity_date)}}</td>
                                         <td>{{activity.asset?.asset_code}}</td>
                                         <td>{{activity.reason?.reason_code}}</td>
@@ -144,6 +144,11 @@ import moment from "moment";
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            },
+            showActivity(activity, type) {
+                let vm = this;
+                this.$store.commit("setCurrentPage", this.meta.page)
+                this.$router.push("/asset_reports/" + type + '/' + activity.user_activity_id + "/view");
             },
             convertDateFormat(date) {
                 let vm = this;
