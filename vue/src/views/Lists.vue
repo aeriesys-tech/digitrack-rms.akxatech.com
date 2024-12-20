@@ -122,7 +122,7 @@ export default {
             column:'col-8',
             meta: {
                 search: "",
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "list_parameter_id",
                 per_page: 10,
                 totalRows: 0,

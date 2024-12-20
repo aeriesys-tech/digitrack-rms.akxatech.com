@@ -142,6 +142,14 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
+                                             <th @click="sort('remark_date')">
+                                                    Remark Date
+                                                <span>
+                                                    <i v-if="meta.keyword == 'remark_date' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'remark_date' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
                                             <th @click="sort('remarks')">
                                                     Remarks
                                                 <span>
@@ -172,6 +180,7 @@
                                             <td>{{ deviation?.default_value }}</td>
                                             <td>{{ deviation?.value }}</td>
                                             <td>{{ deviation?.remark_user?.name }}</td>
+                                            <td>{{ deviation?.remark_date }}</td>
                                             <td>{{ deviation?.remarks }}</td>
                                         </tr>
                                     </tbody>
@@ -206,7 +215,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "user_check_id",
                     per_page: 10,
                     totalRows: 0,

@@ -45,8 +45,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="data_source_attribute.data_source_types_obj"  filter optionLabel="data_source_type_name" 
-                                            :options="data_source_types"  placeholder="Select Data Source Type" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="data_source_attribute.data_source_types_obj"  filter optionLabel="data_source_type_name"
+                                            :options="data_source_types"  placeholder="Select Data Source Type" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.data_source_types ? error_style : ''"/>
                                         <span v-if="errors?.data_source_types"><small class="text-danger">{{ errors?.data_source_types[0] }}</small></span>
                                     </div>
@@ -186,7 +186,7 @@
                             vm.data_source_attribute.data_source_types_obj = []
 
                             vm.data_source_attribute.data_source_attribute_types.map(function(ele){
-                                vm.data_source_attribute.data_source_types_obj.push({data_source_type_code: ele.data_source_type.data_source_type_code, 
+                                vm.data_source_attribute.data_source_types_obj.push({data_source_type_code: ele.data_source_type.data_source_type_code,
                                     data_source_type_id: ele.data_source_type.data_source_type_id, status: ele.data_source_type.status,
                                     data_source_type_name: ele.data_source_type.data_source_type_name})
                             })
@@ -270,7 +270,7 @@
                 this.$store.dispatch('post', { uri: 'addDataSourceAttribute', data:this.data_source_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Data Source Attribute created successfully");
+                        this.$store.dispatch('success',"Data Source Attribute Created Successfully");
                         vm.$router.push("/data_source_attributes");
                     })
                     .catch(function (error) {
@@ -283,7 +283,7 @@
             updateDataSourceAttribute(){
                 let vm = this;
                 let loader = this.$loading.show();
-                
+
                 vm.data_source_attribute.deleted_data_source_attribute_types = vm.data_source_attribute?.data_source_attribute_types.filter(
                     item1 => !vm.data_source_attribute.data_source_types_obj.some(item2 => item1.data_source_type_id === item2.data_source_type_id));
                 vm.data_source_attribute.data_source_types = vm.data_source_attribute.data_source_types_obj.map(item => item.data_source_type_id);
@@ -292,7 +292,7 @@
                 this.$store.dispatch('post', { uri: 'updateDataSourceAttribute', data:vm.data_source_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Data Source Attribute updated successfully");
+                        this.$store.dispatch('success',"Data Source Attribute Updated Successfully");
                         this.$router.push('/data_source_attributes');
                     })
                     .catch(function (error) {

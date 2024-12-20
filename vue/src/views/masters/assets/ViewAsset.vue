@@ -32,7 +32,7 @@
                                     <span class="nav-link text-dark"><span>Radius</span> <span class="badge text-dark">{{asset.radius}}</span></span>
                                     <span class="nav-link text-dark">
                                         <span>Department</span>
-                                        <span class="" style="margin-left: auto">
+                                        <span class="" style="margin-left: auto; padding-right: 5px">
                                             <ul class="list_style_none mb-0 text-end">
                                                 <li v-if="asset?.asset_department_ids?.length === 0">No departments</li>
                                                 <li v-for="department in asset.asset_department_ids" :key="department.id">
@@ -101,7 +101,7 @@
                                             </ul>
                                         </div> -->
 
-                                        <label class="form-label">Asset Zone</label>
+                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
                                         <!-- <div class="dropdown" @click="toggleAssetZoneStatus('spares')">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors?.spare_asset_zones}">
@@ -126,7 +126,7 @@
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
-                                        <label class="form-label">Spare</label>
+                                        <label class="form-label">Spare <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.spare_id }"
                                             :customClass="{ 'is-invalid': errors.spare_id }"
@@ -146,7 +146,7 @@
                                         <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
-                                        <label class="form-label">Max Quantity</label>
+                                        <label class="form-label">Max Quantity <span class="text-danger"> *</span></label>
                                         <input type="number" class="form-control" placeholder="Enter Max Quantity" :class="{ 'is-invalid': errors.quantity }" v-model="spare.quantity" />
                                         <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
                                     </div>
@@ -384,14 +384,14 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <label class="form-label">Asset Zone</label>
+                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="check.check_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%; height: 37px;" :style="errors?.check_asset_zones ? error_style : ''" :disabled="check.check_zone_read_only"/>
                                         <span v-if="errors?.check_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.check_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-8" v-can="'assetChecks.create'">
-                                        <label class="form-label">Check</label>
+                                        <label class="form-label">Check <span class="text-danger"> *</span></label>
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetChecks.create'"> -->
 
                                         <search
@@ -544,7 +544,7 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-4" v-can="'assetChecks.create'">
-                                        <label class="form-label">Asset Zone</label>
+                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
                                         <!-- <div class="dropdown" @click="toggleAssetZoneStatus('services')">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.service_asset_zones}">
@@ -566,7 +566,7 @@
                                         <span v-if="errors?.service_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.service_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Service</label>
+                                        <label class="form-label">Service <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.service_id }"
                                             :customClass="{ 'is-invalid': errors.service_id }"
@@ -773,7 +773,7 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-4">
-                                        <label class="form-label">Asset Zone</label>
+                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
                                         <!-- <div class="dropdown" @click="toggleAssetZoneStatus('variables')">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.variable_asset_zones}">
@@ -795,7 +795,7 @@
                                         <span v-if="errors?.variable_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.variable_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Variable</label>
+                                        <label class="form-label">Variable <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.variable_id }"
                                             :customClass="{ 'is-invalid': errors.variable_id }"
@@ -1015,7 +1015,7 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <label class="form-label">Asset Zone</label>
+                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
                                         <!-- <div class="dropdown" @click="toggleAssetZoneStatus('datasources')">
                                             <div class="overselect"></div>
                                             <select class="form-control form-control" :class="{'is-invalid':errors.data_source_asset_zones}">
@@ -1037,7 +1037,7 @@
                                         <span v-if="errors?.data_source_asset_zones" class="invalid-feedback" style="display: block !important">{{ errors?.data_source_asset_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label">Data Source</label>
+                                        <label class="form-label">Data Source <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.data_source_id }"
                                             :customClass="{ 'is-invalid': errors.data_source_id }"
@@ -1057,7 +1057,7 @@
                                         <span v-if="errors.data_source_id" class="invalid-feedback">{{ errors.data_source_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label">Script</label>
+                                        <label class="form-label">Script <span class="text-danger"> *</span></label>
                                         <select class="form-control form-control" v-model="datasource.script" :class="{'is-invalid':errors.script}">
                                             <option value="">Select Script</option>
                                             <option value="Ladle Scanner">Ladle Scanner</option>
@@ -1291,6 +1291,7 @@
                                                 </li>
                                             </ul>
                                         </div> -->
+                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="accessory.accessory_asset_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Asset Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.accessory_asset_zones ? error_style : ''" :disabled="accessory.accessory_zone_read_only" />
@@ -1298,6 +1299,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
+                                        <label class="form-label">Accessory <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.accessory_type_id }"
                                             :customClass="{ 'is-invalid': errors.accessory_type_id }"
@@ -1315,14 +1317,16 @@
                                         <span v-if="errors.accessory_type_id" class="invalid-feedback">{{ errors.accessory_type_id[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
+                                        <label class="form-label">Accessory Name <span class="text-danger"> *</span></label>
                                         <input type="text" placeholder="Enter accessory name" class="form-control" :class="{'is-invalid':errors?.accessory_name}" v-model="accessory.accessory_name" />
                                         <span v-if="errors?.accessory_name" class="invalid-feedback">{{ errors.accessory_name[0] }}</span>
                                     </div>
                                     <div class="col-md-10">
+                                        <label class="form-label">Attachment <span class="text-danger"> *</span></label>
                                         <input type="file" class="form-control" id="attachment" ref="attachment" name="attachment" :class="{ 'is-invalid': errors.attachment }" />
                                         <span v-if="errors?.attachment" class="invalid-feedback">{{ errors.attachment[0] }}</span>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-2 mt-auto">
                                         <div style="float: left;">
                                             <button class="btn btn-outline-success me-2" @click="addAccessory()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
                                         </div>
@@ -1828,7 +1832,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "spare_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1843,7 +1847,7 @@
                 },
                 check_meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "check_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1859,7 +1863,7 @@
                 },
                 check_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "service_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1874,7 +1878,7 @@
                 },
                 variable_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "variable_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1889,7 +1893,7 @@
                 },
                 datasource_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "data_source_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1904,7 +1908,7 @@
                 },
                 accessory_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "asset_accessory_id",
                     per_page: 5,
                     totalRows: 0,

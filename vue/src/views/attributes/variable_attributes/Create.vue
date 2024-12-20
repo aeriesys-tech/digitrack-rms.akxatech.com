@@ -45,8 +45,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="variable_attribute.variable_types_obj"  filter optionLabel="variable_type_name" 
-                                            :options="variable_types"  placeholder="Select Data Source Type" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="variable_attribute.variable_types_obj"  filter optionLabel="variable_type_name"
+                                            :options="variable_types"  placeholder="Select Data Source Type" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.variable_types ? error_style : ''"/>
                                             <span v-if="errors?.variable_types"><small class="text-danger">{{ errors?.variable_types[0] }}</small></span>
                                     </div>
@@ -187,11 +187,11 @@
                                 vm.variable_attribute.variable_types_obj = []
 
                                 vm.variable_attribute.variable_attribute_types.map(function(ele){
-                                    vm.variable_attribute.variable_types_obj.push({variable_type_code: ele.variable_type.variable_type_code, 
+                                    vm.variable_attribute.variable_types_obj.push({variable_type_code: ele.variable_type.variable_type_code,
                                         variable_type_id: ele.variable_type.variable_type_id, status: ele.variable_type.status,
                                         variable_type_name: ele.variable_type.variable_type_name})
                                 })
-                                
+
                             })
                             .catch(function (error) {
                                 vm.errors = error.response.data.errors;
@@ -271,7 +271,7 @@
                 vm.$store.dispatch('post', { uri: 'addVariableAttribute', data:vm.variable_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Variable Attribute created successfully");
+                        vm.$store.dispatch('success',"Variable Attribute Created Successfully");
                         vm.$router.push("/variable_attributes");
                     })
                     .catch(function (error) {
@@ -293,7 +293,7 @@
                 vm.$store.dispatch('post', { uri: 'updateVariableAttribute', data:vm.variable_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Variable Attribute updated successfully");
+                        vm.$store.dispatch('success',"Variable Attribute Updated Successfully");
                         vm.$router.push('/variable_attributes');
                     })
                     .catch(function (error) {

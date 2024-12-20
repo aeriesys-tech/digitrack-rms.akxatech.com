@@ -100,6 +100,7 @@ export default {
                 mobile_no: '',
                 role_id: '',
                 plant_id: '',
+                department_id:'',
                 address: ''
             },
             roles: [],

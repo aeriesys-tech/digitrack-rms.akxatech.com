@@ -280,7 +280,36 @@
                 </ul>
             </div> -->
 
-            <div class="nav-group show">
+            <div class="nav-group" :class="{show:showReports}" @click="showTab('Reports')">
+                <a href="javascript:void(0)" :style="{color:ReportColor}" class="nav-label" >
+                <i class="ri-file-chart-line icn"></i>&nbsp; Reports
+                </a>
+                <ul class="nav nav-sidebar">
+                <li class="nav-item">
+                    <router-link to="/asset_reports" class="nav-link" v-bind:class="{ active: $route.path === '/asset_reports' }" >
+                        <i class="ri-file-chart-2-line"></i> <span>Asset Report</span>
+                    </router-link>
+                </li>
+
+                <li class="nav-item">
+                    <router-link to="/pending_jobs" class="nav-link" v-bind:class="{ active: $route.path === '/pending_jobs' }" >
+                    <i class="ri-pass-pending-line"></i> <span>Job Pending Report</span>
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link to="/deviation_reports" class="nav-link" v-bind:class="{ active: $route.path === '/deviation_reports' }" >
+                    <i class="ri-store-3-fill"></i> <span>Deviation Report</span>
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                        <router-link to="/breakdown_reports" class="nav-link" v-bind:class="{ active: $route.path === '/breakdown_reports' }" >
+                            <i class="ri-file-chart-2-line"></i> <span>BreakDown Report</span>
+                        </router-link>
+                    </li>
+                </ul>
+            </div>
+
+              <!-- <div class="nav-group show">
                 <a href="javascript:void(0)" style="color: inherit;" class="nav-label" @click="toggleReports">
                 <i class="ri-file-chart-line icn"></i>&nbsp; Reports
                 </a>
@@ -307,7 +336,7 @@
                         </router-link>
                     </li>
                 </ul>
-            </div>
+            </div> -->
 
 
             <div class="nav-group" :class="{show:showPredictions}" @click="showTab('Predictions')">
@@ -324,7 +353,7 @@
             <div class="nav-group show">
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
-                        <router-link to="/downloaded_reports" :style="{color:DownloadedReportsColor}" @click="showTab('DownloadedReports')" class="nav-link"><i class="ri-stack-fill"></i> <span>Downloaded Reports</span></router-link>
+                        <router-link to="/downloaded_reports" :style="{color:DownloadedReportsColor}" @click="showTab('DownloadedReports')" class="nav-link"><i class="ri-download-line"></i> <span>Downloaded Reports</span></router-link>
                     </li>
                 </ul>
             </div>
@@ -442,6 +471,7 @@
                 this.assetActive = "rgba(255, 255, 255, .6) !important";
                 this.AttributesColor = "rgba(255, 255, 255, .6) !important";
                 this.ReviewColor = "rgba(255, 255, 255, .6) !important";
+                this.ReportColor = "rgba(255, 255, 255, .6) !important";
                 this.PredictionColor = "rgba(255, 255, 255, .6) !important";
                 this.listActive = "rgba(255, 255, 255, .6) !important";
                 this.DownloadedReportsColor= 'rgba(255, 255, 255, .6) !important'
@@ -531,6 +561,10 @@
                 else if (tab == "/list_parameters") {
                     this.listActive = "white !important";
                 }
+                else if (tab == "/asset_reports" || tab == "/pending_jobs" || tab == "/deviation_reports" || tab == "/breakdown_reports" ) {
+                    this.ReportColor = "white !important";
+                    this.showReports = !this.showReports;
+                }
                 else if(tab == '/downloaded_reports'){
                     this.DownloadedReportsColor='white !important';
                     this.DownloadedReportsActive = !this.DownloadedReportsActive
@@ -585,6 +619,10 @@
                     case "Review":
                         this.ReviewColor = "white !important";
                         this.showReview = !this.showReview;
+                        break;
+                    case "Reports":
+                        this.ReportColor = "white !important";
+                        this.showReports = !this.showReports;
                         break;
                     case "Predictions":
                         this.PredictionColor = "white !important";

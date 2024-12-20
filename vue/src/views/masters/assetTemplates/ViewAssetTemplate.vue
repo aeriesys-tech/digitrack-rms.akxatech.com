@@ -31,7 +31,7 @@
                                     <span class="nav-link text-dark"><span>Radius</span> <span class="badge text-dark">{{asset.radius}}</span></span>
                                     <span class="nav-link text-dark">
                                         <span>Department</span>
-                                        <span class="" style="margin-left: auto">
+                                        <span class="" style="margin-left: auto; padding-right: 5px">
                                             <ul class="list_style_none mb-0 text-end">
                                                 <li v-if="asset?.asset_department_ids?.length === 0">No departments</li>
                                                 <li v-for="department in asset.asset_department_ids" :key="department.id">
@@ -66,7 +66,7 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-3" v-can="'assetSpares.create'">
-                                        <label class="form-label">Template Zone</label>
+                                        <label class="form-label">Template Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="spare.spare_template_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Template Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.spare_template_zones ? error_style : ''" :disabled="spare.spare_zone_read_only" />
@@ -75,7 +75,7 @@
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
-                                        <label class="form-label">Spare</label>
+                                        <label class="form-label">Spare <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.spare_id }"
                                             :customClass="{ 'is-invalid': errors.spare_id }"
@@ -95,7 +95,7 @@
                                         <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
-                                        <label class="form-label">Max Quantity</label>
+                                        <label class="form-label">Max Quantity <span class="text-danger"> *</span></label>
                                         <input type="number" class="form-control" placeholder="Enter Max Quantity" :class="{ 'is-invalid': errors.quantity }" v-model="spare.quantity" />
                                         <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
                                     </div>
@@ -179,6 +179,7 @@
                                         <div v-if="field.spare_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.spare_attributes[0].display_name]}" v-model="field.field_value">
+                                                <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
                                                 <option :value="field.spare_attributes[0].spare_attribute_value?.field_value" v-if="field.spare_attributes[0].spare_attribute_value?.field_value">
                                                     {{field.spare_attributes[0].spare_attribute_value?.field_value}}
                                                 </option>
@@ -301,14 +302,14 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-4" v-can="'assetChecks.create'">
-                                        <label class="form-label">Template Zone</label>
+                                        <label class="form-label">Template Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="check.check_template_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Template Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.check_template_zones ? error_style : ''" :disabled="check.check_zone_read_only"/>
                                         <span v-if="errors?.check_template_zones" class="invalid-feedback" style="display: block !important">{{ errors?.check_template_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-8" v-can="'assetChecks.create'">
-                                        <label class="form-label">Check</label>
+                                        <label class="form-label">Check <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.check_id }"
                                             :customClass="{ 'is-invalid': errors.check_id }"
@@ -345,7 +346,7 @@
                                                 <input :class="{ 'is-invalid': errors.default_value }" type="text" class="form-control" placeholder="Default Value" v-model="check.default_value" />
                                                 <span v-if="errors.default_value" class="invalid-feedback">{{ errors.default_value[0] }}</span>
                                             </div>
-                                            <div class="col-md-3 pt-4 d-flex justify-content-end">
+                                            <div class="col-md-3 pt-4 d-flex justify-content-end1">
 
                                                 <button v-if="check.asset_template_check_id" class="btn btn-outline-success me-2" @click="updateCheck()"><i class="ri-add-circle-line icon-hgt"></i> Update</button>
                                                 <button v-else class="btn btn-outline-success me-2" @click="addCheck()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
@@ -459,14 +460,14 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-4" v-can="'assetChecks.create'">
-                                        <label class="form-label">Template Zone</label>
+                                        <label class="form-label">Template Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="service.service_template_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Template Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.service_template_zones ? error_style : ''" :disabled="service.service_zone_read_only" />
                                         <span v-if="errors?.service_template_zones" class="invalid-feedback" style="display: block !important">{{ errors?.service_template_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Service</label>
+                                        <label class="form-label">Service <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.service_id }"
                                             :customClass="{ 'is-invalid': errors.service_id }"
@@ -565,6 +566,7 @@
                                         <div v-if="field.service_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" v-model="field.field_value">
+                                                <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
                                                 <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-if="field.service_attributes[0]?.service_attribute_value?.field_value">
                                                     {{field.service_attributes[0].service_attribute_value?.field_value}}
                                                 </option>
@@ -672,14 +674,14 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-4">
-                                        <label class="form-label">Template Zone</label>
+                                        <label class="form-label">Template Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="variable.variable_template_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Template Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.variable_template_zones ? error_style : ''" :disabled="variable.variable_zone_read_only" />
                                         <span v-if="errors?.variable_template_zones" class="invalid-feedback" style="display: block !important">{{ errors?.variable_template_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Variable</label>
+                                        <label class="form-label">Variable <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.variable_id }"
                                             :customClass="{ 'is-invalid': errors.variable_id }"
@@ -779,6 +781,7 @@
                                         <div v-if="field.variable_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.variable_attributes[0].display_name]}" v-model="field.field_value">
+                                                <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
                                                 <option :value="field.variable_attributes[0].variable_attribute_value?.field_value" v-if="field.variable_attributes[0].variable_attribute_value?.field_value">
                                                     {{field.variable_attributes[0].variable_attribute_value?.field_value}}
                                                 </option>
@@ -883,14 +886,14 @@
                             <div class="card-body">
                                 <div class="row g-2">
                                     <div class="col-md-3">
-                                        <label class="form-label">Template Zone</label>
+                                        <label class="form-label">Template Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="datasource.data_source_template_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Template Zone" :maxSelectedLabels="3"
                                             style="width: 100%; height: 37px;" :style="errors?.data_source_template_zones ? error_style : ''" :disabled="datasource.data_source_zone_read_only" />
                                         <span v-if="errors?.data_source_template_zones" class="invalid-feedback" style="display: block !important">{{ errors?.data_source_template_zones[0] }}</span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label">Data Source</label>
+                                        <label class="form-label">Data Source <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.data_source_id }"
                                             :customClass="{ 'is-invalid': errors.data_source_id }"
@@ -910,7 +913,7 @@
                                         <span v-if="errors.data_source_id" class="invalid-feedback">{{ errors.data_source_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label">Script</label>
+                                        <label class="form-label">Script <span class="text-danger"> *</span></label>
                                         <select class="form-control form-control" v-model="datasource.script" :class="{'is-invalid':errors.script}">
                                             <option value="">Select Script</option>
                                             <option value="Ladle Scanner">Ladle Scanner</option>
@@ -999,6 +1002,7 @@
                                         <div v-if="field.data_source_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.data_source_attributes[0].display_name]}" v-model="field.field_value">
+                                                <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
                                                 <option :value="field.data_source_attributes[0].data_source_attribute_value?.field_value" v-if="field.data_source_attributes[0].data_source_attribute_value?.field_value">
                                                     {{field.data_source_attributes[0].data_source_attribute_value?.field_value}}
                                                 </option>
@@ -1143,7 +1147,7 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <label class="form-label">Template Zone</label>
+                                        <label class="form-label">Template Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect v-model="accessory.accessory_template_zones_obj"  filter optionLabel="zone_name"
                                             :options="asset_zones"  placeholder="Select Template Zone" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.accessory_template_zones ? error_style : ''" :disabled="accessory.accessory_zone_read_only" />
@@ -1151,7 +1155,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
-                                        <label class="form-label">Accessory</label>
+                                        <label class="form-label">Accessory <span class="text-danger"> *</span></label>
                                         <search
                                             :class="{ 'is-invalid': errors.accessory_type_id }"
                                             :customClass="{ 'is-invalid': errors.accessory_type_id }"
@@ -1169,12 +1173,12 @@
                                         <span v-if="errors.accessory_type_id" class="invalid-feedback">{{ errors.accessory_type_id[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Accessory Name</label>
+                                        <label class="form-label">Accessory Name <span class="text-danger"> *</span></label>
                                         <input type="text" placeholder="Enter accessory name" class="form-control" :class="{'is-invalid':errors?.accessory_name}" v-model="accessory.accessory_name" />
                                         <span v-if="errors?.accessory_name" class="invalid-feedback">{{ errors.accessory_name[0] }}</span>
                                     </div>
                                     <div class="col-md-10">
-                                        <label class="form-label">Attachment</label>
+                                        <label class="form-label">Attachment <span class="text-danger"> *</span></label>
                                         <input type="file" class="form-control" id="attachment" ref="attachment" name="attachment" :class="{ 'is-invalid': errors.attachment }" />
                                         <span v-if="errors?.attachment" class="invalid-feedback">{{ errors.attachment[0] }}</span>
                                     </div>
@@ -1684,7 +1688,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "spare_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1699,7 +1703,7 @@
                 },
                 check_meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "check_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1715,7 +1719,7 @@
                 },
                 check_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "service_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1730,7 +1734,7 @@
                 },
                 variable_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "variable_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1745,7 +1749,7 @@
                 },
                 datasource_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "data_source_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1760,7 +1764,7 @@
                 },
                 accessory_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "asset_template_accessory_id",
                     per_page: 5,
                     totalRows: 0,

@@ -214,7 +214,7 @@
                                             </tr>
                                             <tr v-else>
                                                 <td colspan="6" class="text-center">
-                                                    <span class="text-warning">No Records to display...</span>
+                                                    <span class="text-warning">No records found </span>
                                                 </td>
                                             </tr>
                                         </tbody>

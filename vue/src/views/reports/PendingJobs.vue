@@ -187,7 +187,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "user_service_id",
                     per_page: 10,
                     totalRows: 0,
@@ -316,6 +316,7 @@
                 vm.meta.from_date = "";
                 vm.meta.to_date = "";
                 vm.errors = [];
+                vm.index();
             },
             search() {
                 let vm = this;

@@ -281,7 +281,7 @@
                 vm.$store.dispatch('post', { uri: 'addActivityAttribute', data:vm.activity_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Break Down Attribute created successfully");
+                        vm.$store.dispatch('success',"Break Down Attribute Created Successfully");
                         vm.$router.push("/activity_attributes");
                     })
                     .catch(function (error) {
@@ -304,7 +304,7 @@
                 vm.$store.dispatch('post', { uri: 'updateActivityAttribute', data:vm.activity_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Break Down Attribute updated successfully");
+                        vm.$store.dispatch('success',"Break Down Attribute Updated Successfully");
                         vm.$router.push('/activity_attributes');
                     })
                     .catch(function (error) {

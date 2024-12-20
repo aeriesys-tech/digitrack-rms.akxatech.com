@@ -69,7 +69,7 @@
                                     <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Asset Zone</label>
+                                    <label class="form-label">Asset Zone</label><span class="text-danger"> *</span>
                                     <search
                                         :disabled="!status"
                                         :class="{ 'is-invalid': errors.asset_zone_id }"

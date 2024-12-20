@@ -106,7 +106,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "download_report_id",
                     per_page: 10,
                     totalRows: 0,
