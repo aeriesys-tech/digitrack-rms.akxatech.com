@@ -16,7 +16,7 @@
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
                             <h6 class="card-title">Deviation Reports</h6>
-                            <button class="btn btn-success" @click="downloadExcel()"><i class="ri-file-excel-line"></i> Download</button>
+                            <button class="btn btn-success" @click="downloadExcel()"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
                         </div>
                         <div class="card-body">
                             <!-- <td>Department
@@ -238,7 +238,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "user_check_id",
                     per_page: 10,
                     totalRows: 0,
@@ -299,6 +299,17 @@
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+            },
+            reset() {
+                let vm = this;
+                vm.meta.asset_type_id = "";
+                vm.meta.asset_id = "";
+                vm.meta.department_id = "";
+                vm.meta.remark_status = "";
+                vm.meta.from_date = "";
+                vm.meta.to_date = "";
+                vm.errors = [];
+                vm.index();
             },
              getAssetTypes() {
             let vm = this;

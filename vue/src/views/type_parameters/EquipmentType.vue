@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Equipment Types</li>
             </ol>
             <h4 class="main-title mb-2">Equipment Types</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" v-can="'equipment_types.create'">
                 <form @submit.prevent="submitForm()">
@@ -63,13 +63,13 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
                                         <th @click="sort('equipment_type_name')">Equipment Type Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='equipment_type_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='equipment_type_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
-                                       
+
                                         <th class="text-center" v-can="'equipment_types.delete'">Status</th>
                                         <th class="text-center" v-can="'equipment_types.update'">Actions</th>
                                     </tr>
@@ -124,7 +124,7 @@ export default {
         return {
             meta: {
                 search: "",
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "equipment_type_id",
                 per_page: 10,
                 totalRows: 0,

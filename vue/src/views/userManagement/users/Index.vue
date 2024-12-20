@@ -82,7 +82,7 @@
                                         <td>{{user.name}}</td>
                                         <td>{{user.email}}</td>
                                         <td>{{ user?.department?.department_name}}</td>
-                                        <td>{{ user.role.role}}</td>
+                                        <td>{{ user.role?.role}}</td>
                                         <td>{{ user.plant?.plant_name }}</td>
                                         <td>{{ user.mobile_no }}</td>
                                         <td class="text-center" v-can="'users.delete'">
@@ -128,7 +128,7 @@ export default {
         return {
             meta: {
                 search: '',
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "user_id",
                 per_page: 10,
                 totalRows: 0,

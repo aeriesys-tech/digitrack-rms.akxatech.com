@@ -277,7 +277,7 @@
                 vm.$store.dispatch('post', { uri: 'addBreakDownAttribute', data:vm.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Break Down Attribute created successfully");
+                        vm.$store.dispatch('success',"Break Down Attribute Created Successfully");
                         vm.$router.push("/break_down_attributes");
                     })
                     .catch(function (error) {
@@ -297,7 +297,7 @@
                 vm.$store.dispatch('post', { uri: 'updateBreakDownAttribute', data:vm.break_down_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Break Down Attribute updated successfully");
+                        vm.$store.dispatch('success',"Break Down Attribute Updated Successfully");
                         vm.$router.push('/break_down_attributes');
                     })
                     .catch(function (error) {

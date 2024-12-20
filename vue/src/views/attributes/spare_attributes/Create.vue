@@ -45,8 +45,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="spare_attribute.spare_types_obj"  filter optionLabel="spare_type_name" 
-                                            :options="spare_types"  placeholder="Select Spare Type" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="spare_attribute.spare_types_obj"  filter optionLabel="spare_type_name"
+                                            :options="spare_types"  placeholder="Select Spare Type" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.spare_types ? error_style : ''"/>
                                         <span v-if="errors?.spare_types"><small class="text-danger">{{ errors?.spare_types[0] }}</small></span>
                                     </div>
@@ -188,7 +188,7 @@
                                 vm.spare_attribute.spare_types_obj = []
 
                                 vm.spare_attribute.spare_attribute_types.map(function(ele){
-                                    vm.spare_attribute.spare_types_obj.push({spare_type_code: ele.spare_type.spare_type_code, 
+                                    vm.spare_attribute.spare_types_obj.push({spare_type_code: ele.spare_type.spare_type_code,
                                         spare_type_id: ele.spare_type.spare_type_id, status: ele.spare_type.status,
                                         spare_type_name: ele.spare_type.spare_type_name})
                                 })
@@ -250,7 +250,7 @@
                 vm.$store.dispatch('post', { uri: 'getSpareTypes' })
                     .then(response => {
                         loader.hide();
-                        vm.spare_types = response.data.data;                    
+                        vm.spare_types = response.data.data;
                     })
                     .catch(function (error) {
                         loader.hide();
@@ -284,7 +284,7 @@
                 vm.$store.dispatch('post', { uri: 'addSpareAttribute', data:vm.spare_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Spare Attribute created successfully");
+                        vm.$store.dispatch('success',"Spare Attribute Created Successfully");
                         vm.$router.push("/spare_attributes");
                     })
                     .catch(function (error) {
@@ -300,14 +300,14 @@
 
                 vm.spare_attribute.deleted_spare_attribute_types = vm.spare_attribute.spare_attribute_types.filter(
                     item1 => !vm.spare_attribute.spare_types_obj.some(item2 => item1.spare_type_id === item2.spare_type_id));
-                
+
                 vm.spare_attribute.spare_types = vm.spare_attribute.spare_types_obj.map(item => item.spare_type_id);
                 vm.spare_attribute.deleted_spare_attribute_types = vm.spare_attribute.deleted_spare_attribute_types.map(item => item.spare_attribute_type_id);
 
                 vm.$store.dispatch('post', { uri: 'updateSpareAttribute', data:vm.spare_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Spare Attribute updated successfully");
+                        vm.$store.dispatch('success',"Spare Attribute Updated Successfully");
                         vm.$router.push('/spare_attributes');
                     })
                     .catch(function (error) {

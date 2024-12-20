@@ -96,7 +96,7 @@
                                         </td>
                                     </tr>
                                     <tr v-if="sections.length == 0">
-                                        <td colspan="5" class=" text-center">No Records to display</td>
+                                        <td colspan="5" class=" text-center">No records found</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -130,7 +130,7 @@ export default {
         return {
             meta: {
                 search: '',
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "section_id",
                 per_page: 10,
                 totalRows: 0,

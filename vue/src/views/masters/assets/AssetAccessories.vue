@@ -121,7 +121,7 @@ import Pagination from "@/components/Pagination.vue";
             asset_accessories:[],
             accessory_meta_service: {
                 search: "",
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "asset_accessory_id",
                 per_page: 5,
                 totalRows: 0,

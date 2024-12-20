@@ -1803,7 +1803,7 @@
             return {
                 meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "spare_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1818,7 +1818,7 @@
                 },
                 check_meta: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "check_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1834,7 +1834,7 @@
                 },
                 check_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "service_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1849,7 +1849,7 @@
                 },
                 variable_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "variable_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1864,7 +1864,7 @@
                 },
                 datasource_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "data_source_id",
                     per_page: 5,
                     totalRows: 0,
@@ -1879,7 +1879,7 @@
                 },
                 accessory_meta_service: {
                     search: "",
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "asset_accessory_id",
                     per_page: 5,
                     totalRows: 0,

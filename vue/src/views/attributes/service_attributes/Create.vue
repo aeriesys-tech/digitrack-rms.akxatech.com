@@ -45,8 +45,8 @@
                                                 </li>
                                             </ul>
                                         </div> -->
-                                        <MultiSelect v-model="service_attribute.service_types_obj"  filter optionLabel="service_type_name" 
-                                            :options="service_types"  placeholder="Select Service Type" :maxSelectedLabels="3"  
+                                        <MultiSelect v-model="service_attribute.service_types_obj"  filter optionLabel="service_type_name"
+                                            :options="service_types"  placeholder="Select Service Type" :maxSelectedLabels="3"
                                             style="width: 100%;; height: 37px;" :style="errors?.service_types ? error_style : ''"/>
                                             <span v-if="errors?.service_types"><small class="text-danger">{{ errors?.service_types[0] }}</small></span>
                                     </div>
@@ -185,7 +185,7 @@
                                 vm.service_attribute.service_types_obj = []
 
                                 vm.service_attribute.service_attribute_types.map(function(ele){
-                                    vm.service_attribute.service_types_obj.push({service_type_code: ele.service_type.service_type_code, 
+                                    vm.service_attribute.service_types_obj.push({service_type_code: ele.service_type.service_type_code,
                                         service_type_id: ele.service_type.service_type_id, status: ele.service_type.status,
                                         service_type_name: ele.service_type.service_type_name})
                                 })
@@ -268,7 +268,7 @@
                 vm.$store.dispatch('post', { uri: 'addServiceAttribute', data:vm.service_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Service Attribute created successfully");
+                        vm.$store.dispatch('success',"Service Attribute Created Successfully");
                         vm.$router.push("/service_attributes");
                     })
                     .catch(function (error) {
@@ -286,11 +286,11 @@
                     item1 => !vm.service_attribute.service_types_obj.some(item2 => item1.service_type_id === item2.service_type_id));
                 vm.service_attribute.service_types = vm.service_attribute.service_types_obj.map(item => item.service_type_id);
                 vm.service_attribute.deleted_service_attribute_types = vm.service_attribute.deleted_service_attribute_types.map(item => item.service_attribute_type_id);
-                
+
                 vm.$store.dispatch('post', { uri: 'updateServiceAttribute', data:vm.service_attribute })
                     .then(response => {
                         loader.hide();
-                        vm.$store.dispatch('success',"Service Attribute updated successfully");
+                        vm.$store.dispatch('success',"Service Attribute Updated Successfully");
                         vm.$router.push('/service_attributes');
                     })
                     .catch(function (error) {

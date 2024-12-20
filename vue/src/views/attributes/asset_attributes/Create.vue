@@ -281,7 +281,7 @@
                 this.$store.dispatch('post', { uri: 'addAssetAttribute', data:vm.asset_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Asset Attribute created successfully");
+                        this.$store.dispatch('success',"Asset Attribute Created Successfully");
                         vm.$router.push("/asset_attributes");
                     })
                     .catch(function (error) {
@@ -303,7 +303,7 @@
                 this.$store.dispatch('post', { uri: 'updateAssetAttribute', data:vm.asset_attribute })
                     .then(response => {
                         loader.hide();
-                        this.$store.dispatch('success',"Asset Attribute updated successfully");
+                        this.$store.dispatch('success',"Asset Attribute Updated Successfully");
                         this.$router.push('/asset_attributes');
                     })
                     .catch(function (error) {

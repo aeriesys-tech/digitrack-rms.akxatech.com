@@ -24,7 +24,22 @@
                             </div>
                             <div class="mb-4">
                                 <label class="form-label d-flex justify-content-between">Password <router-link to="/forgot_password">Forgot password?</router-link></label>
-                                <input type="password" tabindex="1" class="form-control" placeholder="Enter your password" :class="{ 'is-invalid': errors.password }" v-model="user.password" />
+                                <div class="input-group">
+                                    <input
+                                        tabindex="1"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        class="form-control border-end-0"
+                                        v-model="user.password"
+                                        :class="{ 'is-invalid': errors.password }"
+                                        placeholder="Password"
+                                        aria-label="Password"
+                                        aria-describedby="basic-addon2"
+                                    />
+                                    <span class="input-group-text" :class="{ 'is-invalid': errors.password }" id="basic-addon2" @click="togglePassword">
+                                        <i :class="showPassword ? 'ri-eye-line' : 'ri-eye-off-line'"></i>
+                                    </span>
+                                    <span v-if="errors.password" class="invalid-feedback">{{ errors.password[0] }}</span>
+                                </div>
                                 <span v-if="errors.password" class="invalid-feedback">{{ errors.password[0] }}</span>
                             </div>
                             <button method="submit" tabindex="1" class="btn btn-primary btn-sign">Sign In</button>
@@ -44,6 +59,7 @@
                     email: "bharatesh.s@akxatech.com",
                     password: "1qaz2wsx",
                 },
+                showPassword: false,
                 errors: [],
             };
         },
@@ -69,7 +85,9 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-
+            togglePassword() {
+                this.showPassword = !this.showPassword;
+            },
             getPermissions() {
                 let vm = this;
                 let uri = {
@@ -95,3 +113,15 @@
         },
     };
 </script>
+<style>
+    .input-group-text.is-invalid {
+        border-color: #dc3545;
+    }
+    .input-group-text {
+        font-size: 16px;
+        background-color: transparent;
+    }
+    .input-group:focus-within .input-group-text {
+    border-color: #1d4ed8;
+}
+</style>

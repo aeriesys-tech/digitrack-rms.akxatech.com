@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Equipments</li>
             </ol>
             <h4 class="main-title mb-2">Equipments</h4>
-        </div> 
+        </div>
         <div class="row g-2">
             <div class="col-4" v-can="'equipment.create'">
                 <form @submit.prevent="submitForm()">
@@ -24,7 +24,7 @@
                             <div class="row g-2">
                                 <div class="col-md-12">
                                     <label class="form-label">Equipment Type</label><span class="text-danger"> *</span>
-                                    
+
                                     <search
                                         ref="equipment_type_id"
                                         :class="{ 'is-invalid': errors.equipment_type_id }"
@@ -96,7 +96,7 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span></th>
                                         <th @click="sort('equipment_name')">Equipment Name
-                                        
+
                                             <span>
                                                 <i v-if="meta.keyword=='equipment_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                 <i v-else-if="meta.keyword=='equipment_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
@@ -124,7 +124,7 @@
                                         <td>{{equipment.equipment_code}}</td>
                                         <td>{{ equipment.equipment_name }}</td>
                                         <td>{{ equipment.description }}</td>
-                                        
+
                                         <td class="text-center" v-can="'equipment.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'equipment' + equipment.equipment_id" :checked="equipment.status" :value="equipment.status" @change="deleteEquipment(equipment)" />
@@ -171,7 +171,7 @@ export default {
             column:'col-8',
             meta: {
                 search: '',
-                order_by: "asc",
+                order_by: "desc",
                 keyword: "equipment_id",
                 per_page: 10,
                 totalRows: 0,
@@ -322,7 +322,7 @@ export default {
             vm.errors = [];
             vm.status = true;
             vm.index();
-            
+
         },
         search() {
             let vm = this;

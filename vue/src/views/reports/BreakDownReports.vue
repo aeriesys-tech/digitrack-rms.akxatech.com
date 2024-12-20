@@ -16,7 +16,7 @@
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
                             <h6 class="card-title">Breakdown Reports</h6>
-                            <button class="btn btn-success" @click="downloadExcel()"><i class="ri-file-excel-line"></i> Download</button>
+                            <button class="btn btn-success" @click="downloadExcel()"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
                         </div>
                         <div class="card-body">
                             <!-- <td>Department
@@ -155,7 +155,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "break_down_list_id",
                     per_page: 10,
                     totalRows: 0,

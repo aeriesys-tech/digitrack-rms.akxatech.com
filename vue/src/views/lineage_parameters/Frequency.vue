@@ -11,7 +11,7 @@
                     <li class="breadcrumb-item active" aria-current="page">Frequencies</li>
                 </ol>
                 <h4 class="main-title mb-2">Frequencies</h4>
-            </div> 
+            </div>
             <div class="row g-2">
                 <div class="col-4">
                     <form @submit.prevent="submitForm()">
@@ -28,7 +28,7 @@
                                             v-model="frequency.frequency_code" />
                                         <span v-if="errors.frequency_code" class="invalid-feedback">{{ errors.frequency_code[0] }}</span>
                                     </div>
-    
+
                                     <div class="col-md-12">
                                         <label class="form-label">Frequency Name</label><span class="text-danger"> *</span>
                                         <input type="text" placeholder="Enter Frequency name" class="form-control" :class="{ 'is-invalid': errors.frequency_name }"
@@ -66,13 +66,13 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span></th>
                                             <th @click="sort('frequency_name')">Frequency Name
-                                            
+
                                                 <span>
                                                     <i v-if="meta.keyword=='frequency_name' && meta.order_by=='asc'" class="ri-arrow-up-line"></i>
                                                     <i v-else-if="meta.keyword=='frequency_name' && meta.order_by=='desc'" class="ri-arrow-down-line"></i>
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span></th>
-                                           
+
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -128,7 +128,7 @@
             return {
                 meta: {
                     search: '',
-                    order_by: "asc",
+                    order_by: "desc",
                     keyword: "frequency_id",
                     per_page: 10,
                     totalRows: 0,
@@ -161,7 +161,7 @@
             this.index();
             this.getFrequencies();
         },
-    
+
         methods: {
             submitForm() {
                 let vm = this;
@@ -189,7 +189,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             addFrequency() {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -206,7 +206,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             deleteFrequency(frequency) {
                 let vm = this;
                 frequency.status = frequency.status == 1 ? 0 : 1;
@@ -221,12 +221,12 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             editFrequency(frequency) {
                 this.frequency = frequency;
                 this.status = false;
             },
-    
+
             updateFrequency() {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -243,7 +243,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             getFrequencies() {
                 let vm = this;
                 let loader = vm.$loading.show();
@@ -258,7 +258,7 @@
                         vm.$store.dispatch("error", error.response.data.message);
                     });
             },
-    
+
             onPageChange(page) {
                 this.meta.page = page;
                 this.index();
@@ -277,7 +277,7 @@
                 vm.status = true;
                 vm.index();
             },
-    
+
             search() {
                 let vm = this;
                 vm.meta.page = 1;
@@ -291,4 +291,3 @@
         }
     }
     </script>
-    
