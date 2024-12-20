@@ -16,6 +16,7 @@ use Aws\S3\S3Client;
 use App\Models\AssetZone;
 use App\Models\Asset;
 use App\Models\Department;
+use Carbon\Carbon;
 
 class UserCheckController extends Controller
 {
@@ -80,20 +81,20 @@ class UserCheckController extends Controller
 
     public function addUserCheck(Request $request)
     {
-        $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
-        if ($assetZone) {
-            $request->validate([
-                'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
-            ]);
-        } 
-        else {
-            $data['asset_zone_id'] = $request->input('asset_zone_id', null);
-        }
+        // $assetZone = AssetZone::where('asset_id', $request->asset_id)->first();
+        // if ($assetZone) {
+        //     $request->validate([
+        //         'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+        //     ]);
+        // } 
+        // else {
+        //     $data['asset_zone_id'] = $request->input('asset_zone_id', null);
+        // }
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'reference_date' => 'required',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
             'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes',
             'attachments.*' => 'nullable'
@@ -158,7 +159,7 @@ class UserCheckController extends Controller
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'reference_date' => 'required',
-            'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
             'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes'
         ]);
@@ -265,6 +266,7 @@ class UserCheckController extends Controller
 
         $data['remark_status'] = true;
         $data['remark_user_id'] = Auth::id();
+        $data['remark_date'] = Carbon::now();
 
         $asset_check = UserAssetCheck::where('user_asset_check_id', $request->user_asset_check_id)->first();
         $asset_check->update($data);

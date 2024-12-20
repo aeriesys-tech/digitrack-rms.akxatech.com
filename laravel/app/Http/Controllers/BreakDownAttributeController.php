@@ -157,14 +157,14 @@ class BreakDownAttributeController extends Controller
         {
             $break_down_attribute->restore();
             return response()->json([
-                "message" => "BreakDownAttribute Activated successfully"
+                "message" => "BreakDown Attribute Activated Successfully"
             ],200);
         }
         else
         {
             $break_down_attribute->delete();
             return response()->json([
-                "message" => "BreakDownAttribute Deactivated successfully"
+                "message" => "BreakDown Attribute Deactivated Successfully"
             ], 200); 
         }
     }

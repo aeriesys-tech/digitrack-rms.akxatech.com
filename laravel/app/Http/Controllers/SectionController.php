@@ -87,14 +87,14 @@ class SectionController extends Controller
         {
             $section->restore();
             return response()->json([
-                "message" =>"Section Activated successfully"
+                "message" =>"Section Activated Successfully"
             ],200);
         }
         else
         {
             $section->delete();
             return response()->json([
-                "message" =>"Section Deactivated successfully"
+                "message" =>"Section Deactivated Successfully"
             ], 200);
         }
     }

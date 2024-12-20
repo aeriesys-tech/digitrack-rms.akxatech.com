@@ -43,7 +43,8 @@ class UserAssetCheckDeviationResource extends JsonResource
             'remark_user_id' => $this->remark_user_id,
             'remark_user' => $this->RemarkUser,
             'remark_status' => $this->remark_status?true:false,
-            'remarks' => $this->remarks 
+            'remarks' => $this->remarks,
+            'remark_date' => $this->remark_date
         ];
     }
 }

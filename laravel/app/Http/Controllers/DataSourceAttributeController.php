@@ -159,14 +159,14 @@ class DataSourceAttributeController extends Controller
         {
             $data_source_attribute->restore();
             return response()->json([
-                "message" => "DataSourceAttribute Activated successfully"
+                "message" => "DataSource Attribute Activated Successfully"
             ],200);
         }
         else
         {
             $data_source_attribute->delete();
             return response()->json([
-                "message" => "DataSourceAttribute Deactivated successfully"
+                "message" => "DataSource Attribute Deactivated Successfully"
             ], 200); 
         }
     }

@@ -91,14 +91,14 @@ class DepartmentController extends Controller
         {
             $department->restore();
             return response()->json([
-                "message" => "Department Activated successfully"
+                "message" => "Department Activated Successfully"
             ],200);
         }
         else
         {
             $department->delete();
             return response()->json([
-                "message" => "Department Deactivated successfully"
+                "message" => "Department Deactivated Successfully"
             ], 200);
         }
     }

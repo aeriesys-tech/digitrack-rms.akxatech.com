@@ -54,9 +54,12 @@ class ReportController extends Controller
             $query->where('asset_id', $request->asset_id);
         }
 
-        if (isset($request->department_id)) {
-            $query->whereHas('Asset', function($quer) use ($request) {
-                $quer->where('department_id', $request->department_id);
+        if (isset($request->department_id)) 
+        {
+            $query->whereHas('Asset', function($assetQuery) use ($request) {
+                $assetQuery->whereHas('AssetDepartment', function($deptQuery) use($request){
+                    $deptQuery->where('department_id', $request->department_id);
+                });
             });
         }
      
@@ -119,9 +122,12 @@ class ReportController extends Controller
             $query->where('asset_id', $request->asset_id);
         }
 
-        if (isset($request->department_id)) {
-            $query->whereHas('Asset', function ($quer) use ($request) {
-                $quer->where('department_id', $request->department_id);
+        if (isset($request->department_id)) 
+        {
+            $query->whereHas('Asset', function($assetQuery) use ($request) {
+                $assetQuery->whereHas('AssetDepartment', function($deptQuery) use($request){
+                    $deptQuery->where('department_id', $request->department_id);
+                });
             });
         }
 

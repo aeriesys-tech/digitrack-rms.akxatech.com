@@ -190,7 +190,7 @@ class BreakDownListController extends Controller
         BreakDownList::where('break_down_list_id', $request->break_down_list_id)->forceDelete();
 
         return response()->json([
-            "message" => "Break Down Register Deleted successfully"
+            "message" => "Break Down Register Deleted Successfully"
         ], 200);
     }
 

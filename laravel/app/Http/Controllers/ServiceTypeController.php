@@ -50,7 +50,7 @@ class ServiceTypeController extends Controller
         ]);
         
         $service_type = ServiceType::create($data);
-        return response()->json(["message" => "ServiceType Created Successfully"]); 
+        return response()->json(["message" => "Service Type Created Successfully"]); 
     }  
 
     public function getServiceType(Request $request)
@@ -73,7 +73,7 @@ class ServiceTypeController extends Controller
 
         $service_type = ServiceType::where('service_type_id', $request->service_type_id)->first();
         $service_type->update($data);
-        return response()->json(["message" => "ServiceType Updated Successfully"]);  
+        return response()->json(["message" => "Service Type Updated Successfully"]);  
     }
 
     public function deleteServiceType(Request $request)
@@ -87,14 +87,14 @@ class ServiceTypeController extends Controller
         {
             $service_type->restore();
             return response()->json([
-                "message" =>"ServiceType Activated successfully"
+                "message" =>"Service Type Activated Successfully"
             ],200);
         }
         else
         {
             $service_type->delete();
             return response()->json([
-                "message" =>"ServiceType Deactivated successfully"
+                "message" =>"Service Type Deactivated Successfully"
             ], 200); 
         }
     }

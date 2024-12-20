@@ -159,14 +159,14 @@ class AssetAttributeController extends Controller
         {
             $asset_attribute->restore();
             return response()->json([
-                "message" =>"AssetAttribute Activated successfully"
+                "message" =>"Asset Attribute Activated Successfully"
             ],200);
         }
         else
         {
             $asset_attribute->delete();
             return response()->json([
-                "message" =>"AssetAttribute Deactivated successfully"
+                "message" =>"Asset Attribute Deactivated Successfully"
             ], 200); 
         }
     }

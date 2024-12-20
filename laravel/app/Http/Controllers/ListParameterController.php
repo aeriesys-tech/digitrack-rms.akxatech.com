@@ -51,7 +51,7 @@ class ListParameterController extends Controller
         ]);
 
         $list_parameter = ListParameter::create($data);
-        return response()->json(["message" => "ListParameter Created Successfully"]); 
+        return response()->json(["message" => "List Parameter Created Successfully"]); 
     }
 
     public function getListParameter(Request $request)
@@ -74,7 +74,7 @@ class ListParameterController extends Controller
 
         $list_parameter = ListParameter::where('list_parameter_id',$request->list_parameter_id)->first();
         $list_parameter->update($data);
-        return response()->json(["message" => "ListParameter Updated Successfully"]);
+        return response()->json(["message" => "List Parameter Updated Successfully"]);
     }
 
     public function deleteListParameter(Request $request)
@@ -88,14 +88,14 @@ class ListParameterController extends Controller
         {
             $list_parameter->restore();
             return response()->json([
-                "message" =>"ListParameter Activated successfully"
+                "message" =>"List Parameter Activated Successfully"
             ],200);
         } 
         else 
         {
             $list_parameter->delete();
             return response()->json([
-                "message" =>"ListParameter Deactivated successfully"
+                "message" =>"List Parameter Deactivated Successfully"
             ], 200); 
         }
     }

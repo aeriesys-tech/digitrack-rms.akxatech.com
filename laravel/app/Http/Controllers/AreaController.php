@@ -86,14 +86,14 @@ class AreaController extends Controller
         {
             $area->restore();
             return response()->json([
-                "message" =>"Area Activated successfully"
+                "message" =>"Area Activated Successfully"
             ],200);
         } 
         else 
         {
             $area->delete();
             return response()->json([
-                "message" =>"Area Deactivated successfully"
+                "message" =>"Area Deactivated Successfully"
             ], 200); 
         }
     }

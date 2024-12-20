@@ -256,7 +256,7 @@ class UserAuthController extends Controller
                 'password' => Hash::make($request->new_password),
             ]);
             return response()->json([
-                'message' => ['Password is successfully updated'],
+                'message' => ['Password Updated Successfully'],
             ], 200);
         }
     }
@@ -341,7 +341,7 @@ class UserAuthController extends Controller
                     'token' => Str::random(60),
                 ]);
                 $token = $user->createToken('password_reset')->plainTextToken;
-                return response()->json(['message' => 'Password reset successful']);
+                return response()->json(['message' => 'Password reset Successful']);
             } 
             else 
             {

@@ -51,7 +51,7 @@ class DataSourceTypeController extends Controller
         ]);
         
         $data_source_type = DataSourceType::create($data);
-        return response()->json(["message" => "DataSourceType Created Successfully"]); 
+        return response()->json(["message" => "DataSource Type Created Successfully"]); 
     } 
     
     public function getDataSourceType(Request $request)
@@ -74,7 +74,7 @@ class DataSourceTypeController extends Controller
 
         $data_source_type = DataSourceType::where('data_source_type_id', $request->data_source_type_id)->first();
         $data_source_type->update($data);
-        return response()->json(["message" => "DataSourceType Updated Successfully"]);  
+        return response()->json(["message" => "DataSource Type Updated Successfully"]);  
     }
 
     public function deleteDataSourceType(Request $request)
@@ -89,14 +89,14 @@ class DataSourceTypeController extends Controller
         {
             $data_source_type->restore();
             return response()->json([
-                "message" =>"DataSourceType Activated successfully"
+                "message" =>"DataSource Type Activated Successfully"
             ],200);
         }
         else
         {
             $data_source_type->delete();
             return response()->json([
-                "message" =>"DataSourceType Deactivated successfully"
+                "message" =>"DataSource Type Deactivated Successfully"
             ], 200); 
         }
     }

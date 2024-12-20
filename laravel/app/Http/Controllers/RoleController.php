@@ -82,14 +82,14 @@ class RoleController extends Controller
         {
             $role->restore();
             return response()->json([
-                "message" =>"Role Activated successfully"
+                "message" =>"Role Activated Successfully"
             ],200);
         } 
         else 
         {
             $role->delete();
             return response()->json([
-                "message" =>"Role Deactivated successfully"
+                "message" =>"Role Deactivated Successfully"
             ], 200); 
         }
     }

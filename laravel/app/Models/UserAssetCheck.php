@@ -24,7 +24,8 @@ class UserAssetCheck extends Model
         'value',
         'remark_user_id',
         'remark_status',
-        'remarks'
+        'remarks',
+        'remark_date'
     ];
 
     protected $primaryKey = 'user_asset_check_id';

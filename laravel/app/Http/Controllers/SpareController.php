@@ -212,14 +212,14 @@ class SpareController extends Controller
         {
             $spare->restore();
             return response()->json([
-                "message" =>"Spare Activated successfully"
+                "message" =>"Spare Activated Successfully"
             ],200);
         }
         else
         {
             $spare->delete();
             return response()->json([
-                "message" =>"Spare Deactivated successfully"
+                "message" =>"Spare Deactivated Successfully"
             ], 200);
         }
     }

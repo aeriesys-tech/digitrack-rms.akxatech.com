@@ -160,14 +160,14 @@ class ActivityAttributeController extends Controller
         {
             $activity->restore();
             return response()->json([
-                "message" => "ActivityAttribute Activated successfully"
+                "message" => "Activity Attribute Activated Successfully"
             ],200);
         }
         else
         {
             $activity->delete();
             return response()->json([
-                "message" => "ActivityAttribute Deactivated successfully"
+                "message" => "Activity Attribute Deactivated Successfully"
             ], 200); 
         }
     }

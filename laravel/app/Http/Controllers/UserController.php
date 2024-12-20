@@ -121,14 +121,14 @@ class UserController extends Controller
         {
             $user->restore();
             return response()->json([
-                "message" =>"User Activated successfully"
+                "message" =>"User Activated Successfully"
             ],200);
         } 
         else 
         {
             $user->delete();
             return response()->json([
-                "message" =>"User Deactivated successfully"
+                "message" =>"User Deactivated Successfully"
             ], 200); 
         }
     }

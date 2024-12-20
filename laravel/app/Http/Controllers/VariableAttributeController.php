@@ -158,14 +158,14 @@ class VariableAttributeController extends Controller
         {
             $variable_attribute->restore();
             return response()->json([
-                "message" => "VariableAttribute Activated successfully"
+                "message" => "Variable Attribute Activated Successfully"
             ],200);
         }
         else
         {
             $variable_attribute->delete();
             return response()->json([
-                "message" => "VariableAttribute Deactivated successfully"
+                "message" => "Variable Attribute Deactivated Successfully"
             ], 200); 
         }
     }

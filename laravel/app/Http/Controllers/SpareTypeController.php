@@ -50,7 +50,7 @@ class SpareTypeController extends Controller
         ]);
         
         $spare_type = SpareType::create($data);
-        return response()->json(["message" => "SpareType Created Successfully"]); 
+        return response()->json(["message" => "Spare Type Created Successfully"]); 
     }  
 
     public function getSpareType(Request $request)
@@ -73,7 +73,7 @@ class SpareTypeController extends Controller
 
         $spare_type = SpareType::where('spare_type_id', $request->spare_type_id)->first();
         $spare_type->update($data);
-        return response()->json(["message" => "SpareType Updated Successfully"]); 
+        return response()->json(["message" => "Spare Type Updated Successfully"]); 
     }
 
     public function deleteSpareType(Request $request)
@@ -87,14 +87,14 @@ class SpareTypeController extends Controller
         {
             $spare_type->restore();
             return response()->json([
-                "message" =>"SpareType Activated successfully"
+                "message" =>"Spare Type Activated Successfully"
             ],200);
         }
         else
         {
             $spare_type->delete();
             return response()->json([
-                "message" =>"SpareType Deactivated successfully"
+                "message" =>"Spare Type Deactivated Successfully"
             ], 200);
         }
     }

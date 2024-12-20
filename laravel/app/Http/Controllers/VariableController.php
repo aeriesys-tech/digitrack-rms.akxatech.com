@@ -213,14 +213,14 @@ class VariableController extends Controller
         {
             $variable->restore();
             return response()->json([
-                "message" => "Variable Activated successfully"
+                "message" => "Variable Activated Successfully"
             ],200);
         }
         else
         {
             $variable->delete();
             return response()->json([
-                "message" => "Variable Deactivated successfully"
+                "message" => "Variable Deactivated Successfully"
             ], 200);
         }
     }

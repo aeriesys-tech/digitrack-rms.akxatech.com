@@ -223,14 +223,14 @@ class CheckController extends Controller
         {
             $check->restore();
             return response()->json([
-                "message" =>"Check Activated successfully"
+                "message" =>"Check Activated Successfully"
             ],200);
         }
         else
         {
             $check->delete();
             return response()->json([
-                "message" =>"Check Deactivated successfully"
+                "message" =>"Check Deactivated Successfully"
             ], 200);
         }
     }

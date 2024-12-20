@@ -50,7 +50,7 @@ class VariableTypeController extends Controller
         ]);
         
         $variable_type = VariableType::create($data);
-        return response()->json(["message" => "VariableType Created Successfully"]); 
+        return response()->json(["message" => "Variable Type Created Successfully"]); 
     }  
 
     public function getVariableType(Request $request)
@@ -73,7 +73,7 @@ class VariableTypeController extends Controller
 
         $variable_type = VariableType::where('variable_type_id', $request->variable_type_id)->first();
         $variable_type->update($data);
-        return response()->json(["message" => "VariableType Updated Successfully"]); 
+        return response()->json(["message" => "Variable Type Updated Successfully"]); 
     }
 
     public function deleteVariableType(Request $request)
@@ -87,14 +87,14 @@ class VariableTypeController extends Controller
         {
             $variable_type->restore();
             return response()->json([
-                "message" => "VariableType Activated successfully"
+                "message" => "Variable Type Activated Successfully"
             ],200);
         }
         else
         {
             $variable_type->delete();
             return response()->json([
-                "message" => "VariableType Deactivated successfully"
+                "message" => "Variable Type Deactivated Successfully"
             ], 200);
         }
     }

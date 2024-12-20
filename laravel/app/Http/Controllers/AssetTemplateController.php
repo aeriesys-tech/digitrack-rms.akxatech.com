@@ -317,14 +317,14 @@ class AssetTemplateController extends Controller
         {
             $template->restore();
             return response()->json([
-                "message" =>"AssetTemplate Activated successfully"
+                "message" =>"Asset Template Activated Successfully"
             ],200);
         }
         else
         {
             $template->delete();
             return response()->json([
-                "message" =>"AssetTemplate Deactivated successfully"
+                "message" =>"Asset Template Deactivated Successfully"
             ], 200); 
         }
     }

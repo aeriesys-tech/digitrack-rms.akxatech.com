@@ -215,14 +215,14 @@ class DataSourceController extends Controller
         {
             $data_source->restore();
             return response()->json([
-                "message" => "DataSource Activated successfully"
+                "message" => "DataSource Activated Successfully"
             ],200);
         }
         else
         {
             $data_source->delete();
             return response()->json([
-                "message" => "DataSource Deactivated successfully"
+                "message" => "DataSource Deactivated Successfully"
             ], 200);
         }
     }

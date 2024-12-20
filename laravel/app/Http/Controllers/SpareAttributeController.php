@@ -170,14 +170,14 @@ class SpareAttributeController extends Controller
         {
             $spare_attribute->restore();
             return response()->json([
-                "message" => "SpareAttribute Activated successfully"
+                "message" => "Spare Attribute Activated Successfully"
             ],200);
         }
         else
         {
             $spare_attribute->delete();
             return response()->json([
-                "message" => "SpareAttribute Deactivated successfully"
+                "message" => "Spare Attribute Deactivated Successfully"
             ], 200); 
         }
     }

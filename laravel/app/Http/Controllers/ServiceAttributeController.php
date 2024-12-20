@@ -157,14 +157,14 @@ class ServiceAttributeController extends Controller
         {
             $service_attribute->restore();
             return response()->json([
-                "message" => "ServiceAttribute Activated successfully"
+                "message" => "Service Attribute Activated Successfully"
             ],200);
         }
         else
         {
             $service_attribute->delete();
             return response()->json([
-                "message" => "ServiceAttribute Deactivated successfully"
+                "message" => "Service Attribute Deactivated Successfully"
             ], 200); 
         }
     }

@@ -50,7 +50,7 @@ class AssetTypeController extends Controller
         ]);
         
         $asset_type = AssetType::create($data);
-        return response()->json(["message" => "AssetType Created Successfully"]);  
+        return response()->json(["message" => "Asset Type Created Successfully"]);  
     }  
 
     public function getAssetType(Request $request)
@@ -73,7 +73,7 @@ class AssetTypeController extends Controller
 
         $asset_type = AssetType::where('asset_type_id', $request->asset_type_id)->first();
         $asset_type->update($data);
-        return response()->json(["message" => "AssetType Updated Successfully"]); 
+        return response()->json(["message" => "Asset Type Updated Successfully"]); 
     }
 
     public function deleteAssetType(Request $request)
@@ -87,14 +87,14 @@ class AssetTypeController extends Controller
         {
             $asset_type->restore();
             return response()->json([
-                "message" =>"AssetType Activated successfully"
+                "message" =>"Asset Type Activated Successfully"
             ],200);
         }
         else
         {
             $asset_type->delete();
             return response()->json([
-                "message" =>"AssetType Deactivated successfully"
+                "message" =>"Asset Type Deactivated Successfully"
             ], 200); 
         }
     }

@@ -383,7 +383,7 @@ class AssetController extends Controller
             }
         }        
 
-        return response()->json(["message" => "Asset created/updated successfully"], 200);
+        return response()->json(["message" => "Asset Created Successfully"], 200);
     }
 
 
@@ -587,14 +587,14 @@ class AssetController extends Controller
         {
             $asset->restore();
             return response()->json([
-                "message" =>"Asset Activated successfully"
+                "message" =>"Asset Activated Successfully"
             ],200);
         }
         else
         {
             $asset->delete();
             return response()->json([
-                "message" =>"Asset Deactivated successfully"
+                "message" =>"Asset Deactivated Successfully"
             ], 200); 
         }
     }

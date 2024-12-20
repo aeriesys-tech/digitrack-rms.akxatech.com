@@ -52,7 +52,7 @@ class AccessoryTypeController extends Controller
         ]);
 
         $accessory_type = AccessoryType::create($data);
-        return response()->json(["message" => "AccessoryType Created Successfully"]);
+        return response()->json(["message" => "Accessory Type Created Successfully"]);
     }
 
     public function getAccessoryType(Request $request)
@@ -75,7 +75,7 @@ class AccessoryTypeController extends Controller
 
         $accessory_type = AccessoryType::where('accessory_type_id', $request->accessory_type_id)->first();
         $accessory_type->update($data);
-        return response()->json(["message" => "AccessoryType Updated Successfully"]);  
+        return response()->json(["message" => "Accessory Type Updated Successfully"]);  
     }
 
     public function deleteAccessoryType(Request $request)
@@ -90,14 +90,14 @@ class AccessoryTypeController extends Controller
         {
             $accessory_type->restore();
             return response()->json([
-                "message" =>"AccessoryType Activated successfully"
+                "message" =>"Accessory Type Activated Successfully"
             ],200);
         }
         else
         {
             $accessory_type->delete();
             return response()->json([
-                "message" =>"AccessoryType Deactivated successfully"
+                "message" =>"Accessory Type Deactivated Successfully"
             ], 200); 
         }
     }

@@ -116,14 +116,14 @@ class PlantController extends Controller
         {
             $plant->restore();
             return response()->json([
-                "message" =>"Shop Activated successfully"
+                "message" =>"Shop Activated Successfully"
             ],200);
         }
         else
         {
             $plant->delete();
             return response()->json([
-                "message" =>"Shop Deactivated successfully"
+                "message" =>"Shop Deactivated Successfully"
             ], 200);
         }
     }

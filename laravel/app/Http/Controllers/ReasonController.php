@@ -49,7 +49,7 @@ class ReasonController extends Controller
         ]);
 
         $reason = Reason::create($data);
-        return response()->json(["message" => "ActivityType Created Successfully"]); 
+        return response()->json(["message" => "Activity Type Created Successfully"]); 
     }
 
     public function getReason(Request $request)
@@ -83,7 +83,7 @@ class ReasonController extends Controller
 
         $reason = Reason::where('reason_id', $request->reason_id)->first();
         $reason->update($data);
-        return response()->json(["message" => "ActivityType Updated Successfully"]); 
+        return response()->json(["message" => "Activity Type Updated Successfully"]); 
     }
 
     public function deleteReason(Request $request)
@@ -97,14 +97,14 @@ class ReasonController extends Controller
         {
             $reason->restore();
             return response()->json([
-                "message" => "ActivityType Activated successfully"
+                "message" => "Activity Type Activated Successfully"
             ],200);
         }
         else
         {
             $reason->delete();
             return response()->json([
-                "message" => "ActivityType Deactivated successfully"
+                "message" => "Activity Type Deactivated Successfully"
             ], 200);
         }
     }

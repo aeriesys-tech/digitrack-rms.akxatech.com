@@ -50,7 +50,7 @@ class BreakDownTypeController extends Controller
         ]);
         
         $break_down_type = BreakDownType::create($data);
-        return response()->json(["message" => "BreakDownType Created Successfully"]); 
+        return response()->json(["message" => "BreakDown Type Created Successfully"]); 
     }
     
     public function getBreakDownType(Request $request)
@@ -73,7 +73,7 @@ class BreakDownTypeController extends Controller
 
         $break_down_type = BreakDownType::where('break_down_type_id', $request->break_down_type_id)->first();
         $break_down_type->update($data);
-        return response()->json(["message" => "BreakDownType Updated Successfully"]);  
+        return response()->json(["message" => "BreakDown Type Updated Successfully"]);  
     }
 
     public function deleteBreakDownType(Request $request)
@@ -88,14 +88,14 @@ class BreakDownTypeController extends Controller
         {
             $break_down_type->restore();
             return response()->json([
-                "message" =>"BreakDownType Activated successfully"
+                "message" =>"BreakDown Type Activated Successfully"
             ],200);
         }
         else
         {
             $break_down_type->delete();
             return response()->json([
-                "message" =>"BreakDownType Deactivated successfully"
+                "message" =>"BreakDown Type Deactivated Successfully"
             ], 200); 
         }
     }

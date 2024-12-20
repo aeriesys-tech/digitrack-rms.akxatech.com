@@ -87,14 +87,14 @@ class FunctionalController extends Controller
         {
             $functional->restore();
             return response()->json([
-                "message" =>"Functional Activated successfully"
+                "message" =>"Functional Activated Successfully"
             ],200);
         }
         else
         {
             $functional->delete();
             return response()->json([
-                "message" =>"Functional Deactivated successfully"
+                "message" =>"Functional Deactivated Successfully"
             ], 200);
         }
     }

@@ -212,14 +212,14 @@ class ServiceController extends Controller
         {
             $service->restore();
             return response()->json([
-                "message" =>"Service Activated successfully"
+                "message" =>"Service Activated Successfully"
             ],200);
         }
         else
         {
             $service->delete();
             return response()->json([
-                "message" =>"Service Deactivated successfully"
+                "message" =>"Service Deactivated Successfully"
             ], 200); 
         }
     }
