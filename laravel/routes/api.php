@@ -74,6 +74,8 @@ Route::get('downloadCheckAttachment',[UserCheckController::class, 'downloadCheck
 Route::post('addConsent', [UserAuthController::class, 'addConsent']);
 Route::post('getAssetRegisterDepartments',[UserCheckController::class, 'getAssetRegisterDepartments']);
 
+Route::get('getMails',[DashboardController::class, 'getMails']);
+
 Route::get('downloadAssetQRCode',[AssetController::class, 'downloadAssetQRCode']);
 
 Route::group(['middleware' => 'auth:sanctum'], function(){

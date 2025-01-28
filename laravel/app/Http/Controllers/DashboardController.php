@@ -10,6 +10,7 @@ use App\Models\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -48,5 +49,14 @@ class DashboardController extends Controller
             'pending_services' => $pending_services,
             'upcoming_jobs' => $upcoming_jobs
         ]);
+    }
+
+    public function getMails()
+    {
+        $test = "Hello Welcome to Digitrack Asset Management";
+        
+        Mail::raw($test, function ($message) {
+            $message->to('bharatesh.s@akxatech.com')->cc('sammed@aeriesys.com')->subject('Test Email');
+        });
     }
 }

@@ -6,7 +6,7 @@ import axios from "axios";
 export default createStore({
   state: {
     // apiUrl:"https://digitrack-rms.akxatech.com/api/",
-    apiUrl: "http://192.168.0.214/digitrack-rms.akxatech.com/laravel/public/api/",
+    apiUrl: "http://localhost/digitrack-rms.akxatech.com/laravel/public/api/",
     // apiUrl: "http://172.28.224.1/digitrack-rms.akxatech.com/laravel/public/api/",
     user: null,
     token: '',
@@ -19,7 +19,7 @@ export default createStore({
     h_meter: '20',
     asset_templates: '',
     asset_template_id: '',
-  },
+  }, 
   getters: {
     user(state) {
       return state.user;

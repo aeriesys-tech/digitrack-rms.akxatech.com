@@ -51,7 +51,14 @@ class AssetTemplateController extends Controller
                     ->orWhere('asset_type_name', 'like', "%$request->search%");
                 });
         }
-        $templates = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+        if ($request->keyword == 'asset_type_name') {
+            $query->join('asset_type', 'asset_templates.asset_type_id', '=', 'asset_type.asset_type_id')->select('asset_templates.*') 
+                  ->orderBy('asset_type.asset_type_name', $request->order_by);
+        }
+        else {
+            $query->orderBy($request->keyword, $request->order_by);
+        }
+        $templates = $query->withTrashed()->paginate($request->per_page); 
         return AssetTemplateResource::collection($templates);
     }
 
