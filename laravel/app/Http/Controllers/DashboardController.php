@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $deviations = UserAssetCheck::where('remark_status', false)->where(function ($q) {
             $q->where(function ($q) {
                 $q->where('field_type', 'Number')
-                  ->whereRaw('value < lcl OR value > ucl');
+                ->whereRaw("(CAST(value AS DOUBLE PRECISION) < lcl OR CAST(value AS DOUBLE PRECISION) > ucl)");
             })->orWhere(function ($q) {
                 $q->where('field_type', '!=', 'Number')->where('field_type', '!=', 'Date')->where('field_type', '!=', 'Date & Time')
                   ->where('field_type', '!=', 'Text')->where('field_type', '!=', 'Text Area')

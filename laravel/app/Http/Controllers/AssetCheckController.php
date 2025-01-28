@@ -439,7 +439,7 @@ class AssetCheckController extends Controller
             $query->where(function ($q) {
                 $q->where('field_type', 'Number')
                 ->where(function ($subQuery) {
-                    $subQuery->whereColumn('value', '<', 'lcl')->orWhereColumn('value', '>', 'ucl');
+                    $subQuery->whereRaw('CAST(value AS DOUBLE PRECISION) < lcl OR CAST(value AS DOUBLE PRECISION) > ucl');
                 });
             })->orWhere(function ($q) {
                 $q->where('field_type', 'Select')
@@ -514,7 +514,7 @@ class AssetCheckController extends Controller
             $query->where(function ($q) {
                 $q->where('field_type', 'Number')
                 ->where(function ($subQuery) {
-                    $subQuery->whereColumn('value', '<', 'lcl')->orWhereColumn('value', '>', 'ucl');
+                    $subQuery->whereRaw('CAST(value AS DOUBLE PRECISION) < lcl OR CAST(value AS DOUBLE PRECISION) > ucl');
                 });
             })->orWhere(function ($q) {
                 $q->where('field_type', 'Select')
