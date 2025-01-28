@@ -3,4 +3,4 @@
 .env
 .DS_Store
 /public/rms_script/venv
-/public/storage/*
+/public/storage
