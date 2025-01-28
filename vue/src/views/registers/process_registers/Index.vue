@@ -41,22 +41,22 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('reference_no')">
+                                        <th @click="sort('job_no')">
                                             Job No.
                                             <span>
-                                                <i v-if="meta.keyword == 'reference_no' && meta.order_by == 'asc'"
+                                                <i v-if="meta.keyword == 'job_no' && meta.order_by == 'asc'"
                                                     class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'reference_no' && meta.order_by == 'desc'"
+                                                <i v-else-if="meta.keyword == 'job_no' && meta.order_by == 'desc'"
                                                     class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th @click="sort('reference_date')">
+                                        <th @click="sort('job_date')">
                                             Job Date & Time
                                             <span>
-                                                <i v-if="meta.keyword == 'reference_date' && meta.order_by == 'asc'"
+                                                <i v-if="meta.keyword == 'job_date' && meta.order_by == 'asc'"
                                                     class="ri-arrow-up-line"></i>
-                                                <i v-else-if="meta.keyword == 'reference_date' && meta.order_by == 'desc'"
+                                                <i v-else-if="meta.keyword == 'job_date' && meta.order_by == 'desc'"
                                                     class="ri-arrow-down-line"></i>
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>

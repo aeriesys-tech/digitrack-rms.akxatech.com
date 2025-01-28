@@ -66,6 +66,7 @@ class ActivitiesSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
         $sheet->getStyle('A2:G2')->getFont()->setBold(true);
         $sheet->getStyle('A2:G2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
         $sheet->getStyle('A2:G2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
@@ -132,6 +133,7 @@ class ServicesSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
         $sheet->getStyle('A2:J2')->getFont()->setBold(true);
         $sheet->getStyle('A2:J2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
         $sheet->getStyle('A2:J2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
@@ -205,6 +207,7 @@ class ChecksSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
+        $sheet->getStyle('A1:K1')->getFont()->setBold(true);
         $sheet->getStyle('A2:K2')->getFont()->setBold(true);
         $sheet->getStyle('A2:K2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
         $sheet->getStyle('A2:K2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
@@ -274,6 +277,7 @@ class ProcessSheet implements FromCollection, WithStyles, WithColumnWidths
 
     public function styles(Worksheet $sheet)
     {
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
         $sheet->getStyle('A2:G2')->getFont()->setBold(true);
         $sheet->getStyle('A2:G2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
         $sheet->getStyle('A2:G2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
