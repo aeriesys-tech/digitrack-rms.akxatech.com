@@ -1,5 +1,5 @@
 <template>
-	
+
     <div class="header-main px-3 px-lg-4">
 		<a id="menuSidebar" href="javascript:void(0)" class="menu-link me-3 me-lg-4"><i class="ri-menu-2-fill"></i></a>
 		<div class="me-auto">
@@ -27,7 +27,7 @@
                     </nav>
                 </div>
             </div>
-        </div> 
+        </div>
 	</div>
 </template>
 <script>
