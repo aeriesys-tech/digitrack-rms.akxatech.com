@@ -77,8 +77,8 @@
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
                                         <label class="form-label">Spare <span class="text-danger"> *</span></label>
                                         <search
-                                            :class="{ 'is-invalid': errors.spare_id }"
-                                            :customClass="{ 'is-invalid': errors.spare_id }"
+                                            :class="{ 'is-invalid': errors?.spare_id }"
+                                            :customClass="{ 'is-invalid': errors?.spare_id }"
                                             aria-describedby="basic-addon2"
                                             aria-label="Select Spare"
                                             class="my-auto"
@@ -92,12 +92,12 @@
                                             @selectsearch="getSpareAttribute(spare.spare_id)"
                                         >
                                         </search>
-                                        <span v-if="errors.spare_id" class="invalid-feedback">{{ errors.spare_id[0] }}</span>
+                                        <span v-if="errors?.spare_id" class="invalid-feedback">{{ errors?.spare_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3" v-can="'assetSpares.create'">
                                         <label class="form-label">Max Quantity <span class="text-danger"> *</span></label>
-                                        <input type="number" class="form-control" placeholder="Enter Max Quantity" :class="{ 'is-invalid': errors.quantity }" v-model="spare.quantity" />
-                                        <span v-if="errors.quantity" class="invalid-feedback">{{ errors.quantity[0] }}</span>
+                                        <input type="number" class="form-control" placeholder="Enter Max Quantity" :class="{ 'is-invalid': errors?.quantity }" v-model="spare.quantity" />
+                                        <span v-if="errors?.quantity" class="invalid-feedback">{{ errors?.quantity[0] }}</span>
                                     </div>
                                     <div class="col-md-3" v-for="field, key in spare.asset_spare_attributes" :key="key">
                                         <div v-if="field.spare_attributes[0].field_type=='Text'">
@@ -311,8 +311,8 @@
                                     <div class="col-md-8" v-can="'assetChecks.create'">
                                         <label class="form-label">Check <span class="text-danger"> *</span></label>
                                         <search
-                                            :class="{ 'is-invalid': errors.check_id }"
-                                            :customClass="{ 'is-invalid': errors.check_id }"
+                                            :class="{ 'is-invalid': errors?.check_id }"
+                                            :customClass="{ 'is-invalid': errors?.check_id }"
                                             aria-describedby="basic-addon2"
                                             aria-label="Select Check"
                                             class="my-auto"
@@ -325,7 +325,7 @@
                                             @selectsearch="checkstatus()"
                                         >
                                         </search>
-                                        <span v-if="errors.check_id" class="invalid-feedback">{{ errors.check_id[0] }}</span>
+                                        <span v-if="errors?.check_id" class="invalid-feedback">{{ errors?.check_id[0] }}</span>
                                     </div>
                                     <div class="col-md-12" v-can="'assetChecks.create'">
                                         <div class="row align-items-center g-2">
@@ -343,8 +343,8 @@
                                             </div>
                                             <div class="col-md-3" v-if="check.field_type === 'Select'">
                                                 <label class="form-label">Default Value</label>
-                                                <input :class="{ 'is-invalid': errors.default_value }" type="text" class="form-control" placeholder="Default Value" v-model="check.default_value" />
-                                                <span v-if="errors.default_value" class="invalid-feedback">{{ errors.default_value[0] }}</span>
+                                                <input :class="{ 'is-invalid': errors?.default_value }" type="text" class="form-control" placeholder="Default Value" v-model="check.default_value" />
+                                                <span v-if="errors?.default_value" class="invalid-feedback">{{ errors?.default_value[0] }}</span>
                                             </div>
                                             <div class="col-md-3 pt-4 d-flex justify-content-end1">
 
@@ -469,8 +469,8 @@
                                     <div class="col-md-4">
                                         <label class="form-label">Service <span class="text-danger"> *</span></label>
                                         <search
-                                            :class="{ 'is-invalid': errors.service_id }"
-                                            :customClass="{ 'is-invalid': errors.service_id }"
+                                            :class="{ 'is-invalid': errors?.service_id }"
+                                            :customClass="{ 'is-invalid': errors?.service_id }"
                                             aria-describedby="basic-addon2"
                                             aria-label="Select Check"
                                             class="my-auto"
@@ -483,7 +483,7 @@
                                             @selectsearch="getServiceAttribute(service.service_id)"
                                         >
                                         </search>
-                                        <span v-if="errors.service_id" class="invalid-feedback">{{ errors.service_id[0] }}</span>
+                                        <span v-if="errors?.service_id" class="invalid-feedback">{{ errors?.service_id[0] }}</span>
                                     </div>
 
                                     <div class="col-md-3" v-for="field, key in service.asset_service_attributes" :key="key">
@@ -683,8 +683,8 @@
                                     <div class="col-md-4">
                                         <label class="form-label">Variable <span class="text-danger"> *</span></label>
                                         <search
-                                            :class="{ 'is-invalid': errors.variable_id }"
-                                            :customClass="{ 'is-invalid': errors.variable_id }"
+                                            :class="{ 'is-invalid': errors?.variable_id }"
+                                            :customClass="{ 'is-invalid': errors?.variable_id }"
                                             aria-describedby="basic-addon2"
                                             aria-label="Select Variable"
                                             class="my-auto"
@@ -698,7 +698,7 @@
                                             @selectsearch="getVariableAttribute(variable.variable_id)"
                                         >
                                         </search>
-                                        <span v-if="errors.variable_id" class="invalid-feedback">{{ errors.variable_id[0] }}</span>
+                                        <span v-if="errors?.variable_id" class="invalid-feedback">{{ errors?.variable_id[0] }}</span>
                                     </div>
 
                                     <div class="col-md-3" v-for="field, key in variable.asset_variable_attributes" :key="key">
@@ -895,8 +895,8 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Data Source <span class="text-danger"> *</span></label>
                                         <search
-                                            :class="{ 'is-invalid': errors.data_source_id }"
-                                            :customClass="{ 'is-invalid': errors.data_source_id }"
+                                            :class="{ 'is-invalid': errors?.data_source_id }"
+                                            :customClass="{ 'is-invalid': errors?.data_source_id }"
                                             aria-describedby="basic-addon2"
                                             aria-label="Select Data Source"
                                             class="my-auto"
@@ -910,16 +910,16 @@
                                             @selectsearch="getDatasourceAttribute(datasource.data_source_id)"
                                         >
                                         </search>
-                                        <span v-if="errors.data_source_id" class="invalid-feedback">{{ errors.data_source_id[0] }}</span>
+                                        <span v-if="errors?.data_source_id" class="invalid-feedback">{{ errors?.data_source_id[0] }}</span>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Script <span class="text-danger"> *</span></label>
-                                        <select class="form-control form-control" v-model="datasource.script" :class="{'is-invalid':errors.script}">
+                                        <select class="form-control form-control" v-model="datasource.script" :class="{'is-invalid':errors?.script}">
                                             <option value="">Select Script</option>
                                             <option value="Ladle Scanner">Ladle Scanner</option>
                                             <option value="Torpedo Scanner">Torpedo Scanner</option>
                                         </select>
-                                        <span v-if="errors.script" class="invalid-feedback">{{ errors.script[0] }}</span>
+                                        <span v-if="errors?.script" class="invalid-feedback">{{ errors?.script[0] }}</span>
                                     </div>
 
                                     <div class="col-md-3" v-for="field, key in datasource.asset_datasource_attributes" :key="key">
@@ -1157,8 +1157,8 @@
                                         <!-- <div class="d-flex justify-content-between" v-can="'assetSpares.create'"> -->
                                         <label class="form-label">Accessory <span class="text-danger"> *</span></label>
                                         <search
-                                            :class="{ 'is-invalid': errors.accessory_type_id }"
-                                            :customClass="{ 'is-invalid': errors.accessory_type_id }"
+                                            :class="{ 'is-invalid': errors?.accessory_type_id }"
+                                            :customClass="{ 'is-invalid': errors?.accessory_type_id }"
                                             aria-describedby="basic-addon2"
                                             aria-label="Select Accessory"
                                             class="my-auto"
@@ -1170,7 +1170,7 @@
                                             @input=" accessory1 => accessory.accessory_type_id = accessory1"
                                         >
                                         </search>
-                                        <span v-if="errors.accessory_type_id" class="invalid-feedback">{{ errors.accessory_type_id[0] }}</span>
+                                        <span v-if="errors?.accessory_type_id" class="invalid-feedback">{{ errors?.accessory_type_id[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Accessory Name <span class="text-danger"> *</span></label>
@@ -1179,8 +1179,8 @@
                                     </div>
                                     <div class="col-md-10">
                                         <label class="form-label">Attachment <span class="text-danger"> *</span></label>
-                                        <input type="file" class="form-control" id="attachment" ref="attachment" name="attachment" :class="{ 'is-invalid': errors.attachment }" />
-                                        <span v-if="errors?.attachment" class="invalid-feedback">{{ errors.attachment[0] }}</span>
+                                        <input type="file" class="form-control" id="attachment" ref="attachment" name="attachment" :class="{ 'is-invalid': errors?.attachment }" />
+                                        <span v-if="errors?.attachment" class="invalid-feedback">{{ errors?.attachment[0] }}</span>
                                     </div>
                                     <div class="col-md-2 pt-4">
                                         <div style="float: left;">

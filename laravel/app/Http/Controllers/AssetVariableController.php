@@ -13,6 +13,7 @@ use App\Models\Asset;
 use App\Models\VariableAttributeValue;
 use App\Http\Resources\VariableAttributeValueResource;
 use App\Models\AssetVariableValue;
+use App\Models\UserAssetVariable;
 
 class AssetVariableController extends Controller
 {
@@ -262,6 +263,15 @@ class AssetVariableController extends Controller
             'asset_variable_id' => 'required|exists:asset_variables,asset_variable_id'
         ]);
 
+        $variable = AssetVariable::where('asset_variable_id', $request->asset_variable_id)->first();
+        $template = UserAssetVariable::where('variable_id', $variable->variable_id)->exists();
+        if ($template) 
+        {
+            return response()->json([
+                "message" => 'Asset Variable cannot be deleted as it is used in other records.'
+            ], 400);
+        }
+        AssetVariableValue::where('asset_variable_id', $request->asset_variable_id)->delete();
         AssetVariable::where('asset_variable_id', $request->asset_variable_id)->delete();
 
         return response()->json([

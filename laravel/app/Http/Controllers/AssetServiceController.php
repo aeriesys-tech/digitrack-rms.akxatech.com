@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AssetServiceValue;
 use App\Models\ServiceAttributeValue;
 use App\Http\Resources\ServiceAttributeValueResource;
+use App\Models\UserSpare;
 
 class AssetServiceController extends Controller
 {
@@ -308,13 +309,22 @@ class AssetServiceController extends Controller
         ]);
     
         try {
+            $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
+            $service = UserSpare::where('service_id', $asset_service->service_id)->exists();
+            if ($service) 
+            {
+                return response()->json([
+                    "message" => 'Asset Service cannot be deleted as it is used in other records.'
+                ], 400);
+            }
+
             $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->forceDelete();
             return response()->json([
                 "message" => "AssetService deleted successfully"
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
-                "error" => "Cannot delete AssetService because it is associated with other records."
+                "message" => "Cannot delete AssetService because it is associated with other records."
             ], 400);
         } catch (\Exception $e) {
             return response()->json([

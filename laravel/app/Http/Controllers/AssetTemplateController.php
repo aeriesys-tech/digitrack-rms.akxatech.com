@@ -21,6 +21,7 @@ use App\Models\AssetTemplateSpare;
 use App\Http\Resources\AssetAttributeResource;
 use App\Http\Resources\TemplateZoneResource;
 use App\Http\Resources\DuplicateAssetTemplateResource;
+use App\Models\Asset;
 
 class AssetTemplateController extends Controller
 {
@@ -32,10 +33,7 @@ class AssetTemplateController extends Controller
             'keyword' => 'required'
         ]);
 
-        // // $authPlantId = Auth::User()->plant_id;
         $query = AssetTemplate::query();
-
-        // // $query->where('plant_id', $authPlantId);
 
         if(isset($request->asset_type_id))
         {
@@ -108,9 +106,14 @@ class AssetTemplateController extends Controller
                     if ($totalHeight != $assetHeight) {
                         $fail("The total height of TemplateZones must be equal to the AssetTemplate's height.");
                     }
+                    $assetHeight = $request->input('height', 0);
+                    if ($totalHeight != $assetHeight) {
+                        $fail("The total height of TemplateZones must be equal to the AssetTemplate's height.");
+                    }
                 }
             }
         ]);       
+            
 
         $template = AssetTemplate::create($data);
 
@@ -348,6 +351,14 @@ class AssetTemplateController extends Controller
             'asset_template_id' => 'required|exists:asset_templates,asset_template_id'
         ]);
 
+        $template = Asset::where('asset_template_id', $request->asset_template_id)->exists();
+        if ($template) 
+        {
+            return response()->json([
+                "message" => 'Asset Template cannot be deleted as it is used in other records.'
+            ], 400);
+        }
+
         AssetTemplateAccessory::where('asset_template_id', $request->asset_template_id)->forceDelete();
         TemplateDataSourceValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
         AssetTemplateDataSource::where('asset_template_id', $request->asset_template_id)->forceDelete();
@@ -368,7 +379,7 @@ class AssetTemplateController extends Controller
         ]);
     }
 
-    public function getAssetTemplateDropDown(Request $request)
+    public function getAssetTemplateDropDown(Request $request)  
     {
         $request->validate([
             'asset_type_id' => 'required|exists:asset_type,asset_type_id'

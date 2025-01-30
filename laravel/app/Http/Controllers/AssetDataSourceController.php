@@ -264,7 +264,8 @@ class AssetDataSourceController extends Controller
             'asset_data_source_id' => 'required|exists:asset_data_sources,asset_data_source_id'
         ]);
 
-        AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->delete();
+        AssetDataSourceValue::where('asset_data_source_id', $request->asset_data_source_id)->forceDelete();
+        AssetDataSource::where('asset_data_source_id', $request->asset_data_source_id)->forceDelete();
 
         return response()->json([
             'message' => "AssetDataSource Deleted Successfully"

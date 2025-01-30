@@ -252,8 +252,8 @@ class AssetTemplateDataSourceController extends Controller
             'asset_template_datasource_id' => 'required|exists:asset_template_datasources,asset_template_datasource_id'
         ]);
 
-        TemplateDataSourceValue::where('asset_template_datasource_id', $request->asset_template_datasource_id)->delete();
-        AssetTemplateDataSource::where('asset_template_datasource_id', $request->asset_template_datasource_id)->delete();
+        TemplateDataSourceValue::where('asset_template_datasource_id', $request->asset_template_datasource_id)->forceDelete();
+        AssetTemplateDataSource::where('asset_template_datasource_id', $request->asset_template_datasource_id)->forceDelete();
 
         return response()->json([
             'message' => "Template DataSource Deleted Successfully"

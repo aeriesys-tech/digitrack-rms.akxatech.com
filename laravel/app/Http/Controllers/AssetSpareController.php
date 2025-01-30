@@ -14,6 +14,7 @@ use App\Http\Resources\AssetZoneResource;
 use App\Models\SpareAttributeValue;
 use App\Http\Resources\SpareAttributeValueResource;
 use App\Models\AssetSpareValue;
+use App\Models\UserSpare;
 
 class AssetSpareController extends Controller
 {
@@ -312,8 +313,16 @@ class AssetSpareController extends Controller
             'asset_spare_id' => 'required|exists:asset_spares,asset_spare_id'
         ]);
     
+        $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->first();
+        $spare = UserSpare::where('spare_id', $asset_spare->spare_id)->exists();
+        if ($spare) 
+        {
+            return response()->json([
+                "message" => 'Asset Spare cannot be deleted as it is used in other records.'
+            ], 400);
+        }
         AssetSpareValue::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
-        $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
+        AssetSpare::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
 
         return response()->json([
             "message" => "AssetSpare deleted successfully"
