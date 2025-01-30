@@ -235,7 +235,7 @@
                     let loader = vm.$loading.show();
                     vm.$store
                         .dispatch("post", {
-                            uri: "forceDeleteAsset",
+                            uri: "forceDeleteAssetTemplate",
                             data: asset,
                         })
                         .then((response) => {
