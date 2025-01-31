@@ -7,6 +7,7 @@ use App\Http\Resources\AssetCheckResource;
 use App\Http\Resources\UserAssetCheckResource;
 use App\Http\Resources\UserAssetCheckDeviationResource;
 use App\Models\AssetCheck;
+use App\Models\UserCheck;
 use App\Models\Check;
 use App\Models\AssetZone;
 use App\Models\Asset;
@@ -311,7 +312,10 @@ class AssetCheckController extends Controller
         ]);
 
         try {
-            $isAssociated = UserAssetCheck::where('asset_check_id', $request->asset_check_id)->exists();
+            $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->first();
+            $isAssociated = UserCheck::whereHas('UserAssetCheck', function($que) use($asset_check){
+                $que->where('asset_check_id', $asset_check->asset_check_id);
+            })->where('asset_zone_id', $asset_check->asset_zone_id)->where('asset_id', $asset_check->asset_id)->exists();
 
             if ($isAssociated) {
                 return response()->json([

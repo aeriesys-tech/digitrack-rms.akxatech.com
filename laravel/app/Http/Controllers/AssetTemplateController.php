@@ -88,13 +88,19 @@ class AssetTemplateController extends Controller
             'zone_name' => function ($attribute, $value, $fail) use ($request) {
                 if (isset($value)) {
                     $totalHeight = 0;
-                    $assetDiameter = $request->input('diameter', 0); 
-        
+                    $assetDiameter = (float) $request->input('diameter', 0); 
+                    $assetHeight = (float) $request->input('height', 0);
+                    
                     foreach ($value as $zone) {
-                        $zoneHeight = $zone['height'] ?? 0;
-                        $zoneDiameter = $zone['diameter'] ?? 0;
+                        $zoneHeight = (float) $zone['height'] ?? 0;
+                        $zoneDiameter = (float) $zone['diameter'] ?? 0;
+                        $zoneName = $zone['zone_name'] ?? '';
         
-                        $totalHeight += $zoneHeight;
+                        if ($zoneName !== 'Overall') {
+                                $totalHeight += $zoneHeight;
+                            } else {
+                                $overallZoneHeight = $zoneHeight;
+                            }
         
                         if ($zoneDiameter != $assetDiameter) {
                             $fail("The diameter of each TemplateZones must be equal to the AssetTemplate's diameter.");
@@ -102,18 +108,16 @@ class AssetTemplateController extends Controller
                         }
                     }
         
-                    $assetHeight = $request->input('height', 0);
                     if ($totalHeight != $assetHeight) {
-                        $fail("The total height of TemplateZones must be equal to the AssetTemplate's height.");
+                        $fail("The total height of TemplateZones (excluding Overall) must be equal to the AssetTemplate's height.");
                     }
-                    $assetHeight = $request->input('height', 0);
-                    if ($totalHeight != $assetHeight) {
-                        $fail("The total height of TemplateZones must be equal to the AssetTemplate's height.");
+                
+                    if ($overallZoneHeight !== $assetHeight) {
+                        $fail("The height of the Overall zone must be equal to the AssetTemplate's height.");
                     }
                 }
             }
         ]);       
-            
 
         $template = AssetTemplate::create($data);
 
@@ -207,13 +211,19 @@ class AssetTemplateController extends Controller
             'zone_name' => function ($attribute, $value, $fail) use ($request) {
                 if (isset($value)) {
                     $totalHeight = 0;
-                    $assetDiameter = $request->input('diameter', 0); 
-        
+                    $assetDiameter = (float) $request->input('diameter', 0); 
+                    $assetHeight = (float) $request->input('height', 0);
+                    
                     foreach ($value as $zone) {
-                        $zoneHeight = $zone['height'] ?? 0;
-                        $zoneDiameter = $zone['diameter'] ?? 0;
+                        $zoneHeight = (float) ($zone['height'] ?? 0);
+                        $zoneDiameter = (float) ($zone['diameter'] ?? 0);
+                        $zoneName = $zone['zone_name'] ?? '';
         
-                        $totalHeight += $zoneHeight;
+                        if ($zoneName !== 'Overall') {
+                                $totalHeight += $zoneHeight;
+                            } else { 
+                                $overallZoneHeight = $zoneHeight;
+                            }
         
                         if ($zoneDiameter != $assetDiameter) {
                             $fail("The diameter of each TemplateZones must be equal to the AssetTemplate's diameter.");
@@ -221,13 +231,16 @@ class AssetTemplateController extends Controller
                         }
                     }
         
-                    $assetHeight = $request->input('height', 0);
                     if ($totalHeight != $assetHeight) {
-                        $fail("The total height of TemplateZone must be equal to the AssetTemplate's height.");
+                        $fail("The total height of TemplateZones (excluding Overall) must be equal to the AssetTemplate's height.");
+                    }
+                
+                    if ($overallZoneHeight !== $assetHeight) {
+                        $fail("The height of the Overall zone must be equal to the AssetTemplate's height.");
                     }
                 }
             }
-        ]);        
+        ]);          
     
         $template = AssetTemplate::where('asset_template_id', $request->asset_template_id)->first();
         $template->update($data);
@@ -279,15 +292,19 @@ class AssetTemplateController extends Controller
         }
     
         $existingZones = TemplateZone::where('asset_template_id', $template->asset_template_id)->get();
-        $zoneNames = $request->zone_name;
+        // $zoneNames = $request->zone_name;
 
         if(isset($request->deleted_asset_zones) > 0)
         {
             TemplateZone::whereIn('template_zone_id', $request->deleted_asset_zones)->forceDelete();
         }
     
+        $zoneNames = array_filter($request->zone_name, function ($zone) {
+            return $zone['zone_name'] !== 'Overall';
+        });
+
         if (count($zoneNames) !== $data['no_of_zones']) {
-            return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
+            return response()->json(["message" => "The number of zone names must match the number of zones."], 422);
         }
     
         foreach ($zoneNames as $zoneName) 

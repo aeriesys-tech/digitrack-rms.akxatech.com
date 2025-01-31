@@ -314,7 +314,9 @@ class AssetSpareController extends Controller
         ]);
     
         $asset_spare = AssetSpare::where('asset_spare_id', $request->asset_spare_id)->first();
-        $spare = UserSpare::where('spare_id', $asset_spare->spare_id)->exists();
+        $spare = UserSpare::whereHas('userService', function($que) use($asset_spare){
+            $que->where('asset_id', $asset_spare->asset_id)->where('asset_zone_id', $asset_spare->asset_zone_id);
+        })->where('spare_id', $asset_spare->spare_id)->exists();
         if ($spare) 
         {
             return response()->json([

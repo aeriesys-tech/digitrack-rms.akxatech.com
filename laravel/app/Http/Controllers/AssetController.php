@@ -130,27 +130,36 @@ class AssetController extends Controller
             'zone_name' => function ($attribute, $value, $fail) use ($request) {
                 if (isset($value)) {
                     $totalHeight = 0;
-                    $assetDiameter = $request->input('diameter', 0); 
-        
+                    $assetDiameter = (float) $request->input('diameter', 0); 
+                    $assetHeight = (float) $request->input('height', 0);
+                    
                     foreach ($value as $zone) {
-                        $zoneHeight = $zone['height'] ?? 0;
-                        $zoneDiameter = $zone['diameter'] ?? 0;
+                        $zoneHeight = (float) $zone['height'] ?? 0;
+                        $zoneDiameter = (float) $zone['diameter'] ?? 0;
+                        $zoneName = $zone['zone_name'] ?? '';
         
-                        $totalHeight += $zoneHeight;
+                        if ($zoneName !== 'Overall') {
+                                $totalHeight += $zoneHeight;
+                            } else {
+                                $overallZoneHeight = $zoneHeight;
+                            }
         
                         if ($zoneDiameter != $assetDiameter) {
-                            $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
+                            $fail("The diameter of each AssetZones must be equal to the Asset's diameter.");
                             return; 
                         }
                     }
         
-                    $assetHeight = $request->input('height', 0);
                     if ($totalHeight != $assetHeight) {
-                        $fail("The total height of AssetZones must be equal to the Asset's height.");
+                        $fail("The total height of AssetZones (excluding Overall) must be equal to the Asset's height.");
+                    }
+                
+                    if ($overallZoneHeight !== $assetHeight) {
+                        $fail("The height of the Overall zone must be equal to the Asset's height.");
                     }
                 }
             }
-        ]);       
+        ]);             
 
         $asset = Asset::create($data);
 
@@ -467,27 +476,36 @@ class AssetController extends Controller
             'zone_name' => function ($attribute, $value, $fail) use ($request) {
                 if (isset($value)) {
                     $totalHeight = 0;
-                    $assetDiameter = $request->input('diameter', 0); 
-        
+                    $assetDiameter = (float) $request->input('diameter', 0); 
+                    $assetHeight = (float) $request->input('height', 0);
+                    
                     foreach ($value as $zone) {
-                        $zoneHeight = $zone['height'] ?? 0;
-                        $zoneDiameter = $zone['diameter'] ?? 0;
+                        $zoneHeight = (float) ($zone['height'] ?? 0);
+                        $zoneDiameter = (float) ($zone['diameter'] ?? 0);
+                        $zoneName = $zone['zone_name'] ?? '';
         
-                        $totalHeight += $zoneHeight;
+                        if ($zoneName !== 'Overall') {
+                                $totalHeight += $zoneHeight;
+                            } else { 
+                                $overallZoneHeight = $zoneHeight;
+                            }
         
                         if ($zoneDiameter != $assetDiameter) {
-                            $fail("The diameter of each AssetZone must be equal to the Asset's diameter.");
+                            $fail("The diameter of each AssetZones must be equal to the Asset's diameter.");
                             return; 
                         }
                     }
         
-                    $assetHeight = $request->input('height', 0);
                     if ($totalHeight != $assetHeight) {
-                        $fail("The total height of AssetZones must be equal to the Asset's height.");
+                        $fail("The total height of AssetZones (excluding Overall) must be equal to the Asset's height.");
+                    }
+                
+                    if ($overallZoneHeight !== $assetHeight) {
+                        $fail("The height of the Overall zone must be equal to the Asset's height.");
                     }
                 }
             }
-        ]);        
+        ]);          
     
         $asset = Asset::where('asset_id', $request->asset_id)->first();
         $asset->update($data);
@@ -539,13 +557,17 @@ class AssetController extends Controller
         }
     
         $existingZones = AssetZone::where('asset_id', $asset->asset_id)->get();
-        $zoneNames = $request->zone_name;
+        // $zoneNames = $request->zone_name;
 
         if(isset($request->deleted_asset_zones) > 0)
         {
             AssetZone::whereIn('asset_zone_id', $request->deleted_asset_zones)->forceDelete();
         }
     
+        $zoneNames = array_filter($request->zone_name, function ($zone) {
+            return $zone['zone_name'] !== 'Overall';
+        });
+
         if (count($zoneNames) !== $data['no_of_zones']) {
             return response()->json(["error" => "The number of zone names must match the number of zones."], 400);
         }

@@ -15,6 +15,7 @@ use App\Models\AssetServiceValue;
 use App\Models\ServiceAttributeValue;
 use App\Http\Resources\ServiceAttributeValueResource;
 use App\Models\UserSpare;
+use App\Models\UserService;
 
 class AssetServiceController extends Controller
 {
@@ -310,7 +311,9 @@ class AssetServiceController extends Controller
     
         try {
             $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
-            $service = UserSpare::where('service_id', $asset_service->service_id)->exists();
+            $service = UserService::whereHas('UserSpare', function($que) use($asset_service){
+                $que->where('service_id', $asset_service->service_id)->where('asset_zone_id', $asset_service->asset_zone_id);
+            })->where('asset_id', $asset_service->asset_id)->exists();
             if ($service) 
             {
                 return response()->json([
