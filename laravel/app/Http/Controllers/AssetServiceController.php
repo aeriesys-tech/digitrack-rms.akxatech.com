@@ -309,30 +309,22 @@ class AssetServiceController extends Controller
             'asset_service_id' => 'required|exists:asset_services,asset_service_id'
         ]);
     
-        try {
-            $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
-            $service = UserService::whereHas('UserSpare', function($que) use($asset_service){
-                $que->where('service_id', $asset_service->service_id)->where('asset_zone_id', $asset_service->asset_zone_id);
-            })->where('asset_id', $asset_service->asset_id)->exists();
-            if ($service) 
-            {
-                return response()->json([
-                    "message" => 'Asset Service cannot be deleted as it is used in other records.'
-                ], 400);
-            }
-
-            $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->forceDelete();
+        $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
+        $service = UserService::whereHas('UserSpare', function($que) use($asset_service){
+            $que->where('service_id', $asset_service->service_id)->where('asset_zone_id', $asset_service->asset_zone_id);
+        })->where('asset_id', $asset_service->asset_id)->exists();
+        
+        if ($service) 
+        {
+            return response()->json([
+                "message" => 'Asset Service cannot be deleted as it is used in other records.'
+            ], 400);
+        }
+        else{
+            AssetService::where('asset_service_id', $request->asset_service_id)->forceDelete();
             return response()->json([
                 "message" => "AssetService deleted successfully"
             ], 200);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                "message" => "Cannot delete AssetService because it is associated with other records."
-            ], 400);
-        } catch (\Exception $e) {
-            return response()->json([
-                "error" => "An unexpected error occurred. Please try again."
-            ], 500);
         }
     }    
 

@@ -323,12 +323,14 @@ class AssetSpareController extends Controller
                 "message" => 'Asset Spare cannot be deleted as it is used in other records.'
             ], 400);
         }
-        AssetSpareValue::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
-        AssetSpare::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
+        else{
+            AssetSpareValue::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
+            AssetSpare::where('asset_spare_id', $request->asset_spare_id)->forceDelete();
 
-        return response()->json([
-            "message" => "AssetSpare deleted successfully"
-        ], 200);
+            return response()->json([
+                "message" => "AssetSpare deleted successfully"
+            ], 200);
+        }
     } 
 
     public function assetSpareAttributeValues(Request $request)

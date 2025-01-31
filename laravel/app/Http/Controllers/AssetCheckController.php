@@ -311,33 +311,21 @@ class AssetCheckController extends Controller
             'asset_check_id' => 'required|exists:asset_checks,asset_check_id'
         ]);
 
-        try {
-            $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->first();
-            $isAssociated = UserCheck::whereHas('UserAssetCheck', function($que) use($asset_check){
-                $que->where('asset_check_id', $asset_check->asset_check_id);
-            })->where('asset_zone_id', $asset_check->asset_zone_id)->where('asset_id', $asset_check->asset_id)->exists();
+        $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->first();
+        $isAssociated = UserCheck::whereHas('UserAssetCheck', function($que) use($asset_check){
+            $que->where('asset_check_id', $asset_check->asset_check_id);
+        })->where('asset_zone_id', $asset_check->asset_zone_id)->where('asset_id', $asset_check->asset_id)->exists();
 
-            if ($isAssociated) {
-                return response()->json([
-                    "message" => "Cannot delete AssetCheck because it is associated with other records."
-                ], 400);
-            }
-
-            $asset_check = AssetCheck::where('asset_check_id', $request->asset_check_id)->forceDelete();
-
+        if ($isAssociated) {
+            return response()->json([
+                "message" => "Cannot delete AssetCheck because it is associated with other records."
+            ], 400);
+        }
+        else {
+            AssetCheck::where('asset_check_id', $request->asset_check_id)->forceDelete();
             return response()->json([
                 "message" => "AssetCheck deleted successfully"
             ], 200);
-
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                "error" => "Cannot delete AssetCheck due to a database error."
-            ], 400);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                "error" => "An unexpected error occurred. Please try again."
-            ], 500);
         }
     }
 
