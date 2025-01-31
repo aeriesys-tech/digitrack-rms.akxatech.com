@@ -2400,62 +2400,62 @@
                 window.open(vm.$store.state.apiUrl + "downloadAssetQRCode?template_code=" + vm.asset.template_code);
             },
 
-            validateFields(validation_type) {
-                this.isValid = true;
-                this.errors = {};
-                if (validation_type == "Spares") {
-                    for (const field of Object.values(this.spare.asset_spare_attributes)) {
-                        if (field.spare_attributes[0].is_required && !field.field_value) {
-                            if (field.spare_attributes[0].field_type === "Color") {
-                                // Set default color if not provided
-                                field.field_value = "#000000"; // Default to black
-                            } else {
-                                this.errors[field.spare_attributes[0].display_name] = [`${field.spare_attributes[0].display_name} is required`];
-                                this.isValid = false;
+                validateFields(validation_type) {
+                    this.isValid = true;
+                    this.errors = {};
+                    if (validation_type == "Spares") {
+                        for (const field of Object.values(this.spare.asset_spare_attributes)) {
+                            if (field.spare_attributes[0].is_required && !field.field_value) {
+                                if (field.spare_attributes[0].field_type === "Color") {
+                                    // Set default color if not provided
+                                    field.field_value = "#000000"; // Default to black
+                                } else {
+                                    this.errors[field.spare_attributes[0].display_name] = [`${field.spare_attributes[0].display_name} is required`];
+                                    this.isValid = false;
+                                }
                             }
                         }
                     }
-                }
-                if (validation_type == "Services") {
-                    for (const field of Object.values(this.service.asset_service_attributes)) {
-                        if (field.service_attributes[0].is_required && !field.field_value) {
-                            if (field.service_attributes[0].field_type === "Color") {
-                                // Set default color if not provided
-                                field.field_value = "#000000"; // Default to black
-                            } else {
-                                this.errors[field.service_attributes[0].display_name] = [`${field.service_attributes[0].display_name} is required`];
-                                this.isValid = false;
+                    if (validation_type == "Services") {
+                        for (const field of Object.values(this.service.asset_service_attributes)) {
+                            if (field.service_attributes[0].is_required && !field.field_value) {
+                                if (field.service_attributes[0].field_type === "Color") {
+                                    // Set default color if not provided
+                                    field.field_value = "#000000"; // Default to black
+                                } else {
+                                    this.errors[field.service_attributes[0].display_name] = [`${field.service_attributes[0].display_name} is required`];
+                                    this.isValid = false;
+                                }
                             }
                         }
                     }
-                }
-                if (validation_type == "Variables") {
-                    for (const field of Object.values(this.variable.asset_variable_attributes)) {
-                        if (field.variable_attributes[0].is_required && !field.field_value) {
-                            if (field.variable_attributes[0].field_type === "Color") {
-                                // Set default color if not provided
-                                field.field_value = "#000000"; // Default to black
-                            } else {
-                                this.errors[field.variable_attributes[0].display_name] = [`${field.variable_attributes[0].display_name} is required`];
-                                this.isValid = false;
+                    if (validation_type == "Variables") {
+                        for (const field of Object.values(this.variable.asset_variable_attributes)) {
+                            if (field.variable_attributes[0].is_required && !field.field_value) {
+                                if (field.variable_attributes[0].field_type === "Color") {
+                                    // Set default color if not provided
+                                    field.field_value = "#000000"; // Default to black
+                                } else {
+                                    this.errors[field.variable_attributes[0].display_name] = [`${field.variable_attributes[0].display_name} is required`];
+                                    this.isValid = false;
+                                }
                             }
                         }
                     }
-                }
-                if (validation_type == "Data Sources") {
-                    for (const field of Object.values(this.datasource.asset_datasource_attributes)) {
-                        if (field.data_source_attributes[0].is_required && !field.field_value) {
-                            if (field.data_source_attributes[0].field_type === "Color") {
-                                // Set default color if not provided
-                                field.field_value = "#000000"; // Default to black
-                            } else {
-                                this.errors[field.data_source_attributes[0].display_name] = [`${field.data_source_attributes[0].display_name} is required`];
-                                this.isValid = false;
+                    if (validation_type == "Data Sources") {
+                        for (const field of Object.values(this.datasource.asset_datasource_attributes)) {
+                            if (field.data_source_attributes[0].is_required && !field.field_value) {
+                                if (field.data_source_attributes[0].field_type === "Color") {
+                                    // Set default color if not provided
+                                    field.field_value = "#000000"; // Default to black
+                                } else {
+                                    this.errors[field.data_source_attributes[0].display_name] = [`${field.data_source_attributes[0].display_name} is required`];
+                                    this.isValid = false;
+                                }
                             }
                         }
                     }
-                }
-            },
+                },
 
             addSpare() {
                 let vm = this;
@@ -2466,7 +2466,11 @@
                 })
                 let loader = vm.$loading.show();
                 vm.validateFields('Spares');
-                if (vm.isValid) {
+                 // If validation fails, hide loader and stop execution
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                     vm.$store
                         .dispatch("post", { uri: "addAssetTemplateSpare", data: vm.spare })
                         .then((response) => {
@@ -2491,12 +2495,18 @@
                             vm.errors = error.response.data.errors;
                             vm.$store.dispatch("error", error.response.data.message);
                         });
-                }
             },
             updateSpare() {
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Spares');
+
+                 // Prevent form submission if validation fails
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
+
                 if (vm.spare.spare_id != vm.spare.initial_spare_id) {
                     vm.spare.initial_asset_spare_attributes.map(function (ele) {
                         vm.spare.deleted_asset_spare_values.push(ele.template_spare_value_id);
@@ -2599,6 +2609,10 @@
                 })
                 let loader = vm.$loading.show();
                 vm.validateFields('Services');
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 vm.$store.dispatch("post", { uri: "addAssetTemplateService", data: vm.service })
                 .then((response) => {
                     loader.hide();
@@ -2629,6 +2643,10 @@
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Services');
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 if (vm.service.service_id != vm.service.initial_service_id) {
                     vm.service.initial_asset_service_attributes.map(function (ele) {
                         vm.service.deleted_asset_service_values.push(ele.template_service_value_id);
@@ -2673,6 +2691,10 @@
                 })
                 let loader = vm.$loading.show();
                 vm.validateFields('Variables');
+                 if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 vm.$store.dispatch("post", { uri: "addAssetTemplateVariable", data: vm.variable })
                 .then((response) => {
                     loader.hide();
@@ -2704,6 +2726,10 @@
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Variables');
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 if (vm.variable.variable_id != vm.variable.initial_variable_id) {
                     vm.variable.initial_asset_variable_attributes.map(function (ele) {
                         vm.variable.deleted_asset_variable_values.push(ele.template_variable_value_id);
@@ -2746,6 +2772,10 @@
                 })
                 let loader = vm.$loading.show();
                 vm.validateFields('Data Sources');
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 vm.$store.dispatch("post", { uri: "addAssetTemplateDataSource", data: vm.datasource })
                 .then((response) => {
                     loader.hide();
@@ -2776,6 +2806,10 @@
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Data Sources');
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 if (vm.datasource.data_source_id != vm.datasource.initial_data_source_id) {
                     vm.datasource.initial_asset_datasource_attributes.map(function (ele) {
                         vm.datasource.deleted_asset_datasource_values.push(ele.template_datasource_value_id);
@@ -2847,7 +2881,7 @@
                         })
                         .catch(function (error) {
                             loader.hide();
-                            vm.$store.dispatch("warning", error.response.data.message);
+                            vm.$store.dispatch("error", error.response.data.message);
                         });
                 }
             },

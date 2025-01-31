@@ -2609,7 +2609,11 @@
 
                 let loader = vm.$loading.show();
                 vm.validateFields('Spares');
-                if (vm.isValid) {
+                 // If validation fails, hide loader and stop execution
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                     vm.$store
                         .dispatch("post", { uri: "addAssetSpare", data: vm.spare })
                         .then((response) => {
@@ -2634,12 +2638,16 @@
                             vm.errors = error.response.data.errors;
                             vm.$store.dispatch("error", error.response.data.message);
                         });
-                }
             },
             updateSpare() {
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Spares');
+                // Prevent form submission if validation fails
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 if (vm.spare.spare_id != vm.spare.initial_spare_id) {
                     vm.spare.initial_asset_spare_attributes.map(function (ele) {
                         vm.spare.deleted_asset_spare_values.push(ele.asset_spare_value_id);
@@ -2741,6 +2749,10 @@
                 })
                 let loader = vm.$loading.show();
                 vm.validateFields('Services');
+                 if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 vm.$store.dispatch("post", { uri: "addAssetService", data: vm.service })
                 .then((response) => {
                     loader.hide();
@@ -2771,6 +2783,10 @@
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Services');
+                 if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 if (vm.service.service_id != vm.service.initial_service_id) {
                     vm.service.initial_asset_service_attributes.map(function (ele) {
                         vm.service.deleted_asset_service_values.push(ele.asset_service_value_id);
@@ -2814,6 +2830,10 @@
                 })
                 let loader = vm.$loading.show();
                 vm.validateFields('Variables');
+                 if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 vm.$store.dispatch("post", { uri: "addAssetVariable", data: vm.variable })
                 .then((response) => {
                     loader.hide();
@@ -2845,6 +2865,10 @@
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Variables');
+                 if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 if (vm.variable.variable_id != vm.variable.initial_variable_id) {
                     vm.variable.initial_asset_variable_attributes.map(function (ele) {
                         vm.variable.deleted_asset_variable_values.push(ele.asset_variable_value_id);
@@ -2887,6 +2911,10 @@
                 })
                 let loader = vm.$loading.show();
                 vm.validateFields('Data Sources');
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 vm.$store.dispatch("post", { uri: "addAssetDataSource", data: vm.datasource })
                 .then((response) => {
                     loader.hide();
@@ -2917,6 +2945,10 @@
                 let vm = this;
                 let loader = vm.$loading.show();
                 vm.validateFields('Data Sources');
+                if (!vm.isValid) {
+                    loader.hide();
+                    return;
+                }
                 if (vm.datasource.data_source_id != vm.datasource.initial_data_source_id) {
                     vm.datasource.initial_asset_datasource_attributes.map(function (ele) {
                         vm.datasource.deleted_asset_datasource_values.push(ele.asset_data_source_value_id);
@@ -2967,7 +2999,7 @@
                         .catch(function (error) {
                             loader.hide();
                             vm.errors = error.response.data.errors;
-                            vm.$store.dispatch("error", error.response.data.message);
+                            vm.$store.dispatch("warning", error.response.data.message);
                         });
                 }
             },
@@ -3010,7 +3042,7 @@
                         .catch(function (error) {
                             loader.hide();
                             vm.errors = error.response.data.errors;
-                            vm.$store.dispatch("error", error.response.data.message);
+                            vm.$store.dispatch("warning", error.response.data.message);
                         });
                 }
             },
@@ -3033,7 +3065,7 @@
                         .catch(function (error) {
                             loader.hide();
                             vm.errors = error.response.data.errors;
-                            vm.$store.dispatch("error", error.response.data.message);
+                            vm.$store.dispatch("warning", error.response.data.message);
                         });
                 }
             },
@@ -3055,7 +3087,7 @@
                         .catch(function (error) {
                             loader.hide();
                             vm.errors = error.response.data.errors;
-                            vm.$store.dispatch("error", error.response.data.message);
+                            vm.$store.dispatch("warning", error.response.data.message);
                         });
                 }
             },
@@ -3076,7 +3108,7 @@
                         .catch(function (error) {
                             loader.hide();
                             vm.errors = error.response.data.errors;
-                            vm.$store.dispatch("error", error.response.data.message);
+                            vm.$store.dispatch("warning", error.response.data.message);
                         });
                 }
             },
