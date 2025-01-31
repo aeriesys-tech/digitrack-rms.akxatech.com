@@ -53,7 +53,7 @@
                                             </search> -->
 
                                                 <search
-                                                :class="{ 'is-invalid': errors.asset_type_id }"
+                                                :class="{ 'is-invalid': errors?.asset_type_id }"
                                                 :customClass="{ 'is-invalid': errors?.asset_type_id }"
                                                 :initialize="asset?.asset_type_id"
                                                 id="asset_type_id"
@@ -66,7 +66,7 @@
                                                 :disabled="!status"
                                             >
                                             </search>
-                                            <span v-if="errors?.asset_type_id" class="invalid-feedback">{{ errors.asset_type_id[0] }}</span>
+                                            <span v-if="errors?.asset_type_id" class="invalid-feedback">{{ errors?.asset_type_id[0] }}</span>
                                         </div>
 
                                         <!-- try starts -->
@@ -76,7 +76,7 @@
                                                 <div><label class="form-label">Asset Template</label></div>
                                             </div>
                                             <search
-                                                :class="{ 'is-invalid': errors.asset_template_id }"
+                                                :class="{ 'is-invalid': errors?.asset_template_id }"
                                                 :customClass="{ 'is-invalid': errors?.asset_template_id }"
                                                 :initialize="asset?.asset_template_id"
                                                 id="asset_template_id"
@@ -212,7 +212,7 @@
                                                 <option value="Trapezoidal">Trapezoidal</option>
                                                 <option value="Others">Others</option>
                                             </select>
-                                            <span v-if="errors?.radius" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
+                                            <span v-if="errors?.geometry_type" class="invalid-feedback">{{ errors.geometry_type[0] }}</span>
                                         </div>
                                         <div class="col-md-4" v-if="['V-Cylindrical', 'H-Cylindrical'].includes(asset.geometry_type)">
                                             <label class="form-label">Height (in m)</label><span class="text-danger"> *</span>
@@ -254,62 +254,34 @@
                                             />
                                             <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
                                         </div>
-                                        <!-- <div v-for="(zone, index) in asset.zone_name" :key="index" class="col-md-4">
-                                            <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                            <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index===0" />
-                                            <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
-
-                                            <div class="row g-2">
-                                                <div class="col pt-2">
-                                                    <label class="form-label">Height (in m)</label><span class="text-danger"> *</span>
-                                                    <input type="number" step="any" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
-                                                    <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
-                                                </div>
-                                                <div class="col pt-2">
-                                                    <label class="form-label">Diameter (in m)</label><span class="text-danger"> *</span>
-                                                    <input type="number" step="any" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
-                                                    <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
-                                                </div>
-                                            </div>
-                                        </div> -->
                                         <div class="row zone-border g-2" v-for="(zone, index) in asset.zone_name" :key="index">
-                                            <!-- <div class="col-md-4 mt-0">
-                                                <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                                <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index === 0 || !!asset.asset_template_id"  />
-                                                <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
-                                            </div> -->
-
                                             <div class="col-md-4 mt-0">
-                                                <label class="form-label">Zone {{ index + 1 }}</label><span class="text-danger"> *</span>
-                                                 <input
-                                                    v-if="!!asset.asset_id"
-                                                    type="text"
-                                                    v-model="zone.zone_name"
-                                                    class="form-control"
-                                                    :class="{ 'is-invalid': errors[`zone_name_${index}`] }"
-                                                    :disabled="index === 0"
-                                                />
-
-                                                <input
-                                                    v-else
-                                                    type="text"
-                                                    v-model="zone.zone_name"
-                                                    class="form-control"
-                                                    :class="{ 'is-invalid': errors[`zone_name_${index}`] }"
-                                                    :disabled="index === 0 || !!asset.asset_template_id"
-                                                />
-                                                <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">{{ errors[`zone_name_${index}`][0] }}</span>
+                                                <label class="form-label">
+                                                    Zone {{ index === 0 ? "0 (Overall)" : index }}
+                                                </label>
+                                                <span class="text-danger"> *</span>
+                                                <input type="text" v-model="zone.zone_name" class="form-control" :class="{ 'is-invalid': errors[`zone_name_${index}`] }" :disabled="index === 0" />
+                                                <span v-if="errors[`zone_name_${index}`]" class="invalid-feedback">
+                                                    {{ errors[`zone_name_${index}`][0] }}
+                                                </span>
                                             </div>
 
                                             <div class="col-md-4 mt-0">
-                                                <label class="form-label">Height (in m)</label><span v-if="asset.geometry_type=='Cylindrical'" class="text-danger"> *</span>
+                                                <label class="form-label">Height (in m)</label>
+                                                <span v-if="asset.geometry_type=='Cylindrical'" class="text-danger"> *</span>
                                                 <input type="number" step="any" v-model="zone.height" class="form-control" :class="{ 'is-invalid': errors[`zone_height_${index}`] }" min="0" />
-                                                <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">{{ errors[`zone_height_${index}`][0] }}</span>
+                                                <span v-if="errors[`zone_height_${index}`]" class="invalid-feedback">
+                                                    {{ errors[`zone_height_${index}`][0] }}
+                                                </span>
                                             </div>
+
                                             <div class="col-md-4 mt-0">
-                                                <label class="form-label">Diameter (in m)</label><span v-if="asset.geometry_type=='Cylindrical'" class="text-danger"> *</span>
+                                                <label class="form-label">Diameter (in m)</label>
+                                                <span v-if="asset.geometry_type=='Cylindrical'" class="text-danger"> *</span>
                                                 <input type="number" step="any" v-model="zone.diameter" class="form-control" :class="{ 'is-invalid': errors[`zone_diameter_${index}`] }" min="0" />
-                                                <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">{{ errors[`zone_diameter_${index}`][0] }}</span>
+                                                <span v-if="errors[`zone_diameter_${index}`]" class="invalid-feedback">
+                                                    {{ errors[`zone_diameter_${index}`][0] }}
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="row g-2">
@@ -468,7 +440,7 @@
                     asset_type_id: "",
                     latitude: "",
                     longitude: "",
-                    no_of_zones: 1,
+                    no_of_zones: 0,
                     status: "",
                     asset_attributes: [],
                     department_id: "",
@@ -628,63 +600,43 @@
             "asset.no_of_zones": function (newVal) {
                 let vm = this;
 
-                if (!vm.asset.asset_template_id) { // If asset_template_id is empty, it's a new asset
-                    // Handle new asset zone creation
-                    vm.asset.zone_name = [];
-
-                    if (vm.asset.no_of_zones <= 0) {
-                        vm.asset.no_of_zones = 1;
-                        vm.asset.zone_name.push({
+                // Always ensure Zone 0 is "Overall"
+                if (newVal === 0) {
+                    vm.asset.zone_name = [
+                        {
                             zone_name: "Overall",
-                            height: null, // Add height field
-                            diameter: null, // Add diameter field
-                        });
-                    }
+                            height: null,
+                            diameter: null,
+                        },
+                    ];
+                    return; // Exit to avoid further execution
+                }
 
-                    if (vm.status) {
-                        for (let i = 0; i < vm.asset.no_of_zones; i++) {
-                            vm.asset.zone_name.push({
-                                zone_name: i === 0 ? "Overall" : null,
-                            });
-                        }
-                    } else {
-                        vm.prev_zone_names.map(function (pre_element) {
-                            vm.asset.zone_name.push(pre_element);
-                        });
+                // Ensure "Overall" is always at index 0
+                if (!vm.asset.zone_name.length || vm.asset.zone_name[0].zone_name !== "Overall") {
+                    vm.asset.zone_name.unshift({
+                        zone_name: "Overall",
+                        height: null,
+                        diameter: null,
+                    });
+                }
 
-                        if (vm.asset.no_of_zones < vm.prev_zone_names.length) {
-                            vm.asset.no_of_zones = vm.prev_zone_names.length;
-                        } else if (vm.asset.no_of_zones > vm.prev_zone_names.length) {
-                            let number = vm.asset.no_of_zones - vm.prev_zone_names.length;
-                            let newZones = [];
-                            for (let i = 0; i < number; i++) {
-                                newZones.push({
-                                    zone_name: null,
-                                });
-                            }
-                            vm.asset.zone_name.push(...newZones);
-                        }
-                    }
+                // Adjust the number of zones based on the new value
+                let requiredZones = newVal + 1; // +1 to account for "Overall"
+                if (vm.asset.zone_name.length > requiredZones) {
+                    vm.asset.zone_name.splice(requiredZones);
                 } else {
-                    if (newVal <= 0) {
-                        vm.asset.no_of_zones = 1;
-                    }
-
-                    // Prevent reduction of zones in edit mode
-                    if (newVal < vm.asset.zone_name.length) {
-                        vm.asset.no_of_zones = vm.asset.zone_name.length;
-                    } else if (newVal > vm.asset.zone_name.length) {
-                        let number = newVal - vm.asset.zone_name.length;
-                        let newZones = [];
-                        for (let i = 0; i < number; i++) {
-                            newZones.push({
-                                zone_name: null,
-                            });
-                        }
-                        vm.asset.zone_name.push(...newZones); // Add new zones if increasing number
+                    for (let i = vm.asset.zone_name.length; i < requiredZones; i++) {
+                        vm.asset.zone_name.push({
+                            zone_name: null,
+                            height: null,
+                            diameter: null,
+                        });
                     }
                 }
-            }
+
+                console.log("Updated Zones: ", vm.asset.zone_name);
+            },
         },
 
         computed: {
@@ -723,25 +675,37 @@
                     return "Zone name field is required";
                 }
             },
-            checkZoneValue(event, asset) {
-                if (this.asset.no_of_zones <= 0) {
-                    this.asset.no_of_zones = 1; // Reset to minimum allowed value
-                    this.asset.zone_name.push({
-                        zone_name: "Overall",
+             checkZoneValue(event, asset) {
+                let value = parseInt(event?.target?.value) || 0;
+
+                // Ensure Zone 0 is "Overall"
+                if (value === 0) {
+                    asset.no_of_zones = 0;
+                    asset.zone_name = [
+                        {
+                            zone_name: "Overall",
+                            height: null,
+                            diameter: null,
+                        },
+                    ];
+                    return;
+                }
+
+                // Adjust the number of zones
+                let requiredZones = value + 1; // Including "Overall"
+                while (asset.zone_name.length < requiredZones) {
+                    asset.zone_name.push({
+                        zone_name: null,
+                        height: null,
+                        diameter: null,
                     });
                 }
 
-                let value = event?.target?.value?.replace(/[^0-9]/g, "");
-
-                if (value >= 1) {
-                    let popped_data = asset.no_of_zones - value;
-                    for (let i = 0; i < popped_data; i++) {
-                        let del_asset_zone = asset.zone_name.pop();
-                        this.asset.deleted_asset_zones.push(del_asset_zone.asset_zone_id);
-                        this.prev_zone_names.pop();
-                    }
+                while (asset.zone_name.length > requiredZones) {
+                    asset.zone_name.pop();
                 }
-                asset.no_of_zones = asset.zone_name.length;
+
+                asset.no_of_zones = value;
             },
 
             // selectColor(colorValue, colorName, field) {
