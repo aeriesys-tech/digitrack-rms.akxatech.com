@@ -1830,6 +1830,7 @@
         components: { Search, Pagination, MultiSelect },
         data() {
             return {
+                asset_type:'',
                 meta: {
                     search: "",
                     order_by: "desc",
