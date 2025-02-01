@@ -162,6 +162,8 @@ import ProcessTrends from "@/views/Reviews/ProcessTrends.vue"
 import ViewAssetReport from "@/views/reports/ViewAssetReport.vue";
 
 import DownloadedReports from "@/views/DownloadedReports.vue"
+
+import Error from '@/views/Error.vue'
 const routes = [
   {
     path: "/",
@@ -920,6 +922,11 @@ const routes = [
     path: "/deviation_reports",
     name: "DeviationReport.Index",
     component: DeviationReport,
+  },
+  {
+    path: '/error',
+    name: 'Error',
+    component: Error,
   },
 
 ]

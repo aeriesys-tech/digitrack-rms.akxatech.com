@@ -134,8 +134,8 @@ class AssetController extends Controller
                     $assetHeight = (float) $request->input('height', 0);
                     
                     foreach ($value as $zone) {
-                        $zoneHeight = (float) $zone['height'] ?? 0;
-                        $zoneDiameter = (float) $zone['diameter'] ?? 0;
+                        $zoneHeight = isset($zone['height']) ? (float) $zone['height'] : 0;
+                        $zoneDiameter = isset($zone['diameter']) ? (float) $zone['diameter'] : 0;
                         $zoneName = $zone['zone_name'] ?? '';
         
                         if ($zoneName !== 'Overall') {
@@ -480,8 +480,8 @@ class AssetController extends Controller
                     $assetHeight = (float) $request->input('height', 0);
                     
                     foreach ($value as $zone) {
-                        $zoneHeight = (float) ($zone['height'] ?? 0);
-                        $zoneDiameter = (float) ($zone['diameter'] ?? 0);
+                        $zoneHeight = isset($zone['height']) ? (float) $zone['height'] : 0;
+                        $zoneDiameter = isset($zone['diameter']) ? (float) $zone['diameter'] : 0;
                         $zoneName = $zone['zone_name'] ?? '';
         
                         if ($zoneName !== 'Overall') {
