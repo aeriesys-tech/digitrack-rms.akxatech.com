@@ -40,8 +40,7 @@ class SpareHeadingsSheet implements FromView, WithTitle, WithColumnWidths
     {
         $this->spare_type_id = $spare_type_id;
 
-        $spareType = SpareAttributeType::with('SpareType')->where('spare_type_id', $this->spare_type_id)
-            ->first();
+        $spareType = SpareAttributeType::with('SpareType')->where('spare_type_id', $this->spare_type_id)->first();
 
         // Fetch spare_type_name for display purposes, if needed
         $this->spare_type_name = $spareType ? $spareType->SpareType->spare_type_name : 'Unknown Type';
@@ -82,7 +81,7 @@ class SpareHeadingsSheet implements FromView, WithTitle, WithColumnWidths
 
     public function title(): string
     {
-        return "Spare Type ID: " . $this->spare_type_id; // Use spare_type_id for the title
+        return $this->spare_type_name;
     }
 
     public function columnWidths(): array

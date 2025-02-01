@@ -3207,21 +3207,9 @@
                     });
             },
             viewAsset(asset, from) {
-                // this.$store.commit("setAssets", asset)
-                // this.$router.push({ name: 'Assets.DynamicAssets', params: { assets: from } });
-
-
-                // this.asset_type = from;
-                // this.assets1 = asset;
-
-
-
-                // try starts
                 this.$store.commit("setAssetTemplates", asset)
                 this.asset_type = from;
                 this.assets1 = this.$store.getters.asset_templates;
-
-                // try ends
             },
             discard() {
                 let vm = this;

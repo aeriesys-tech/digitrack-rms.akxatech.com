@@ -56,8 +56,8 @@ export default {
 	data() {
 		return {
 			user: {
-				email: "",
-				password: "",
+				email: "bharatesh.s@akxatech.com",
+				password: "1qaz2wsx",
 			},
 			showPassword: false,
 			errors: [],
