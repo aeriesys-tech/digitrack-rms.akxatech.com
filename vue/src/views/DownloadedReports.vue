@@ -57,7 +57,7 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
-                                            <th class="text-center">Action</th>
+                                            <th class="text-center" v-can="['downloaded_reports.download','downloaded_reports.delete']">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -69,9 +69,9 @@
                                             <td>{{ downloaded_report?.user?.name }}</td>
                                              <td>{{downloaded_report?.report_name}}</td>
                                             <td>{{downloaded_report?.date_time}}</td>
-                                            <td class="text-center">
-                                                <a href="javascript:void(0)" class="text-success" @click="downloadReport(downloaded_report.file_name)"><i class="ri-download-line fs-18 lh-1 me-2"></i></a>
-                                                <a href="javascript:void(0)" class="text-danger" @click="deleteReport(downloaded_report)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <td class="text-center" v-can="['downloaded_reports.download','downloaded_reports.delete']">
+                                                <a v-can="'downloaded_reports.download'" href="javascript:void(0)" class="text-success" @click="downloadReport(downloaded_report.file_name)"><i class="ri-download-line fs-18 lh-1 me-2"></i></a>
+                                                <a v-can="'downloaded_reports.delete'" href="javascript:void(0)" class="text-danger" @click="deleteReport(downloaded_report)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>

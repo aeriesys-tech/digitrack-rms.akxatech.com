@@ -12,7 +12,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Service Attributes</h4>
                 </div>
-                <router-link to="/service_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                <router-link v-can="'service_attributes.create'" to="/service_attributes/create" class="btn btn-primary" style="float: right;" ><i
                         class="ri-list-check"></i> ADD SERVICE ATTRIBUTE</router-link>
             </div>
             <div class="row">
@@ -93,8 +93,8 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span> -->
                                             </th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-center" v-can="'service_attributes.delete'">Status</th>
+                                            <th class="text-center" v-can="'service_attributes.update'">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,13 +114,13 @@
                                             <td>
                                                 <span v-for="service_attribute_type, key in serviceattribute.service_attribute_types" :key="key">{{ service_attribute_type?.service_type?.service_type_name }}, </span>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'service_attributes.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'serviceattribute' + serviceattribute.service_attribute_id" :checked="serviceattribute.status" :value="serviceattribute.status" @change="deleteServiceAttribute(serviceattribute)" />
                                                     <label class="custom-control-label" :for="'user' + serviceattribute.service_attribute_id"></label>
                                                 </div>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'service_attributes.update'">
                                                 <a href="javascript:void(0)" class="text-success" v-if="serviceattribute.status"
                                                     @click="editServiceAttribute(serviceattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>

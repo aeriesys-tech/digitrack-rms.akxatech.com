@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Process Registers</h4>
             </div>
-            <router-link to="/process_registers/create" class="btn btn-primary" style="float: right;"><i
+            <router-link v-can="'process_registers.create'" to="/process_registers/create" class="btn btn-primary" style="float: right;"><i
                     class="ri-list-check"></i> ADD PROCESS REGISTER</router-link>
         </div>
         <div class="row">
@@ -90,14 +90,14 @@
                                         <!-- <td>{{ user_variable?.asset_variables?.variable?.variable_name }}</td> -->
                                         <!-- <td>{{ user_variable?.value }}</td> -->
                                         <td class="text-center">
-                                            <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)"
+                                            <a title="Edit" v-can="'process_registers.update'" href="javascript:void(0)"
                                                 class="text-success me-2" @click="editUserVariable(user_variable)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
                                             <a title="View" href="javascript:void(0)"
                                                 @click="viewUserVariable(user_variable)" class="text-primary me-2"><i
                                                     class="ri-eye-fill fs-18 lh-1"></i></a>
-                                            <a title="Delete" v-can="'userChecks.delete'" href="javascript:void(0)"
+                                            <a title="Delete" v-can="'process_registers.delete'" href="javascript:void(0)"
                                                 class="text-danger me-2"
                                                 @click.prevent="deleteUserVariable(user_variable)"><i
                                                     class="ri-delete-bin-6-line fs-18 lh-1"></i></a>

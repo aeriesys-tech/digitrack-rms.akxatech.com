@@ -19,7 +19,7 @@
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
                             <h6 class="card-title">Job Pending Reports</h6>
-                            <button class="btn btn-success" @click="downloadExcel()" style="float: right;"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
+                            <button v-can="'job_pending_reports.download'" class="btn btn-success" @click="downloadExcel()" style="float: right;"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
                         </div>
                         <div class="card-body">
                             <div class="row">

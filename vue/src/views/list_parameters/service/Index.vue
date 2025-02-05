@@ -13,7 +13,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Services</h4>
                 </div>
-                <router-link to="/services/create" class="btn btn-primary" style="float: right;"><i
+                <router-link v-can="'services.create'" to="/services/create" class="btn btn-primary" style="float: right;"><i
                         class="ri-list-check"></i> ADD SERVICE</router-link>
             </div>
         <div class="row">
@@ -68,8 +68,8 @@
                                     </th> -->
 
 
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center" >Actions</th>
+                                        <th class="text-center" v-can="'services.delete'">Status</th>
+                                        <th class="text-center" v-can="'services.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -85,13 +85,13 @@
                                             <span v-for="asset_type, key in service.service_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>
                                         <!-- <td>{{service?.frequency?.frequency_name}}</td> -->
-                                        <td class="text-center" >
+                                        <td class="text-center" v-can="'services.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'service' + service.service_id" :checked="service.status" :value="service.status" @change="deleteService(service)" />
                                                 <label class="custom-control-label" :for="'service' + service.service_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center" >
+                                        <td class="text-center" v-can="'services.update'">
                                             <a href="javascript:void(0)" v-if="service.status" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>

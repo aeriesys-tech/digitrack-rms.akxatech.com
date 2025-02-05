@@ -12,7 +12,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Variable Attributes</h4>
                 </div>
-                <router-link to="/variable_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                <router-link v-can="'variable_attributes.create'" to="/variable_attributes/create" class="btn btn-primary" style="float: right;" ><i
                         class="ri-list-check"></i> ADD VARIABLE ATTRIBUTE</router-link>
             </div>
             <div class="row">
@@ -93,8 +93,8 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span> -->
                                             </th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-center" v-can="'variable_attributes.delete'">Status</th>
+                                            <th class="text-center" v-can="'variable_attributes.update'">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,13 +114,13 @@
                                             <td>
                                                 <span v-for="variable_attribute_type, key in variableattribute.variable_attribute_types" :key="key">{{ variable_attribute_type?.variable_type?.variable_type_name }}, </span>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'variable_attributes.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'variableattribute' + variableattribute.variable_attribute_id" :checked="variableattribute.status" :value="variableattribute.status" @change="deleteVariableAttribute(variableattribute)" />
                                                     <label class="custom-control-label" :for="'user' + variableattribute.variable_attribute_id"></label>
                                                 </div>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'variable_attributes.update'">
                                                 <a href="javascript:void(0)" class="text-success" v-if="variableattribute.status"
                                                     @click="editVariableAttribute(variableattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>

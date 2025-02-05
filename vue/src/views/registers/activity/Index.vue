@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Activities</h4>
             </div>
-            <router-link v-can="'userActivities.create'" to="/activity/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ACTIVITY</router-link>
+            <router-link v-can="'activity_registers.create'" to="/activity/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ACTIVITY</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -62,7 +62,7 @@
                                             </span>
                                         </th>
                                         <!-- <th class="text-center">Status</th> -->
-                                        <th class="text-center" v-if="get_activity.length">Actions</th>
+                                        <th class="text-center" v-can="['activity_registers.update','activity_registers.delete']">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,11 +74,11 @@
                                         <td>{{activity.reason?.reason_code}}</td>
                                         <td>{{activity.cost}}</td>
                                         <!-- <td>{{activity.activity_status}}</td> -->
-                                        <td class="text-center" v-if="get_activity.length">
-                                            <a title="Edit" v-can="'userActivities.update'" href="javascript:void(0)" class="text-success me-2" v-if="activity.status" @click="editActivity(activity)">
+                                        <td class="text-center" v-can="['activity_registers.update','activity_registers.delete']">
+                                            <a v-can="'activity_registers.update'" title="Edit" href="javascript:void(0)" class="text-success me-2" v-if="activity.status" @click="editActivity(activity)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
-                                            <a title="Delete" v-can="'userActivities.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'activity_registers.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteActivity(activity)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="activities.length==0">

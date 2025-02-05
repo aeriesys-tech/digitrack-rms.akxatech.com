@@ -13,7 +13,7 @@
             <h4 class="main-title mb-2">Shops</h4>
         </div>
         <div class="row g-2">
-            <div class="col-4" v-can="'plants.create'">
+            <div class="col-4" v-can="'shops.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
@@ -145,8 +145,8 @@
                                         </span>
                                     </th>
 
-                                        <th class="text-center" v-can="'plants.delete'">Status</th>
-                                        <th class="text-center" v-can="'plants.update'">Actions</th>
+                                        <th class="text-center" v-can="'shops.delete'">Status</th>
+                                        <th class="text-center" v-can="'shops.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -161,13 +161,13 @@
                                         <td>{{plant.latitude }}</td>
                                         <td>{{plant.longitude }}</td>
                                         <td>{{plant.radius }}</td>
-                                        <td class="text-center" v-can="'plants.delete'">
+                                        <td class="text-center" v-can="'shops.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'plant' + plant.plant_id" :checked="plant.status" :value="plant.status" @change="deletePlant(plant)" />
                                                 <label class="custom-control-label" :for="'plant' + plant.plant_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center" v-can="'plants.update'">
+                                        <td class="text-center" v-can="'shops.update'">
                                             <a href="javascript:void(0)" v-if="plant.status" class="text-success me-2" @click="editPlant(plant)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
@@ -232,7 +232,7 @@ export default {
     },
     mounted() {
         this.create_plant = this.$store.getters.permissions.filter(function(element){
-            return element.ability.ability.includes('plants.create')
+            return element.ability.ability.includes('shops.create')
         })
         if(this.create_plant.length){
             this.column = 'col-8'
