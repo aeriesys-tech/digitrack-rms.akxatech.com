@@ -42,44 +42,44 @@
         ]
     },
     {
-        "module":"Clusters",
+        "module":"Areas",
         "abilities":[
             {
-                "ability" : "clusters.view",
-                "description" : "View Clusters"
+                "ability" : "areas.view",
+                "description" : "View Areas"
             },
             {
-                "ability" : "clusters.create",
-                "description" : "Create Clusters"
+                "ability" : "areas.create",
+                "description" : "Create Areas"
             },
             {
-                "ability" : "clusters.update",
-                "description" : "Edit Clusters"
+                "ability" : "areas.update",
+                "description" : "Edit Areas"
             },
             {
-                "ability" : "clusters.delete",
-                "description" : "Delete Clusters"
+                "ability" : "areas.delete",
+                "description" : "Delete Areas"
             }
         ]
     },
     {
-        "module":"Plants",
+        "module":"Shops",
         "abilities":[
             {
-                "ability" : "plants.view",
-                "description" : "View Plants"
+                "ability" : "shops.view",
+                "description" : "View Shops"
             },
             {
-                "ability" : "plants.create",
-                "description" : "Create Plants"
+                "ability" : "shops.create",
+                "description" : "Create Shops"
             },
             {
-                "ability" : "plants.update",
-                "description" : "Edit Plants"
+                "ability" : "shops.update",
+                "description" : "Edit Shops"
             },
             {
-                "ability" : "plants.delete",
-                "description" : "Delete Plants"
+                "ability" : "shops.delete",
+                "description" : "Delete Shops"
             }
         ]
     },
@@ -105,23 +105,65 @@
         ]
     },
     {
-        "module":"EquipmentTypes",
+        "module":"Departments",
         "abilities":[
             {
-                "ability" : "equipment_types.view",
-                "description" : "View EquipmentTypes"
+                "ability" : "departments.view",
+                "description" : "View Departments"
             },
             {
-                "ability" : "equipment_types.create",
-                "description" : "Create EquipmentTypes"
+                "ability" : "departments.create",
+                "description" : "Create Departments"
             },
             {
-                "ability" : "equipment_types.update",
-                "description" : "Edit EquipmentTypes"
+                "ability" : "departments.update",
+                "description" : "Edit Departments"
             },
             {
-                "ability" : "equipment_types.delete",
-                "description" : "Delete EquipmentTypes"
+                "ability" : "departments.delete",
+                "description" : "Delete Departments"
+            }
+        ]
+    },
+    {
+        "module":"Functionals",
+        "abilities":[
+            {
+                "ability" : "functionals.view",
+                "description" : "View Functionals"
+            },
+            {
+                "ability" : "functionals.create",
+                "description" : "Create Functionals"
+            },
+            {
+                "ability" : "functionals.update",
+                "description" : "Edit Functionals"
+            },
+            {
+                "ability" : "functionals.delete",
+                "description" : "Delete Functionals"
+            }
+        ]
+    },
+    {
+        "module":"ListParameters",
+        "abilities":[
+            {
+                "ability" : "list_parameters.view",
+                "description" : "View ListParameters"
+            },
+            {
+                "ability" : "list_parameters.create",
+                "description" : "Create ListParameters"
+            },
+            {
+                "ability" : "list_parameters.update",
+                "description" : "Edit ListParameters"
+            },
+            {
+                "ability" : "list_parameters.delete",
+                "description" : "Delete ListParameters"
             }
         ]
     },
@@ -189,128 +231,254 @@
         ]
     },
     {
-        "module":"Voltages",
+        "module":"ActivityTypes",
         "abilities":[
             {
-                "ability" : "voltages.view",
-                "description" : "View Voltages"
+                "ability" : "activity_types.view",
+                "description" : "View ActivityTypes"
             },
             {
-                "ability" : "voltages.create",
-                "description" : "Create Voltages"
+                "ability" : "activity_types.create",
+                "description" : "Create ActivityTypes"
             },
             {
-                "ability" : "voltages.update",
-                "description" : "Edit Voltages"
+                "ability" : "activity_types.update",
+                "description" : "Edit ActivityTypes"
             },
             {
-                "ability" : "voltages.delete",
-                "description" : "Delete Voltages"
+                "ability" : "activity_types.delete",
+                "description" : "Delete ActivityTypes"
             }
         ]
     },
     {
-        "module":"WattRatings",
+        "module":"DataSourceTypes",
         "abilities":[
             {
-                "ability" : "watt_ratings.view",
-                "description" : "View WattRatings"
+                "ability" : "data_source_types.view",
+                "description" : "View DataSourceTypes"
             },
             {
-                "ability" : "watt_ratings.create",
-                "description" : "Create WattRatings"
+                "ability" : "data_source_types.create",
+                "description" : "Create DataSourceTypes"
             },
             {
-                "ability" : "watt_ratings.update",
-                "description" : "Edit WattRatings"
+                "ability" : "data_source_types.update",
+                "description" : "Edit DataSourceTypes"
             },
             {
-                "ability" : "watt_ratings.delete",
-                "description" : "Delete WattRatings"
+                "ability" : "data_source_types.delete",
+                "description" : "Delete DataSourceTypes"
             }
         ]
     },
     {
-        "module":"Frames",
+        "module":"BreakDownTypes",
         "abilities":[
             {
-                "ability" : "frames.view",
-                "description" : "View Frames"
+                "ability" : "break_down_types.view",
+                "description" : "View BreakDownTypes"
             },
             {
-                "ability" : "frames.create",
-                "description" : "Create Frames"
+                "ability" : "break_down_types.create",
+                "description" : "Create BreakDownTypes"
             },
             {
-                "ability" : "frames.update",
-                "description" : "Edit Frames"
+                "ability" : "break_down_types.update",
+                "description" : "Edit BreakDownTypes"
             },
             {
-                "ability" : "frames.delete",
-                "description" : "Delete Frames"
+                "ability" : "break_down_types.delete",
+                "description" : "Delete BreakDownTypes"
             }
         ]
     },
     {
-        "module":"Mountings",
+        "module":"AccessoryTypes",
         "abilities":[
             {
-                "ability" : "mountings.view",
-                "description" : "View Mountings"
+                "ability" : "accessory_types.view",
+                "description" : "View AccessoryTypes"
             },
             {
-                "ability" : "mountings.create",
-                "description" : "Create Mountings"
+                "ability" : "accessory_types.create",
+                "description" : "Create AccessoryTypes"
             },
             {
-                "ability" : "mountings.update",
-                "description" : "Edit Mountings"
+                "ability" : "accessory_types.update",
+                "description" : "Edit AccessoryTypes"
             },
             {
-                "ability" : "mountings.delete",
-                "description" : "Delete Mountings"
+                "ability" : "accessory_types.delete",
+                "description" : "Delete AccessoryTypes"
             }
         ]
     },
     {
-        "module":"Makes",
+        "module":"VariableTypes",
         "abilities":[
             {
-                "ability" : "makes.view",
-                "description" : "View Makes"
+                "ability" : "variable_types.view",
+                "description" : "View VariableTypes"
             },
             {
-                "ability" : "makes.create",
-                "description" : "Create Makes"
+                "ability" : "variable_types.create",
+                "description" : "Create VariableTypes"
             },
             {
-                "ability" : "makes.update",
-                "description" : "Edit Makes"
+                "ability" : "variable_types.update",
+                "description" : "Edit VariableTypes"
             },
             {
-                "ability" : "makes.delete",
-                "description" : "Delete Makes"
+                "ability" : "variable_types.delete",
+                "description" : "Delete VariableTypes"
             }
         ]
     },
     {
-        "module":"Speeds",
+        "module":"AssetAttributes",
         "abilities":[
             {
-                "ability" : "speeds.view",
-                "description" : "View Speeds"
+                "ability" : "asset_attributes.view",
+                "description" : "View AssetAttributes"
             },
             {
-                "ability" : "speeds.create",
-                "description" : "Create Speeds"
+                "ability" : "asset_attributes.create",
+                "description" : "Create AssetAttributes"
             },
             {
-                "ability" : "speeds.update",
-                "description" : "Edit Speeds"
+                "ability" : "asset_attributes.update",
+                "description" : "Edit AssetAttributes"
             },
             {
-                "ability" : "speeds.delete",
-                "description" : "Delete Speeds"
+                "ability" : "asset_attributes.delete",
+                "description" : "Delete AssetAttributes"
+            }
+        ]
+    },
+    {
+        "module":"SpareAttributes",
+        "abilities":[
+            {
+                "ability" : "spare_attributes.view",
+                "description" : "View SpareAttributes"
+            },
+            {
+                "ability" : "spare_attributes.create",
+                "description" : "Create SpareAttributes"
+            },
+            {
+                "ability" : "spare_attributes.update",
+                "description" : "Edit SpareAttributes"
+            },
+            {
+                "ability" : "spare_attributes.delete",
+                "description" : "Delete SpareAttributes"
+            }
+        ]
+    },
+    {
+        "module":"DataSourceAttributes",
+        "abilities":[
+            {
+                "ability" : "data_source_attributes.view",
+                "description" : "View DataSourceAttributes"
+            },
+            {
+                "ability" : "data_source_attributes.create",
+                "description" : "Create DataSourceAttributes"
+            },
+            {
+                "ability" : "data_source_attributes.update",
+                "description" : "Edit DataSourceAttributes"
+            },
+            {
+                "ability" : "data_source_attributes.delete",
+                "description" : "Delete DataSourceAttributes"
+            }
+        ]
+    },
+    {
+        "module":"VariableAttributes",
+        "abilities":[
+            {
+                "ability" : "variable_attributes.view",
+                "description" : "View VariableAttributes"
+            },
+            {
+                "ability" : "variable_attributes.create",
+                "description" : "Create VariableAttributes"
+            },
+            {
+                "ability" : "variable_attributes.update",
+                "description" : "Edit VariableAttributes"
+            },
+            {
+                "ability" : "variable_attributes.delete",
+                "description" : "Delete VariableAttributes"
+            }
+        ]
+    },
+    {
+        "module":"ServiceAttributes",
+        "abilities":[
+            {
+                "ability" : "service_attributes.view",
+                "description" : "View ServiceAttributes"
+            },
+            {
+                "ability" : "service_attributes.create",
+                "description" : "Create ServiceAttributes"
+            },
+            {
+                "ability" : "service_attributes.update",
+                "description" : "Edit ServiceAttributes"
+            },
+            {
+                "ability" : "service_attributes.delete",
+                "description" : "Delete ServiceAttributes"
+            }
+        ]
+    },
+    {
+        "module":"BreakDownAttributes",
+        "abilities":[
+            {
+                "ability" : "break_down_attributes.view",
+                "description" : "View BreakDownAttributes"
+            },
+            {
+                "ability" : "break_down_attributes.create",
+                "description" : "Create BreakDownAttributes"
+            },
+            {
+                "ability" : "break_down_attributes.update",
+                "description" : "Edit BreakDownAttributes"
+            },
+            {
+                "ability" : "break_down_attributes.delete",
+                "description" : "Delete BreakDownAttributes"
+            }
+        ]
+    },
+    {
+        "module":"ActivityAttributes",
+        "abilities":[
+            {
+                "ability" : "activity_attributes.view",
+                "description" : "View ActivityAttributes"
+            },
+            {
+                "ability" : "activity_attributes.create",
+                "description" : "Create ActivityAttributes"
+            },
+            {
+                "ability" : "activity_attributes.update",
+                "description" : "Edit ActivityAttributes"
+            },
+            {
+                "ability" : "activity_attributes.delete",
+                "description" : "Delete ActivityAttributes"
             }
         ]
     },
@@ -332,27 +500,6 @@
             {
                 "ability" : "checks.delete",
                 "description" : "Delete Checks"
-            }
-        ]
-    },
-    {
-        "module":"Equipment",
-        "abilities":[
-            {
-                "ability" : "equipment.view",
-                "description" : "View Equipment"
-            },
-            {
-                "ability" : "equipment.create",
-                "description" : "Create Equipment"
-            },
-            {
-                "ability" : "equipment.update",
-                "description" : "Edit Equipment"
-            },
-            {
-                "ability" : "equipment.delete",
-                "description" : "Delete Equipment"
             }
         ]
     },
@@ -399,6 +546,199 @@
         ]
     },
     {
+        "module":"Variables",
+        "abilities":[
+            {
+                "ability" : "variables.view",
+                "description" : "View Variables"
+            },
+            {
+                "ability" : "variables.create",
+                "description" : "Create Variables"
+            },
+            {
+                "ability" : "variables.update",
+                "description" : "Edit Variables"
+            },
+            {
+                "ability" : "variables.delete",
+                "description" : "Delete Variables"
+            }
+        ]
+    },
+    {
+        "module":"DataSources",
+        "abilities":[
+            {
+                "ability" : "data_sources.view",
+                "description" : "View DataSources"
+            },
+            {
+                "ability" : "data_sources.create",
+                "description" : "Create DataSources"
+            },
+            {
+                "ability" : "data_sources.update",
+                "description" : "Edit DataSources"
+            },
+            {
+                "ability" : "data_sources.delete",
+                "description" : "Delete DataSources"
+            }
+        ]
+    },
+    {
+        "module":"AssetTemplates",
+        "abilities":[
+            {
+                "ability" : "asset_templates.view",
+                "description" : "View AssetTemplates"
+            },
+            {
+                "ability" : "asset_templates.create",
+                "description" : "Create AssetTemplates"
+            },
+            {
+                "ability" : "asset_templates.update",
+                "description" : "Edit AssetTemplates"
+            },
+            {
+                "ability" : "asset_templates.delete",
+                "description" : "Delete AssetTemplates"
+            },
+            {
+                "ability" : "asset_template_views.details",
+                "description" : "View Detail AssetTemplates"
+            },
+            {
+                "ability" : "asset_template_permanent.delete",
+                "description" : "Delete AssetTemplates Permanently"
+            }
+        ]
+    },
+    {
+        "module":"AssetTemplateSpares",
+        "abilities":[
+            {
+                "ability" : "asset_template_Spares.view",
+                "description" : "View AssetTemplateSpares"
+            },
+            {
+                "ability" : "asset_template_Spares.create",
+                "description" : "Create AssetTemplateSpares"
+            },
+            {
+                "ability" : "asset_template_Spares.update",
+                "description" : "Edit AssetTemplateSpares"
+            },
+            {
+                "ability" : "asset_template_Spares.delete",
+                "description" : "Delete AssetTemplateSpares"
+            }
+        ]
+    },  
+    {
+        "module":"AssetTemplateChecks",
+        "abilities":[
+            {
+                "ability" : "asset_template_Checks.view",
+                "description" : "View AssetTemplateChecks"
+            },
+            {
+                "ability" : "asset_template_Checks.create",
+                "description" : "Create AssetTemplateChecks"
+            },
+            {
+                "ability" : "asset_template_Checks.update",
+                "description" : "Edit AssetTemplateChecks"
+            },
+            {
+                "ability" : "asset_template_Checks.delete",
+                "description" : "Delete AssetTemplateChecks"
+            }
+        ]
+    },
+    {
+        "module":"AssetTemplateServices",
+        "abilities":[
+            {
+                "ability" : "asset_template_Services.view",
+                "description" : "View AssetTemplateServices"
+            },
+            {
+                "ability" : "asset_template_Services.create",
+                "description" : "Create AssetTemplateServices"
+            },
+            {
+                "ability" : "asset_template_Services.update",
+                "description" : "Edit AssetTemplateServices"
+            },
+            {
+                "ability" : "asset_template_Services.delete",
+                "description" : "Delete AssetTemplateServices"
+            }
+        ]
+    },
+    {
+        "module":"AssetTemplateVariables",
+        "abilities":[
+            {
+                "ability" : "asset_template_Variables.view",
+                "description" : "View AssetTemplateVariables"
+            },
+            {
+                "ability" : "asset_template_Variables.create",
+                "description" : "Create AssetTemplateVariables"
+            },
+            {
+                "ability" : "asset_template_Variables.update",
+                "description" : "Edit AssetTemplateVariables"
+            },
+            {
+                "ability" : "asset_template_Variables.delete",
+                "description" : "Delete AssetTemplateVariables"
+            }
+        ]
+    },
+    {
+        "module":"AssetTemplateDataSources",
+        "abilities":[
+            {
+                "ability" : "asset_template_data_sources.view",
+                "description" : "View AssetTemplateDataSources"
+            },
+            {
+                "ability" : "asset_template_data_sources.create",
+                "description" : "Create AssetTemplateDataSources"
+            },
+            {
+                "ability" : "asset_template_data_sources.update",
+                "description" : "Edit AssetTemplateDataSources"
+            },
+            {
+                "ability" : "asset_template_data_sources.delete",
+                "description" : "Delete AssetTemplateDataSources"
+            }
+        ]
+    },
+    {
+        "module":"AssetTemplateAccessories",
+        "abilities":[
+            {
+                "ability" : "asset_template_accessories.view",
+                "description" : "View AssetTemplateAccessories"
+            },
+            {
+                "ability" : "asset_template_accessories.create",
+                "description" : "Create AssetTemplateAccessories"
+            },
+            {
+                "ability" : "asset_template_accessories.delete",
+                "description" : "Delete AssetTemplateAccessories"
+            }
+        ]
+    },
+    {
         "module":"Assets",
         "abilities":[
             {
@@ -416,36 +756,14 @@
             {
                 "ability" : "assets.delete",
                 "description" : "Delete Assets"
-            }
-        ]
-    },
-    {
-        "module":"AssetParameters",
-        "abilities":[
-            {
-                "ability" : "assetParameters.view",
-                "description" : "View AssetParameters"
             },
             {
-                "ability" : "assetParameters.create",
-                "description" : "Create AssetParameters"
+                "ability" : "assets_views.details",
+                "description" : "View Detail Assets"
             },
             {
-                "ability" : "assetParameters.update",
-                "description" : "Edit AssetParameters"
-            },
-            {
-                "ability" : "assetParameters.delete",
-                "description" : "Delete AssetParameters"
-            }
-        ]
-    },
-    {
-        "module":"AssetViews",
-        "abilities":[
-            {
-                "ability" : "assetviews.view",
-                "description" : "View AssetViews"
+                "ability" : "assets_permanent.delete",
+                "description" : "Delete Assets Permanently"
             }
         ]
     },
@@ -459,6 +777,10 @@
             {
                 "ability" : "assetSpares.create",
                 "description" : "Create AssetSpares"
+            },
+            {
+                "ability" : "assetSpares.update",
+                "description" : "Edit AssetSpares"
             },
             {
                 "ability" : "assetSpares.delete",
@@ -478,92 +800,314 @@
                 "description" : "Create AssetChecks"
             },
             {
+                "ability" : "assetChecks.update",
+                "description" : "Edit AssetChecks"
+            },
+            {
                 "ability" : "assetChecks.delete",
                 "description" : "Delete AssetChecks"
             }
         ]
     },
     {
-        "module":"Reasons",
+        "module":"AssetServices",
         "abilities":[
             {
-                "ability" : "reasons.view",
-                "description" : "View Reasons"
+                "ability" : "assetServices.view",
+                "description" : "View AssetServices"
             },
             {
-                "ability" : "reasons.create",
-                "description" : "Create Reasons"
+                "ability" : "assetServices.create",
+                "description" : "Create AssetServices"
             },
             {
-                "ability" : "reasons.update",
-                "description" : "Edit Reasons"
+                "ability" : "assetServices.update",
+                "description" : "Edit AssetServices"
             },
             {
-                "ability" : "reasons.delete",
-                "description" : "Delete Reasons"
+                "ability" : "assetServices.delete",
+                "description" : "Delete AssetServices"
             }
         ]
     },
     {
-        "module":"UserActivities",
+        "module":"AssetVariables",
         "abilities":[
             {
-                "ability" : "userActivities.view",
-                "description" : "View UserActivities"
+                "ability" : "assetVariables.view",
+                "description" : "View AssetVariables"
             },
             {
-                "ability" : "userActivities.create",
-                "description" : "Create UserActivities"
+                "ability" : "assetVariables.create",
+                "description" : "Create AssetVariables"
             },
             {
-                "ability" : "userActivities.update",
-                "description" : "Edit UserActivities"
+                "ability" : "assetVariables.update",
+                "description" : "Edit AssetVariables"
             },
             {
-                "ability" : "userActivities.delete",
-                "description" : "Delete UserActivities"
+                "ability" : "assetVariables.delete",
+                "description" : "Delete AssetVariables"
             }
         ]
     },
     {
-        "module":"UserServices",
+        "module":"AssetDataSources",
         "abilities":[
             {
-                "ability" : "userServices.view",
-                "description" : "View UserServices"
+                "ability" : "asset_data_sources.view",
+                "description" : "View AssetDataSources"
             },
             {
-                "ability" : "userServices.create",
-                "description" : "Create UserServices"
+                "ability" : "asset_data_sources.create",
+                "description" : "Create AssetDataSources"
             },
             {
-                "ability" : "userServices.update",
-                "description" : "Edit UserServices"
+                "ability" : "asset_data_sources.update",
+                "description" : "Edit AssetDataSources"
             },
             {
-                "ability" : "userServices.delete",
-                "description" : "Delete UserServices"
+                "ability" : "asset_data_sources.delete",
+                "description" : "Delete AssetDataSources"
             }
         ]
     },
     {
-        "module":"UserChecks",
+        "module":"AssetAccessories",
         "abilities":[
             {
-                "ability" : "userChecks.view",
-                "description" : "View UserChecks"
+                "ability" : "asset_accessories.view",
+                "description" : "View AssetAccessories"
             },
             {
-                "ability" : "userChecks.create",
-                "description" : "Create UserChecks"
+                "ability" : "asset_accessories.create",
+                "description" : "Create AssetAccessories"
             },
             {
-                "ability" : "userChecks.update",
-                "description" : "Edit UserChecks"
+                "ability" : "asset_accessories.delete",
+                "description" : "Delete AssetAccessories"
+            }
+        ]
+    },
+    {
+        "module":"HealthCheckRegisters",
+        "abilities":[
+            {
+                "ability" : "health_check_registers.view",
+                "description" : "View HealthCheckRegisters"
             },
             {
-                "ability" : "userChecks.delete",
-                "description" : "Delete UserChecks"
+                "ability" : "health_check_registers.create",
+                "description" : "Create HealthCheckRegisters"
+            },
+            {
+                "ability" : "health_check_registers.delete",
+                "description" : "Delete HealthCheckRegisters"
+            }
+        ]
+    },
+    {
+        "module":"ActivityRegisters",
+        "abilities":[
+            {
+                "ability" : "activity_registers.view",
+                "description" : "View ActivityRegisters"
+            },
+            {
+                "ability" : "activity_registers.create",
+                "description" : "Create ActivityRegisters"
+            },
+            {
+                "ability" : "activity_registers.update",
+                "description" : "Edit ActivityRegisters"
+            },
+            {
+                "ability" : "activity_registers.delete",
+                "description" : "Delete ActivityRegisters"
+            }
+        ]
+    },
+    {
+        "module":"ServiceRegisters",
+        "abilities":[
+            {
+                "ability" : "service_registers.view",
+                "description" : "View ServiceRegisters"
+            },
+            {
+                "ability" : "service_registers.create",
+                "description" : "Create ServiceRegisters"
+            },
+            {
+                "ability" : "service_registers.update",
+                "description" : "Edit ServiceRegisters"
+            },
+            {
+                "ability" : "service_registers.delete",
+                "description" : "Delete ServiceRegisters"
+            }
+        ]
+    },
+    {
+        "module":"CheckRegisters",
+        "abilities":[
+            {
+                "ability" : "check_registers.view",
+                "description" : "View CheckRegisters"
+            },
+            {
+                "ability" : "check_registers.create",
+                "description" : "Create CheckRegisters"
+            },
+            {
+                "ability" : "check_registers.update",
+                "description" : "Edit CheckRegisters"
+            },
+            {
+                "ability" : "check_registers.delete",
+                "description" : "Delete CheckRegisters"
+            }
+        ]
+    },
+    {
+        "module":"ProcessRegisters",
+        "abilities":[
+            {
+                "ability" : "process_registers.view",
+                "description" : "View ProcessRegisters"
+            },
+            {
+                "ability" : "process_registers.create",
+                "description" : "Create ProcessRegisters"
+            },
+            {
+                "ability" : "process_registers.update",
+                "description" : "Edit ProcessRegisters"
+            },
+            {
+                "ability" : "process_registers.delete",
+                "description" : "Delete ProcessRegisters"
+            }
+        ]
+    },
+    {
+        "module":"BreakDownRegisters",
+        "abilities":[
+            {
+                "ability" : "break_down_registers.view",
+                "description" : "View BreakDownRegisters"
+            },
+            {
+                "ability" : "break_down_registers.create",
+                "description" : "Create BreakDownRegisters"
+            },
+            {
+                "ability" : "break_down_registers.update",
+                "description" : "Edit BreakDownRegisters"
+            },
+            {
+                "ability" : "break_down_registers.delete",
+                "description" : "Delete BreakDownRegisters"
+            }
+        ]
+    },
+    {
+        "module":"AssetDetails",
+        "abilities":[
+            {
+                "ability" : "asset_details.view",
+                "description" : "View AssetDetails"
+            },
+            {
+                "ability" : "asset_details.geometry_types",
+                "description" : "view Geometric Shapes"
+            }
+        ]
+    },
+    {
+        "module":"SpareCampaigns",
+        "abilities":[
+            {
+                "ability" : "spare_campaigns.view",
+                "description" : "View SpareCampaigns"
+            }
+        ]
+    },
+    {
+        "module":"ProcessTrends",
+        "abilities":[
+            {
+                "ability" : "process_trends.view",
+                "description" : "View ProcessTrends"
+            }
+        ]
+    },
+    {
+        "module":"AssetReports",
+        "abilities":[
+            {
+                "ability" : "asset_reports.view",
+                "description" : "View AssetReports"
+            },
+            {
+                "ability" : "asset_reports.download",
+                "description" : "Download AssetReports"
+            }
+        ]
+    },
+    {
+        "module":"JobPendingReports",
+        "abilities":[
+            {
+                "ability" : "job_pending_reports.view",
+                "description" : "View JobPendingReports"
+            },
+            {
+                "ability" : "job_pending_reports.download",
+                "description" : "Download JobPendingReports"
+            }
+        ]
+    },
+    {
+        "module":"DeviationReports",
+        "abilities":[
+            {
+                "ability" : "deviation_reports.view",
+                "description" : "View DeviationReports"
+            },
+            {
+                "ability" : "deviation_reports.download",
+                "description" : "Download DeviationReports"
+            }
+        ]
+    },
+    {
+        "module":"BreakDownReports",
+        "abilities":[
+            {
+                "ability" : "break_down_reports.view",
+                "description" : "View BreakDownReports"
+            },
+            {
+                "ability" : "break_down_reports.download",
+                "description" : "Download BreakDownReports"
+            }
+        ]
+    },
+    {
+        "module":"DownloadedReports",
+        "abilities":[
+            {
+                "ability" : "downloaded_reports.view",
+                "description" : "View DownloadedReports"
+            },
+            {
+                "ability" : "downloaded_reports.download",
+                "description" : "Download DownloadedReports"
+            },
+            {
+                "ability" : "downloaded_reports.delete",
+                "description" : "Delete DownloadedReports"
             }
         ]
     },

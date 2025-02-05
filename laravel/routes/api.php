@@ -159,6 +159,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('downloadChecks',[CheckController::class, 'downloadChecks']);
     Route::post('downloadCheckHeadings',[CheckController::class, 'downloadCheckHeadings']);
     Route::post('importCheck',[CheckController::class, 'importCheck']);
+    Route::post('deleteHardcheck',[CheckController::class, 'deleteHardcheck']);
 
     //Module 
     Route::post('/paginateModules', [ModuleController::class, 'paginateModules']);
@@ -198,6 +199,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('downloadSpares',[SpareController::class, 'downloadSpares']);
     Route::post('downloadSpareHeadings',[SpareController::class, 'downloadSpareHeadings']);
     Route::post('importSpare',[SpareController::class, 'importSpare']);
+    Route::post('deleteHardSpare',[SpareController::class, 'deleteHardSpare']);
 
     Route::post('paginateServices',[ServiceController::class, 'paginateServices']);
     Route::post('getServices',[ServiceController::class, 'getServices']);

@@ -19,7 +19,8 @@
                 <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>LCL</strong></th>
                 <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Field Values</strong></th>
                 <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Order</strong></th>
-                <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Department Id</strong></th>
+                <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Department</strong></th>
+                <th style="text-align: center; background-color: #98AFC7; color: Black"><strong>Assign To</strong></th>
             </tr>
         </thead>
     </table>

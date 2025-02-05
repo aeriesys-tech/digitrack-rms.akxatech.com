@@ -262,4 +262,18 @@ class CheckController extends Controller
 
         return response()->json(['success' => 'Data imported successfully!']);
     }
+
+    public function deleteHardcheck(Request $request)
+    {
+        $request->validate([
+            'check_id' => 'required|exists:checks,check_id'
+        ]);
+       
+        CheckAssetType::whereIn('check_id', $request->check_id)->forceDelete();
+        Check::whereIn('check_id', $request->check_id)->forceDelete();
+
+        return response()->json([
+            "message" =>"Check Deleted Successfully"
+        ],200);
+    }
 }

@@ -235,6 +235,10 @@ class SpareController extends Controller
 
     public function downloadSpareHeadings(Request $request)
     {
+        $request->validate([
+            'spare_type_ids' => 'required'
+        ]);
+
         $filename = "Spare Headings.xlsx";
         $excel = new SpareHeadingsExport($request->spare_type_ids);
         
@@ -247,8 +251,27 @@ class SpareController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        Excel::import(new SpareImport, $request->file('file'));
+        try {
+            Excel::import(new SpareImport, $request->file('file'));
+            return response()->json(['success' => 'Data imported successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+    }
 
-        return response()->json(['success' => 'Data imported successfully!']);
+
+    public function deleteHardSpare(Request $request)
+    {
+        $request->validate([
+            'spare_id' => 'required|exists:spares,spare_id'
+        ]);
+       
+        SpareAssetType::whereIn('spare_id', $request->spare_id)->forceDelete();
+        SpareAttributeValue::whereIn('spare_id', $request->spare_id)->forceDelete();
+        Spare::whereIn('spare_id', $request->spare_id)->forceDelete();
+
+        return response()->json([
+            "message" =>"Spare Deleted Successfully"
+        ],200);
     }
 }

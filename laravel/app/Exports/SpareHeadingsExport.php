@@ -42,8 +42,8 @@ class SpareHeadingsSheet implements FromView, WithTitle, WithColumnWidths
 
         $spareType = SpareAttributeType::with('SpareType')->where('spare_type_id', $this->spare_type_id)->first();
 
-        // Fetch spare_type_name for display purposes, if needed
-        $this->spare_type_name = $spareType ? $spareType->SpareType->spare_type_name : 'Unknown Type';
+        // spare_type_name 
+        $this->spare_type_name = $spareType ? $spareType->SpareType->spare_type_name : '';
     }
 
     public function view(): View
@@ -54,17 +54,24 @@ class SpareHeadingsSheet implements FromView, WithTitle, WithColumnWidths
 
         $rows = [];
 
-        // headers
+        // $idRow = [
+        //     'Spare Type ID' => $this->spare_type_id,
+        //     '', 
+        //     '',  
+        //     ''    
+        // ];
+
+        // foreach ($spares as $spare) {
+        //     array_push($idRow, $spare->spare_attribute_id); 
+        // }
+
+        // array_push($rows, $idRow);
+
         $headers = [
             'Spare Type',
             'Spare Code',
             'Spare Name',
-            'Asset Type'
-        ];
-
-        // Add the spare type name to the values (optional)
-        $values = [
-            $this->spare_type_name 
+            'Assign To'
         ];
 
         foreach ($spares as $spare) {
@@ -72,6 +79,11 @@ class SpareHeadingsSheet implements FromView, WithTitle, WithColumnWidths
         }
 
         array_push($rows, $headers);
+
+        $values = [
+            $this->spare_type_name 
+        ];
+
         array_push($rows, $values);
 
         return view('exports.SpareHeadings', [
