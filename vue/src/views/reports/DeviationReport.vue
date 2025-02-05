@@ -16,7 +16,7 @@
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
                             <h6 class="card-title">Deviation Reports</h6>
-                            <button class="btn btn-success" @click="downloadExcel()"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
+                            <button v-can="'deviation_reports.download'" class="btn btn-success" @click="downloadExcel()"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
                         </div>
                         <div class="card-body">
                             <!-- <td>Department

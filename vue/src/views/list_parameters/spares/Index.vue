@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Spares</h4>
             </div>
-            <router-link to="/spares/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD SPARE</router-link>
+            <router-link v-can="'spares.create'" to="/spares/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD SPARE</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -61,8 +61,8 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Actions</th>
+                                        <th class="text-center" v-can="'spares.delete'">Status</th>
+                                        <th class="text-center" v-can="'spares.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,13 +82,13 @@
                                         <td>
                                             <span v-for="asset_type, key in spare.spare_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" v-can="'spares.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'spare' + spare.spare_id" :checked="spare.status" :value="spare.status" @change="deleteSpare(spare)" />
                                                 <label class="custom-control-label" :for="'spare' + spare.spare_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" v-can="'spares.update'">
                                             <a href="javascript:void(0)" v-if="spare.status" class="text-success me-2" @click="editSpare(spare)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>

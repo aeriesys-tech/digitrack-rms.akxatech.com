@@ -13,7 +13,7 @@
             <h4 class="main-title mb-2">Variable Types</h4>
         </div>
         <div class="row g-2">
-            <div class="col-4">
+            <div class="col-4" v-can="'variable_types.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
@@ -70,8 +70,8 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
 
-                                        <th class="text-center" >Status</th>
-                                        <th class="text-center" >Actions</th>
+                                        <th class="text-center" v-can="'variable_types.delete'">Status</th>
+                                        <th class="text-center" v-can="'variable_types.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,13 +82,13 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{variable_type.variable_type_code}}</td>
                                         <td>{{ variable_type.variable_type_name }}</td>
-                                        <td class="text-center">
+                                        <td class="text-center" v-can="'variable_types.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'variable_type' + variable_type.variable_type_id" :checked="variable_type.status" :value="variable_type.status" @change="deleteVariableType(variable_type)" />
                                                 <label class="custom-control-label" :for="'variable_type' + variable_type.variable_type_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" v-can="'variable_types.update'">
                                             <a href="javascript:void(0)" v-if="variable_type.status" class="text-success me-2" @click="editVariableType(variable_type)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
@@ -148,14 +148,14 @@ export default {
         }
     },
     mounted() {
-        // this.create_variable_type = this.$store.getters.permissions.filter(function(element){
-        //     return element.ability.ability.includes('variable_types.create')
-        // })
-        // if(this.create_variable_type.length){
-        //     this.column = 'col-8'
-        // }else{
-        //     this.column = 'col-12'
-        // }
+        this.create_variable_type = this.$store.getters.permissions.filter(function(element){
+            return element.ability.ability.includes('variable_types.create')
+        })
+        if(this.create_variable_type.length){
+            this.column = 'col-8'
+        }else{
+            this.column = 'col-12'
+        }
         this.index();
         this.$refs.variable_type_code.focus();
     },

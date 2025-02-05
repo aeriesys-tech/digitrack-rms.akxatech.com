@@ -32,10 +32,10 @@
             <div class="nav-group" :class="{show:showLinage}" @click="showTab('LineageParameters')" v-if="permission('LineageParameters')">
                 <a href="javascript:void(0)" :style="{color:color}" class="nav-label"><i class="ri-equalizer-line icn"></i> Lineage parameters</a>
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'areas.view'">
                         <router-link to="/areas" v-bind:class="{ active: $route.path === '/areas' }" class="nav-link"><i class="ri-command-line"></i> <span>Areas</span></router-link>
                     </li>
-                    <li class="nav-item" v-can="'plants.view'">
+                    <li class="nav-item" v-can="'shops.view'">
                         <router-link to="/plants" v-bind:class="{ active: $route.path === '/plants' }" class="nav-link"><i class="ri-building-fill"></i> <span>Shops</span></router-link>
                     </li>
                     <li class="nav-item" v-can="'sections.view'">
@@ -44,17 +44,17 @@
                     <!-- <li class="nav-item">
                         <router-link to="/frequency" v-bind:class="{ active: $route.path === '/frequency' }" class="nav-link"><i class="ri-rfid-line"></i> <span>Frequency</span></router-link>
                     </li>     -->
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'departments.view'">
                         <router-link to="/department" v-bind:class="{ active: $route.path === '/department' }" class="nav-link"><i class="ri-government-line"></i> <span>Department</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'functionals.view'">
                         <router-link to="/functional" v-bind:class="{ active: $route.path === '/functional' }" class="nav-link"><i class="ri-rfid-line"></i> <span>Functional</span></router-link>
                     </li>
                 </ul>
             </div>
              <div class="nav-group show">
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'list_parameters.view'">
                         <router-link to="/list_parameters" :style="{color:listActive}" @click="showTab('List')" class="nav-link"><i class="ri-command-line"></i> <span>List Parameters</span></router-link>
                     </li>
                 </ul>
@@ -74,19 +74,19 @@
                     <li class="nav-item" v-can="'spare_types.view'">
                         <router-link to="/spare_types" v-bind:class="{ active: $route.path === '/spare_types' }" class="nav-link"><i class="ri-shapes-line"></i> <span>Spare Types</span></router-link>
                     </li>
-                    <li class="nav-item" v-can="'reasons.view'">
+                    <li class="nav-item" v-can="'activity_types.view'">
                         <router-link to="/activity_types" v-bind:class="{ active: $route.path === '/activity_types' }" class="nav-link"><i class="ri-color-filter-line"></i> <span>Activity Types</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'data_source_types.view'">
                         <router-link to="/data_source_type" v-bind:class="{ active: $route.path === '/data_source_type' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source Types</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'break_down_types.view'">
                         <router-link to="/break_down_type" v-bind:class="{ active: $route.path === '/break_down_type' }" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Break Down Types</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'accessory_types.view'">
                         <router-link to="/accessory_type" v-bind:class="{ active: $route.path === '/accessory_type' }" class="nav-link"><i class="ri-briefcase-line"></i> <span>Accessory Types</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'variable_types.view'">
                         <router-link to="/variable_type" v-bind:class="{ active: $route.path === '/variable_type' }" class="nav-link"><i class="ri-infinity-line"></i> <span>Variable Types</span></router-link>
                     </li>
                 </ul>
@@ -99,34 +99,34 @@
                     </li>
                 </ul>
             </div> -->
-            <div class="nav-group" :class="{show:showAttributes}" @click="showTab('Attributes')">
+            <div class="nav-group" :class="{show:showAttributes}" @click="showTab('Attributes')" v-if="permission('Attributes')">
                 <a href="javascript:void(0)" class="nav-label" :style="{color:AttributesColor}"><i class="ri-stack-fill icn"></i> Attributes</a>
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item" >
+                    <li class="nav-item" v-can="'asset_attributes.view'">
                         <router-link to="/asset_attributes" v-bind:class="{ active: $route.path === '/asset_attributes' || $route.name === 'AssetAttributes.Create' || $route.path === 'AssetAttributes.Edit' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Attribute</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'spare_attributes.view'">
                         <router-link to="/spare_attributes" v-bind:class="{ active: $route.path === '/spare_attributes' || $route.name === 'SpareAttributes.Create' || $route.path === 'SpareAttributes.Edit'  }" class="nav-link"><i class="ri-shapes-line"></i> <span>Spare Attribute</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'data_source_attributes.view'">
                         <router-link to="/data_source_attributes" v-bind:class="{ active: $route.path === '/data_source_attributes' || $route.name === 'DataSourceAttributes.Create' || $route.path === 'DataSourceAttributes.Edit' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source Attribute</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'variable_attributes.view'">
                         <router-link to="/variable_attributes" v-bind:class="{ active: $route.path === '/variable_attributes' || $route.name === 'VariableAttributes.Create' || $route.path === 'VariableAttributes.Edit'}" class="nav-link"><i class="ri-infinity-line"></i> <span>Variable Attribute</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'service_attributes.view'">
                         <router-link to="/service_attributes" v-bind:class="{ active: $route.path === '/service_attributes' || $route.name === 'ServiceAttributes.Create' || $route.path === 'ServiceAttributes.Edit'}" class="nav-link"><i class="ri-layout-fill"></i> <span>Service Attribute</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'break_down_attributes.view'">
                         <router-link to="/break_down_attributes" v-bind:class="{ active: $route.path === '/break_down_attributes' || $route.name === 'BreakDownAttributes.Create' || $route.path === 'BreakDownAttributes.Edit'}" class="nav-link"><i class="ri-bubble-chart-line"></i> <span>Breakdown Attribute</span></router-link>
                     </li>
-                      <li class="nav-item">
+                      <li class="nav-item" v-can="'activity_attributes.view'">
                         <router-link to="/activity_attributes" v-bind:class="{ active: $route.path === '/activity_attributes' || $route.name === 'ActivityAttributes.Create' || $route.path === 'ActivityAttributes.Edit'}" class="nav-link"><i class="ri-color-filter-line"></i> <span>Activity Attribute</span></router-link>
                     </li>
                 </ul>
             </div>
 
-            <div class="nav-group" v-if="permission('ListParameters')" :class="{show:showList}" @click="showTab('ListParameters')">
+            <div class="nav-group" v-if="permission('Masters')" :class="{show:showList}" @click="showTab('ListParameters')">
                 <a href="javascript:void(0)" :style="{color:listParameterColor}" class="nav-label"><i class="ri-list-settings-line icn"></i> Masters</a>
                 <ul class="nav nav-sidebar">
                     <li class="nav-item" v-can="'checks.view'">
@@ -135,16 +135,16 @@
                     <li class="nav-item" v-can="'spares.view'">
                         <router-link to="/spares" v-bind:class="{ active: $route.path === '/spares' || $route.name === 'Spares.Create' || $route.path === 'Spares.Edit' }" class="nav-link"><i class="ri-align-left"></i> <span>Spares</span></router-link>
                     </li>
-                    <li class="nav-item" >
+                    <li class="nav-item" v-can="'services.view'">
                         <router-link to="/services" v-bind:class="{ active: $route.path === '/services' || $route.name === 'Services.Create' || $route.path === 'Services.Edit' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
                     </li>
                     <!-- <li class="nav-item" v-can="'services.view'">
                         <router-link to="/services" v-bind:class="{ active: $route.path === '/services' }" class="nav-link"><i class="ri-drag-move-2-line"></i> <span>Services</span></router-link>
                     </li> -->
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'variables.view'">
                         <router-link to="/variables" v-bind:class="{ active: $route.path === '/variables' || $route.name === 'Variables.Create' || $route.path === 'Variables.Edit'}" class="nav-link"><i class="ri-archive-drawer-line"></i> <span>Variables</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'data_sources.view'">
                         <router-link to="/data_sources" v-bind:class="{ active: $route.path === '/data_sources' || $route.name === 'DataSources.Create' || $route.path === 'DataSources.Edit' }" class="nav-link"><i class="ri-line-chart-line"></i> <span>Data Source</span></router-link>
                     </li>
                     <!-- <li class="nav-item">
@@ -165,7 +165,7 @@
             </div> -->
              <div class="nav-group show">
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'asset_templates.view'">
                         <router-link
                             to="/asset_templates"
                             :style="{color:assetTemplateActive}"
@@ -180,7 +180,7 @@
             </div>
             <div class="nav-group show">
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'assets.view'">
                         <router-link
                             to="/assets"
                             :style="{color:assetActive}"
@@ -197,30 +197,30 @@
             <div class="nav-group" v-if="permission('Registers')" :class="{show:showRegister}" @click="showTab('Registers')">
                 <a href="javascript:void(0)" :style="{color:registerColor}" class="nav-label"><i class="ri-links-fill icn"></i> Registers</a>
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'health_check_registers.view'">
                         <router-link v-bind:class="{ active: $route.path === '/health_checks' || $route.name === 'HealthChecks.Create' || $route.name === 'HealthChecks.Edit'}" to="/health_checks" class="nav-link">
                             <i class="ri-health-book-line"></i><span>Health Check Register</span>
                         </router-link>
                     </li>
-                    <li class="nav-item" v-can="'userActivities.view'">
+                    <li class="nav-item" v-can="'activity_registers.view'">
                         <router-link v-bind:class="{ active: $route.path === '/activities' || $route.name === 'Activity.Create' || $route.name === 'Activity.Edit'}" to="/activities" class="nav-link">
                             <i class="ri-list-check"></i><span>Activity Register</span>
                         </router-link>
                     </li>
-                    <li class="nav-item" v-can="'userServices.view'">
+                    <li class="nav-item" v-can="'service_registers.view'">
                         <router-link v-bind:class="{ active: $route.path === '/user_services' || $route.name === 'UserServices.Create' || $route.name === 'UserServices.Edit'}" to="/user_services" class="nav-link">
                             <i class="ri-flow-chart"></i><span>Service Register</span>
                         </router-link>
                     </li>
-                    <li class="nav-item" v-can="'userChecks.view'">
+                    <li class="nav-item" v-can="'check_registers.view'">
                         <router-link v-bind:class="{ active: $route.path === '/user_checks' || $route.name === 'UserChecks.Create' || $route.name === 'UserChecks.Edit'}" to="/user_checks" class="nav-link">
                             <i class="ri-survey-line"></i><span>Check Register</span>
                         </router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'process_registers.view'">
                         <router-link to="/process_registers" v-bind:class="{ active: $route.path === '/process_registers' || $route.name === 'CreateProcessRegister.Create' || $route.name === 'CreateProcessRegister.Edit' }" class="nav-link"><i class="ri-briefcase-fill"></i><span>Process Register</span></router-link>
                     </li>
-                     <li class="nav-item">
+                     <li class="nav-item" v-can="'break_down_registers.view'">
                         <router-link to="/break_down_registers" v-bind:class="{ active: $route.path === '/break_down_registers' || $route.name === 'BreakDownRegister.Create' || $route.name === 'BreakDownRegister.Edit' }" class="nav-link"><i class="ri-bubble-chart-line"></i><span>Break Down Register</span></router-link>
                     </li>
                     <!-- <li class="nav-item">
@@ -241,16 +241,16 @@
                 </ul>
             </div>  -->
 
-            <div class="nav-group" :class="{show:showReview}" @click="showTab('Review')">
+            <div class="nav-group" :class="{show:showReview}" @click="showTab('Review')" v-if="permission('Review')">
                 <a href="javascript:void(0)" class="nav-label" :style="{color:ReviewColor}"><i class="ri-file-search-line icn"></i> Review</a>
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'asset_details.view'">
                         <router-link to="/asset_details" v-bind:class="{ active: $route.path === '/asset_details' }" class="nav-link"><i class="ri-building-3-line"></i> <span>Asset Details</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'spare_campaigns.view'">
                         <router-link to="/spare_campaigns" v-bind:class="{ active: $route.path === '/spare_campaigns' }" class="nav-link"><i class="ri-align-left   "></i> <span>Spare Campaign</span></router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'process_trends.view'">
                         <router-link to="/process_trends" v-bind:class="{ active: $route.path === '/process_trends' }" class="nav-link"><i class="ri-alarm-warning-line"></i> <span>Process Trends</span></router-link>
                     </li>
                     <li class="nav-item">
@@ -280,28 +280,28 @@
                 </ul>
             </div> -->
 
-            <div class="nav-group" :class="{show:showReports}" @click="showTab('Reports')">
+            <div class="nav-group" :class="{show:showReports}" @click="showTab('Reports')" v-if="permission('Reports')">
                 <a href="javascript:void(0)" :style="{color:ReportColor}" class="nav-label" >
                 <i class="ri-file-chart-line icn"></i>&nbsp; Reports
                 </a>
                 <ul class="nav nav-sidebar">
-                <li class="nav-item">
+                <li class="nav-item" v-can="'asset_reports.view'">
                     <router-link to="/asset_reports" class="nav-link" v-bind:class="{ active: $route.path === '/asset_reports' }" >
                         <i class="ri-file-chart-2-line"></i> <span>Asset Report</span>
                     </router-link>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item" v-can="'job_pending_reports.view'">
                     <router-link to="/pending_jobs" class="nav-link" v-bind:class="{ active: $route.path === '/pending_jobs' }" >
                     <i class="ri-pass-pending-line"></i> <span>Job Pending Report</span>
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-can="'deviation_reports.view'">
                     <router-link to="/deviation_reports" class="nav-link" v-bind:class="{ active: $route.path === '/deviation_reports' }" >
                     <i class="ri-store-3-fill"></i> <span>Deviation Report</span>
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-can="'break_down_reports.view'">
                         <router-link to="/breakdown_reports" class="nav-link" v-bind:class="{ active: $route.path === '/breakdown_reports' }" >
                             <i class="ri-file-chart-2-line"></i> <span>BreakDown Report</span>
                         </router-link>
@@ -352,7 +352,7 @@
             </div>
             <div class="nav-group show">
                 <ul class="nav nav-sidebar">
-                    <li class="nav-item">
+                    <li class="nav-item" v-can="'downloaded_reports.view'">
                         <router-link to="/downloaded_reports" :style="{color:DownloadedReportsColor}" @click="showTab('DownloadedReports')" class="nav-link"><i class="ri-download-line"></i> <span>Downloaded Reports</span></router-link>
                     </li>
                 </ul>
@@ -638,16 +638,32 @@
                     let permission = [];
                     if (ability == "LineageParameters") {
                         permission = permissions.filter(function (el) {
-                            return el.ability.ability == "clusters.view" || el.ability.ability == "plants.view" || el.ability.ability == "sections.view";
+                            return el.ability.ability == "areas.view" || el.ability.ability == "shops.view" || el.ability.ability == "sections.view" ||  el.ability.ability == "departments.view" || el.ability.ability == "functionals.view";
                         });
                     } else if (ability == "TypeParameters") {
                         permission = permissions.filter(function (el) {
                             return (
-                                el.ability.ability == "equipment_types.view" ||
                                 el.ability.ability == "asset_types.view" ||
                                 el.ability.ability == "service_types.view" ||
                                 el.ability.ability == "spare_types.view" ||
-                                el.ability.ability == "reasons.view"
+                                el.ability.ability == "activity_types.view" ||
+                                el.ability.ability == "data_source_types.view" ||
+                                el.ability.ability == "break_down_types.view" ||
+                                el.ability.ability == "accessory_types.view" ||
+                                el.ability.ability == "variable_types.view"
+                            );
+                        });
+                    }
+                    if (ability == "Attributes") {
+                        permission = permissions.filter(function (el) {
+                            return (
+                                el.ability.ability == "asset_attributes.view" ||
+                                el.ability.ability == "spare_attributes.view" ||
+                                el.ability.ability == "data_source_attributes.view" ||
+                                el.ability.ability == "variable_attributes.view" ||
+                                el.ability.ability == "service_attributes.view" ||
+                                el.ability.ability == "break_down_attributes.view" ||
+                                el.ability.ability == "activity_attributes.view"
                             );
                         });
                     }
@@ -663,14 +679,9 @@
                             );
                         });
                     }
-                    if (ability == "ListParameters") {
-                        permission = permissions.filter(function (el) {
-                            return el.ability.ability == "checks.view" || el.ability.ability == "spares.view" || el.ability.ability == "services.view";
-                        });
-                    }
                     if (ability == "Masters") {
                         permission = permissions.filter(function (el) {
-                            return el.ability.ability == "equipment.view" || el.ability.ability == "assets.view";
+                            return el.ability.ability == "checks.view" || el.ability.ability == "spares.view" || el.ability.ability == "services.view" || el.ability.ability == "variables.view" || el.ability.ability == "data_sources.view";
                         });
                     }
                     if (ability == "UserManagement") {
@@ -680,7 +691,22 @@
                     }
                     if (ability == "Registers") {
                         permission = permissions.filter(function (el) {
-                            return el.ability.ability == "userActivities.view" || el.ability.ability == "userServices.view" || el.ability.ability == "userChecks.view";
+                            return el.ability.ability == "health_check_registers.view" || el.ability.ability == "activity_registers.view" || el.ability.ability == "service_registers.view" || el.ability.ability == "check_registers.view" || el.ability.ability == "process_registers.view" || el.ability.ability == "break_down_registers.view";
+                        });
+                    }
+                     if (ability == "Review") {
+                        permission = permissions.filter(function (el) {
+                            return el.ability.ability == "asset_details.view" ||
+                                el.ability.ability == "spare_campaigns.view" ||
+                                el.ability.ability == "process_trends.view";
+                        });
+                    }
+                     if (ability == "Reports") {
+                        permission = permissions.filter(function (el) {
+                            return el.ability.ability == "asset_reports.view" ||
+                                el.ability.ability == "job_pending_reports.view" ||
+                                el.ability.ability == "deviation_reports.view" ||
+                                 el.ability.ability == "break_down_reports.view";
                         });
                     }
                     if (permission.length == 0) {

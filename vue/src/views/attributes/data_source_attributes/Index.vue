@@ -12,7 +12,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Data Source Attributes</h4>
                 </div>
-                <router-link to="/data_source_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                <router-link v-can="'data_source_attributes.create'" to="/data_source_attributes/create" class="btn btn-primary" style="float: right;" ><i
                         class="ri-list-check"></i> ADD DATA SOURCE ATTRIBUTE</router-link>
             </div>
             <div class="row">
@@ -93,8 +93,8 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span> -->
                                             </th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-center" v-can="'data_source_attributes.delete'">Status</th>
+                                            <th class="text-center" v-can="'data_source_attributes.update'">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,13 +114,13 @@
                                             <td>
                                                 <span v-for="data_source_attribute_type, key in datasourceattribute.data_source_attribute_types" :key="key">{{ data_source_attribute_type?.data_source_type?.data_source_type_name }}, </span>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'data_source_attributes.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'datasourceattribute' + datasourceattribute.data_source_attribute_id" :checked="datasourceattribute.status" :value="datasourceattribute.status" @change="deleteDataSourceAttribute(datasourceattribute)" />
                                                     <label class="custom-control-label" :for="'user' + datasourceattribute.data_source_attribute_id"></label>
                                                 </div>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'data_source_attributes.update'">
                                                 <a href="javascript:void(0)" class="text-success" v-if="datasourceattribute.status"
                                                     @click="editDataSourceAttribute(datasourceattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>

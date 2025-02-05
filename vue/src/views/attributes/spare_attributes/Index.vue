@@ -12,7 +12,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Spare Attributes</h4>
                 </div>
-                <router-link to="/spare_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                <router-link v-can="'spare_attributes.create'" to="/spare_attributes/create" class="btn btn-primary" style="float: right;" ><i
                         class="ri-list-check"></i> ADD SPARE ATTRIBUTE</router-link>
             </div>
             <div class="row">
@@ -93,8 +93,8 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span> -->
                                             </th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-center" v-can="'spare_attributes.delete'">Status</th>
+                                            <th class="text-center" v-can="'spare_attributes.update'">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,13 +114,13 @@
                                             <td>
                                                 <span v-for="spare_attribute_type, key in spareattribute.spare_attribute_types" :key="key">{{ spare_attribute_type?.spare_type?.spare_type_name }}, </span>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'spare_attributes.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'spareattribute' + spareattribute.spare_attribute_id" :checked="spareattribute.status" :value="spareattribute.status" @change="deleteSpareAttribute(spareattribute)" />
                                                     <label class="custom-control-label" :for="'user' + spareattribute.spare_attribute_id"></label>
                                                 </div>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'spare_attributes.update'">
                                                 <a href="javascript:void(0)" class="text-success" v-if="spareattribute.status"
                                                     @click="editSpareAttribute(spareattribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>

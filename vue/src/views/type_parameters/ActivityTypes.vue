@@ -13,7 +13,7 @@
             <h4 class="main-title mb-2">Activity Types</h4>
         </div>
         <div class="row g-2">
-            <div class="col-4" v-can="'reasons.create'">
+            <div class="col-4" v-can="'activity_types.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
@@ -70,8 +70,8 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
 
-                                        <th class="text-center" v-can="'reasons.delete'">Status</th>
-                                        <th class="text-center" v-can="'reasons.update'">Actions</th>
+                                        <th class="text-center" v-can="'activity_types.delete'">Status</th>
+                                        <th class="text-center" v-can="'activity_types.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,13 +82,13 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{reason.reason_code}}</td>
                                         <td>{{ reason.reason_name }}</td>
-                                        <td class="text-center" v-can="'reasons.delete'">
+                                        <td class="text-center" v-can="'activity_types.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'reason' + reason.reason_id" :checked="reason.status" :value="reason.status" @change="deleteReason(reason)" />
                                                 <label class="custom-control-label" :for="'reason' + reason.reason_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center" v-can="'reasons.update'">
+                                        <td class="text-center" v-can="'activity_types.update'">
                                             <a href="javascript:void(0)" v-if="reason.status" class="text-success me-2" @click="editReason(reason)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
@@ -150,7 +150,7 @@ export default {
     },
     mounted() {
         this.create_reason = this.$store.getters.permissions.filter(function(element){
-            return element.ability.ability.includes('reasons.create')
+            return element.ability.ability.includes('activity_types.create')
         })
         if(this.create_reason.length){
             this.column = 'col-8'

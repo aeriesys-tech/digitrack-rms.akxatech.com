@@ -13,7 +13,7 @@
             <h4 class="main-title mb-2">Areas</h4>
         </div>
         <div class="row g-2">
-            <div class="col-4">
+            <div class="col-4" v-can="'areas.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
@@ -70,8 +70,8 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
 
-                                        <th class="text-center" >Status</th>
-                                        <th class="text-center" >Actions</th>
+                                        <th class="text-center" v-can="'areas.delete'">Status</th>
+                                        <th class="text-center" v-can="'areas.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,13 +82,13 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{area.area_code}}</td>
                                         <td>{{ area.area_name }}</td>
-                                        <td class="text-center" >
+                                        <td class="text-center" v-can="'areas.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'area' + area.area_id" :checked="area.status" :value="area.status" @change="deleteArea(area)" />
                                                 <label class="custom-control-label" :for="'area' + area.area_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center" >
+                                        <td class="text-center" v-can="'areas.update'">
                                             <a href="javascript:void(0)" v-if="area.status" class="text-success me-2" @click="editArea(area)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
@@ -148,14 +148,14 @@ export default {
         }
     },
     mounted() {
-        // this.create_area = this.$store.getters.permissions.filter(function(element){
-        //         return element.ability.ability.includes('areas.create')
-        //     })
-        //     if(this.create_area.length){
-        //         this.column = 'col-8'
-        //     }else{
-        //         this.column = 'col-12'
-        //     }
+        this.create_area = this.$store.getters.permissions.filter(function(element){
+                return element.ability.ability.includes('areas.create')
+            })
+            if(this.create_area.length){
+                this.column = 'col-8'
+            }else{
+                this.column = 'col-12'
+            }
         this.index();
         this.$refs.area_code.focus();
     },

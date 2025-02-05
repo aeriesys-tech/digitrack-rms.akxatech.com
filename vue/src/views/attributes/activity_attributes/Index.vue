@@ -12,7 +12,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Activity Attributes</h4>
                 </div>
-                <router-link to="/activity_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                <router-link v-can="'activity_attributes.create'" to="/activity_attributes/create" class="btn btn-primary" style="float: right;" ><i
                         class="ri-list-check"></i> ADD ACTIVITY ATTRIBUTE</router-link>
             </div>
             <div class="row">
@@ -93,8 +93,8 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span> -->
                                             </th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-center" v-can="'activity_attributes.delete'">Status</th>
+                                            <th class="text-center" v-can="'activity_attributes.update'">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,13 +114,13 @@
                                             <td>
                                                 <span v-for="activity_attribute_type, key in activity_attribute.activity_attribute_types" :key="key">{{ activity_attribute_type?.activity_type?.reason_name }}, </span>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'activity_attributes.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'activity_attribute' + activity_attribute.activity_attribute_id" :checked="activity_attribute.status" :value="activity_attribute.status" @change="deleteActivityAttribute(activity_attribute)" />
                                                     <label class="custom-control-label" :for="'user' + activity_attribute.activity_attribute_id"></label>
                                                 </div>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'activity_attributes.update'">
                                                 <a href="javascript:void(0)" class="text-success" v-if="activity_attribute.status"
                                                     @click="editActivityAttribute(activity_attribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>
