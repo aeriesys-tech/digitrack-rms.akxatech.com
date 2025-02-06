@@ -267,4 +267,19 @@ class DataSourceController extends Controller
 
         return response()->json(['success' => 'Data imported successfully!']);
     }
+
+    public function deleteHardDataSource(Request $request)
+    {
+        $request->validate([
+            'data_source_id' => 'required|exists:data_sources,data_source_id'
+        ]);
+
+        DataSourceAssetType::whereIn('data_source_id', $request->data_source_id)->forceDelete();
+        DataSourceAttributeValue::whereIn('data_source_id', $request->data_source_id)->forceDelete();
+        DataSource::whereIn('data_source_id', $request->data_source_id)->forceDelete();
+
+        return response()->json([
+            "message" =>"Data Source Deleted Successfully"
+        ],200);
+    }
 }

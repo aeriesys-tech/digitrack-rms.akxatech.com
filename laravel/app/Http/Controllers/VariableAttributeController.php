@@ -78,6 +78,7 @@ class VariableAttributeController extends Controller
         ]);
     
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
         
         $variable_attribute = VariableAttribute::create($data);
     
@@ -116,6 +117,7 @@ class VariableAttributeController extends Controller
         ]);
 
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
 
         $variable_attribute = VariableAttribute::where('variable_attribute_id', $request->variable_attribute_id)->first();
         $variable_attribute->update($data);

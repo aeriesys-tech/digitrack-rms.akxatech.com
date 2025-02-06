@@ -14,31 +14,46 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Validators\Failure;
 
-class ServiceImport implements ToCollection, WithHeadingRow
+class ServiceImport implements ToCollection, WithHeadingRow, SkipsOnFailure
 {
+    use SkipsFailures;
+
     public function collection(Collection $rows)
     {
         $errorRows = [];
-  
-        $assetTypes = ServiceAssetType::whereHas('AssetType')->with('AssetType')->get()
-            ->keyBy(function ($spareAssetType) {
-                return $spareAssetType->AssetType->asset_type_name;
-            });
 
         $serviceTypes = ServiceAttributeType::whereHas('ServiceType')->with('ServiceType')->get()
             ->keyBy(function ($serviceAttributeType) {
                 return $serviceAttributeType->ServiceType->service_type_name;
             });
 
-        $serviceAttributes = ServiceAttribute::all()->keyBy('field_name');
+        $serviceAttributes = ServiceAttribute::all()->keyBy('field_key');
 
-        foreach ($rows as $row) 
+        foreach ($rows as $index => $row) 
         {
-            if (!isset($row['service_code']) || !isset($row['service_name']) || !isset($row['service_type'])) 
-            {
-                $errorRows[] = $row; 
+            //Validation
+            if (!isset($row['service_code']) || !isset($row['service_name']) || !isset($row['service_type'])) {
+                $this->failures[] = new Failure(
+                    $index + 1, 
+                    'service_code, service_name, spare_type',
+                    ['Missing required fields']
+                );
                 continue; 
+            }
+            
+            if (Spare::where('service_code', trim($row['service_code']))->exists() || 
+                Spare::where('service_name', trim($row['service_name']))->exists()) {
+                $this->failures[] = new Failure(
+                    $index + 1,
+                    'service_code, service_name',
+                    ['Duplicate service_code or service_name']
+                );
+                continue;
             }
 
             $serviceTypeId = $serviceTypes->get(trim($row['service_type'])) ? 
@@ -53,12 +68,12 @@ class ServiceImport implements ToCollection, WithHeadingRow
             $service = Service::create($data);
 
             // asset types
-            if (isset($row['asset_type'])) 
+            if (isset($row['assign_to'])) 
             {
-                $assetTypeNames = explode(',', $row['asset_type']);
-                $assetTypeNames = array_map('trim', $assetTypeNames);
+                $assetTypeNames = explode(',', $row['assign_to']);
+                $assetTypedatas = array_map('trim', $assetTypeNames);
             
-                $assetTypes = AssetType::whereIn('asset_type_name', $assetTypeNames)->get();
+                $assetTypes = AssetType::whereIn('asset_type_name', $assetTypedatas)->get();
             
                 if ($assetTypes->isNotEmpty()) {
                     foreach ($assetTypes as $assetType) {
@@ -71,31 +86,33 @@ class ServiceImport implements ToCollection, WithHeadingRow
                     }
                 } 
             }
-            Log::info($row);
+           
             foreach ($row as $key => $value) 
             {
-                $normalizedKey = $this->normalizeKey($key);
-
-                // Skip the known keys like spare_type, spare_code, spare_name, and asset_type
-                if (!in_array($normalizedKey, ['service_type', 'service_code', 'service_name', 'asset_type']) && !empty($value)) 
+                if (!in_array($key, ['service_type', 'service_code', 'service_name', 'assign_to']) && !empty($value)) 
                 {
-                    $serviceAttribute = $serviceAttributes->get($normalizedKey); 
-                    if (!$serviceAttribute) 
-                    {
-                        $serviceAttribute = $serviceAttributes->get(ucwords(str_replace('_', ' ', $normalizedKey)));
-                    }
+                    $serviceAttribute = $serviceAttributes->get($key); 
 
                     if ($serviceAttribute) 
                     {
                         $fieldValue = trim($value);
-
-                        if ($this->isDate($fieldValue)) {
-                            $fieldValue = Carbon::parse($fieldValue)->format('Y-m-d'); 
+                        $serviceAttributeId = $serviceAttribute->service_attribute_id;
+                        if ($serviceAttribute->field_type === 'Color') 
+                        {
+                            $fieldValue = $this->convertColorNameToHex($fieldValue);
+                        }
+                        if($serviceAttribute->field_type === 'Date')
+                        {
+                            $fieldValue = $this->convertDate($fieldValue);
+                        }
+                        if($serviceAttribute->field_type === 'Date&Time')
+                        {
+                            $fieldValue = $this->convertDateTime($fieldValue);
                         }
 
                         ServiceAttributeValue::create([
                             'service_id' => $service->service_id,
-                            'service_attribute_id' => $serviceAttribute->service_attribute_id,
+                            'service_attribute_id' => $serviceAttributeId,
                             'field_value' => $fieldValue,
                         ]);
                     }
@@ -104,22 +121,53 @@ class ServiceImport implements ToCollection, WithHeadingRow
         }
     }
 
-    private function normalizeKey($key)
+    public function convertColorNameToHex($fieldValue) 
     {
-        return strtolower(trim(str_replace(' ', '_', $key)));
+        $colorNamesToHex = [
+            'Red' => '#FF0000',
+            'Green' => '#008000',
+            'Blue' => '#0000FF',
+            'Yellow' => '#FFFF00',
+            'Black' => '#000000',
+            'White' => '#FFFFFF',
+            'Gray' => '#808080',
+            'Orange' => '#FFA500',
+            'Purple' => '#800080',
+            'Pink' => '#FFC0CB',
+            'Brown' => '#A52A2A',
+            'Cyan' => '#00FFFF',
+            'Magenta' => '#FF00FF',
+            'Lime' => '#00FF00',
+            'Indigo' => '#4B0082',
+            'Violet' => '#8A2BE2',
+        ];
+
+        if (array_key_exists($fieldValue, $colorNamesToHex)) {
+            return $colorNamesToHex[$fieldValue];
+        }
+        return '#000000';
     }
 
-    private function isDate($value)
+    public function convertDate($fieldValue) 
     {
-        if (is_numeric($value)) {
-            return false;
+        if (is_numeric($fieldValue)) {
+            return Date::excelToDateTimeObject($fieldValue)->format('Y-m-d');
+        } else if (is_string($fieldValue) && strtotime($fieldValue)) {
+            return Carbon::createFromFormat('Y-m-d', $fieldValue)->format('Y-m-d');
         }
+        else{
+            return '0000-00-00';
+        }   
+    }
 
-        try {
-            Carbon::parse($value);
-            return true;
-        } catch (\Exception $e) {
-            return false;
+    public function convertDateTime($fieldValue)
+    {
+        if (is_numeric($fieldValue)) {
+            return Date::excelToDateTimeObject($fieldValue)->format('Y-m-d H:i');
+        } elseif (is_string($fieldValue) && strtotime($fieldValue)) {
+            return Carbon::parse($fieldValue)->format('Y-m-d H:i');
+        } else {
+            return '0000-00-00 00:00';
         }
     }
 }

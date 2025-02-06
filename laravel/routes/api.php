@@ -212,6 +212,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('downloadServices',[ServiceController::class, 'downloadServices']);
     Route::post('downloadServiceHeadings',[ServiceController::class, 'downloadServiceHeadings']);
     Route::post('importService',[ServiceController::class, 'importService']);
+    Route::post('deleteHardService',[ServiceController::class, 'deleteHardService']);
 
     Route::post('paginateAssets',[AssetController::class, 'paginateAssets']);
     Route::post('addAsset',[AssetController::class, 'addAsset']);
@@ -457,6 +458,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('downloadDataSources',[DataSourceController::class, 'downloadDataSources']);
     Route::post('downloadDataSourceHeadings',[DataSourceController::class, 'downloadDataSourceHeadings']);
     Route::post('importDataSource',[DataSourceController::class, 'importDataSource']);
+    Route::post('deleteHardDataSource',[DataSourceController::class, 'deleteHardDataSource']);
 
     Route::post('paginateBreakDownLists',[BreakDownListController::class, 'paginateBreakDownLists']);
     Route::post('getBreakDownLists',[BreakDownListController::class, 'getBreakDownLists']);

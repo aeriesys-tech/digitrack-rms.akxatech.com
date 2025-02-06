@@ -15,31 +15,44 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Validators\Failure;
 
-class DataSourceImport implements ToCollection, WithHeadingRow
+class DataSourceImport implements ToCollection, WithHeadingRow, SkipsOnFailure
 {
+    use SkipsFailures;
+
     public function collection(Collection $rows)
     {
-        $errorRows = [];
   
-        $assetTypes = DataSourceAssetType::whereHas('AssetType')->with('AssetType')->get()
-            ->keyBy(function ($datasourceAssetType) {
-                return $datasourceAssetType->AssetType->asset_type_name;
-            });
-
         $dataSourceTypes = DataSourceAttributeType::whereHas('DataSourceType')->with('DataSourceType')->get()
             ->keyBy(function ($dataSourceAttributeType) {
                 return $dataSourceAttributeType->DataSourceType->data_source_type_name;
             });
 
-        $DataSourceAttributes = DataSourceAttribute::all()->keyBy('field_name');
+        $DataSourceAttributes = DataSourceAttribute::all()->keyBy('field_key');
 
-        foreach ($rows as $row) 
+        foreach ($rows as $index => $row) 
         {
-            if (!isset($row['data_source_code']) || !isset($row['data_source_name']) || !isset($row['data_source_type'])) 
-            {
-                $errorRows[] = $row; 
+            if (!isset($row['data_source_code']) || !isset($row['data_source_name'])) {
+                $this->failures[] = new Failure(
+                    $index + 1, 
+                    'data_source_code, data_source_name, spare_type',
+                    ['Missing required fields']
+                );
                 continue; 
+            }
+            
+            if (DataSource::where('data_source_code', trim($row['data_source_code']))->exists() || 
+                DataSource::where('data_source_name', trim($row['data_source_name']))->exists()) {
+                $this->failures[] = new Failure(
+                    $index + 1,
+                    'data_source_code, data_source_name',
+                    ['Duplicate data_source_code or data_source_name']
+                );
+                continue;
             }
 
             $dataSourceTypeId = $dataSourceTypes->get(trim($row['data_source_type'])) ? 
@@ -54,11 +67,9 @@ class DataSourceImport implements ToCollection, WithHeadingRow
             $dataSource = DataSource::create($data);
 
             // asset types
-            if (isset($row['asset_type'])) 
+            if (isset($row['assign_to'])) 
             {
-                $assetTypeNames = explode(',', $row['asset_type']);
-                $assetTypeNames = array_map('trim', $assetTypeNames);
-            
+                $assetTypeNames = array_map('trim', explode(',', $row['assign_to']));
                 $assetTypes = AssetType::whereIn('asset_type_name', $assetTypeNames)->get();
             
                 if ($assetTypes->isNotEmpty()) {
@@ -72,31 +83,34 @@ class DataSourceImport implements ToCollection, WithHeadingRow
                     }
                 } 
             }
-            // Log::info($row);
+
             foreach ($row as $key => $value) 
             {
-                $normalizedKey = $this->normalizeKey($key);
-
-                // Skip the known keys like spare_type, spare_code, spare_name, and asset_type
-                if (!in_array($normalizedKey, ['data_source_type', 'data_source_code', 'data_source_name', 'asset_type']) && !empty($value)) 
+                if (!in_array($key, ['data_source_type', 'data_source_code', 'data_source_name', 'assign_to']) && !empty($value)) 
                 {
-                    $dataSourceAttribute = $DataSourceAttributes->get($normalizedKey); 
-                    if (!$dataSourceAttribute) 
-                    {
-                        $dataSourceAttribute = $DataSourceAttributes->get(ucwords(str_replace('_', ' ', $normalizedKey)));
-                    }
-
+                    $dataSourceAttribute = $DataSourceAttributes->get($key); 
+                
                     if ($dataSourceAttribute) 
                     {
                         $fieldValue = trim($value);
+                        $dataSourceAttributeId = $dataSourceAttribute->data_source_attribute_id;
 
-                        if ($this->isDate($fieldValue)) {
-                            $fieldValue = Carbon::parse($fieldValue)->format('Y-m-d'); 
+                        if ($dataSourceAttribute->field_type === 'Color') 
+                        {
+                            $fieldValue = $this->convertColorNameToHex($fieldValue);
+                        }
+                        if($dataSourceAttribute->field_type === 'Date')
+                        {
+                            $fieldValue = $this->convertDate($fieldValue);
+                        }
+                        if($dataSourceAttribute->field_type === 'Date&Time')
+                        {
+                            $fieldValue = $this->convertDateTime($fieldValue);
                         }
 
                         DataSourceAttributeValue::create([
                             'data_source_id' => $dataSource->data_source_id,
-                            'data_source_attribute_id' => $dataSourceAttribute->data_source_attribute_id,
+                            'data_source_attribute_id' => $dataSourceAttributeId,
                             'field_value' => $fieldValue,
                         ]);
                     }
@@ -105,22 +119,53 @@ class DataSourceImport implements ToCollection, WithHeadingRow
         }
     }
 
-    private function normalizeKey($key)
+    public function convertColorNameToHex($fieldValue) 
     {
-        return strtolower(trim(str_replace(' ', '_', $key)));
+        $colorNamesToHex = [
+            'Red' => '#FF0000',
+            'Green' => '#008000',
+            'Blue' => '#0000FF',
+            'Yellow' => '#FFFF00',
+            'Black' => '#000000',
+            'White' => '#FFFFFF',
+            'Gray' => '#808080',
+            'Orange' => '#FFA500',
+            'Purple' => '#800080',
+            'Pink' => '#FFC0CB',
+            'Brown' => '#A52A2A',
+            'Cyan' => '#00FFFF',
+            'Magenta' => '#FF00FF',
+            'Lime' => '#00FF00',
+            'Indigo' => '#4B0082',
+            'Violet' => '#8A2BE2',
+        ];
+
+        if (array_key_exists($fieldValue, $colorNamesToHex)) {
+            return $colorNamesToHex[$fieldValue];
+        }
+        return '#000000';
     }
 
-    private function isDate($value)
+    public function convertDate($fieldValue) 
     {
-        if (is_numeric($value)) {
-            return false;
+        if (is_numeric($fieldValue)) {
+            return Date::excelToDateTimeObject($fieldValue)->format('Y-m-d');
+        } else if (is_string($fieldValue) && strtotime($fieldValue)) {
+            return Carbon::createFromFormat('Y-m-d', $fieldValue)->format('Y-m-d');
         }
+        else{
+            return '0000-00-00';
+        }   
+    }
 
-        try {
-            Carbon::parse($value);
-            return true;
-        } catch (\Exception $e) {
-            return false;
+    public function convertDateTime($fieldValue)
+    {
+        if (is_numeric($fieldValue)) {
+            return Date::excelToDateTimeObject($fieldValue)->format('Y-m-d H:i');
+        } elseif (is_string($fieldValue) && strtotime($fieldValue)) {
+            return Carbon::parse($fieldValue)->format('Y-m-d H:i');
+        } else {
+            return '0000-00-00 00:00';
         }
     }
 }

@@ -249,4 +249,19 @@ class ServiceController extends Controller
 
         return response()->json(['success' => 'Data imported successfully!']);
     }
+
+    public function deleteHardService(Request $request)
+    {
+        $request->validate([
+            'service_id' => 'required|exists:services,service_id'
+        ]);
+
+        ServiceAssetType::whereIn('service_id', $request->service_id)->forceDelete();
+        ServiceAttributeValue::whereIn('service_id', $request->service_id)->forceDelete();
+        Service::whereIn('service_id', $request->service_id)->forceDelete();
+
+        return response()->json([
+            "message" =>"Service Deleted Successfully"
+        ],200);
+    }
 }

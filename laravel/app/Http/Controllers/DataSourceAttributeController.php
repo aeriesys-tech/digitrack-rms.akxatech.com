@@ -78,6 +78,7 @@ class DataSourceAttributeController extends Controller
         ]);
 
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
 
         $data_source_attribute = DataSourceAttribute::create($data);
 
@@ -117,6 +118,7 @@ class DataSourceAttributeController extends Controller
         ]);
 
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
 
         $data_source_attribute = DataSourceAttribute::where('data_source_attribute_id', $request->data_source_attribute_id)->first();
         $data_source_attribute->update($data);

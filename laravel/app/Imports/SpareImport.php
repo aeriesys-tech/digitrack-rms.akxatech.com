@@ -14,34 +14,47 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Validators\Failure;
 
-class SpareImport implements ToCollection, WithHeadingRow
+class SpareImport implements ToCollection, WithHeadingRow, SkipsOnFailure
 {
+    use SkipsFailures;
+
     public function collection(Collection $rows)
     {
-        $errorRows = [];
-  
-        $spareTypes = SpareAttributeType::whereHas('SpareType')->with('SpareType')->get()
-            ->keyBy(function ($spareAttributeType) {
-                return $spareAttributeType->SpareType->spare_type_name;
-            });
-
-        $spareAttributes = SpareAttribute::all()->keyBy('field_key');
-
-        foreach ($rows as $row) 
+        foreach ($rows as $index =>  $row) 
         {
-            if (!isset($row['spare_code']) || !isset($row['spare_name']) || !isset($row['spare_type'])) {
-                $errorRows[] = $row;
-                continue;
-            }
+            $spareTypes = SpareAttributeType::whereHas('SpareType')->with('SpareType')->get()
+                ->keyBy(function ($spareAttributeType) {
+                    return $spareAttributeType->SpareType->spare_type_name;
+                });
 
-            if (Spare::where('spare_code', trim($row['spare_code']))->exists() || Spare::where('spare_name', trim($row['spare_name']))->exists()) {
-                $errorRows[] = $row;
-                continue;
-            }
+            $spareAttributes = SpareAttribute::all()->keyBy('field_key');
 
             $spareTypeId = $spareTypes->get(trim($row['spare_type'])) ? 
                 $spareTypes->get(trim($row['spare_type']))->spare_type_id : null;
+
+            if (!isset($row['spare_code']) || !isset($row['spare_name']) || !isset($row['spare_type'])) {
+                $this->failures[] = new Failure(
+                    $index + 1, 
+                    'spare_code, spare_name, spare_type',
+                    ['Missing required fields']
+                );
+                continue; 
+            }
+            
+            if (Spare::where('spare_code', trim($row['spare_code']))->exists() || 
+                Spare::where('spare_name', trim($row['spare_name']))->exists()) {
+                $this->failures[] = new Failure(
+                    $index + 1,
+                    'spare_code, spare_name',
+                    ['Duplicate spare_code or spare_name']
+                );
+                continue;
+            }
 
             $data = [
                 'spare_type_id' => $spareTypeId,

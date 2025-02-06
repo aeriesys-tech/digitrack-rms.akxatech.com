@@ -58,7 +58,7 @@ class ServiceHeadingsSheet implements FromView, WithTitle, WithColumnWidths
             'Service Type',
             'Service Code',
             'Service Name',
-            'Asset Type'
+            'Assign To'
         ];
 
         $values = [

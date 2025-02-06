@@ -59,7 +59,7 @@ class VariableHeadingsSheet implements FromView, WithTitle, WithColumnWidths
             'Variable Type',
             'Variable Code',
             'Variable Name',
-            'Asset Type'
+            'Assign To'
         ];
 
         $values = [

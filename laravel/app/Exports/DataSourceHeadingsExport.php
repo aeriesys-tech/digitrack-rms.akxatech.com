@@ -55,10 +55,10 @@ class DataSourceHeadingsSheet implements FromView, WithTitle, WithColumnWidths
 
         // headers
         $headers = [
-            'DataSource Type',
-            'DataSource Code',
-            'DataSource Name',
-            'Asset Type'
+            'Data Source Type',
+            'Data Source Code',
+            'Data Source Name',
+            'Assign To'
         ];
 
         $values = [

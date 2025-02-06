@@ -77,6 +77,7 @@ class ServiceAttributeController extends Controller
 	        'service_type_id.*' => 'required|exists:service_types,service_type_id'
         ]);
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
         
         $service_attribute = ServiceAttribute::create($data);
 
@@ -115,6 +116,7 @@ class ServiceAttributeController extends Controller
         ]);
 
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
 
         $service_attribute = ServiceAttribute::where('service_attribute_id', $request->service_attribute_id)->first();
         $service_attribute->update($data);
