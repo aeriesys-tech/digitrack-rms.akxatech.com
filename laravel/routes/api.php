@@ -530,6 +530,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetTemplateService',[AssetTemplateServiceController::class, 'getAssetTemplateService']);
     Route::post('updateAssetTemplateService',[AssetTemplateServiceController::class, 'updateAssetTemplateService']);
     Route::post('forceDeleteAssetTemplateService',[AssetTemplateServiceController::class, 'forceDeleteAssetTemplateService']);
+    Route::post('getCheckTemplateServices',[AssetTemplateServiceController::class, 'getCheckTemplateServices']);
     
     Route::post('paginateAssetTemplateVariables',[AssetTemplateVariableController::class, 'paginateAssetTemplateVariables']);
     Route::post('addAssetTemplateVariable',[AssetTemplateVariableController::class, 'addAssetTemplateVariable']);

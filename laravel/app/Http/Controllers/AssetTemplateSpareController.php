@@ -98,7 +98,7 @@ class AssetTemplateSpareController extends Controller
                 'array',
             ],
             'template_zones.*' => 'nullable|exists:template_zones,template_zone_id',
-            'quantity' =>  'required|integer|min:1'
+            'quantity' =>  'required'
         ]);
 
         $asset = AssetTemplate::where('asset_template_id', $request->asset_template_id)->first();
@@ -213,7 +213,7 @@ class AssetTemplateSpareController extends Controller
             'template_zone_id' => [
                 $assetHasZones ? 'required' : 'nullable',
             ],
-            'quantity' =>  'required|integer|min:1'
+            'quantity' =>  'required'
         ]);
 
         $spare = Spare::where('spare_id', $request->spare_id)->first();

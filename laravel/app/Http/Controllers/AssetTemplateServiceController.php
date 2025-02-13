@@ -9,6 +9,7 @@ use App\Models\AssetTemplate;
 use App\Models\TemplateServiceValue;
 use App\Http\Resources\AssetTemplateServiceResource;
 use App\Http\Resources\ServiceResource;
+use App\Models\AssetTemplateCheck;
 
 class AssetTemplateServiceController extends Controller
 {
@@ -251,11 +252,20 @@ class AssetTemplateServiceController extends Controller
         $request->validate([
             'asset_template_service_id' => 'required|exists:asset_template_services,asset_template_service_id'
         ]);
-    
-        $asset_service = TemplateServiceValue::where('asset_template_service_id', $request->asset_template_service_id)->forceDelete();
-        $asset_service = AssetTemplateService::where('asset_template_service_id', $request->asset_template_service_id)->forceDelete();
-        return response()->json([
-            "message" => "Template Service deleted successfully"
-        ], 200);
+
+        $template_check = AssetTemplateCheck::where('asset_template_service_id', $request->asset_template_service_id)->exists();
+        if ($template_check) 
+        {
+            return response()->json([
+                "message" => 'Template Service cannot be deleted as it is used in other records.'
+            ], 400);
+        }
+        else{
+            $asset_service = TemplateServiceValue::where('asset_template_service_id', $request->asset_template_service_id)->forceDelete();
+            $asset_service = AssetTemplateService::where('asset_template_service_id', $request->asset_template_service_id)->forceDelete();
+            return response()->json([
+                "message" => "Template Service deleted successfully"
+            ], 200);
+        }
     }    
 }

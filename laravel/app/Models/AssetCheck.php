@@ -18,7 +18,8 @@ class AssetCheck extends Model
         'check_id',
         'default_value',
         'lcl',
-        'ucl'
+        'ucl',
+        'asset_service_id'
     ];
 
     protected $primaryKey = 'asset_check_id';
@@ -46,5 +47,10 @@ class AssetCheck extends Model
     public function AssetZone()
     {
         return $this->belongsTo(AssetZone::class, 'asset_zone_id');
+    }
+
+    public function AssetService()
+    {
+        return $this->belongsTo(AssetService::class, 'asset_service_id');
     }
 }

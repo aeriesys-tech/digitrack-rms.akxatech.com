@@ -10,6 +10,8 @@ use App\Models\AssetTemplate;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\CheckResource;
 use App\Http\Resources\AssetTemplateCheckResource;
+use App\Http\Resources\AssetTemplateCheckServiceResource;
+use App\Models\AssetTemplateService;
 
 class AssetTemplateCheckController extends Controller
 {
@@ -54,6 +56,8 @@ class AssetTemplateCheckController extends Controller
             $que->where('asset_type_id', $request->asset_type_id);
         })->get();
 
+        $template_services = AssetTemplateService::where('asset_template_id', $request->asset_template_id)->get();
+
         return response()->json([
             'paginate_checks' => AssetTemplateCheckResource::collection($template_check),
             'meta' => [
@@ -62,7 +66,8 @@ class AssetTemplateCheckController extends Controller
                 'per_page' => $template_check->perPage(),
                 'total' => $template_check->total(),
             ],
-            'checks' => CheckResource::collection($checks)
+            'checks' => CheckResource::collection($checks),
+            'template_services' => AssetTemplateCheckServiceResource::collection($template_services)
         ]);
     }
 
@@ -79,15 +84,15 @@ class AssetTemplateCheckController extends Controller
                         ->where('asset_template_id', $request->asset_template_id)
                         ->where(function ($query) use ($request, $assetHasZones) {
                             if ($assetHasZones && $request->filled('check_template_zones')) {
-                                $query->whereIn('template_zone_id', $request->check_template_zones);
+                                $query->whereIn('asset_template_service_id', $request->check_template_zones);
                             } else {
-                                $query->whereNull('template_zone_id');
+                                $query->whereNull('asset_template_service_id');
                             }
                         })->exists();
 
                     if ($exists) {
                         if ($request->filled('check_template_zones') && $assetHasZones) {
-                            $fail('The combination of Check and Asset Template Zone already exists.');
+                            $fail('The combination of Check and Asset Template Service already exists.');
                         } else {
                             $fail('The combination of Check and Asset Template already exists.');
                         }
@@ -134,26 +139,23 @@ class AssetTemplateCheckController extends Controller
         {
             foreach ($data['check_template_zones'] as $zoneId) 
             {              
-                if (is_null($zoneId) || $zoneId == 0) 
+                if (is_null($zoneId) || $zoneId == 0)
                 {
                     continue;
                 }
 
+                $templateZone = AssetTemplateService::where('asset_template_service_id', $zoneId)
+                    ->value('template_zone_id');
+
+    
                 $checksData = $data;
-                $checksData['template_zone_id'] = $zoneId;
+                $checksData['asset_template_service_id'] = $zoneId;
+                $checksData['template_zone_id'] = $templateZone;
 
                 $assetChecks = AssetTemplateCheck::create($checksData);
                 $createdChecks[] = new AssetTemplateCheckResource($assetChecks);
             }
         } 
-        else 
-        {
-            $checksData = $data;
-            $checksData['template_zone_id'] = null;
-
-            $assetChecks = AssetTemplateCheck::create($checksData);
-            $createdChecks[] = new AssetTemplateCheckResource($assetChecks);
-        }
         return response()->json([$createdChecks, "message" => "Template Check Created Successfully"]);
     }
 
@@ -193,15 +195,15 @@ class AssetTemplateCheckController extends Controller
                         $exists = AssetTemplateCheck::where('check_id', $value)
                             ->where('asset_template_id', $request->asset_template_id)
                             ->where(function ($query) use ($request) {
-                                if ($request->filled('template_zone_id')) {
-                                    $query->where('template_zone_id', $request->template_zone_id);
+                                if ($request->filled('asset_template_service_id')) {
+                                    $query->where('asset_template_service_id', $request->asset_template_service_id);
                                 } else {
-                                    $query->whereNull('template_zone_id');
+                                    $query->whereNull('asset_template_service_id');
                                 }
                             })->where('asset_template_check_id', '!=', $request->asset_template_check_id)->exists();
     
                         if ($exists) {
-                            $fail('The combination of Check, Asset Template, and Template Zone already exists.');
+                            $fail('The combination of Check, Asset Template Service already exists.');
                         }
                     }
                 },
@@ -224,6 +226,7 @@ class AssetTemplateCheckController extends Controller
             'template_zone_id' => [
                 $assetHasZones ? 'required' : 'nullable',
             ],
+            'asset_template_service_id' => 'required|exists:asset_template_services,asset_template_service_id'
         ]);
 
         $asset = AssetTemplate::where('asset_template_id', $request->asset_template_id)->first();

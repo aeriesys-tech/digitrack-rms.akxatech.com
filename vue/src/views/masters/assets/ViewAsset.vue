@@ -77,6 +77,229 @@
             <!-- try -->
             <div class="col-xl-9 mb-2" style="height: 950px; overflow-y: scroll;">
                 <div class="row">
+
+                    <div class="col-12 mb-2" v-can="'assetServices.view'">
+                        <div class="card card-one">
+                            <div class="card-header d-flex justify-content-between">
+                                <h6 class="card-title">Services</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3 g-2" v-can="['assetServices.create','assetServices.update']">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
+                                        <MultiSelect
+                                            v-model="service.service_asset_zones_obj"
+                                            filter
+                                            optionLabel="zone_name"
+                                            :options="asset_zones"
+                                            placeholder="Select Asset Zone"
+                                            :maxSelectedLabels="3"
+                                            style="width: 100%; height: 37px;"
+                                            :style="errors?.service_asset_zones ? error_style : ''"
+                                            :disabled="service.service_zone_read_only"
+                                        />
+                                        <span v-if="errors?.service_asset_zones" class="invalid-feedback" style="display: block !important;">{{ errors?.service_asset_zones[0] }}</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Service <span class="text-danger"> *</span></label>
+                                        <search
+                                            :class="{ 'is-invalid': errors?.service_id }"
+                                            :customClass="{ 'is-invalid': errors?.service_id }"
+                                            aria-describedby="basic-addon2"
+                                            aria-label="Select Check"
+                                            class="my-auto"
+                                            :initialize="service.service_id"
+                                            id="service_id"
+                                            label="service_name"
+                                            placeholder="Select Service"
+                                            :data="services"
+                                            @input=" service1 => service.service_id = service1"
+                                            @selectsearch="getServiceAttribute(service.service_id)"
+                                        >
+                                        </search>
+                                        <span v-if="errors?.service_id" class="invalid-feedback">{{ errors?.service_id[0] }}</span>
+                                    </div>
+
+                                    <div class="col-md-3" v-for="field, key in service.asset_service_attributes" :key="key">
+                                        <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Text'">
+                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                :placeholder="'Enter '+ field.service_attributes[0].display_name"
+                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
+                                                v-model="field.field_value"
+                                            />
+                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
+                                        </div>
+
+                                        <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Number'">
+                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                min="0"
+                                                oninput="validity.valid||(value='');"
+                                                :placeholder="'Enter '+ field.service_attributes[0].display_name"
+                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
+                                                v-model="field.field_value"
+                                            />
+                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
+                                        </div>
+
+                                        <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Date'">
+                                            <label class="form-label">
+                                                {{ field.service_attributes[0].display_name }}
+                                                <span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                :placeholder="'Enter ' + field.service_attributes[0].display_name"
+                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
+                                                v-model="field.field_value"
+                                            />
+                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">
+                                                {{ errors[field.service_attributes[0].display_name][0] }}
+                                            </span>
+                                        </div>
+
+                                        <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Date&Time'">
+                                            <label class="form-label">
+                                                {{ field.service_attributes[0].display_name }}
+                                                <span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                type="datetime-local"
+                                                class="form-control"
+                                                :placeholder="'Enter ' + field.service_attributes[0].display_name"
+                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
+                                                v-model="field.field_value"
+                                                step="1"
+                                            />
+                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">
+                                                {{ errors[field.service_attributes[0].display_name][0] }}
+                                            </span>
+                                        </div>
+                                        <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Dropdown'">
+                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
+                                            <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" v-model="field.field_value">
+                                                <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
+                                                <option :value="field.field_value" v-else>Select {{field.service_attributes[0].display_name}}</option>
+                                                <option v-for="value, key in field.service_attributes[0].field_values.split(',')" :key="key" :value="value">{{value}}</option>
+                                            </select>
+                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
+                                        </div>
+                                        <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Color'">
+                                            <label class="form-label">{{ field.service_attributes[0].display_name }}<span v-if="field.service_attributes[0].is_required" class="text-danger">*</span></label>
+                                            <input type="color" class="form-control" v-model="field.field_value" style="height: 2.2rem;" />
+                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
+                                        </div>
+
+                                        <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'List'">
+                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
+                                            <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" v-model="field.field_value">
+                                                <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-if="field.service_attributes[0]?.service_attribute_value?.field_value">
+                                                    {{field.service_attributes[0].service_attribute_value?.field_value}}
+                                                </option>
+                                                <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-else>Select {{field.service_attributes[0].display_name}}</option>
+                                                <option v-for="value, key in field.service_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
+                                            </select>
+                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 pt-4" v-if="service.asset_service_id">
+                                        <button v-can="'assetServices.update'" class="btn btn-outline-success me-2" @click="updateService()"><i class="ri-add-circle-line icon-hgt"></i> Update</button>
+                                    </div>
+                                    <div class="col-md-2 pt-4" v-else>
+                                        <button v-can="'assetServices.create'" class="btn btn-outline-success me-2" @click="addService()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
+                                    </div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <div class="table-responsive table-responsive-sm">
+                                            <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
+                                                <thead>
+                                                    <tr class="">
+                                                        <th class="text-center">#</th>
+                                                        <th @click="sort('asset_zone_id', 'Services')">
+                                                            Asset Zone
+                                                            <span>
+                                                                <i v-if="check_meta.keyword=='asset_zone_id' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="check_meta.keyword=='asset_zone_id' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
+                                                        <th @click="sort('service_type_id', 'Services')">
+                                                            Service Type
+                                                            <span>
+                                                                <i v-if="check_meta.keyword=='service_type_id' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="check_meta.keyword=='service_type_id' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
+                                                        <th @click="sort('service_name', 'Services')">
+                                                            Service Name
+                                                            <span>
+                                                                <i v-if="check_meta.keyword=='service_name' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="check_meta.keyword=='service_name' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
+                                                        <th @click="sort('service_code', 'Services')">
+                                                            Service Code
+                                                            <span>
+                                                                <i v-if="check_meta.keyword=='service_code' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="check_meta.keyword=='service_code' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
+                                                        <th class="text-center">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-if="asset_services?.length==0">
+                                                        <td colspan="6" class="text-center">No records found</td>
+                                                    </tr>
+                                                    <tr v-for="service, key in asset_services" :key="key">
+                                                        <td class="text-center">{{(check_meta_service.page-1)*check_meta_service.per_page + key+1 }}</td>
+                                                        <td>{{ service?.asset_zone?.zone_name }}</td>
+                                                        <td>{{ service?.service?.service_type?.service_type_name }}</td>
+                                                        <td>{{ service?.service?.service_name }}</td>
+                                                        <td>{{ service?.service?.service_code }}</td>
+                                                        <td class="text-center">
+                                                            <a v-can="'assetServices.update'" href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                                            <a href="javascript:void(0)" class="text-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" @click.prevent="viewAsset(service, 'Services')">
+                                                                <i class="ri-eye-fill fs-18 lh-1"></i>
+                                                            </a>
+                                                            <a v-can="'assetServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <select class="form-select from-select-sm width-75" v-model="check_meta_service.per_page" @change="onPerPageChange('Services')">
+                                        <option>5</option>
+                                        <option>10</option>
+                                        <option>15</option>
+                                        <option>20</option>
+                                        <option>25</option>
+                                        <option>30</option>
+                                    </select>
+                                    <span>Showing {{ check_meta_service.from }} to {{ check_meta_service.to }} of {{ check_meta_service.totalRows }} entries</span>
+                                    <Pagination :maxPage="check_meta_service.maxPage" :totalPages="check_meta_service.lastPage" :currentPage="check_meta_service.page" @pagechanged="onPageChange" :from="'Services'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-12 mb-2" v-can="'assetSpares.view'">
                         <div class="card card-one">
                             <div class="card-header d-flex justify-content-between">
@@ -125,7 +348,7 @@
                                         <span v-if="errors?.quantity" class="invalid-feedback">{{ errors?.quantity[0] }}</span>
                                     </div>
                                     <div class="col-md-3" v-for="field, key in spare.asset_spare_attributes" :key="key">
-                                        <div v-if="field.spare_attributes[0].field_type=='Text'">
+                                        <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Text'">
                                             <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                             <input
                                                 type="text"
@@ -137,7 +360,7 @@
                                             <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.spare_attributes[0].field_type=='Number'">
+                                        <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Number'">
                                             <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                             <input
                                                 type="number"
@@ -151,7 +374,7 @@
                                             <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.spare_attributes[0].field_type === 'Date'">
+                                        <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type === 'Date'">
                                             <label class="form-label">
                                                 {{ field.spare_attributes[0].display_name }}
                                                 <span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
@@ -168,7 +391,7 @@
                                             </span>
                                         </div>
 
-                                        <div v-if="field.spare_attributes[0].field_type === 'Date&Time'">
+                                        <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type === 'Date&Time'">
                                             <label class="form-label">
                                                 {{ field.spare_attributes[0].display_name }}
                                                 <span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
@@ -186,7 +409,7 @@
                                                 {{ errors[field.spare_attributes[0].display_name][0] }}
                                             </span>
                                         </div>
-                                        <div v-if="field.spare_attributes[0].field_type=='Dropdown'">
+                                        <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Dropdown'">
                                             <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.spare_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
@@ -195,13 +418,13 @@
                                             </select>
                                             <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                         </div>
-                                        <div v-if="field.spare_attributes[0].field_type=='Color'">
+                                        <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Color'">
                                             <label class="form-label">{{ field.spare_attributes[0].display_name }}<span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span></label>
                                             <input type="color" class="form-control" v-model="field.field_value" style="height: 2.2rem;" />
                                             <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.spare_attributes[0].field_type=='List'">
+                                        <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.spare_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.spare_attributes[0].spare_attribute_value?.field_value" v-if="field.spare_attributes[0].spare_attribute_value?.field_value">
@@ -324,7 +547,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row mb-3 g-2" v-can="['assetChecks.create','assetChecks.update']">
-                                    <div class="col-md-4">
+                                    <!-- <div class="col-md-4">
                                         <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
                                         <MultiSelect
                                             v-model="check.check_asset_zones_obj"
@@ -338,6 +561,26 @@
                                             :disabled="check.check_zone_read_only"
                                         />
                                         <span v-if="errors?.check_asset_zones" class="invalid-feedback" style="display: block !important;">{{ errors?.check_asset_zones[0] }}</span>
+                                    </div> -->
+                                    <div class="col-md-4">
+                                        <label class="form-label">Asset Zone Service <span class="text-danger"> *</span></label>
+                                        <MultiSelect
+                                            v-model="check.check_asset_zones_obj"
+                                            filter
+                                            optionLabel="displayName"
+                                            :options="formattedTemplateServices"
+                                            placeholder="Select Service"
+                                            :maxSelectedLabels="3"
+                                            style="width: 100%; height: 37px;"
+                                            :class="{ 'is-invalid': errors?.asset_service_id }"
+                                            :customClass="{ 'is-invalid': errors?.asset_service_id }"
+                                            id="asset_service_id"
+                                            @input="templateservice1 => check.asset_service_id = templateservice1"
+                                            :disabled="check.check_zone_read_only"
+                                        />
+                                        <span v-if="errors?.asset_service_id" class="invalid-feedback" style="display: block !important;">
+                                            {{ errors?.asset_service_id[0] }}
+                                        </span>
                                     </div>
                                     <div class="col-md-8">
                                         <label class="form-label">Check <span class="text-danger"> *</span></label>
@@ -418,6 +661,14 @@
                                                                 <i v-else class="fas fa-sort"></i>
                                                             </span>
                                                         </th>
+                                                        <th @click="sort('asset_zone_id', 'Checks')">
+                                                            Service
+                                                            <span>
+                                                                <i v-if="check_meta.keyword=='asset_zone_id' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="check_meta.keyword=='asset_zone_id' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
 
                                                         <th @click="sort('lcl', 'Checks')" width="8%">
                                                             Lcl
@@ -456,6 +707,7 @@
                                                         <td>{{ check?.asset_zone?.zone_name }}</td>
                                                         <td style="white-space: normal;">{{check?.check?.field_name}}</td>
                                                         <td>{{ check?.check?.field_type }}</td>
+                                                        <td>{{check?.asset_service?.service_name}}</td>
                                                         <td>{{ check.lcl }}</td>
                                                         <td>{{ check.ucl }}</td>
                                                         <td style="white-space: normal;">{{ check.default_value }}</td>
@@ -482,228 +734,6 @@
                                     </select>
                                     <span>Showing {{ check_meta.from }} to {{ check_meta.to }} of {{ check_meta.totalRows }} entries</span>
                                     <Pagination :maxPage="check_meta.maxPage" :totalPages="check_meta.lastPage" :currentPage="check_meta.page" @pagechanged="onPageChange" :from="'Checks'" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 mb-2" v-can="'assetServices.view'">
-                        <div class="card card-one">
-                            <div class="card-header d-flex justify-content-between">
-                                <h6 class="card-title">Services</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row mb-3 g-2" v-can="['assetServices.create','assetServices.update']">
-                                    <div class="col-md-4">
-                                        <label class="form-label">Asset Zone <span class="text-danger"> *</span></label>
-                                        <MultiSelect
-                                            v-model="service.service_asset_zones_obj"
-                                            filter
-                                            optionLabel="zone_name"
-                                            :options="asset_zones"
-                                            placeholder="Select Asset Zone"
-                                            :maxSelectedLabels="3"
-                                            style="width: 100%; height: 37px;"
-                                            :style="errors?.service_asset_zones ? error_style : ''"
-                                            :disabled="service.service_zone_read_only"
-                                        />
-                                        <span v-if="errors?.service_asset_zones" class="invalid-feedback" style="display: block !important;">{{ errors?.service_asset_zones[0] }}</span>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Service <span class="text-danger"> *</span></label>
-                                        <search
-                                            :class="{ 'is-invalid': errors?.service_id }"
-                                            :customClass="{ 'is-invalid': errors?.service_id }"
-                                            aria-describedby="basic-addon2"
-                                            aria-label="Select Check"
-                                            class="my-auto"
-                                            :initialize="service.service_id"
-                                            id="service_id"
-                                            label="service_name"
-                                            placeholder="Select Service"
-                                            :data="services"
-                                            @input=" service1 => service.service_id = service1"
-                                            @selectsearch="getServiceAttribute(service.service_id)"
-                                        >
-                                        </search>
-                                        <span v-if="errors?.service_id" class="invalid-feedback">{{ errors?.service_id[0] }}</span>
-                                    </div>
-
-                                    <div class="col-md-3" v-for="field, key in service.asset_service_attributes" :key="key">
-                                        <div v-if="field.service_attributes[0].field_type=='Text'">
-                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                :placeholder="'Enter '+ field.service_attributes[0].display_name"
-                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
-                                                v-model="field.field_value"
-                                            />
-                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
-                                        </div>
-
-                                        <div v-if="field.service_attributes[0].field_type=='Number'">
-                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
-                                            <input
-                                                type="number"
-                                                class="form-control"
-                                                min="0"
-                                                oninput="validity.valid||(value='');"
-                                                :placeholder="'Enter '+ field.service_attributes[0].display_name"
-                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
-                                                v-model="field.field_value"
-                                            />
-                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
-                                        </div>
-
-                                        <div v-if="field.service_attributes[0].field_type === 'Date'">
-                                            <label class="form-label">
-                                                {{ field.service_attributes[0].display_name }}
-                                                <span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
-                                            </label>
-                                            <input
-                                                type="date"
-                                                class="form-control"
-                                                :placeholder="'Enter ' + field.service_attributes[0].display_name"
-                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
-                                                v-model="field.field_value"
-                                            />
-                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">
-                                                {{ errors[field.service_attributes[0].display_name][0] }}
-                                            </span>
-                                        </div>
-
-                                        <div v-if="field.service_attributes[0].field_type === 'Date&Time'">
-                                            <label class="form-label">
-                                                {{ field.service_attributes[0].display_name }}
-                                                <span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
-                                            </label>
-
-                                            <input
-                                                type="datetime-local"
-                                                class="form-control"
-                                                :placeholder="'Enter ' + field.service_attributes[0].display_name"
-                                                :class="{'is-invalid': errors[field.service_attributes[0].display_name]}"
-                                                v-model="field.field_value"
-                                                step="1"
-                                            />
-                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">
-                                                {{ errors[field.service_attributes[0].display_name][0] }}
-                                            </span>
-                                        </div>
-                                        <div v-if="field.service_attributes[0].field_type=='Dropdown'">
-                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
-                                            <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" v-model="field.field_value">
-                                                <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
-                                                <option :value="field.field_value" v-else>Select {{field.service_attributes[0].display_name}}</option>
-                                                <option v-for="value, key in field.service_attributes[0].field_values.split(',')" :key="key" :value="value">{{value}}</option>
-                                            </select>
-                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
-                                        </div>
-                                        <div v-if="field.service_attributes[0].field_type=='Color'">
-                                            <label class="form-label">{{ field.service_attributes[0].display_name }}<span v-if="field.service_attributes[0].is_required" class="text-danger">*</span></label>
-                                            <input type="color" class="form-control" v-model="field.field_value" style="height: 2.2rem;" />
-                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
-                                        </div>
-
-                                        <div v-if="field.service_attributes[0].field_type=='List'">
-                                            <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
-                                            <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" v-model="field.field_value">
-                                                <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-if="field.service_attributes[0]?.service_attribute_value?.field_value">
-                                                    {{field.service_attributes[0].service_attribute_value?.field_value}}
-                                                </option>
-                                                <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-else>Select {{field.service_attributes[0].display_name}}</option>
-                                                <option v-for="value, key in field.service_attributes[0].list_parameter?.field_values.split(',')" :key="key" :value="value.trim()">{{value.trim()}}</option>
-                                            </select>
-                                            <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-2 pt-4" v-if="service.asset_service_id">
-                                        <button v-can="'assetServices.update'" class="btn btn-outline-success me-2" @click="updateService()"><i class="ri-add-circle-line icon-hgt"></i> Update</button>
-                                    </div>
-                                    <div class="col-md-2 pt-4" v-else>
-                                        <button v-can="'assetServices.create'" class="btn btn-outline-success me-2" @click="addService()"><i class="ri-add-circle-line icon-hgt"></i> Add</button>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col-12">
-                                        <div class="table-responsive table-responsive-sm">
-                                            <table class="table table-sm text-nowrap table-striped table-bordered mb-0">
-                                                <thead>
-                                                    <tr class="">
-                                                        <th class="text-center">#</th>
-                                                        <th @click="sort('asset_zone_id', 'Services')">
-                                                            Asset Zone
-                                                            <span>
-                                                                <i v-if="check_meta.keyword=='asset_zone_id' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                                <i v-else-if="check_meta.keyword=='asset_zone_id' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
-                                                                <i v-else class="fas fa-sort"></i>
-                                                            </span>
-                                                        </th>
-                                                        <th @click="sort('service_type_id', 'Services')">
-                                                            Service Type
-                                                            <span>
-                                                                <i v-if="check_meta.keyword=='service_type_id' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                                <i v-else-if="check_meta.keyword=='service_type_id' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
-                                                                <i v-else class="fas fa-sort"></i>
-                                                            </span>
-                                                        </th>
-                                                        <th @click="sort('service_name', 'Services')">
-                                                            Service Name
-                                                            <span>
-                                                                <i v-if="check_meta.keyword=='service_name' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                                <i v-else-if="check_meta.keyword=='service_name' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
-                                                                <i v-else class="fas fa-sort"></i>
-                                                            </span>
-                                                        </th>
-                                                        <th @click="sort('service_code', 'Services')">
-                                                            Service Code
-                                                            <span>
-                                                                <i v-if="check_meta.keyword=='service_code' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                                <i v-else-if="check_meta.keyword=='service_code' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
-                                                                <i v-else class="fas fa-sort"></i>
-                                                            </span>
-                                                        </th>
-                                                        <th class="text-center">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-if="asset_services?.length==0">
-                                                        <td colspan="6" class="text-center">No records found</td>
-                                                    </tr>
-                                                    <tr v-for="service, key in asset_services" :key="key">
-                                                        <td class="text-center">{{(check_meta_service.page-1)*check_meta_service.per_page + key+1 }}</td>
-                                                        <td>{{ service?.asset_zone?.zone_name }}</td>
-                                                        <td>{{ service?.service?.service_type?.service_type_name }}</td>
-                                                        <td>{{ service?.service?.service_name }}</td>
-                                                        <td>{{ service?.service?.service_code }}</td>
-                                                        <td class="text-center">
-                                                            <a v-can="'assetServices.update'" href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                                            <a href="javascript:void(0)" class="text-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" @click.prevent="viewAsset(service, 'Services')">
-                                                                <i class="ri-eye-fill fs-18 lh-1"></i>
-                                                            </a>
-                                                            <a v-can="'assetServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <select class="form-select from-select-sm width-75" v-model="check_meta_service.per_page" @change="onPerPageChange('Services')">
-                                        <option>5</option>
-                                        <option>10</option>
-                                        <option>15</option>
-                                        <option>20</option>
-                                        <option>25</option>
-                                        <option>30</option>
-                                    </select>
-                                    <span>Showing {{ check_meta_service.from }} to {{ check_meta_service.to }} of {{ check_meta_service.totalRows }} entries</span>
-                                    <Pagination :maxPage="check_meta_service.maxPage" :totalPages="check_meta_service.lastPage" :currentPage="check_meta_service.page" @pagechanged="onPageChange" :from="'Services'" />
                                 </div>
                             </div>
                         </div>
@@ -753,7 +783,7 @@
                                     </div>
 
                                     <div class="col-md-3" v-for="field, key in variable.asset_variable_attributes" :key="key">
-                                        <div v-if="field.variable_attributes[0].field_type=='Text'">
+                                        <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Text'">
                                             <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                             <input
                                                 type="text"
@@ -765,7 +795,7 @@
                                             <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.variable_attributes[0].field_type=='Number'">
+                                        <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Number'">
                                             <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                             <input
                                                 type="number"
@@ -779,7 +809,7 @@
                                             <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.variable_attributes[0].field_type === 'Date'">
+                                        <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type === 'Date'">
                                             <label class="form-label">
                                                 {{ field.variable_attributes[0].display_name }}
                                                 <span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
@@ -796,7 +826,7 @@
                                             </span>
                                         </div>
 
-                                        <div v-if="field.variable_attributes[0].field_type === 'Date&Time'">
+                                        <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type === 'Date&Time'">
                                             <label class="form-label">
                                                 {{ field.variable_attributes[0].display_name }}
                                                 <span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
@@ -814,7 +844,7 @@
                                                 {{ errors[field.variable_attributes[0].display_name][0] }}
                                             </span>
                                         </div>
-                                        <div v-if="field.variable_attributes[0].field_type=='Dropdown'">
+                                        <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Dropdown'">
                                             <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.variable_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
@@ -823,13 +853,13 @@
                                             </select>
                                             <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                         </div>
-                                        <div v-if="field.variable_attributes[0].field_type=='Color'">
+                                        <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Color'">
                                             <label class="form-label">{{ field.variable_attributes[0].display_name }}<span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span></label>
                                             <input type="color" class="form-control" v-model="field.field_value" style="height: 2.2rem;" />
                                             <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.variable_attributes[0].field_type=='List'">
+                                        <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.variable_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.variable_attributes[0].variable_attribute_value?.field_value" v-if="field.variable_attributes[0].variable_attribute_value?.field_value">
@@ -985,7 +1015,7 @@
                                     </div>
 
                                     <div class="col-md-3" v-for="field, key in datasource.asset_datasource_attributes" :key="key">
-                                        <div v-if="field.data_source_attributes[0].field_type=='Text'">
+                                        <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Text'">
                                             <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                             <input
                                                 type="text"
@@ -997,7 +1027,7 @@
                                             <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.data_source_attributes[0].field_type=='Number'">
+                                        <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Number'">
                                             <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                             <input
                                                 type="number"
@@ -1011,7 +1041,7 @@
                                             <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.data_source_attributes[0].field_type === 'Date'">
+                                        <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type === 'Date'">
                                             <label class="form-label">
                                                 {{ field.data_source_attributes[0].display_name }}
                                                 <span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
@@ -1028,7 +1058,7 @@
                                             </span>
                                         </div>
 
-                                        <div v-if="field.data_source_attributes[0].field_type === 'Date&Time'">
+                                        <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type === 'Date&Time'">
                                             <label class="form-label">
                                                 {{ field.data_source_attributes[0].display_name }}
                                                 <span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
@@ -1046,7 +1076,7 @@
                                                 {{ errors[field.data_source_attributes[0].display_name][0] }}
                                             </span>
                                         </div>
-                                        <div v-if="field.data_source_attributes[0].field_type=='Dropdown'">
+                                        <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Dropdown'">
                                             <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.data_source_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
@@ -1055,13 +1085,13 @@
                                             </select>
                                             <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                         </div>
-                                        <div v-if="field.data_source_attributes[0].field_type=='Color'">
+                                        <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Color'">
                                             <label class="form-label">{{ field.data_source_attributes[0].display_name }}<span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span></label>
                                             <input type="color" class="form-control" v-model="field.field_value" style="height: 2.2rem;" />
                                             <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                         </div>
 
-                                        <div v-if="field.data_source_attributes[0].field_type=='List'">
+                                        <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='List'">
                                             <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                             <select class="form-control" :class="{'is-invalid': errors[field.data_source_attributes[0].display_name]}" v-model="field.field_value">
                                                 <option :value="field.data_source_attributes[0].data_source_attribute_value?.field_value" v-if="field.data_source_attributes[0].data_source_attribute_value?.field_value">
@@ -1334,7 +1364,7 @@
                             <!-- Spare -->
                             <div class="row g-2" v-if="asset_type=='Spares'">
                                 <div class="col-md-4" v-for="field, key in assets1?.asset_spare_attributes" :key="key">
-                                    <div v-if="field.spare_attributes[0].field_type=='Text'">
+                                    <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Text'">
                                         <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="text"
@@ -1347,7 +1377,7 @@
                                         <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.spare_attributes[0].field_type=='Number'">
+                                    <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Number'">
                                         <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="number"
@@ -1362,7 +1392,7 @@
                                         <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.spare_attributes[0].field_type === 'Date'">
+                                    <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type === 'Date'">
                                         <label class="form-label">
                                             {{ field.spare_attributes[0].display_name }}
                                             <span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
@@ -1380,7 +1410,7 @@
                                         </span>
                                     </div>
 
-                                    <div v-if="field.spare_attributes[0].field_type === 'Date&Time'">
+                                    <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type === 'Date&Time'">
                                         <label class="form-label">
                                             {{ field.spare_attributes[0].display_name }}
                                             <span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
@@ -1399,7 +1429,7 @@
                                             {{ errors[field.spare_attributes[0].display_name][0] }}
                                         </span>
                                     </div>
-                                    <div v-if="field.spare_attributes[0].field_type=='Dropdown'">
+                                    <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Dropdown'">
                                         <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.spare_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
@@ -1408,13 +1438,13 @@
                                         </select>
                                         <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                     </div>
-                                    <div v-if="field.spare_attributes[0].field_type=='Color'">
+                                    <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='Color'">
                                         <label class="form-label">{{ field.spare_attributes[0].display_name }}<span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span></label>
                                         <input type="color" class="form-control" :value="field.field_value" style="height: 2.2rem;" disabled="true" />
                                         <span v-if="errors[field.spare_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.spare_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.spare_attributes[0].field_type=='List'">
+                                    <div v-if="field.spare_attributes?.length && field.spare_attributes[0].field_type=='List'">
                                         <label class="form-label">{{field.spare_attributes[0].display_name}}</label><span v-if="field.spare_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.spare_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.spare_attributes[0].spare_attribute_value.field_value" v-if="field.spare_attributes[0].spare_attribute_value.field_value">
@@ -1431,7 +1461,7 @@
                             <!-- Service -->
                             <div class="row g-2" v-if="asset_type=='Services'">
                                 <div class="col-md-4" v-for="field, key in assets1?.asset_service_attributes" :key="key">
-                                    <div v-if="field.service_attributes[0].field_type=='Text'">
+                                    <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Text'">
                                         <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="text"
@@ -1444,7 +1474,7 @@
                                         <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.service_attributes[0].field_type=='Number'">
+                                    <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Number'">
                                         <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="number"
@@ -1459,7 +1489,7 @@
                                         <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.service_attributes[0].field_type === 'Date'">
+                                    <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Date'">
                                         <label class="form-label">
                                             {{ field.service_attributes[0].display_name }}
                                             <span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
@@ -1477,7 +1507,7 @@
                                         </span>
                                     </div>
 
-                                    <div v-if="field.service_attributes[0].field_type === 'Date&Time'">
+                                    <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Date&Time'">
                                         <label class="form-label">
                                             {{ field.service_attributes[0].display_name }}
                                             <span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
@@ -1496,7 +1526,7 @@
                                             {{ errors[field.service_attributes[0].display_name][0] }}
                                         </span>
                                     </div>
-                                    <div v-if="field.service_attributes[0].field_type=='Dropdown'">
+                                    <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Dropdown'">
                                         <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
@@ -1505,13 +1535,13 @@
                                         </select>
                                         <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
                                     </div>
-                                    <div v-if="field.service_attributes[0].field_type=='Color'">
+                                    <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'Color'">
                                         <label class="form-label">{{ field.service_attributes[0].display_name }}<span v-if="field.service_attributes[0].is_required" class="text-danger">*</span></label>
                                         <input type="color" class="form-control" :value="field.field_value" style="height: 2.2rem;" disabled="true" />
                                         <span v-if="errors[field.service_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.service_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.service_attributes[0].field_type=='List'">
+                                    <div v-if="field.service_attributes?.length && field.service_attributes[0].field_type === 'List'">
                                         <label class="form-label">{{field.service_attributes[0].display_name}}</label><span v-if="field.service_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.service_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.service_attributes[0].service_attribute_value?.field_value" v-if="field.service_attributes[0].service_attribute_value?.field_value">
@@ -1526,7 +1556,7 @@
                             </div>
                             <div class="row g-2" v-if="asset_type=='Variables'">
                                 <div class="col-md-4" v-for="field, key in assets1?.asset_variable_attributes" :key="key">
-                                    <div v-if="field.variable_attributes[0].field_type=='Text'">
+                                    <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Text'">
                                         <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="text"
@@ -1539,7 +1569,7 @@
                                         <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.variable_attributes[0].field_type=='Number'">
+                                    <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Number'">
                                         <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="number"
@@ -1554,7 +1584,7 @@
                                         <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.variable_attributes[0].field_type === 'Date'">
+                                    <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type === 'Date'">
                                         <label class="form-label">
                                             {{ field.variable_attributes[0].display_name }}
                                             <span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
@@ -1572,7 +1602,7 @@
                                         </span>
                                     </div>
 
-                                    <div v-if="field.variable_attributes[0].field_type === 'Date&Time'">
+                                    <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type === 'Date&Time'">
                                         <label class="form-label">
                                             {{ field.variable_attributes[0].display_name }}
                                             <span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
@@ -1591,7 +1621,7 @@
                                             {{ errors[field.variable_attributes[0].display_name][0] }}
                                         </span>
                                     </div>
-                                    <div v-if="field.variable_attributes[0].field_type=='Dropdown'">
+                                    <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Dropdown'">
                                         <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.variable_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
@@ -1600,13 +1630,13 @@
                                         </select>
                                         <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                     </div>
-                                    <div v-if="field.variable_attributes[0].field_type=='Color'">
+                                    <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='Color'">
                                         <label class="form-label">{{ field.variable_attributes[0].display_name }}<span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span></label>
                                         <input type="color" class="form-control" :value="field.field_value" style="height: 2.2rem;" disabled="true" />
                                         <span v-if="errors[field.variable_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.variable_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.variable_attributes[0].field_type=='List'">
+                                    <div v-if="field.variable_attributes.length && field.variable_attributes[0].field_type=='List'">
                                         <label class="form-label">{{field.variable_attributes[0].display_name}}</label><span v-if="field.variable_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.variable_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.variable_attributes[0].variable_attribute_value?.field_value" v-if="field.variable_attributes[0].variable_attribute_value?.field_value">
@@ -1621,7 +1651,7 @@
                             </div>
                             <div class="row g-2" v-if="asset_type=='Data Sources'">
                                 <div class="col-md-4" v-for="field, key in assets1?.asset_datasource_attributes" :key="key">
-                                    <div v-if="field.data_source_attributes[0].field_type=='Text'">
+                                    <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Text'">
                                         <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="text"
@@ -1634,7 +1664,7 @@
                                         <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.data_source_attributes[0].field_type=='Number'">
+                                    <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Number'">
                                         <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                         <input
                                             type="number"
@@ -1649,7 +1679,7 @@
                                         <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.data_source_attributes[0].field_type === 'Date'">
+                                    <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type === 'Date'">
                                         <label class="form-label">
                                             {{ field.data_source_attributes[0].display_name }}
                                             <span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
@@ -1667,7 +1697,7 @@
                                         </span>
                                     </div>
 
-                                    <div v-if="field.data_source_attributes[0].field_type === 'Date&Time'">
+                                    <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type === 'Date&Time'">
                                         <label class="form-label">
                                             {{ field.data_source_attributes[0].display_name }}
                                             <span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
@@ -1686,7 +1716,7 @@
                                             {{ errors[field.data_source_attributes[0].display_name][0] }}
                                         </span>
                                     </div>
-                                    <div v-if="field.data_source_attributes[0].field_type=='Dropdown'">
+                                    <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Dropdown'">
                                         <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.data_source_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.field_value" v-if="field.field_value">{{field.field_value}}</option>
@@ -1695,13 +1725,13 @@
                                         </select>
                                         <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                     </div>
-                                    <div v-if="field.data_source_attributes[0].field_type=='Color'">
+                                    <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='Color'">
                                         <label class="form-label">{{ field.data_source_attributes[0].display_name }}<span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span></label>
                                         <input type="color" class="form-control" :value="field.field_value" style="height: 2.2rem;" disabled="true" />
                                         <span v-if="errors[field.data_source_attributes[0].display_name]" class="invalid-feedback">{{ errors[field.data_source_attributes[0].display_name][0] }}</span>
                                     </div>
 
-                                    <div v-if="field.data_source_attributes[0].field_type=='List'">
+                                    <div v-if="field.data_source_attributes.length && field.data_source_attributes[0].field_type=='List'">
                                         <label class="form-label">{{field.data_source_attributes[0].display_name}}</label><span v-if="field.data_source_attributes[0].is_required" class="text-danger">*</span>
                                         <select class="form-control" :class="{'is-invalid': errors[field.data_source_attributes[0].display_name]}" :value="field.field_value" disabled="true">
                                             <option :value="field.data_source_attributes[0].data_source_attribute_value?.field_value" v-if="field.data_source_attributes[0].data_source_attribute_value?.field_value">
@@ -1864,6 +1894,7 @@
                     check_asset_zones: [],
                     check_zone_read_only: false,
                     template_check_status: false,
+                    asset_service_id:"",
                 },
                 service: {
                     service_id: "",
@@ -1927,6 +1958,7 @@
                 asset_spares: [],
                 checks: [],
                 asset_checks: [],
+                template_services:[],
                 asset_services: [],
                 asset_variables: [],
                 asset_data_sources: [],
@@ -1987,6 +2019,15 @@
                     vm.check.field_values = check_temp[0].field_values;
                 }
             },
+        },
+
+        computed: {
+            formattedTemplateServices() {
+                return this.template_services.map(service => ({
+                    ...service,
+                    displayName: `${service.zone_name} - ${service.service_name}`
+                }));
+            }
         },
 
         beforeRouteEnter(to, from, next) {
@@ -2141,6 +2182,29 @@
                 this.spare.initial_asset_spare_attributes = spare.asset_spare_attributes;
                 // console.log('spare.asset_spare_attributes:----', spare?.asset_spare_attributes)
             },
+            // editCheck(check) {
+            //     this.check.template_check_status = true;
+            //     this.check.asset_id = check.asset_id;
+            //     this.check.asset_check_id = check.asset_check_id;
+            //     this.check.check_id = check.check_id;
+            //     this.check.lcl = check.lcl;
+            //     this.check.ucl = check.ucl;
+            //     this.check.default_value = check.default_value;
+            //     this.check.check_asset_zones = [];
+            //     this.check.check_asset_zones.push(check.asset_zone_id);
+            //     this.check.asset_zone_id = check.asset_zone_id;
+            //     this.check.check_asset_zones_obj = [];
+            //     this.check.check_asset_zones_obj.push({
+            //         asset_id: check.asset_zone.asset_id,
+            //         asset_zone_id: check.asset_zone.asset_zone_id,
+            //         status: check.asset_zone.status,
+            //         zone_name: check.asset_zone.zone_name,
+            //         diameter: check.asset_zone.diameter,
+            //         height: check.asset_zone.height,
+            //         asset_spares: check.asset_zone.asset_spares,
+            //     });
+            //     this.check.check_zone_read_only = true;
+            // },
             editCheck(check) {
                 this.check.template_check_status = true;
                 this.check.asset_id = check.asset_id;
@@ -2149,19 +2213,20 @@
                 this.check.lcl = check.lcl;
                 this.check.ucl = check.ucl;
                 this.check.default_value = check.default_value;
-                this.check.check_asset_zones = [];
-                this.check.check_asset_zones.push(check.asset_zone_id);
+                
+                this.check.check_asset_zones = [check.asset_zone_id];
                 this.check.asset_zone_id = check.asset_zone_id;
-                this.check.check_asset_zones_obj = [];
-                this.check.check_asset_zones_obj.push({
-                    asset_id: check.asset_zone.asset_id,
-                    asset_zone_id: check.asset_zone.asset_zone_id,
-                    status: check.asset_zone.status,
-                    zone_name: check.asset_zone.zone_name,
-                    diameter: check.asset_zone.diameter,
-                    height: check.asset_zone.height,
-                    asset_spares: check.asset_zone.asset_spares,
-                });
+
+                const selectedService = this.formattedTemplateServices.find(service => 
+                    service.asset_service_id === check.asset_service_id
+                );
+
+                if (selectedService) {
+                    this.check.check_asset_zones_obj = [selectedService];
+                    this.check.asset_service_id = selectedService.asset_service_id;
+                } else {
+                    this.check.check_template_zones_obj = [];
+                }
                 this.check.check_zone_read_only = true;
             },
             checkstatus() {
@@ -2364,6 +2429,7 @@
                         console.log("checks response", response);
                         vm.checks = response.data.checks;
                         vm.asset_checks = response.data.paginate_checks;
+                        vm.template_services = response.data.asset_services;
                         vm.check_meta.totalRows = response.data.meta.total;
                         // vm.check_meta.from = response.data.meta.from;
                         vm.check_meta.lastPage = response.data.meta.last_page;
@@ -2396,6 +2462,7 @@
                         if (vm.initial_status) {
                             vm.getAssetVariables();
                         }
+                        vm.getAssetChecks();
                     })
                     .catch(function (error) {
                         vm.errors = error.response.data.errors;
@@ -2461,7 +2528,7 @@
 
                 if (validation_type == "Spares") {
                     for (const field of Object.values(this.spare.asset_spare_attributes)) {
-                        if (field.spare_attributes[0].is_required && !field.field_value) {
+                        if (field.spare_attributes.length && field.spare_attributes[0].is_required && !field.field_value) {
                             console.log("field.spare_attributes[0]?.field_type:--", field.spare_attributes[0]?.field_type);
                             if (field.spare_attributes[0]?.field_type === "Color") {
                                 // Set default color if not provided
@@ -2476,7 +2543,7 @@
 
                 if (validation_type == "Services") {
                     for (const field of Object.values(this.service.asset_service_attributes)) {
-                        if (field.service_attributes[0].is_required && !field.field_value) {
+                        if (field.service_attributes.length && field.service_attributes[0].is_required && !field.field_value) {
                             if (field.service_attributes[0].field_type === "Color") {
                                 // Set default color if not provided
                                 field.field_value = "#000000"; // Default to black
@@ -2489,7 +2556,7 @@
                 }
                 if (validation_type == "Variables") {
                     for (const field of Object.values(this.variable.asset_variable_attributes)) {
-                        if (field.variable_attributes[0].is_required && !field.field_value) {
+                        if (field.variable_attributes.length && field.variable_attributes[0].is_required && !field.field_value) {
                             if (field.variable_attributes[0].field_type === "Color") {
                                 // Set default color if not provided
                                 field.field_value = "#000000"; // Default to black
@@ -2502,7 +2569,7 @@
                 }
                 if (validation_type == "Data Sources") {
                     for (const field of Object.values(this.datasource.asset_datasource_attributes)) {
-                        if (field.data_source_attributes[0].is_required && !field.field_value) {
+                        if (field.data_source_attributes.length && field.data_source_attributes[0].is_required && !field.field_value) {
                             if (field.data_source_attributes[0].field_type === "Color") {
                                 // Set default color if not provided
                                 field.field_value = "#000000"; // Default to black
@@ -2601,7 +2668,7 @@
                 vm.check.asset_id = vm.asset.asset_id;
                 vm.check.check_asset_zones = [];
                 vm.check.check_asset_zones_obj.map(function (ele) {
-                    vm.check.check_asset_zones.push(ele.asset_zone_id);
+                    vm.check.check_asset_zones.push(ele.asset_service_id);
                 });
                 let loader = vm.$loading.show();
                 vm.$store

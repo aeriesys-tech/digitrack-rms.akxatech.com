@@ -200,7 +200,7 @@
                                                 class="form-control"
                                                 :class="{ 'is-invalid': errors?.no_of_zones }"
                                                 v-model="asset.no_of_zones"
-                                                min="1"
+                                                min="0"
                                                 @input="checkZoneValue($event, asset)"
                                             />
                                             <span v-if="errors?.no_of_zones" class="invalid-feedback">{{ errors.no_of_zones[0] }}</span>
@@ -846,7 +846,7 @@
                 //     this.errors.area_id = ["Area id is required"];
                 //     isValid = false;
                 // }
-                if (!this.asset.no_of_zones) {
+                if (!this.asset.no_of_zones < 0) {
                     this.errors.no_of_zones = ["No. of zones id is required"];
                     isValid = false;
                 } else {
