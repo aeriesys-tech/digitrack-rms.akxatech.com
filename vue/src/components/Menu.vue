@@ -306,6 +306,11 @@
                             <i class="ri-file-chart-2-line"></i> <span>BreakDown Report</span>
                         </router-link>
                     </li>
+                <li class="nav-item">
+                    <router-link to="/refractory_consumption_reports" class="nav-link" v-bind:class="{ active: $route.path === '/refractory_consumption_reports' }" >
+                        <i class="ri-functions"> </i> <span>Refractory Consumption Report</span>
+                    </router-link>
+                </li>
                 </ul>
             </div>
 

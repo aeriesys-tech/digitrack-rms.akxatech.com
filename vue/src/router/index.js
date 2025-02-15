@@ -89,6 +89,7 @@ import BreakDownReports from "@/views/reports/BreakDownReports.vue";
 
 import PendingJobs from "@/views/reports/PendingJobs.vue";
 import DeviationReport from "@/views/reports/DeviationReport.vue";
+import RefractoryConsumptionReport from "@/views/reports/RefractoryConsumption.vue"
 
 //Asset management
 import Components from "@/views/assets/Index.vue";
@@ -1025,6 +1026,12 @@ const routes = [
     name: "DeviationReport.Index",
     component: DeviationReport,
     meta: { auth: true, permission: "deviation_reports.view" },
+  },
+  {
+    path: "/refractory_consumption_reports",
+    name: "RefractoryConsumptionReport.Index",
+    component: RefractoryConsumptionReport,
+    meta: { auth: true, permission: "refractory_consumption_reports.view" },
   },
   {
     path: "/error",

@@ -199,14 +199,21 @@ class AssetCheckController extends Controller
     {
         $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
-            // 'asset_zone_id' => 'nullable|exists:asset_zones,asset_zone_id',
+            'asset_service_id' => 'nullable|exists:asset_services,asset_service_id',
             'department_id' => 'nullable|exists:departments,department_id'
         ]);
         $query = AssetCheck::query();
 
-        if (isset($request->asset_zone_id)) 
+        if (isset($request->asset_service_id)) 
         {
-            $query->where('asset_zone_id', $request->asset_zone_id);
+            $query->where('asset_service_id', $request->asset_service_id);
+        }
+
+        if ($request->filled('asset_service_id')) {
+            $assetService = AssetService::where('asset_service_id',$request->asset_service_id)->first();
+            if ($assetService) {
+                $query->where('asset_zone_id', $assetService->asset_zone_id);
+            }
         }
 
         if (isset($request->department_id)) 
@@ -565,5 +572,17 @@ class AssetCheckController extends Controller
         }
         $asset_check = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
         return UserAssetCheckDeviationResource::collection($asset_check);
+    }
+
+    public function getAssetServiceChecks(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,asset_id'
+        ]);
+
+        $assetChecks = AssetCheck::where('asset_id', $request->asset_id)
+            ->with('AssetService')->get()->unique('asset_service_id');
+
+        return AssetCheckResource::collection($assetChecks);
     }
 }

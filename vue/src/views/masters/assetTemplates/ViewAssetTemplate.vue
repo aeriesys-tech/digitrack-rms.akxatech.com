@@ -652,6 +652,14 @@
                                                                 <i v-else class="fas fa-sort"></i>
                                                             </span>
                                                         </th>
+                                                        <th @click="sort('check_id', 'Checks')">
+                                                           Service
+                                                            <span>
+                                                                <i v-if="check_meta.keyword=='service_name' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
+                                                                <i v-else-if="check_meta.keyword=='service_name' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
+                                                                <i v-else class="fas fa-sort"></i>
+                                                            </span>
+                                                        </th>
                                                         <th @click="sort('check_id', 'Checks')" width="40%" style="white-space: normal;">
                                                             Field Name
                                                             <span>
@@ -660,14 +668,7 @@
                                                                 <i v-else class="fas fa-sort"></i>
                                                             </span>
                                                         </th>
-                                                        <th @click="sort('check_id', 'Checks')" width="40%" style="white-space: normal;">
-                                                           Service
-                                                            <span>
-                                                                <i v-if="check_meta.keyword=='service_name' && check_meta.order_by=='asc'" class="ri-arrow-up-line"></i>
-                                                                <i v-else-if="check_meta.keyword=='service_name' && check_meta.order_by=='desc'" class="ri-arrow-down-line"></i>
-                                                                <i v-else class="fas fa-sort"></i>
-                                                            </span>
-                                                        </th>
+                                                       
                                                         <th @click="sort('check_id', 'Checks')" width="10%">
                                                             Field Type
                                                             <span>
@@ -712,8 +713,8 @@
                                                     <tr v-for="check, key in asset_checks" :key="key">
                                                         <td class="text-center">{{(check_meta.page-1)*check_meta.per_page + key+1 }}</td>
                                                         <td>{{ check?.asset_zone?.zone_name }}</td>
-                                                        <td style="white-space: normal;">{{check?.check?.field_name}}</td>
                                                         <td>{{check?.asset_template_service?.service_name}}</td>
+                                                        <td style="white-space: normal;">{{check?.check?.field_name}}</td>
                                                         <td>{{ check?.check?.field_type }}</td>
                                                         <td>{{ check.lcl }}</td>
                                                         <td>{{ check.ucl }}</td>

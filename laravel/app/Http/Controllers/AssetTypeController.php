@@ -36,6 +36,34 @@ class AssetTypeController extends Controller
         return AssetTypeResource::collection($asset_type);
     }
 
+    public function paginateActiveAssetTypes(Request $request)
+    {
+        $request->validate([
+            'order_by' => 'required',
+            'per_page' => 'required',
+            'keyword' => 'required'
+        ]);
+
+        $query = AssetType::query();
+
+        if(isset($request->asset_type_code))
+        {
+            $query->where('asset_type_code',$request->asset_type_code);
+        }
+        if(isset($request->asset_type_name))
+        {
+            $query->where('asset_type_name',$request->asset_type_name);
+        }
+        
+        if($request->search!='')
+        {
+            $query->where('asset_type_code', 'like', "%$request->search%")
+                ->orWhere('asset_type_name', 'like', "$request->search%");
+        }
+        $asset_type = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
+        return AssetTypeResource::collection($asset_type);
+    }
+
     public function getAssetTypes()
     {
         $asset_type = AssetType::all();

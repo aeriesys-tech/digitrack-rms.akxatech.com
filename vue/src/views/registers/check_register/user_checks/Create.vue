@@ -55,8 +55,8 @@
                                     <label class="form-label">Department</label><span class="text-danger"> *</span>
                                     <search
                                         :disabled="!status"
-                                        :class="{ 'is-invalid': errors.department_id }"
-                                        :customClass="{ 'is-invalid': errors.department_id }"
+                                        :class="{ 'is-invalid': errors?.department_id }"
+                                        :customClass="{ 'is-invalid': errors?.department_id }"
                                         :initialize="user_check.department_id"
                                         id="department_id"
                                         label="department_name"
@@ -66,24 +66,25 @@
                                         @input=" department => user_check.department_id = department"
                                     >
                                     </search>
-                                    <span v-if="errors.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
+                                    <span v-if="errors?.asset_id" class="invalid-feedback">{{ errors.asset_id[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Asset Zone</label><span class="text-danger"> *</span>
+                                    <label class="form-label">Asset Zone Service</label><span class="text-danger"> *</span>
                                     <search
                                         :disabled="!status"
-                                        :class="{ 'is-invalid': errors.asset_zone_id }"
-                                        :customClass="{ 'is-invalid': errors.asset_zone_id }"
-                                        :initialize="user_check.asset_zone_id"
-                                        id="asset_zone_id"
-                                        label="zone_name"
-                                        placeholder="Select Asset Zone"
-                                        :data="asset_zones"
-                                        @input=" zone => user_check.asset_zone_id = zone"
-                                        @selectsearch="getAssetChecks(user_check.asset_zone_id)"
+                                        :class="{ 'is-invalid': errors.asset_service_id }"
+                                        :customClass="{ 'is-invalid': errors.asset_service_id }"
+                                        :initialize="user_check.asset_service_id"
+                                        id="asset_service_id"
+                                        label="display_name"
+                                        placeholder="Select Asset Zone Service"
+                                        :data="formattedAssetZones"
+                                        @input="zone => user_check.asset_service_id = zone"
+                                        @selectsearch="getAssetChecks(user_check.asset_service_id)"
                                     >
                                     </search>
-                                    <span v-if="errors.asset_zone_id" class="invalid-feedback">{{ errors.asset_zone_id[0] }}</span>
+
+                                    <span v-if="errors.asset_service_id" class="invalid-feedback">{{ errors.asset_service_id[0] }}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Reference Date & Time</label><span class="text-danger"> *</span>
@@ -137,10 +138,10 @@
                                             <td>{{ check.field_name}}</td>
                                             <td>{{ check.field_type}}</td>
                                             <td>{{ check.default_value}}</td>
-                                            <td>{{ check.is_required==1 ? 'Yes' : 'No'}}</td>
+                                            <td>{{ check.is_required==true ? 'Yes' : 'No'}}</td>
                                             <td>{{ check.lcl}}</td>
                                             <td>{{ check.ucl}}</td>
-                                            <td v-if="check.field_type == 'Text'">
+                                            <!-- <td v-if="check.field_type == 'Text'">
                                                 <input type="text" placeholder="Enter Value" class="form-control"  v-model="check.value" />
                                             </td>
                                             <td v-if="check.field_type == 'Number'">
@@ -160,7 +161,29 @@
                                                     <option value="">Select</option>
                                                     <option v-for="value, key in check?.field_values?.split(',')" :key="key" :value="value">{{ value }}</option>
                                                 </select>
-                                            </td>
+                                            </td> -->
+                                            <td>
+                                            <input v-if="check.field_type == 'Text'" type="text" class="form-control"
+                                                v-model="check.value" :class="{ 'is-invalid': errors[`asset_checks.${key}.value`] }" />
+                                            <input v-if="check.field_type == 'Number'" type="number" class="form-control"
+                                                v-model="check.value" :class="{ 'is-invalid': errors[`asset_checks.${key}.value`] }" />
+                                            <textarea v-if="check.field_type == 'Text Area'" class="form-control"
+                                                v-model="check.value" :class="{ 'is-invalid': errors[`asset_checks.${key}.value`] }"></textarea>
+                                            <input v-if="check.field_type == 'Date'" type="date" class="form-control"
+                                                v-model="check.value" :class="{ 'is-invalid': errors[`asset_checks.${key}.value`] }" />
+                                            <input v-if="check.field_type == 'Date & Time'" type="datetime-local" class="form-control"
+                                                v-model="check.value" :class="{ 'is-invalid': errors[`asset_checks.${key}.value`] }" />
+                                            <select v-if="check.field_type == 'Select'" class="form-control"
+                                                v-model="check.value" :class="{ 'is-invalid': errors[`asset_checks.${key}.value`] }">
+                                                <option value="">Select</option>
+                                                <option v-for="(value, key) in check?.field_values?.split(',')" :key="key" :value="value">
+                                                    {{ value }}
+                                                </option>
+                                            </select>
+                                            <span v-if="errors[`asset_checks.${key}.value`]" class="invalid-feedback">
+                                                {{ errors[`asset_checks.${key}.value`][0] }}
+                                            </span>
+                                        </td>
                                             <!-- <td></td> -->
                                         </tr>
                                     </tbody>
@@ -192,6 +215,7 @@ export default {
                 department_id:"",
                 status:'',
                 asset_checks:[],
+                asset_service_id:""
             },
             assets: [],
             status:true,
@@ -222,6 +246,7 @@ export default {
                         vm.errors = error.response.data.errors;
                         vm.$store.dispatch("error", error.response.data.message);
                     });
+                
             }
         });
     },
@@ -237,6 +262,15 @@ export default {
                 }
             }
         },
+        computed: {
+            formattedAssetZones() {
+                return this.asset_zones.map(zone => ({
+                    ...zone,
+                    display_name: `${zone?.asset_zone?.zone_name} :: ${zone?.asset_service?.service_name}`
+                }));
+            }
+        },
+
     mounted() {
         this.user_check.reference_date = moment().format("yyyy-MM-DDTHH:mm");
     },
@@ -304,6 +338,8 @@ export default {
                             'ucl':ele.check.ucl,
                             'value': "",
                             'asset_check_id': ele.asset_check_id,
+                            'asset_service_id': ele.asset_service_id,
+                            'asset_service': ele.asset_service
 
                         })
                     })
@@ -319,6 +355,20 @@ export default {
         addUserCheck(){
 
             let vm = this;
+            let hasErrors = false;
+                vm.errors = {};
+
+            vm.user_check.asset_checks.forEach((check, index) => {
+                if (check.is_required && !check.value) {
+                    vm.errors[`asset_checks.${index}.value`] = ["This Value field is required."];
+                    hasErrors = true;
+                }
+            });
+
+            if (hasErrors) {
+                vm.$store.dispatch("error", "Please fill all required fields.");
+                return;
+            }
             let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'addUserCheck', data:vm.user_check })
                 .then(response => {
@@ -334,6 +384,20 @@ export default {
         },
         updateUserCheck(){
             let vm = this;
+            let hasErrors = false;
+                vm.errors = {};
+
+            vm.user_check.asset_checks.forEach((check, index) => {
+                if (check.is_required && !check.value) {
+                    vm.errors[`asset_checks.${index}.value`] = ["This Value field is required."];
+                    hasErrors = true;
+                }
+            });
+
+            if (hasErrors) {
+                vm.$store.dispatch("error", "Please fill all required fields.");
+                return;
+            }
             let loader = vm.$loading.show();
             vm.$store.dispatch('post', { uri: 'updateUserCheck', data:vm.user_check })
                 .then(response => {
@@ -351,7 +415,7 @@ export default {
             let vm = this;
             let loader = vm.$loading.show();
             vm.$store
-                .dispatch("post", { uri: "getAssetZones", data: vm.user_check })
+                .dispatch("post", { uri: "getAssetServiceChecks", data: vm.user_check })
                 .then((response) => {
                     loader.hide();
                     vm.asset_zones = response.data.data;

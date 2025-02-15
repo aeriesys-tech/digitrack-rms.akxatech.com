@@ -64,6 +64,12 @@ class SpareController extends Controller
         return SpareResource::collection($spare);
     }
 
+    public function getTypesSpares(Request $request)
+    {
+        $spares = Spare::where('spare_type_id', $request->spare_type_id)->get();
+        return SpareResource::collection($spares);
+    }
+
     public function addSpare(Request $request)
     {
         $userPlantId = Auth::User()->plant_id;

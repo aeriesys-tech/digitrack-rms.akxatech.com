@@ -38,8 +38,8 @@
                                     <p class="font">{{user_check?.asset?.asset_code}}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <h6>Asset Zone</h6>
-                                    <p class="font">{{user_check?.asset_zone?.zone_name}}</p>
+                                    <h6>Asset Zone Service</h6>
+                                    <p class="font">{{user_check?.asset_zone?.zone_name}} :: {{user_check?.asset_service?.service_name  }}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <h6>Reference Date</h6>

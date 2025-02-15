@@ -1095,6 +1095,19 @@
         ]
     },
     {
+        "module":"RefractoryConsumptionReports",
+        "abilities":[
+            {
+                "ability" : "refractory_consumption_reports.view",
+                "description" : "View RefractoryConsumptionReports"
+            },
+            {
+                "ability" : "refractory_consumption_reports.download",
+                "description" : "Download RefractoryConsumptionReports"
+            }
+        ]
+    },
+    {
         "module":"DownloadedReports",
         "abilities":[
             {

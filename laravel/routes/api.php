@@ -134,6 +134,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getAssetType',[AssetTypeController::class, 'getAssetType']);
     Route::post('updateAssetType',[AssetTypeController::class, 'updateAssetType']);
     Route::post('deleteAssetType',[AssetTypeController::class, 'deleteAssetType']);
+    Route::post('paginateActiveAssetTypes',[AssetTypeController::class, 'paginateActiveAssetTypes']);
 
     Route::post('paginateSpareTypes',[SpareTypeController::class, 'paginateSpareTypes']);
     Route::post('getSpareTypes',[SpareTypeController::class, 'getSpareTypes']);
@@ -200,6 +201,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('downloadSpareHeadings',[SpareController::class, 'downloadSpareHeadings']);
     Route::post('importSpare',[SpareController::class, 'importSpare']);
     Route::post('deleteHardSpare',[SpareController::class, 'deleteHardSpare']);
+    Route::post('getTypesSpares',[SpareController::class, 'getTypesSpares']);
+
 
     Route::post('paginateServices',[ServiceController::class, 'paginateServices']);
     Route::post('getServices',[ServiceController::class, 'getServices']);
@@ -257,6 +260,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deviationAssetChecks',[AssetCheckController::class, 'deviationAssetChecks']);
     Route::post('getAssetRegisterChecks',[AssetCheckController::class, 'getAssetRegisterChecks']);
     Route::post('completedDeviationChecks',[AssetCheckController::class, 'completedDeviationChecks']);
+    Route::post('getAssetServiceChecks',[AssetCheckController::class, 'getAssetServiceChecks']);
 
     Route::post('paginateAssetVariables',[AssetVariableController::class, 'paginateAssetVariables']);
     Route::post('getAssetVariables',[AssetVariableController::class, 'getAssetVariables']);
@@ -557,5 +561,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('deleteDownloadReport',[ReportController::class, 'deleteDownloadReport']);
     Route::post('downloadAllRegisters',[ReportController::class, 'downloadAllRegisters']);
     Route::post('downloadBreakDownRegister',[ReportController::class, 'downloadBreakDownRegister']);
+    Route::post('getTotalQuantitySpares',[ReportController::class, 'getTotalQuantitySpares']);
+    Route::post('downloadRefractoryConsumptions',[ReportController::class, 'downloadRefractoryConsumptions']);
 
 });

@@ -451,7 +451,15 @@ class AssetController extends Controller
         ]);
 
         $asset = Asset::where('asset_code',$request->asset_code)->first();
-        return new AssetResource($asset);
+        if($asset)
+        {
+            return new AssetResource($asset);
+        }
+        else {
+            return response()->json([
+                "message" => "Please Scan Valid QR Code"
+            ],422);
+        }
     }
 
     public function updateAsset(Request $request)

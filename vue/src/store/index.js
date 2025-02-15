@@ -6,7 +6,7 @@ import axios from "axios";
 export default createStore({
 	state: {
 		// apiUrl: "https://rmsprod.jsw.in/api/",
-		apiUrl: "http://192.168.0.225:8000/api/",
+		apiUrl: "http://192.168.47.237:8000/api/",
 		user: null,
 		token: '',
 		permissions: [],

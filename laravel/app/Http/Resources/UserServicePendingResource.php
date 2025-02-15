@@ -13,7 +13,7 @@ class UserServicePendingResource extends JsonResource
         $date1 = Carbon::parse($this->next_service_date)->startOfDay();
         $date2 = Carbon::now()->startOfDay();
         $daysCount = $date1->greaterThan($date2) ? $date1->diffInDays($date2) - 1 : $date1->diffInDays($date2);
-        
+
         return [
             'user_service_id' => $this->user_service_id,
             'plant_id' => $this->plant_id,
@@ -31,7 +31,7 @@ class UserServicePendingResource extends JsonResource
             'next_service_date' => $this->next_service_date,
             'delay_days' => round($daysCount),
             'note' => $this->note,
-            'is_latest' => $this->is_latest
+            'is_latest' => $this->is_latest,
         ];
     }
 }
