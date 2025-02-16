@@ -87,7 +87,7 @@ class DataSourceController extends Controller
         $data_source = DataSource::create($data);
 
         foreach ($data['asset_types'] as $asset_type) {
-            DataSourceAssetType::create([
+            DataSourceAssetType::firstOrCreate([
                 'data_source_id' => $data_source->data_source_id,
                 'asset_type_id' => $asset_type,
                 ]);

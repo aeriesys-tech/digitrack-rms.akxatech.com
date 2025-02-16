@@ -86,7 +86,7 @@ class VariableController extends Controller
         $variable = Variable::create($data);
 
         foreach ($data['asset_types'] as $asset_type) {
-            VariableAssetType::create([
+            VariableAssetType::firstOrCreate([
                 'variable_id' => $variable->variable_id,
                 'asset_type_id' => $asset_type,
             ]);

@@ -85,7 +85,7 @@ class ServiceController extends Controller
         $service = Service::create($data);
 
         foreach ($data['asset_types'] as $asset_type) {
-            ServiceAssetType::create([
+            ServiceAssetType::firstOrCreate([
                 'service_id' => $service->service_id,
                 'asset_type_id' => $asset_type,
             ]);

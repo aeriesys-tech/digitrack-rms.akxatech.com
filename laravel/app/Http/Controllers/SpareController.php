@@ -88,7 +88,7 @@ class SpareController extends Controller
         $spare = Spare::create($data);
 
         foreach ($data['asset_types'] as $asset_type) {
-            SpareAssetType::create([
+            SpareAssetType::firstOrCreate([
                 'spare_id' => $spare->spare_id,
                 'asset_type_id' => $asset_type,
             ]);
