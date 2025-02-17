@@ -10,7 +10,7 @@
             <h4 class="main-title mb-2">List Parameters</h4>
         </div>
         <div class="row g-2">
-            <div class="col-4">
+            <div class="col-4" v-can="'list_parameters.create'">
                 <form @submit.prevent="submitForm()">
                     <div class="card card-one">
                         <div class="card-header d-flex justify-content-between">
@@ -67,8 +67,8 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span></th>
 
-                                        <th class="text-center" >Status</th>
-                                        <th class="text-center" >Actions</th>
+                                        <th class="text-center" v-can="'list_parameters.delete'">Status</th>
+                                        <th class="text-center" v-can="'list_parameters.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,13 +79,13 @@
                                         <td class="text-center">{{ meta.from + key }}</td>
                                         <td>{{list.list_parameter_name}}</td>
                                         <td>{{ list.field_values }}</td>
-                                        <td class="text-center" >
+                                        <td class="text-center" v-can="'list_parameters.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'list' + list.list_parameter_id" :checked="list.status" :value="list.status" @change="deleteList(list)" />
                                                 <label class="custom-control-label" :for="'list' + list.list_parameter_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center" >
+                                        <td class="text-center" v-can="'list_parameters.update'">
                                             <a href="javascript:void(0)" v-if="list.status" class="text-success me-2" @click="editList(list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
@@ -145,6 +145,14 @@ export default {
         }
     },
     mounted() {
+        this.create_list = this.$store.getters.permissions.filter(function (element) {
+                return element.ability.ability.includes("list_parameters.create");
+            });
+            if (this.create_list.length) {
+                this.column = "col-8";
+            } else {
+                this.column = "col-12";
+            }
         this.index();
         this.$refs.list_parameter_name.focus();
     },

@@ -29,7 +29,7 @@ use App\Models\AssetVariable;
 use App\Models\AssetDataSource;
 use App\Models\AssetAccessory;
 use App\Models\AssetSpareValue;
-
+use App\Models\AssetTemplateService;
 use App\Models\AssetServiceValue;
 use App\Models\AssetVariableValue;
 use App\Models\AssetDataSourceValue;
@@ -42,7 +42,6 @@ use App\Models\UserVariable;
 use App\Models\AssetTemplateSpare;
 use App\Models\TemplateZone;
 use App\Models\AssetTemplateCheck;
-use App\Models\AssetTemplateService;
 use App\Models\AssetTemplateVariable;
 use App\Models\AssetTemplateDataSource;
 use App\Models\AssetTemplateAccessory;
@@ -241,30 +240,6 @@ class AssetController extends Controller
                 }
             }
 
-            //AssetCheck
-            $template_checks = AssetTemplateCheck::where('asset_template_id', $asset->asset_template_id)->get();
-            foreach ($template_checks as $check) 
-            {
-                $templateZone = TemplateZone::where('template_zone_id', $check->template_zone_id)->first();
-                if ($templateZone) 
-                {
-                    $assetZone = AssetZone::where('asset_id', $asset->asset_id)->where('zone_name', $templateZone->zone_name)->first();
-                    if ($assetZone) 
-                    {
-                        $newCheck = AssetCheck::create([
-                            'asset_id' => $asset->asset_id,
-                            'area_id' => $asset->area_id,
-                            'plant_id' => $asset->plant_id,
-                            'check_id' => $check->check_id,
-                            'asset_zone_id' => $assetZone->asset_zone_id,
-                            'default_value' => $check->default_value,
-                            'lcl' => $check->lcl,
-                            'ucl' => $check->ucl
-                        ]);
-                    }
-                }
-            }
-
             //AssetService
             $template_services = AssetTemplateService::where('asset_template_id', $asset->asset_template_id)->get();
             foreach ($template_services as $service) 
@@ -295,6 +270,38 @@ class AssetController extends Controller
                                 'field_value' => $service_value->field_value
                             ]);
                         }
+                    }
+                }
+            }
+
+            //AssetCheck
+            $template_checks = AssetTemplateCheck::where('asset_template_id', $asset->asset_template_id)->get();
+            foreach ($template_checks as $check) 
+            {
+                $templateZone = TemplateZone::where('template_zone_id', $check->template_zone_id)->first();
+                $service = AssetTemplateService::where('asset_template_service_id', $check->asset_template_service_id)->with('Service')->first();
+
+                if ($templateZone && $service) 
+                {
+                    $assetZone = AssetZone::where('asset_id', $asset->asset_id)->where('zone_name', $templateZone->zone_name)->first();
+                    $serviceName = AssetService::where('asset_id', $asset->asset_id)
+                        ->whereHas('Service', function ($qur) use ($service) {
+                            $qur->where('service_name', $service->Service->service_name);
+                        })->first();
+
+                    if ($assetZone && $serviceName) 
+                    {
+                        $newCheck = AssetCheck::create([
+                            'asset_id' => $asset->asset_id,
+                            'area_id' => $asset->area_id,
+                            'plant_id' => $asset->plant_id,
+                            'check_id' => $check->check_id,
+                            'asset_zone_id' => $assetZone->asset_zone_id,
+                            'default_value' => $check->default_value,
+                            'lcl' => $check->lcl,
+                            'ucl' => $check->ucl,
+                            'asset_service_id' =>$serviceName->asset_service_id
+                        ]);
                     }
                 }
             }
@@ -444,7 +451,15 @@ class AssetController extends Controller
         ]);
 
         $asset = Asset::where('asset_code',$request->asset_code)->first();
-        return new AssetResource($asset);
+        if($asset)
+        {
+            return new AssetResource($asset);
+        }
+        else {
+            return response()->json([
+                "message" => "Please Scan Valid QR Code"
+            ],422);
+        }
     }
 
     public function updateAsset(Request $request)

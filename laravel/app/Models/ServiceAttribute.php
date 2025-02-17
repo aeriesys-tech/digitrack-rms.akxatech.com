@@ -18,7 +18,8 @@ class ServiceAttribute extends Model
         'field_length',
         'is_required',
         'user_id',
-        'list_parameter_id'
+        'list_parameter_id',
+        'field_key'
     ];
 
     protected $primaryKey = 'service_attribute_id';

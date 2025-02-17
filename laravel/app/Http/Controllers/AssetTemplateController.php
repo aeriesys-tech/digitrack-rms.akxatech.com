@@ -375,25 +375,26 @@ class AssetTemplateController extends Controller
                 "message" => 'Asset Template cannot be deleted as it is used in other records.'
             ], 400);
         }
-
-        AssetTemplateAccessory::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        TemplateDataSourceValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        AssetTemplateDataSource::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        TemplateVariableValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        AssetTemplateVariable::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        TemplateServiceValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        AssetTemplateService::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        AssetTemplateCheck::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        TemplateSpareValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        AssetTemplateSpare::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        TemplateZone::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        TemplateDepartment::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        TemplateAttributeValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
-        AssetTemplate::where('asset_template_id', $request->asset_template_id)->forceDelete();
-
-        return response()->json([
-            "message" => "AssetTemplate Deleted Sucessfully"
-        ]);
+        else{
+            AssetTemplateAccessory::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            TemplateDataSourceValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            AssetTemplateDataSource::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            TemplateVariableValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            AssetTemplateVariable::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            TemplateServiceValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            AssetTemplateService::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            AssetTemplateCheck::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            TemplateSpareValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            AssetTemplateSpare::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            TemplateZone::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            TemplateDepartment::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            TemplateAttributeValue::where('asset_template_id', $request->asset_template_id)->forceDelete();
+            AssetTemplate::where('asset_template_id', $request->asset_template_id)->forceDelete();
+    
+            return response()->json([
+                "message" => "AssetTemplate Deleted Sucessfully"
+            ]);
+        }
     }
 
     public function getAssetTemplateDropDown(Request $request)  

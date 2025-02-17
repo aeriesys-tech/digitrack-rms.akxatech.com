@@ -97,8 +97,8 @@ class CheckController extends Controller
                     }
                 }
             ],
-            'lcl' => 'required_if:field_type,Number',
-            'ucl' => 'required_if:field_type,Number',
+            'lcl' => 'required_if:field_type,Number|numeric',
+            'ucl' => 'required_if:field_type,Number|numeric',
             'field_values' => 'nullable|required_if:field_type,Select',
             'order' => 'required',
             'is_required' => 'required',
@@ -113,7 +113,7 @@ class CheckController extends Controller
         $check = Check::create($data);
 
         foreach ($data['asset_types'] as $asset_type) {
-            CheckAssetType::create([
+            CheckAssetType::firstOrCreate([
                 'check_id' => $check->check_id,
                 'asset_type_id' => $asset_type,
             ]);
@@ -175,8 +175,8 @@ class CheckController extends Controller
                     }
                 }
             ],
-            'lcl' => 'required_if:field_type,Number',
-            'ucl' => 'required_if:field_type,Number',
+            'lcl' => 'required_if:field_type,Number|numeric',
+            'ucl' => 'required_if:field_type,Number|numeric',
             'field_values' => 'required_if:field_type,Select',
             'order' => 'required',
             'is_required' => 'required',
@@ -261,5 +261,19 @@ class CheckController extends Controller
         Excel::import(new CheckImport, $request->file('file'));
 
         return response()->json(['success' => 'Data imported successfully!']);
+    }
+
+    public function deleteHardcheck(Request $request)
+    {
+        $request->validate([
+            'check_id' => 'required|exists:checks,check_id'
+        ]);
+       
+        CheckAssetType::whereIn('check_id', $request->check_id)->forceDelete();
+        Check::whereIn('check_id', $request->check_id)->forceDelete();
+
+        return response()->json([
+            "message" =>"Check Deleted Successfully"
+        ],200);
     }
 }

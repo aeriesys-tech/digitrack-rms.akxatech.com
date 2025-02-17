@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Service Registers</h4>
             </div>
-            <router-link v-can="'userServices.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD SERVICE REGISTER</router-link>
+            <router-link v-can="'service_registers.create'" to="/user_service/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD SERVICE REGISTER</router-link>
         </div>
 
         <div class="row">
@@ -85,7 +85,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th> -->
-                                        <th class="text-center" v-if="get_service.length">Actions</th>
+                                        <th class="text-center" v-can="['service_registers.update','service_registers.delete']">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -98,9 +98,9 @@
                                         <!-- <td>{{service.service?.service_name}}</td> -->
                                         <td>{{service.asset?.asset_code}}</td>
                                         <!-- <td>{{service.asset_zone?.zone_name}}</td> -->
-                                        <td class="text-center" v-if="get_service.length">
-                                            <a title="Edit" v-can="'userServices.update'" href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a title="Delete" v-can="'userServices.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                        <td class="text-center" v-can="['service_registers.update','service_registers.delete']">
+                                            <a title="Edit" v-can="'service_registers.update'" href="javascript:void(0)" class="text-success me-2" @click="editService(service)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'service_registers.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteService(service)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="user_services.length==0">

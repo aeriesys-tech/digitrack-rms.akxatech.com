@@ -18,7 +18,8 @@ class AssetTemplateCheck extends Model
         'check_id',
         'default_value',
         'lcl',
-        'ucl'
+        'ucl',
+        'asset_template_service_id'
     ];
 
     protected $primaryKey = 'asset_template_check_id';
@@ -46,5 +47,10 @@ class AssetTemplateCheck extends Model
     public function TemplateZone()
     {
         return $this->belongsTo(TemplateZone::class, 'template_zone_id');
+    }
+
+    public function AssetTemplateService()
+    {
+        return $this->belongsTo(AssetTemplateService::class, 'asset_template_service_id');
     }
 }

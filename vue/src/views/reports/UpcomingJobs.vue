@@ -68,6 +68,14 @@
                                                     <i v-else class="fas fa-sort"></i>
                                                 </span>
                                             </th>
+                                            <th @click="sort('service_no')">
+                                                Service.
+                                                <span>
+                                                    <i v-if="meta.keyword == 'service_no' && meta.order_by == 'asc'" class="ri-arrow-up-line"></i>
+                                                    <i v-else-if="meta.keyword == 'service_no' && meta.order_by == 'desc'" class="ri-arrow-down-line"></i>
+                                                    <i v-else class="fas fa-sort"></i>
+                                                </span>
+                                            </th>
                                             <th @click="sort('service_date')">
                                                 Service Date
                                                 <span>
@@ -121,6 +129,10 @@
                                                 {{ service?.asset?.asset_department_ids.map(department => department.department?.department_name).join(', ') }}
                                             </td>
                                             <td>{{service?.service_no}}</td>
+                                            <td>
+                                                {{ service?.user_spares?.map(spare => spare.service?.service_name).filter(name => name).join(', ') }}
+                                            </td>
+
                                             <td>{{service?.service_date}}</td>
                                             <!-- <td>{{ service?.service_cost}}</td> -->
                                             <td>{{ service?.next_service_date}}</td>

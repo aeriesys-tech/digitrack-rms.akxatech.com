@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Data Sources</h4>
             </div>
-            <router-link to="/data_sources/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD DATA SOURCE</router-link>
+            <router-link v-can="'data_sources.create'" to="/data_sources/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD DATA SOURCE</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -61,8 +61,8 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Actions</th>
+                                        <th class="text-center" v-can="'data_sources.delete'">Status</th>
+                                        <th class="text-center" v-can="'data_sources.update'">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,13 +77,13 @@
                                         <td>
                                             <span v-for="asset_type, key in data_source.data_source_asset_types" :key="key">{{asset_type?.asset_types?.asset_type_name }}, </span>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" v-can="'data_sources.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'data_source' + data_source.data_source_id" :checked="data_source.status" :value="data_source.status" @change="deleteDataSource(data_source)" />
                                                 <label class="custom-control-label" :for="'data_source' + data_source.data_source_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" v-can="'data_sources.update'">
                                             <a href="javascript:void(0)" v-if="data_source.status" class="text-success me-2" @click="editDataSource(data_source)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>

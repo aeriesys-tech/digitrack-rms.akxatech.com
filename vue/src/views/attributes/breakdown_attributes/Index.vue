@@ -12,7 +12,7 @@
                     </ol>
                     <h4 class="main-title mb-0">Break Down Attributes</h4>
                 </div>
-                <router-link to="/break_down_attributes/create" class="btn btn-primary" style="float: right;" ><i
+                <router-link v-can="'break_down_attributes.create'" to="/break_down_attributes/create" class="btn btn-primary" style="float: right;" ><i
                         class="ri-list-check"></i> ADD BREAK DOWN ATTRIBUTE</router-link>
             </div>
             <div class="row">
@@ -78,8 +78,8 @@
                                                 </span>
                                             </th>
                                             <th>Break Down Type</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-center" v-can="'break_down_attributes.delete'">Status</th>
+                                            <th class="text-center" v-can="'break_down_attributes.update'">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -98,13 +98,13 @@
                                             <td>
                                                 <span v-for="break_down_attribute_type, key in break_down_attribute.break_down_attribute_types" :key="key">{{ break_down_attribute_type?.break_down_type?.break_down_type_name }}, </span>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'break_down_attributes.delete'">
                                                 <div class="form-switch" >
                                                     <input class="form-check-input"  type="checkbox" role="switch" :id="'break_down_attribute' + break_down_attribute.break_down_attribute_id" :checked="break_down_attribute.status" :value="break_down_attribute.status" @change="deleteBreakDownAttribute(break_down_attribute)" />
                                                     <label class="custom-control-label" :for="'user' + break_down_attribute.break_down_attribute_id"></label>
                                                 </div>
                                             </td>
-                                            <td class="text-center" >
+                                            <td class="text-center" v-can="'break_down_attributes.update'">
                                                 <a href="javascript:void(0)" class="text-success" v-if="break_down_attribute.status"
                                                     @click="editBreakDownAttribute(break_down_attribute)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             </td>

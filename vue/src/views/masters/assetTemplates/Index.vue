@@ -10,7 +10,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Asset Templates</h4>
             </div>
-            <router-link to="/asset_templates/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ASSET TEMPLATE</router-link>
+            <router-link v-can="'asset_templates.create'" to="/asset_templates/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD ASSET TEMPLATE</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -84,9 +84,8 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th> -->
-                                        <th class="text-center" v-can="'assets.delete'">Status</th>
-                                        <th class="text-center" v-if="get_assetviews.length || get_asset.length">Actions</th>
-
+                                        <th class="text-center" v-can="'asset_templates.delete'">Status</th>
+                                        <th class="text-center" v-can="['asset_templates.update','asset_template_views.details','asset_template_permanent.delete']" v-if="get_assetviews.length || get_asset.length">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,22 +98,21 @@
                                         <td>{{asset.longitude}}</td>
                                         <td>{{asset.radius}}</td>
                                         <!-- <td>{{asset.serial_no}}</td> -->
-                                        <td class="text-center" >
+                                        <td class="text-center" v-can="'asset_templates.delete'">
                                             <div class="form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" :id="'asset' + asset.asset_id" :checked="asset.status" :value="asset.status" @change="deleteAsset(asset)" />
                                                 <label class="custom-control-label" :for="'asset' + asset.asset_id"></label>
                                             </div>
                                         </td>
-                                        <td class="text-center" v-if="get_assetviews.length || get_asset.length">
-                                            <a  title="Edit Asset Template Attributes" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a title="View Register Attributes" href="javascript:void(0)" class="text-primary me-2" v-if="asset.status"  @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
+                                        <td class="text-center" v-if="get_assetviews.length || get_asset.length" v-can="['asset_templates.update','asset_template_views.details','asset_template_permanent.delete']">
+                                            <a v-can="'asset_templates.update'" title="Edit Asset Template Attributes" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a v-can="'asset_template_views.details'" title="View Register Attributes" href="javascript:void(0)" class="text-primary me-2" v-if="asset.status"  @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                             <!-- <a href="javascript:void(0)" title="QR code" class="text-dark me-2" @click.prevent="getQRCode(asset)"><i class="ri-qr-code-line fs-18 lh-1"></i></a> -->
-                                            <a title="Asset Delete"  href="javascript:void(0)" class="text-danger me-2" @click.prevent="forceDeleteAsset(asset)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a v-can="'asset_template_permanent.delete'" title="Asset Delete"  href="javascript:void(0)" class="text-danger me-2" @click.prevent="forceDeleteAsset(asset)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="assets.length==0">
                                         <td colspan="10" class="text-center">No records found</td>
-
                                     </tr>
                                 </tbody>
                             </table>

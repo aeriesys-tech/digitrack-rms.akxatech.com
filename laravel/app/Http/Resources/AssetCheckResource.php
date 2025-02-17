@@ -27,7 +27,9 @@ class AssetCheckResource extends JsonResource
             'status' => $this->deleted_at?false:true,
             'lcl' => $this->lcl,
             'ucl' => $this->ucl,
-            'default_value' => $this->default_value
+            'default_value' => $this->default_value,
+            'asset_service_id' => $this->asset_service_id,
+            'asset_service' => new AssetCheckServiceResource($this->AssetService)
         ];
     }
 }

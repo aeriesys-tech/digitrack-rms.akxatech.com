@@ -67,8 +67,8 @@
                                     <label class="form-label">Is Required</label><span class="text-danger"> *</span>
                                     <select class="form-control" :class="{'is-invalid':errors.is_required}" v-model="check.is_required">
                                         <option value="">Select Is Required</option>
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
                                     </select>
                                     <span v-if="errors.is_required" class="invalid-feedback">{{ errors.is_required[0] }}</span>
                                 </div>

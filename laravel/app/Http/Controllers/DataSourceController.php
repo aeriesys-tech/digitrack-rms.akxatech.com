@@ -87,7 +87,7 @@ class DataSourceController extends Controller
         $data_source = DataSource::create($data);
 
         foreach ($data['asset_types'] as $asset_type) {
-            DataSourceAssetType::create([
+            DataSourceAssetType::firstOrCreate([
                 'data_source_id' => $data_source->data_source_id,
                 'asset_type_id' => $asset_type,
                 ]);
@@ -266,5 +266,20 @@ class DataSourceController extends Controller
         Excel::import(new DataSourceImport, $request->file('file'));
 
         return response()->json(['success' => 'Data imported successfully!']);
+    }
+
+    public function deleteHardDataSource(Request $request)
+    {
+        $request->validate([
+            'data_source_id' => 'required|exists:data_sources,data_source_id'
+        ]);
+
+        DataSourceAssetType::whereIn('data_source_id', $request->data_source_id)->forceDelete();
+        DataSourceAttributeValue::whereIn('data_source_id', $request->data_source_id)->forceDelete();
+        DataSource::whereIn('data_source_id', $request->data_source_id)->forceDelete();
+
+        return response()->json([
+            "message" =>"Data Source Deleted Successfully"
+        ],200);
     }
 }

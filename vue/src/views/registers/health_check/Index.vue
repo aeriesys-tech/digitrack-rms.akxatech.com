@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Health Check</h4>
             </div>
-            <router-link to="/health_check/create" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD HEALTH CHECK</router-link>
+            <router-link v-can="'health_check_registers.create'" to="/health_check/create" type="submit" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD HEALTH CHECK</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -67,7 +67,7 @@
                                                 <i v-else class="fas fa-sort"></i>
                                             </span>
                                         </th>
-                                        <th class="text-center"> Action </th>
+                                        <th class="text-center" v-can="'health_check_registers.delete'"> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -78,7 +78,9 @@
                                         <td>{{ campaign.datasource }}</td>
                                         <td>{{convertDateFormat( campaign?.job_date_time )}}</td>
                                         <td>{{ campaign?.script }}</td>
-                                        <td class="text-center align-middle"><a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a></td>
+                                        <td class="text-center align-middle" v-can="'health_check_registers.delete'">
+                                            <a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteHealthCheck(campaign)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                        </td>
                                     </tr>
                                     <tr v-if="campaigns.length==0">
                                         <td colspan="7" class="text-center">No records found</td>

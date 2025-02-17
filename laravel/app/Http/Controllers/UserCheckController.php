@@ -17,6 +17,7 @@ use App\Models\AssetZone;
 use App\Models\Asset;
 use App\Models\Department;
 use Carbon\Carbon;
+use App\Models\AssetService;
 
 class UserCheckController extends Controller
 {
@@ -94,15 +95,17 @@ class UserCheckController extends Controller
         $data = $request->validate([
             'asset_id' => 'required|exists:assets,asset_id',
             'reference_date' => 'required',
-            'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
+            // 'asset_zone_id' => 'required|exists:asset_zones,asset_zone_id',
             'department_id' => 'required|exists:departments,department_id',
             'note' => 'nullable|sometimes',
-            'attachments.*' => 'nullable'
+            'attachments.*' => 'nullable',
+            'asset_service_id' => 'required|exists:asset_services,asset_service_id'
         ]);
-        
+        $zoneID = AssetService::where('asset_service_id', $request->asset_service_id)->first();
         $data['plant_id'] =  $asset->plant_id;
         $data['user_id'] = Auth::User()->user_id;
         $data['reference_no'] = $this->generateReferanceNo();
+        $data['asset_zone_id'] = $zoneID->asset_zone_id;
 
         $user_check = UserCheck::create($data);
         

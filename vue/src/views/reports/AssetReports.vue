@@ -18,7 +18,7 @@
                 <div class="card card-one mb-3">
                     <div class="card-header align-items-center d-flex justify-content-between">
                         <h6 class="card-title">Asset Reports</h6>
-                        <button class="btn btn-success" @click="downloadExcel()" style="float: right;"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
+                        <button v-can="'asset_reports.download'" class="btn btn-success" @click="downloadExcel()" style="float: right;"><i class="ri-file-excel-line"></i> DOWNLOAD EXCEL</button>
                     </div>
                     <div class="card-body">
                         <div class="row">

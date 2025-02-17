@@ -78,6 +78,7 @@ class SpareAttributeController extends Controller
         ]);
 
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
 
         $spare_attribute = SpareAttribute::create($data);
 
@@ -130,6 +131,7 @@ class SpareAttributeController extends Controller
         ]);
 
         $data['user_id'] = Auth::id();
+        $data['field_key'] = strtolower(trim(str_replace(' ', '_', $request->field_name)));
 
         $spare_attribute = SpareAttribute::where('spare_attribute_id', $request->spare_attribute_id)->first();
         $spare_attribute->update($data);

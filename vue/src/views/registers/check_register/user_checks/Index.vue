@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Check Registers</h4>
             </div>
-            <router-link v-can="'userChecks.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD CHECK REGISTER</router-link>
+            <router-link v-can="'check_registers.create'" to="/user_check/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD CHECK REGISTER</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -71,11 +71,11 @@
                                         <td>{{convertDateFormat(user_check.reference_date)}}</td>
                                         <td>{{user_check?.asset_zone?.zone_name}}</td>
                                         <td class="text-center">
-                                            <a title="Edit" v-can="'userChecks.update'" href="javascript:void(0)" class="text-success me-2" @click="editUserCheck(user_check)">
+                                            <a title="Edit" v-can="'check_registers.update'" href="javascript:void(0)" class="text-success me-2" @click="editUserCheck(user_check)">
                                                 <i class="ri-pencil-line fs-18 lh-1"></i>
                                             </a>
                                             <a title="View" href="javascript:void(0)" @click="viewUserCheck(user_check)" class="text-primary me-2" ><i class="ri-eye-fill fs-18 lh-1"></i></a>
-                                            <a title="Delete" v-can="'userChecks.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'check_registers.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteUserCheck(user_check)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                     <tr v-if="user_checks.length==0">

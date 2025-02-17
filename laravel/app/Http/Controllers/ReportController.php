@@ -24,6 +24,9 @@ use App\Http\Resources\DownloadedReportResource;
 use App\Http\Resources\UserActivityResource;
 use App\Http\Resources\UserServiceResource;
 use App\Http\Resources\UserCheckResource;
+use App\Http\Resources\TotalQuantitySpareResources;
+use App\Models\UserSpare;
+use App\Jobs\ExportTotalQuantitySpareJob;
 
 class ReportController extends Controller
 {
@@ -390,6 +393,71 @@ class ReportController extends Controller
 
         return response()->json([
             'message' => 'BreakDown Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.',
+        ]);
+    }
+
+    public function getTotalQuantitySpares(Request $request)
+    {
+        $query = UserSpare::query();
+
+        $query->selectRaw('
+            user_spares.spare_id, 
+            user_services.asset_id,
+            SUM(user_spares.quantity) as quantity, 
+            MAX(user_spares.user_spare_id) as user_spare_id, 
+            MAX(user_spares.user_service_id) as user_service_id, 
+            MAX(user_spares.spare_cost) as spare_cost, 
+            MAX(user_spares.service_id) as service_id, 
+            MAX(user_spares.service_cost) as service_cost
+        ')->join('user_services', 'user_spares.user_service_id', '=', 'user_services.user_service_id')
+            ->groupBy('user_spares.spare_id', 'user_services.asset_id');
+
+        if ($request->filled('spare_id')) {
+            $query->where('user_spares.spare_id', $request->spare_id);
+        }
+
+        if ($request->filled('spare_type_id')) {
+            $query->whereHas('Spare', function ($q) use ($request) {
+                $q->where('spare_type_id', $request->spare_type_id);
+            });
+        }
+
+        if ($request->filled('asset_id')) {
+            $query->where('user_services.asset_id', $request->asset_id);
+        }
+
+        if ($request->filled('asset_type_id')) {
+            $query->whereHas('userService.Asset', function ($subQ) use ($request) {
+                $subQ->where('asset_type_id', $request->asset_type_id);
+            });
+        }
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $fromDate = $request->from_date;
+            $toDate = $request->to_date . ' 23:59:59';
+
+            $query->whereBetween('user_services.service_date', [$fromDate, $toDate]);
+        }
+
+        $user_spares = $query->orderBy($request->keyword, $request->order_by)->paginate($request->per_page);
+        return TotalQuantitySpareResources::collection($user_spares);
+    }
+
+    public function downloadRefractoryConsumptions(Request $request)
+    {
+        $request->validate([
+            'asset_id' => 'nullable|exists:assets,asset_id',
+            'asset_type_id' => 'nullable|exists:asset_type,asset_type_id',
+            'spare_id' => 'nullable|exists:spares,spare_id',
+            'spare_type_id' => 'nullable|exists:spare_types,spare_type_id',
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date'
+        ]);
+
+        ExportTotalQuantitySpareJob::dispatch($request->all(), Auth::id());
+
+        return response()->json([
+            'message' => 'Refractory Consumption Report Download Started! Please wait for a while and then check in the <b>Downloaded Reports</b>.'
         ]);
     }
 }

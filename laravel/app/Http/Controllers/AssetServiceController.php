@@ -16,6 +16,7 @@ use App\Models\ServiceAttributeValue;
 use App\Http\Resources\ServiceAttributeValueResource;
 use App\Models\UserSpare;
 use App\Models\UserService;
+use App\Models\AssetCheck;
 
 class AssetServiceController extends Controller
 {
@@ -310,23 +311,34 @@ class AssetServiceController extends Controller
         ]);
     
         $asset_service = AssetService::where('asset_service_id', $request->asset_service_id)->first();
-        $service = UserService::whereHas('UserSpare', function($que) use($asset_service){
-            $que->where('service_id', $asset_service->service_id)->where('asset_zone_id', $asset_service->asset_zone_id);
+    
+        if (!$asset_service) {
+            return response()->json([
+                "message" => "Asset Service not found."
+            ], 404);
+        }
+    
+        $service = UserService::whereHas('UserSpare', function ($que) use ($asset_service) {
+            $que->where('service_id', $asset_service->service_id)
+                ->where('asset_zone_id', $asset_service->asset_zone_id);
         })->where('asset_id', $asset_service->asset_id)->exists();
-        
-        if ($service) 
-        {
+    
+        $template_check = AssetCheck::where('asset_service_id', $request->asset_service_id)->exists();
+    
+        if ($template_check || $service) {
             return response()->json([
                 "message" => 'Asset Service cannot be deleted as it is used in other records.'
             ], 400);
         }
         else{
-            AssetService::where('asset_service_id', $request->asset_service_id)->forceDelete();
+            AssetServiceValue::where('asset_service_id', $request->asset_service_id)->forceDelete();
+            $asset_service->forceDelete();
+        
             return response()->json([
                 "message" => "AssetService deleted successfully"
             ], 200);
         }
-    }    
+    }
 
     public function assetServiceAttributeValues(Request $request)
     {

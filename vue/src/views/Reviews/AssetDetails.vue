@@ -98,7 +98,7 @@
                                         </th> -->
                                         <!-- <th class="text-center" v-can="'assets.delete'">Status</th>
                                         <th class="text-center" v-if="get_assetviews.length || get_asset.length">Actions</th>-->
-                                        <th class="text-center">GoTo</th>
+                                        <th class="text-center" v-can="['asset_accessories.view','asset_details.geometry_types']">GoTo</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,14 +121,20 @@
                                             <a v-can="'assets.update'" title="Edit" href="javascript:void(0)" class="text-success me-2" v-if="asset.status" @click="editAsset(asset)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
                                             <a v-can="'assetviews.view'" title="View" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewAsset(asset)"><i class="ri-eye-fill fs-18 lh-1"></i></a>
                                         </td> -->
-                                        <td class="text-center">
+                                        <td class="text-center" v-can="['asset_accessories.view','asset_details.geometry_types']">
                                             <!-- <a title="Activity Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/activity/create')"><i class="ri-stack-fill fs-18 lh-1"></i></a>
                                             <a title="Service Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_service/create')"><i class="ri-tools-fill fs-18 lh-1"></i></a>
                                             <a title="Check Register" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, 'user_check/create')"><i class="ri-calendar-check-fill fs-18 lh-1"></i></a> -->
-                                            <a title="Asset Accessories" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories/'+asset.asset_id)"><i class="ri-survey-line fs-18 lh-1"></i></a>
+                                            <a v-can="'asset_accessories.view'" title="Asset Accessories" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories/'+asset.asset_id)"><i class="ri-survey-line fs-18 lh-1"></i></a>
                                             <!-- <a title="Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewRegister(asset, '/asset/accessories')"><i class="ri-pentagon-line fs-18 lh-1"></i></a> -->
-                                            <a v-if="asset.geometry_type === 'V-Cylindrical'"  title="Vertical Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewVGeometric(asset)"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a>
-                                            <a v-else-if="asset.geometry_type === 'H-Cylindrical'" title="Horizontal Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewHGeometric(asset)"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a>
+                                            <!-- <a  v-if="asset.geometry_type === 'V-Cylindrical'"  title="Vertical Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewVGeometric(asset)"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a>
+                                            <a v-else-if="asset.geometry_type === 'H-Cylindrical'" title="Horizontal Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewHGeometric(asset)"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a> -->
+
+                                            <span v-can="'asset_details.geometry_types'">
+                                               <a  v-if="asset.geometry_type === 'V-Cylindrical'"  title="Vertical Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewVGeometric(asset)"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a>
+                                               <a v-else-if="asset.geometry_type === 'H-Cylindrical'" title="Horizontal Geometric Type" href="javascript:void(0)" class="text-primary me-2" @click.prevent="viewHGeometric(asset)"><img src="../../../public/assets/images/icosahedron.png" style="width:18px; height: 18px;" /></a>
+
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr v-if="assets.length==0">

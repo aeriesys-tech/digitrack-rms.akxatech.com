@@ -85,7 +85,7 @@ class ServiceController extends Controller
         $service = Service::create($data);
 
         foreach ($data['asset_types'] as $asset_type) {
-            ServiceAssetType::create([
+            ServiceAssetType::firstOrCreate([
                 'service_id' => $service->service_id,
                 'asset_type_id' => $asset_type,
             ]);
@@ -248,5 +248,20 @@ class ServiceController extends Controller
         Excel::import(new ServiceImport, $request->file('file'));
 
         return response()->json(['success' => 'Data imported successfully!']);
+    }
+
+    public function deleteHardService(Request $request)
+    {
+        $request->validate([
+            'service_id' => 'required|exists:services,service_id'
+        ]);
+
+        ServiceAssetType::whereIn('service_id', $request->service_id)->forceDelete();
+        ServiceAttributeValue::whereIn('service_id', $request->service_id)->forceDelete();
+        Service::whereIn('service_id', $request->service_id)->forceDelete();
+
+        return response()->json([
+            "message" =>"Service Deleted Successfully"
+        ],200);
     }
 }

@@ -13,7 +13,7 @@
                 </ol>
                 <h4 class="main-title mb-0">Break Down Registers</h4>
             </div>
-            <router-link to="/break_down_registers/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD BREAK DOWN REGISTER</router-link>
+            <router-link v-can="'break_down_registers.create'" to="/break_down_registers/create" class="btn btn-primary" style="float: right;"><i class="ri-list-check"></i> ADD BREAK DOWN REGISTER</router-link>
         </div>
         <div class="row">
             <div class="col-12">
@@ -77,7 +77,7 @@
                                             </span>
                                         </th> -->
                                         <!-- <th class="text-center">Status</th> -->
-                                        <th class="text-center">Actions</th>
+                                        <th class="text-center" v-can="['break_down_registers.update','break_down_registers.delete']">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -96,9 +96,9 @@
                                                 <label class="custom-control-label" :for="'break_down_list' + break_down_list.break_down_list_id"></label>
                                             </div>
                                         </td> -->
-                                        <td class="text-center">
-                                            <a title="Edit" href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
-                                            <a title="Delete" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
+                                        <td class="text-center" v-can="['break_down_registers.update','break_down_registers.delete']">
+                                            <a title="Edit" v-can="'break_down_registers.update'" href="javascript:void(0)" v-if="break_down_list.status" class="text-success me-2" @click="editBreakDownList(break_down_list)"><i class="ri-pencil-line fs-18 lh-1"></i></a>
+                                            <a title="Delete" v-can="'break_down_registers.delete'" href="javascript:void(0)" class="text-danger me-2" @click.prevent="deleteBreakDownList(break_down_list)"><i class="ri-delete-bin-6-line fs-18 lh-1"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
