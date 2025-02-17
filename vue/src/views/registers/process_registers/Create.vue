@@ -59,7 +59,7 @@
 
                             <div class="row g-2 mb-3" v-if="status">
                                 <div class="col-md-4" v-for="asset_zone,key in asset_zones" :key="key">
-                                    <div class="card">
+                                    <div class="card" v-if="user_variable.user_asset_variables[key] && user_variable.user_asset_variables[key].some(item => item.variable_name)">
                                         <div class="card-header">
                                             <h6 class="mb-0">{{ asset_zone.zone_name }}</h6>
                                         </div>
@@ -149,7 +149,7 @@
                                     </div>
                                 </div> -->
                                 <div class="col-md-4" v-for="asset_zone,key in asset_zones" :key="key">
-                                    <div class="card">
+                                    <div class="card" v-if="user_variable.user_asset_variables[key] && user_variable.user_asset_variables[key].some(item => item?.variable?.variable_name)">
                                         <div class="card-header">
                                             <h6 class="mb-0">{{ asset_zone.zone_name }}</h6>
                                         </div>

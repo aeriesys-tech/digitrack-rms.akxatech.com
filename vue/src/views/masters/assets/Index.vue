@@ -92,7 +92,7 @@
                                 <tbody>
                                     <tr v-for="asset, key in assets" :key="key">
                                         <td class="text-center">{{ meta.from + key }}</td>
-                                        <td>{{ asset.asset_type.asset_type_name }}</td>
+                                        <td>{{ asset?.asset_type?.asset_type_name }}</td>
                                         <td>{{asset.asset_code}}</td>
                                         <td>{{asset.asset_name}}</td>
                                         <td>{{asset.latitude}}</td>
