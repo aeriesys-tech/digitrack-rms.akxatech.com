@@ -104,7 +104,7 @@ class AssetSpareController extends Controller
                 'array',
             ],
             'asset_zones.*' => 'nullable|exists:asset_zones,asset_zone_id',
-            'quantity' =>  'required|integer|min:1'
+            'quantity' =>  'required|min:0'
         ]);
 
         $asset = Asset::where('asset_id', $request->asset_id)->first();
@@ -240,7 +240,7 @@ class AssetSpareController extends Controller
             'asset_zone_id' => [
                 $assetHasZones ? 'required' : 'nullable',
             ],
-            'quantity' =>  'required|integer|min:1'
+            'quantity' =>  'required|min:0'
         ]);
 
         $spare = Spare::where('spare_id', $request->spare_id)->first();

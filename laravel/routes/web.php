@@ -9,8 +9,8 @@ Route::get('/', function () {
 });
 
 Route::get('/send-test-email', function () {
-    Mail::raw('This is a test email from RMS.', function ($message) {
-        $message->to('bharatesh.s@akxatech.com','raghuraj.rao@akxatech.com','alokmoy.bose@akxatech.com')->subject('Test Email from RMS');
+    Mail::raw('This is a test email from digiTRACK.', function ($message) {
+        $message->to('bharatesh.s@akxatech.com','amey.desai@akxatech.com','sammed@aeriesys.com')->subject('Test Email from digiTRACK');
     });
 
     return 'Test email sent!';

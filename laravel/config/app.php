@@ -133,4 +133,17 @@ return [
     'PDF' => Barryvdh\DomPDF\Facade::class,
 
     'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+
+	/*
+    |--------------------------------------------------------------------------
+    | IMAP Server configuration
+    |--------------------------------------------------------------------------
+	*/
+	'protocol' => env('FROM_MAIL_MAILER'),
+    'host' => env('FROM_MAIL_HOST'),
+    'port' => env('FROM_MAIL_PORT'),
+    'username' => env('FROM_MAIL_USERNAME'),
+	'password' => env('FROM_MAIL_PASSWORD'),
+    'encryption' => env('FROM_MAIL_ENCRYPTION'),
 ];

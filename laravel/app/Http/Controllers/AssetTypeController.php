@@ -32,7 +32,7 @@ class AssetTypeController extends Controller
             $query->where('asset_type_code', 'like', "%$request->search%")
                 ->orWhere('asset_type_name', 'like', "$request->search%");
         }
-        $asset_type = $query->orderBy($request->keyword,$request->order_by)->withTrashed()->paginate($request->per_page); 
+        $asset_type = $query->orderBy($request->keyword,$request->order_by)->paginate($request->per_page); 
         return AssetTypeResource::collection($asset_type);
     }
 
