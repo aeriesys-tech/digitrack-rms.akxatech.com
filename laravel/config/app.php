@@ -135,6 +135,9 @@ return [
     'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
 
+    App\Providers\ScheduleServiceProvider::class,
+
+
 	/*
     |--------------------------------------------------------------------------
     | IMAP Server configuration
