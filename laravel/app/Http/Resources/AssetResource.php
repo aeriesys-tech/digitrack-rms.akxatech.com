@@ -56,7 +56,9 @@ class AssetResource extends JsonResource
             'height' => $this->height,
             'diameter' => $this->diameter,
             'asset_template_id' => $this->asset_template_id,
-            'asset_template' => new AssetTemplateResource($this->AssetTemplate)
+            'asset_template' => new AssetTemplateResource($this->AssetTemplate),
+            'scanner_code' => $this->scanner_code,
+            'ppms_code' => $this->ppms_code
         ];
     }
 }

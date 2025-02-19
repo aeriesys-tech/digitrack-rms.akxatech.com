@@ -81,7 +81,9 @@ class AssetTemplateController extends Controller
             'area_id' => 'nullable|exists:areas,area_id',
             'geometry_type' => 'nullable',
             'height' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical',
-            'diameter' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical'
+            'diameter' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical',
+            'scanner_code' => 'nullable',
+            'ppms_code' => 'nullable'
         ]);
      
         $request->validate([
@@ -204,7 +206,9 @@ class AssetTemplateController extends Controller
             'area_id' => 'nullable|exists:areas,area_id',
             'geometry_type' => 'nullable',
             'height' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical',
-            'diameter' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical'
+            'diameter' => 'nullable|required_if:geometry_type,V-Cylindrical,H-Cylindrical',
+            'scanner_code' => 'nullable',
+            'ppms_code' => 'nullable'
         ]);
 
         $request->validate([

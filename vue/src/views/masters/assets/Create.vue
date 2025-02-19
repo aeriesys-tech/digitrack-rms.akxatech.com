@@ -111,6 +111,18 @@
                                             <input type="text" placeholder="Enter Asset Name" class="form-control" :class="{ 'is-invalid': errors?.asset_name }" v-model="asset.asset_name" />
                                             <span v-if="errors?.asset_name" class="invalid-feedback">{{ errors.asset_name[0] }}</span>
                                         </div>
+
+                                        <div class="col-md-3">
+                                            <label class="form-label">Scanner Code</label>
+                                            <input type="text" placeholder="Enter Scanner Code" class="form-control" :class="{ 'is-invalid': errors?.scanner_code }" v-model="asset.scanner_code" />
+                                            <span v-if="errors?.scanner_code" class="invalid-feedback">{{ errors.scanner_code[0] }}</span>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="form-label">PPMS Code</label>
+                                            <input type="text" placeholder="Enter PPMS Code" class="form-control" :class="{ 'is-invalid': errors?.ppms_code }" v-model="asset.ppms_code" />
+                                            <span v-if="errors?.ppms_code" class="invalid-feedback">{{ errors.ppms_code[0] }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -461,6 +473,8 @@
                     height: "",
                     diameter: "",
                     asset_template_id: "",
+                    scanner_code:"",
+                    ppms_code:""
                 },
                 asset_template: "",
 

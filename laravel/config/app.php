@@ -140,7 +140,7 @@ return [
     | IMAP Server configuration
     |--------------------------------------------------------------------------
 	*/
-	'protocol' => env('FROM_MAIL_MAILER'),
+	'protocol' => env('FROM_MAIL_PROTOCOL'),
     'host' => env('FROM_MAIL_HOST'),
     'port' => env('FROM_MAIL_PORT'),
     'username' => env('FROM_MAIL_USERNAME'),

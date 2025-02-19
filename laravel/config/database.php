@@ -109,6 +109,17 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'oracle' => [
+            'driver'         => 'oracle',
+            'tns'            => env('DB_TNS', ''),
+            'host'           => env('ORACLE_DB_HOST', '172.21.253.5'),
+            'port'           => env('ORACLE_DB_PORT', '1521'),
+            'database'       => env('ORACLE_DB_DATABASE', 'ppms'),
+            'username'       => env('ORACLE_DB_USERNAME', 'ictstage'),
+            'password'       => env('ORACLE_DB_PASSWORD', 'Jsw2021'),
+            'charset'        => 'AL32UTF8',
+            'prefix'         => '',
+        ],
     ],
 
     /*

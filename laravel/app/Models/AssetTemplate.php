@@ -24,7 +24,9 @@ class AssetTemplate extends Model
         'radius',
         'geometry_type',
         'height',
-        'diameter'
+        'diameter',
+        'scanner_code',
+        'ppms_code'
     ];
 
     protected $primaryKey = 'asset_template_id';

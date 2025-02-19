@@ -62,6 +62,17 @@
                                             <input type="text" placeholder="Enter Template Name" class="form-control" :class="{ 'is-invalid': errors?.template_name }" v-model="asset.template_name" />
                                             <span v-if="errors?.template_name" class="invalid-feedback">Template Name is required</span>
                                         </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label">Scanner Code</label>
+                                            <input type="text" placeholder="Enter Scanner Code" class="form-control" :class="{ 'is-invalid': errors?.scanner_code }" v-model="asset.scanner_code" />
+                                            <span v-if="errors?.scanner_code" class="invalid-feedback">{{ errors.scanner_code[0] }}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">PPMS Code</label>
+                                            <input type="text" placeholder="Enter PPMS Code" class="form-control" :class="{ 'is-invalid': errors?.ppms_code }" v-model="asset.ppms_code" />
+                                            <span v-if="errors?.ppms_code" class="invalid-feedback">{{ errors.ppms_code[0] }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -407,6 +418,8 @@
                     geometry_type: "",
                     height: "",
                     diameter: "",
+                    scanner_code:"",
+                    ppms_code:""
                 },
 
                 voltage: {

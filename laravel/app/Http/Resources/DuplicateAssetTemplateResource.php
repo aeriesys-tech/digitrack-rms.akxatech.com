@@ -47,7 +47,9 @@ class DuplicateAssetTemplateResource extends JsonResource
             'asset_departments' => $asset_department_id,
             'geometry_type' => $this->geometry_type,
             'height' => $this->height,
-            'diameter' => $this->diameter
+            'diameter' => $this->diameter,
+            'scanner_code' => $this->scanner_code,
+            'ppms_code' => $this->ppms_code
         ];
     }
 }

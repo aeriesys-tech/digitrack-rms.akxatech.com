@@ -25,6 +25,8 @@
                                 <nav class="nav nav-classic">
                                     <span class="nav-link text-dark"><span>Template Code</span> <span class="badge text-dark" style="text-wrap: balance;">{{asset.template_code}}</span></span>
                                     <span class="nav-link text-dark"><span>Template Name</span> <span class="badge text-dark">{{asset.template_name}}</span></span>
+                                    <span class="nav-link text-dark"><span>Scanner Code</span> <span class="badge text-dark">{{asset?.scanner_code}}</span></span>
+                                    <span class="nav-link text-dark"><span>PPMS Code</span> <span class="badge text-dark">{{asset?.ppms_code}}</span></span>
                                     <span class="nav-link text-dark"><span>Asset Type</span> <span class="badge text-dark">{{asset.asset_type?.asset_type_name}}</span></span>
                                     <span class="nav-link text-dark"><span>Latitude</span> <span class="badge text-dark">{{asset.latitude}}</span></span>
                                     <span class="nav-link text-dark"><span>Longitude</span> <span class="badge text-dark">{{asset.longitude}}</span></span>
