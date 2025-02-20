@@ -94,6 +94,19 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'sec_pgsql' => [
+            'driver' => 'pgsql',
+            'host' => env('SEC_DB_HOST', '127.0.0.1'),
+            'port' => env('SEC_DB_PORT', '5432'),
+            'database' => env('SEC_DB_DATABASE'),
+            'username' => env('SEC_DB_USERNAME', 'postgres'),
+            'password' => env('SEC_DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),
